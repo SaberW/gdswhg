@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Carson</title>
+    <script>
+          function callAndroid(){
+           var str1 = document.getElementById("text1").value;
+            var str2 = document.getElementById("text2").value;
+            var result= prompt("js://sign?arg1="+ str1 + "&arg2=" +str2);
+            alert("demo " + result);
+         }
+      </script>
+</head>
+<body>
+<p>
+    <input type="text" id="text1" value="admin" />
+</p>
+<p>
+    <input type="text" id="text2" value="123456" />
+</p>
+<p>
+    <input type="button" id="button1" value="js调用安卓" onclick="callAndroid();"  />
+</p>
+
+</body>
+</html>

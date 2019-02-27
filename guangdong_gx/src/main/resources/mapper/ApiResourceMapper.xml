@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.creatoo.hn.dao.mapper.api.ApiResourceMapper">
+
+    <select id="t_selppSource" resultType="hashmap">
+        SELECT r.*
+        FROM whg_resource r
+        WHERE r.refid in (
+            SELECT
+            a.id
+            FROM
+            whg_act a
+            WHERE
+            a.ebrand LIKE "%"#{id}"%" AND a.state = 6 )
+        AND  r.reftype = #{reftype}
+        AND  r.enttype in ('1','2','3','4')
+        <if test="enttype != null and enttype!=''.toString()">
+            AND  r.enttype = #{enttype}
+        </if>
+        <if test="name != null and name!=''.toString()">
+            and r.name like "%"#{name}"%"
+        </if>
+        ORDER BY crtdate DESC
+
+    </select>
+
+    <select id="t_selppAndtarSource" resultType="hashmap">
+        SELECT r.*
+        FROM whg_resource r
+        WHERE (
+        r.refid in ( SELECT a.id FROM whg_act a WHERE a.ebrand LIKE "%"#{id}"%" AND a.state = 6 )
+        or r.refid = #{id}
+        )
+
+        <if test="enttype != null and enttype!=''.toString()">
+            AND  r.enttype = #{enttype}
+        </if>
+        <if test="name != null and name!=''.toString()">
+            and r.name like "%"#{name}"%"
+        </if>
+        ORDER BY crtdate DESC
+    </select>
+
+
+    <select id="t_selMajorSource" resultType="hashmap">
+        SELECT
+        r.*
+        FROM
+        whg_resource r
+        WHERE
+        (r.refid IN (
+        SELECT
+        t.id
+        FROM
+        whg_tra t
+        WHERE
+        t.id IN (
+        SELECT
+        c.entid
+        FROM
+        whg_major_contact c
+        WHERE
+        c.majorid = #{refid}
+        )
+        ) OR
+        r.refid IN (
+        SELECT
+        tea.id
+        FROM
+        whg_tra_teacher tea
+        WHERE
+        tea.id IN (
+        SELECT
+        c.entid
+        FROM
+        whg_major_contact c
+        WHERE
+        c.majorid = #{refid}
+        )
+        ))
+        AND (r.reftype = 5 OR r.reftype = 31 OR r.reftype = 16)
+        AND r.enttype IN ('1', '2', '3','4')
+        <if test="enttype != null and enttype!=''.toString()">
+            AND  r.enttype = #{enttype}
+        </if>
+        <if test="name != null and name!=''.toString()">
+            and r.name like "%"#{name}"%"
+        </if>
+        ORDER BY r.crtdate DESC
+    </select>
+</mapper>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<script th:src="${basePath}+'/assets/js/field/fieldList.js'"></script>
+<div class="wrapper clearfix">
+    <div class="content">
+        <!--公共主头部开始-->
+        <div id="header" th:include="guangdong/public/header :: copy"></div>
+        <!--公共主头部结束-->
+        <!--主体开始-->
+        <div class="categoryChange">
+            <div class="row clearfix">
+                <div class="title">区域：</div>
+                <div class="adrList" id="areList">
+                    <span class='item active'><a href='javascript:void(0)' onclick='setDistrict(this)'>全部</a></span>
+               </div>
+                <div class="title">类型：</div>
+                <div class="adrList" id="regList">
+                    <span class='item active'><a href='javascript:void(0)' onclick='setDistrict(this)'>全部</a></span>
+                </div>
+            </div>
+            <input type="hidden" id="type">
+            <input type="hidden" id="area">
+            <input type="hidden" id="city">
+            <input type="hidden" id="province">
+        </div>
+        <div class="container content">
+            <div class="filter">
+                <div class="filter-list">
+                    <div class="clearfix">
+                        <span class="active"><a href="javascript:void(0)" onclick="setState(this,null)">全部</a></span>
+                        <span><a href="javascript:void(0)" onclick="setState(this,'1')">可预订</a></span>
+                    </div>
+                </div>
+                <div class="search">
+                    <input type="text" id="searchValue" onkeydown="if(event.keyCode==13) searchList();" placeholder="输入关键词">
+                    <a href="javascript:searchList()"><i class="iconfont icon-search"></i></a>
+                    <input type="hidden" id="searchId">
+                </div>
+                <input type="hidden" id="sdate">
+            </div>
+            <div class="page-list">
+                <!--<div class="public-no-message"></div>-->
+                <div class="venue-list" id="venueList">
+                    <ul class="clearfix">
+                        <!--<li>
+                            <a href="detail">
+                                <div class="img">
+                                    <img th:src="${basePath}+'/assets/img/img_demo/activi-img1.jpg'" width="385" height="256">
+                                    <div class="mask"></div>
+                                </div>
+                                <div class="detail">
+                                    <div class="zcbrand-name">广东省文化馆</div>
+                                    <div class="zcbrand-button-r">立即预定</div>
+                                    &lt;!&ndash;<div class="zcbrand-button-w">查看详情<i class="iconfont icon-enter"></i></div>&ndash;&gt;
+                                </div>
+                            </a>
+                        </li>-->
+                    </ul>
+                </div>
+                <!--分页开始 -->
+                <div class="green-black" id="artPagging"></div>
+                <!--分页结束-->
+            </div>
+        </div>
+        <!--主体结束-->
+    </div>
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong/public/footer :: copy"></div>
+
+<!--底部结束-->
+<a class="to-top"></a>
+<script type="text/javascript" th:inline="javascript">
+
+    $(document).ready(function () {
+        dataInit.ajax({
+            api: [[${apiPath.actCate}]],
+            params: {
+                type:2//活动分类type
+            },
+            fn: showVenueClass
+        });
+        showAre($.cookie("city"));
+        dataPage();
+    })
+
+    function dataPage(page, rows) {
+        var params_page = page || 1;
+        var params_rows = rows || 9;
+        var params = {
+            page: params_page,
+            pageSize: params_rows,
+            cultid: $.cookie('cultid'),
+            content: $("#searchId").val(),
+            type: $("#type").val(),
+            area: $("#area").val(), //区域
+            city: $("#city").val(), //市
+            province: $("#province").val(), //省
+            deptid: $("#deptid").val(), //部门id
+            isUse: $("#sdate").val()
+        }
+        dataInit.ajax({
+            api: [[${apiPath.venueListList}]],
+            params: params,
+            fn: function (data) {
+                if (data.code == 0) {
+                    showActivityList(data);
+                } else {
+                    rongDialog.init({ico: 2, type: 1, desc: data.msg || "未知错误"});
+                }
+                dataInit.pageInit('artPagging', params_page, params_rows, data.total, dataPage);
+            }
+        })
+    }
+
+    function showVenueClass(data) {
+        $("#regList").html("");
+        var region = data.rows;
+        var regList = $("#regList");
+        regList.append("<span class='item active'><a href='javascript:void(0)' onclick='setType(this," + null + ")'>全部</a></span>")
+        for (var i in region) {
+            regList.append("<span class='item'><a href='javascript:void(0)' onclick=setType(this,'" + region[i].id + "')>" + region[i].name + "</a></span>");
+        }
+    }
+
+    function showVenueArea(data) {
+        $("#" +
+            "").html("");
+        var cate = data.rows;
+        var adrList = $("#adrList");
+        adrList.append("<span class='item active'><a href='javascript:void(0)' onclick='setArea(this," + null + ")'>全部</a></span>")
+        for (var i in cate) {
+            adrList.append("<span class='item'><a href='javascript:void(0)' onclick='setArea(this," + cate[i].id + ")'>" + cate[i].name + "</a></span>");
+        }
+    }
+
+    function showActivityList(data) {
+        $("#venueList").html("");
+        var venue = data.rows;
+        var venueList = $("#venueList");
+        if (venue.length) {
+            venueList.append("<ul class='group clearfix'></ul>");
+            for (var i in venue) {
+                var imgPath = data.imgPath + dataInit.getBigImage(venue[i].image);
+                var a_label = '';
+                if (venue[i].openTimeNum > 0) {
+                    a_label = '<a href="detail?id=' + venue[i].itemId + '"><div class="venue-button-r">马上预定</div></a>';
+                } else {
+                    a_label = '<a href="detail?id=' + venue[i].itemId + '"><div class="venue-button-w">查看详情<i class="iconfont icon-enter"></i></div></a>';
+                }
+                venueList.children("ul").append(
+                    '<li>' +
+                    '<div class="img">' +
+                    '<img src="' + imgPath + '" width="385" height="256">' +
+                    '<div class="mask"></div>' +
+                    '</div>' +
+                    '<div class="detail">' +
+                    '<div class="venue-name">' + venue[i].title + '</div>' + a_label +
+                    '</div>' +
+                    '</li>'
+                );
+            }
+        } else {
+            venueList.append("<div class='public-no-message'></div>");
+        }
+    }
+    function setActive(dom) {
+        $(dom).parent('span').addClass("active").siblings().removeClass("active");
+    }
+
+    function setType(dom, id) {
+        $("#type").val(id);
+        dataPage();
+        setActive(dom);
+    }
+
+    function setState(dom, id) {
+        $("#sdate").val(id);
+        dataPage();
+        setActive(dom);
+    }
+    function searchList() {
+        if($("#searchValue").val()){
+            var searchValue = removeHTMLTag($("#searchValue").val());
+            $("#searchId").val(searchValue);
+            dataPage();
+        }else {
+            $("#searchId").val("");
+            dataPage();
+        }
+    }
+    //给消息过滤HTML标签
+    function removeHTMLTag(str) {
+        str = str.replace(/<\/?[^>]*>/g,''); //去除HTML tag
+        str = str.replace(/[ | ]*\n/g,'\n'); //去除行尾空白
+        //str = str.replace(/\n[\s| | ]*\r/g,'\n'); //去除多余空行
+        str=str.replace(/&nbsp;/ig,'');//去掉&nbsp;
+        return str;
+    }
+</script>
+</body>
+</html>

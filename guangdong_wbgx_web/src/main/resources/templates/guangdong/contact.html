@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<link th:href="${basePath}+'/assets/style/index/index.css'" rel="stylesheet">
+<!--<link th:href="${basePath}+'/assets/style/index/index_x.css'" rel="stylesheet">-->
+<style>
+    .bg_img{
+        width: 100%;
+        display: block;
+    }
+    .main{
+        width: 1200px;
+        margin: 0 auto;
+        margin-bottom: 50px;
+    }
+    .bgs{
+        background: #0d0804;
+    }
+    .main .title{
+        font-size: 24px;
+        position: relative;
+        padding: 10px 0;
+        margin-bottom: 20px;
+        color: #333;
+    }
+    .main .title span{
+        position: absolute;
+        width: 48px;
+        height: 2px;
+        background: #9c0707;
+        bottom: 0;
+        left: 24px;
+    }
+    .main p{
+        margin: 0;
+        font-size: 16px;
+        line-height: 30px;
+        color: #999;
+    }
+    p.msg{
+        text-indent: 32px;
+    }
+</style>
+<body>
+<div class="wrapper clearfix">
+    <div class="content">
+        <!--公共主头部开始-->
+        <div id="header" th:include="guangdong/public/header :: copy"></div>
+        <!--公共主头部结束-->
+        <div class="bgs">
+            <div class="main">
+                <img class="bg_img" th:src="${basePath}+'/assets/img/about_bg.png'">
+            </div>
+        </div>
+        <div class="main">
+            <div class="title">
+                联系我们<span></span>
+            </div>
+            <p>地址：广州市天河区广州大道中1229号</p>
+            <p>邮编：510075</p>
+            <p>电话：020-87302466 ，020-87600956</p>
+            <p>邮箱：gdswhgxxjsb@163.com</p>
+        </div>
+    </div>
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong/public/footer :: copy"></div>
+<!--底部结束-->
+<a class="to-top"></a>
+</body>
+</html>

@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configs>
+    <opts>
+        <opt id="view">查看</opt>
+        <opt id="add">添加</opt>
+        <opt id="edit">编辑</opt>
+        <opt id="on">启用</opt>
+        <opt id="off">停用</opt>
+        <opt id="order">排序</opt>
+        <opt id="reset">密码重置</opt>
+        <opt id="del">删除</opt>
+        <opt id="publish">发布</opt>
+        <opt id="publishoff">撤销发布</opt>
+
+        <opt id="undel">还原删除</opt>
+        <opt id="checkgo">送审</opt>
+        <opt id="checkon">审核通过</opt>
+        <opt id="checkoff">审核打回</opt>
+
+        <opt id="back">打回编辑</opt>
+        <opt id="recommend">推荐</opt>
+        <opt id="recommendoff">取消推荐</opt>
+        <opt id="retime">设置预定时段</opt>
+        <opt id="reserve">预定管理</opt>
+        <opt id="baoming">报名管理</opt>
+        <opt id="kecheng">课程管理</opt>
+        <opt id="ccmanager">场次管理</opt>
+        <opt id="info">场次管理</opt>
+        <opt id="setPublish">设置发布信息</opt>
+        <opt id="shizi">师资管理</opt>
+        <opt id="ziyuan">资源管理</opt>
+
+        <opt id="bigbannered">推荐上大首页</opt>
+        <opt id="bigbanneroff">取消上大首页</opt>
+        <opt id="upindex">上首页</opt>
+        <opt id="upindexoff">取消上首页</opt>
+    </opts>
+    
+
+    <menus>
+
+        <!-- 系统管理 -->
+        <menu id="M_SYS" type="0" state="1" text="系统管理" iconcls="p-1">
+            <menu id="M_SYS_ZDPZ" type="1" state="1" text="站点配置" href="/admin/system/cult/view/zdpz" opts="view,add,edit,on,off,del"></menu>
+            <menu id="M_SYS_CULT" type="1" state="1" text="子站管理" href="/admin/system/cult/view/list" opts="view,add,edit,on,off,order,del"></menu>
+            <menu id="M_SYS_DEPT" type="1" state="1" text="部门管理" href="/admin/system/dept/view/list" opts="view,add,edit,del,on,off" ></menu>
+            <menu id="M_SYS_ROLE" type="1" state="1" text="角色管理" href="/admin/system/role/view/list" opts="view,add,edit,on,off,del"></menu>
+            <menu id="M_SYS_USER" type="1" state="1" text="管理员管理" href="/admin/system/user/view/list" opts="view,add,edit,on,off,reset,del"></menu>
+        </menu>
+        <!-- 系统管理-END -->
+
+        <!-- 运维管理 -->
+        <menu id="M_YWI" type="0" state="1" text="运维管理" iconcls="p-2">
+            <menu id="M_YWI_TYP" type="0" state="1" text="分类管理">
+                <menu type="1" state="1" href="/admin/yunwei/type/view/list/1" id="M_YWI_TYPE_ART" text="艺术分类配置"   opts="view, add, edit, del, publish, publishoff"/>
+                <menu type="1" state="1" href="/admin/yunwei/type/view/list/2" id="M_YWI_TYPE_FYI" text="非遗分类配置"   opts="view, add, edit, del, publish, publishoff"/>
+            </menu>
+            <menu id="M_YWI_KEY" type="0" state="1" text="关键字管理">
+                <menu type="1" state="1" href="/admin/yunwei/key/view/list/2" id="M_YWI_KEY_VENUE" text="场馆关键字配置" opts="view, add, edit, del, publish, publishoff"/>
+            </menu>
+            <menu id="M_YWI_TAG" type="0" state="1" text="标签管理">
+                <menu type="1" state="1" href="/admin/yunwei/tag/view/list/2" id="M_YWI_TAG_VENUE" text="场馆标签配置"   opts="view, add, edit, del, publish, publishoff"/>
+            </menu>
+            <menu id="M_YWI_SMSTMP" type="1" state="1" text="短信模板管理" href="/admin/yunwei/smstmp/view/list" opts="add,view,edit,del"></menu>
+            <menu id="M_YWI_WHP" type="1" state="1" href="/admin/yunwei/whpp/view/list" text="文化品牌配置" opts="view, add, edit, del, on, off"/>
+            <menu id="M_YWI_NOT" type="1" state="1" text="操作日志管理"  href="/admin/yunwei/note/view/list" opts="view"/>
+            <menu id="M_YWI_LBT" type="0" state="1" text="轮播图配置">
+                <menu type="1" state="1" href="/admin/yunwei/lbt/view/list/0" id="M_YWI_BIG_LBT_PC" text="外部供需大首页轮播图配置" opts="view, add, edit, on, off,del"/>
+            </menu>
+            <menu id="M_YWI_VID" type="1" state="1" text="视频管理"  href="/admin/video/index" opts="view, add, edit, del, publish, publishoff"/>
+        </menu>
+        <!-- 运维管理-END -->
+
+        <!-- 会员管理 -->
+        <menu id="M_USR" type="0" state="1" text="会员管理"  iconcls="p-3">
+            <menu id="M_USR_USR" type="1" state="1" text="会员管理" href="/admin/user/info/view/list" opts="view, edit, del" />
+            <menu id="M_USR_BAK" type="1" state="1" text="黑名单管理" href="/admin/user/black/view/list" opts="view, off" />
+        </menu>
+        <!-- 会员管理-END -->
+
+
+        <!-- 非遗申报管理 -->
+        <menu id="M_FYSB" type="0" state="1" text="非遗申报管理"  iconcls="p-4">
+            <menu id="M_FYSB_SH" type="0" state="1" text="申报审核">
+                <menu id="M_FYSB_SH_FXM" type="1" state="1" text="非遗项目" href="/admin/user/info/view/list" opts="view" />
+                <menu id="M_FYSB_SH_CCR" type="1" state="1" text="非遗传承人" href="/admin/user/info/view/list" opts="view" />
+                <menu id="M_FYSB_SH_FJD" type="1" state="1" text="非遗传承基地" href="/admin/user/info/view/list" opts="view" />
+                <menu id="M_FYSB_SH_SYQ" type="1" state="1" text="生态保护实验区" href="/admin/user/info/view/list" opts="view" />
+                <menu id="M_FYSB_SH_SFD" type="1" state="1" text="生态保护示范基地" href="/admin/user/info/view/list" opts="view" />
+                <menu id="M_FYSB_SH_YJD" type="1" state="1" text="研究基地" href="/admin/user/info/view/list" opts="view" />
+                <menu id="M_FYSB_SH_ZXJ" type="1" state="1" text="专项资金" href="/admin/user/info/view/list" opts="view" />
+                <menu id="M_FYSB_SH_ZJK" type="1" state="1" text="专家库" href="/admin/user/info/view/list" opts="view,add,edit,del" />
+                <menu id="M_FYSB_SH_GWA" type="1" state="1" text="公文档案" href="/admin/user/info/view/list" opts="view" />
+                <menu id="M_FYSB_SH_PCZ" type="1" state="1" text="非遗普查资料" href="/admin/user/info/view/list" opts="view" />
+            </menu>
+            <menu id="M_FYSB_XWZX" type="1" state="1" text="新闻资讯" href="/admin/user/black/view/list" opts="view, off" />
+            <menu id="M_FYSB_CZWT" type="1" state="1" text="常见问题" href="/admin/user/black/view/list" opts="view, off" />
+            <menu id="M_FYSB_YJFK" type="1" state="1" text="意见反馈" href="/admin/user/black/view/list" opts="view, off" />
+        </menu>
+        <!-- 非遗申报管理-END -->
+
+        <!-- 非遗管理 -->
+        <menu id="M_FYGL" type="0" state="1" text="非遗管理"  iconcls="p-5">
+            <menu id="M_FYGL_FXM" type="1" state="1" text="非遗项目" href="/admin/user/info/view/list" opts="view" />
+            <menu id="M_FYGL_CCR" type="1" state="1" text="非遗传承人" href="/admin/user/info/view/list" opts="view" />
+            <menu id="M_FYGL_FJD" type="1" state="1" text="非遗传承基地" href="/admin/user/info/view/list" opts="view" />
+            <menu id="M_FYGL_SYQ" type="1" state="1" text="生态保护实验区" href="/admin/user/info/view/list" opts="view" />
+            <menu id="M_FYGL_SFD" type="1" state="1" text="生态保护示范基地" href="/admin/user/info/view/list" opts="view" />
+            <menu id="M_FYGL_YJD" type="1" state="1" text="研究基地" href="/admin/user/info/view/list" opts="view" />
+            <menu id="M_FYGL_ZXJ" type="1" state="1" text="专项资金" href="/admin/fyi/fund/view/list" opts="view" />
+            <menu id="M_FYGL_ZJK" type="1" state="1" text="专家库" href="/admin/fyi/expert/view/list" opts="view" />
+            <menu id="M_FYGL_GWA" type="1" state="1" text="公文档案" href="/admin/fyi/archive/view/list" opts="view" />
+            <menu id="M_FYGL_PCZ" type="1" state="1" text="非遗普查资料" href="/admin/user/info/view/list" opts="view" />
+        </menu>
+        <!-- 非遗管理-END -->
+
+        <!-- 非遗综合管理 -->
+        <menu id="M_FYZH" type="0" state="1" text="非遗综合管理"  iconcls="p-6">
+            <menu id="M_FYZH_FYZX" type="0" state="1" text="非遗资讯">
+                <menu id="M_FYZH_FYZX_1" type="1" state="1" text="非遗资讯分类" href="/admin/user/info/view/list" opts="view" />
+                <menu id="M_FYZH_FYZX_2" type="1" state="1" text="非遗资讯" href="/admin/user/info/view/list" opts="view" />
+            </menu>
+            <menu id="M_FYZH_FYHD" type="0" state="1" text="非遗活动">
+                <menu id="M_FYZH_FYHD_1" type="1" state="1" text="非遗活动" href="/admin/user/black/view/list" opts="view" />
+            </menu>
+            <menu id="M_FYZH_FYPX" type="0" state="1" text="非遗培训">
+                <menu id="M_FYZH_FYPX_1" type="1" state="1" text="非遗培训" href="/admin/user/black/view/list" opts="view" />
+            </menu>
+            <!--<menu id="M_FYZH_FYHD" type="0" state="1" text="非遗互动">
+                <menu id="M_FYZH_FYHD_1" type="1" state="1" text="绝技传承" href="/admin/user/black/view/list" opts="view" />
+                <menu id="M_FYZH_FYHD_2" type="1" state="1" text="非遗展览" href="/admin/user/black/view/list" opts="view" />
+                <menu id="M_FYZH_FYHD_3" type="1" state="1" text="非遗收徒" href="/admin/user/black/view/list" opts="view" />
+            </menu>-->
+            <menu id="M_FYZH_FYJT" type="0" state="1" text="非遗大讲坛">
+                <menu id="M_FYZH_FYJT_1" type="1" state="1" text="非遗大讲坛" href="/admin/user/black/view/list" opts="view" />
+            </menu>
+            <menu id="M_FYZH_FYBK" type="0" state="1" text="非遗百科">
+                <menu id="M_FYZH_FYBK_1" type="1" state="1" text="非遗名录" href="/admin/user/black/view/list" opts="view" />
+                <menu id="M_FYZH_FYBK_1" type="2" state="1" text="非遗期刊" href="/admin/user/black/view/list" opts="view" />
+                <menu id="M_FYZH_FYBK_1" type="3" state="1" text="数字资源" href="/admin/user/black/view/list" opts="view" />
+                <menu id="M_FYZH_FYBK_1" type="4" state="1" text="非遗地图" href="/admin/user/black/view/list" opts="view" />
+            </menu>
+            <menu id="M_FYZH_FYZT" type="0" state="1" text="非遗专题">
+                <menu id="M_FYZH_FYZT_1" type="1" state="1" text="非遗专题" href="/admin/subject/view/list" opts="view,add,edit,del,publish,publishoff,ziyuan"  />
+            </menu>
+            <menu id="M_FYZH_FYZG" type="0" state="1" text="非遗展馆">
+                <menu id="M_FYZH_FYZG_1" type="1" state="1" text="非遗展馆管理" href="/admin/showroom/view/list" opts="view,add,edit,del,publish,publishoff,recommend,recommendoff,ziyuan" />
+            </menu>
+            <menu id="M_FYZH_CYKJ" type="0" state="1" text="创意空间">
+                <menu id="M_FYZH_CYKJ_1" type="1" state="1" text="非遗文创" href="/admin/derivative/view/list" opts="view,add,edit,del,publish,publishoff,recommend,recommendoff" />
+                <!--<menu id="M_FYZH_CYKJ_2" type="1" state="1" text="非遗定制" href="/admin/user/black/view/list" opts="view" />-->
+            </menu>
+            <menu id="M_FYZH_TJBB" type="0" state="1" text="统计报表">
+
+            </menu>
+            <menu id="M_FYZH_TJBB" type="0" state="1" text="非遗指数">
+
+            </menu>
+        </menu>
+        <!-- 非遗综合管理-END -->
+
+    </menus>
+
+
+</configs>

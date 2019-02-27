@@ -1,0 +1,29 @@
+<header th:fragment="copy" xmlns:th="http://www.w3.org/1999/xhtml">
+    <script th:src="${basePath}+'/assets/js/public/voteup.js'"></script>
+    <script type="text/javascript" th:inline="javascript">
+        $().ready(function(){
+            var type = $("#temp_type").val();
+            var id = dataInit.getUrlParam("id");
+            var userId = $("#temp_userId").val();
+            voteup.init({
+                api1 : [[${apiPath.voteCount}]],
+                api2 : [[${apiPath.voteup}]],
+                cmreftyp : type,
+                cmrefid: id,
+                userId : userId,
+                dom:"#good"
+            });
+            $('#good').on("click",function(){
+                if($(this).find('i').hasClass("icon-praise")){
+                    voteup.add({
+                        cmrefid  : id,
+                        userId : userId,
+                        cmreftyp  : type,
+                        api1 : [[${apiPath.voteCount}]],
+                        api2 : [[${apiPath.voteup}]]
+                    });
+                }
+            })
+        })
+    </script>
+</header>

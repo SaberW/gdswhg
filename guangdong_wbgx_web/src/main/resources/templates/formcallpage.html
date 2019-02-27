@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script th:src="${basePath}+'/assets/js/plugs/jquery-1.11.0.min.js'" type="text/javascript"></script>
+</head>
+<body>
+  <p>表单回调测试页面</p>
+
+<script>
+    $(function(){
+        var args=new Object();
+        var query= window.location.search.substring(1);//获取查询串
+
+        var pairs=query.split("&");//在逗号处断开
+        for(var i=0;i<pairs.length;i++)
+        {
+            var pos=pairs[i].indexOf('=');//查找name=value
+            if(pos==-1) continue;//如果没有找到就跳过
+            var argname=pairs[i].substring(0,pos);//提取name
+            var value=pairs[i].substring(pos+1);//提取value
+            args[argname]=unescape(value);//存为属性
+            //args[argname]= value;
+        }
+
+        //console.info(args);
+        var callback = args.callback;
+        /*var data = args.data;
+        if (data){
+            try {
+                data = $.parseJSON(data);
+            } catch (e) {
+                data = {};
+            }
+        }else {
+            data = {};
+        }*/
+        var data = {code:0, msg:''};
+        data.code = args.code;
+        data.msg = args.msg;
+
+        if (callback && callback != ''){
+            window.parent[callback].call(window.parent, data);
+        }
+    })
+</script>
+
+</body>
+</html>

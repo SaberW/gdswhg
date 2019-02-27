@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/usercenter/usercenter.css'" >
+<script th:src="${basePath}+'/assets/js/jquery.qrcode.min.js'" type="text/javascript"></script>
+<div th:include="guangdong/public/leftBar :: copy"></div>
+<div id="page">
+    <div class="mui-content">
+        <div class="current">
+            <!-- 顶栏-->
+            <div class="top mui-row">
+                <div class="mui-col-sm-6 mui-col-xs-6 active">
+                    <a href="javascript:void(0)" data-type="0">线下培训</a>
+                </div>
+                <div class="cl"></div>
+                <div class="mui-col-sm-6 mui-col-xs-6">
+                    <a href="javascript:void(0)" data-type="1">在线课程</a>
+                </div>
+            </div>
+            <!-- 顶栏-->
+            <div class="blank"></div>
+            <!--订单详情-->
+            <div id="model-list-panel" class="mui-scroll-wrapper order" style="top:62px;">
+                <div class="mui-scroll">
+                    <div id="model-list">
+                        <!--<div class="main">
+                            <div class="main-top">
+                                <p>订单号： 12546593344526</p>
+                                <span class="time">2017-01-30 17:21</span>
+                            </div>
+                            <div class="main-m">
+                                <div class="img">
+                                    <img class="lazy" src="http://mpic.tiankong.com/8a5/a3a/8a5a3add3a77d981060fbd858dff9bda/EV601-043.jpg"/>
+                                </div>
+                                <div class="detail">
+                                    <h3>新中式露露服饰服饰服饰服饰</h3>
+                                    <p>
+                                        <i class="icon iconfont icon-location"></i>
+                                        <span>广东省文化服务中心</span>
+                                    </p>
+                                    <p>
+                                        <i class="icon iconfont icon-time"></i>
+                                        <span>2017-03-12 &nbsp;17:30-18:00</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="main-bot">
+                                <div class="info">
+                                    <span>失败理由：不给钱不让看</span>
+                                </div>
+                                <div class="ticket">
+                                    <p>报名成功</p>
+                                    <button>退订</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="main">
+                            <div class="main-top">
+                                <p>订单号： 12546593344526</p>
+                                <span class="time">2017-01-30 17:21</span>
+                            </div>
+                            <div class="main-m">
+                                <div class="img">
+                                    <img class="lazy" src="http://mpic.tiankong.com/8a5/a3a/8a5a3add3a77d981060fbd858dff9bda/EV601-043.jpg"/>
+                                </div>
+                                <div class="detail">
+                                    <h3>新中式露露服饰服饰服饰服饰</h3>
+                                    <p>
+                                        <i class="icon iconfont icon-location"></i>
+                                        <span>广东省文化服务中心</span>
+                                    </p>
+                                    <p>
+                                        <i class="icon iconfont icon-time"></i>
+                                        <span>2017-03-12 &nbsp;17:30-18:00</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="main-bot">
+                                <div class="info">
+                                    <span>失败理由：不给钱不让看</span>
+                                </div>
+                                <div class="ticket">
+                                    <p>报名成功</p>
+                                    <button>退订</button>
+                                </div>
+                            </div>
+                        </div>-->
+                    </div>
+                </div>
+            </div>
+            <!--订单详情-->
+        </div>
+        <input type="hidden" id="type" value="1">
+        <div class="qr-wrapper">
+            <div>
+                <div class="qr-code"></div>
+            </div>
+        </div>
+        <!-- <div class="history">
+             &lt;!&ndash; 顶栏&ndash;&gt;
+             <div class="top mui-row">
+                 <div class="mui-col-sm-6 mui-col-xs-6">
+                     <a href="#">当前活动</a>
+                 </div>
+                 <div class="cl"></div>
+                 <div class="mui-col-sm-6 mui-col-xs-6">
+                     <a href="#" class="active">历史活动</a>
+                 </div>
+             </div>
+             &lt;!&ndash; 顶栏&ndash;&gt;
+             <div class="blank"></div>
+             &lt;!&ndash;订单详情&ndash;&gt;
+             <div class="order">
+                 <div class="main">
+                     <div class="main-top">
+                         <p>订单号：&nbsp;12546593344526</p>
+                         <span class="time">2017-01-30 17:21</span>
+                     </div>
+                     <div class="main-m">
+                         <div class="img">
+                             <img class="lazy" src="http://mpic.tiankong.com/8a5/a3a/8a5a3add3a77d981060fbd858dff9bda/EV601-043.jpg"/>
+                         </div>
+                         <div class="detail">
+                             <h3>新中式露露服饰服饰服饰服饰</h3>
+                             <p>
+                                 <i class="icon iconfont icon-location"></i>
+                                 <span>广东省文化服务中心</span>
+                             </p>
+                             <p>
+                                 <i class="icon iconfont icon-time"></i>
+                                 <span>2017-03-12 &nbsp;17:30-18:00</span>
+                             </p>
+                         </div>
+                     </div>
+                     <div class="main-bot">
+                         <div class="seat">
+                             <span>2排3座</span>
+                             <span>2排3座</span>
+                         </div>
+                         <div class="ticket">
+                             <p>未取票</p>
+                             <button>退订</button>
+                             <button class="frame ">取票码</button>
+                         </div>
+                     </div>
+                 </div>
+             </div>
+             &lt;!&ndash;订单详情&ndash;&gt;
+         </div>-->
+    </div>
+</div>
+<script type="text/javascript" th:inline="javascript">
+    var userId = $("#temp_userId").val();
+    var type = 0;
+    $(document).ready(function () {
+        modelData();
+        mui(".top").on('tap','.mui-col-sm-6',function () {
+            $(this).addClass('active').siblings().removeClass('active');
+            type = $(this).find('a').attr('data-type');
+            $("#model-list").html('');
+            modelData();
+            mui('#model-list-panel').pullRefresh().scrollTo(0,0,0);
+            mui('#model-list-panel').pullRefresh().refresh(true);
+        })
+    })
+    function modelData(page, size) {
+        var page = page || 1;
+        var size = size || 10;
+        dataInit.ajax({
+            api: [[${apiPath.mytraList}]],
+            params: {
+                page:page,
+                pageSize:size,
+                userid:userId,
+                type:type,
+                cultid:$.cookie('cultid')
+            },
+            forceUpdate: false,
+            fn: function (data) {
+                var params = {
+                    page: page,
+                    size: size,
+                    total: data.total
+                }
+                dataInit.htmlAdd(page, showModelHtml(data));
+                dataInit.pullUp(params, modelData);
+            }
+        })
+    }
+
+    function showModelHtml(data) {
+        if(data && data.code == 0){
+            var html = '';
+            if(data.rows.length>0){
+                for (var i in data.rows) {
+                    var model = data.rows[i];
+                    var img = data.imgPath + dataInit.getSmallImage(model.trainimg);
+                    var state = model.state + "";
+                    var state_text;
+                    var statedesc = model.statedesc;
+                    var statedescCls = 'none', delCls = 'none', cancelCls = 'none';
+                    var adrCls = type == 1 ? "none" : "";
+                    switch (state) {
+                        case "1":
+                            state_text = "报名申请中";
+                            cancelCls = 'block';
+                            break;
+                        case "2":
+                            state_text = "取消报名";
+                            delCls = 'block';
+                            break;
+                        case "3":
+                            state_text = "审核失败";
+                            statedescCls = 'block';
+                            delCls = 'block';
+                            break;
+                        case "4":
+                            state_text = "等待面试";
+                            break;
+                        case "5":
+                            state_text = "面试不通过";
+                            statedescCls = 'block';
+                            delCls = 'block';
+                            break;
+                        case "6":
+                            state_text = "报名成功";
+                            break;
+                    }
+
+                    //报名结束培训结束后，不显示取消订单
+                    if (data.data.nowTime>model.enrollendtime || data.data.nowTime>model.endtime ){
+                        cancelCls = 'none';
+                    }
+
+                    var _hrefUrl = '';
+                    html+='<div class="main">\
+                                    <div class="main-top">\
+                                        <p>订单号： '+model.id+'</p>\
+                                        <span class="time">'+moment(model.crttime).format("YYYY-MM-DD HH:mm:ss")+'</span>\
+                                    </div>\
+                                    <a href="javascript:goPage(\''+model.traid+'\')">\
+                                        <div class="main-m">\
+                                            <div class="img">\
+                                                <img class="lazy" src="'+img+'"/>\
+                                            </div>\
+                                            <div class="detail">\
+                                                <h3>'+model.title+'</h3>\
+                                                <p class="'+adrCls+'">\
+                                                    <i class="icon iconfont icon-location"></i>\
+                                                    <span>'+model.address+'</span>\
+                                                </p>\
+                                                <p>\
+                                                    <i class="icon iconfont icon-time"></i>\
+                                                    <span>'+moment(model.starttime).format('YYYY-MM-DD')+' ~ '+moment(model.endtime).format('YYYY-MM-DD')+'</span>\
+                                                </p>\
+                                            </div>\
+                                        </div>\
+                                    </a>\
+                                <div class="main-bot">\
+                                    <div class="info '+statedescCls+'">\
+                                        <span>失败理由：'+statedesc+'</span>\
+                                    </div>\
+                                    <div class="ticket">\
+                                        <p>'+state_text+'</p>\
+                                        <button class="'+cancelCls+'" onclick="orderCancel('+model.id+')">取消订单</button>\
+                                        <button class="'+delCls+'" onclick="orderDel('+model.id+')">删除订单</button>\
+                                    </div>\
+                                </div>\
+                            </div>';
+                }
+            }else {
+                html = "<div class='newbility-no-msg'></div>";
+            }
+            return html;
+        }else {
+            mui.toast(data.msg || '获取订单信息失败')
+        }
+    }
+
+    //取消订单
+    function orderCancel(itemId){
+        var btnArray = ['否', '是'];
+        mui.confirm('您确定取消预订吗？', '', btnArray, function (e) {
+            if (e.index == 1) {
+                dataInit.ajax({
+                    api:[[${apiPath.userOffgatherApplyTra}]],
+                    params:{
+                        state:1,
+                        userId:userId,
+                        orderId:itemId
+                    },
+                    fn:function(data){
+                        if(data.code == 0){
+                            $("#model-list").html("");
+                            modelData();
+                            mui.toast("订单取消成功");
+                        }
+                    }
+                })
+            }
+        });
+    }
+
+    //删除订单
+    function orderDel(itemId){
+        var btnArray = ['否', '是'];
+        mui.confirm('您确定删除预订吗？', '', btnArray, function (e) {
+            if (e.index == 1) {
+                dataInit.ajax({
+                    api:[[${apiPath.userUngatherApplyTra}]],
+                    params:{
+                        userId:userId,
+                        orderId:itemId
+                    },
+                    fn:function(data){
+                        if(data.code == 0){
+                            $("#model-list").html("");
+                            modelData();
+                            mui.toast("订单删除成功");
+                        }
+                    }
+                })
+            }
+        });
+    }
+    function goPage(id) {
+        var actUrl = [[${basePath}]]+"/train/detail?id=";
+        if(type == 1){
+            actUrl = [[${basePath}]]+"/train/liveDetail?id=";
+        }
+        window.location.href = actUrl+id;
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<!--<input type="hidden" id="a_open" value="0">-->
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/brand/brand.css'" >
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/public/detail.css'">
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/venue/timeSlot.css'">
+<script th:src="${basePath}+'/assets/js/field/fieldOrder.js'"></script>
+<script th:src="${basePath}+'/assets/js/field/roomOrderTool.js'"></script>
+<div th:include="guangdong/public/leftBar :: copy"></div>
+<div id="page">
+    <div class="mui-content">
+        <div class="wrapper-detail">
+            <div id="room-detail"></div>
+            <div class="wrapper-detail-box" style="display: none" id="roomTime">
+                <input type="hidden" id="roomTimeValue" value="">
+                <h2>选择时间段</h2>
+                <div class="orderPayCont">
+                    <div class="dateCont clearfix">
+                        <div class="weekCont clearfix">
+                            <div class="week-btn week-prev">
+                                <i class="iconfont icon-return"></i>
+                            </div>
+                            <div class="week-btn week-next">
+                                <i class="iconfont icon-enter"></i>
+                            </div>
+                            <div class="week-groups">
+                                <ul></ul>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div class="tableListCont">
+                        <table>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!--<div class="orderPayBg">
+                        <div class="orderPay"><a href="javascript:void(0)">立即预订</a></div>
+                    </div>-->
+                </div>
+            </div>
+        </div>
+
+
+
+        <nav class="mui-bar mui-bar-tab">
+            <div th:include="guangdong/public/collectionAndVoteup :: copy" class="zan-collection mui-tab-item"></div>
+            <div class="mui-tab-item" style="display: none" ><a class="goNext" href="javascript:void(0)">立即预订</a></div>
+        </nav>
+        <input type="hidden" id="temp_type" value="3">
+        <input type="hidden" id="toproject" value="WBGX">
+        <input type="hidden" id="commType">
+
+        <div class="wrapper-detail">
+            <div class="wrapper-detail-box">
+                <h2>相关资源</h2>
+                <div class="picture" >
+                    <div th:include="guangdong/resource/publicres :: copy" class="photo" id="res-box">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" th:inline="javascript">
+    var itemId = dataInit.getUrlParam('id');
+    var userid = $("#temp_userId").val();
+    var map_params = {};
+    $().ready(function () {
+        dataInit.ajax({
+            api: [[${apiPath.roomdetail}]],
+            fn: function (data) {
+                showRoomDetail(data);
+            },
+            params: {id: itemId}
+        });
+        dataInit.ajax({
+            api: [[${apiPath.roomTimeMaxMinDay}]],
+            fn: function (data) {
+                getBeginDay(data);
+                initWeekList(new Date());
+            },
+            params: {roomid: itemId},
+        });
+        //goNext();
+        mui('body').on('tap','#_address',function () {
+            dataInit.menuMap(map_params)
+        })
+    })
+    function showRoomDetail(data) {
+        if (data.code == 0) {
+            var model = data.data;
+            var img = data.imgPath + model.imgurl;
+            var facility = '', facilityHtml = '';
+            if (model.facility) {
+                facility = model.facility.split(",");
+                if (model.facility) {
+                    facilityHtml += '<div class="label"><i class="iconfont icon-computer"></i> 设施：';
+                    for (var j in facility) {
+                        facilityHtml += '<span>' + facility[j] + '</span>';
+                    }
+                    facilityHtml += '</div>';
+                }
+            }
+            map_params = {
+                latitude:model.latitude,
+                longitude:model.longitude,
+                name: model.address+model.location,
+                address: model.address+model.location
+            }
+            var summary = dataInit.removeHTMLTag(model.summary);
+            var description = dataInit.removeHTMLTag(model.description);
+            var show_1 = summary ? "" : "none";
+            var show_2 = summary ? "" : "none";
+            var state = model.state;
+            var model_html = '<div class="wrapper-detail-box">\
+                            <div class="img">\
+                                 <img id="image" class="lazy" src="' + img + '"/>\
+                            </div>\
+                            <div class="info">\
+                                <div class="title">' + model.title + '</div>\
+                                <p><i class="iconfont icon-group"></i> 可容纳人数：' + model.sizepeople + '人</p>\
+                                <p><i class="iconfont icon-mianji1"></i> 面积：' + model.sizearea + 'm²</p>\
+                                ' + facilityHtml + '\
+                            </div>\
+                            <div class="address" id="_address"><i class="iconfont icon-coordinates"></i> 地址：<span id="address">' + model.address + model.location + '</span></div>\
+                                <a href="tel:'+model.phone+'" class="telbtn"><div class="phone"><i class="iconfont icon-mobilephone"></i> 电话：<span id="phone">' + model.phone + '</span></div></a>\
+                         </div>\
+                         <div class="wrapper-detail-box ' + show_1 + '">\
+                            <h2>活动室介绍</h2>\
+                            <div class="detail-box-text" id="desc-cont-1">\
+                                ' + summary + '\
+                            </div>\
+                         </div>\
+                         <div class="wrapper-detail-box ' + show_2 + '">\
+                            <h2>活动室描述</h2>\
+                            <div class="detail-box-text" id="desc-cont-2">\
+                                ' + description + '\
+                            </div>\
+                         </div>';
+            $("#room-detail").html(model_html);
+            mui('.wrapper-detail-box').on('tap','.telbtn',function(){document.location.href=this.href});
+            cont.init({
+                panelCls: '#desc-cont-1,#desc-cont-2'
+            })
+        } else {
+            mui.toast(data.msg || '数据加载失败')
+        }
+    }
+
+    function getBeginDay(data) {
+        var orderTool = new RoomOrderTool({
+            basePath: [[${apiPath.roomApplyAll}]],
+            basePathHeader: [[${basePath}]],
+            orderCheckUrl: [[${apiPath.venueOrderCheck}]],
+            roomId: itemId,
+            userId: userid,
+            startDay: data.data.minDay,
+            endDay: data.data.maxDay
+        });
+        //扩展initWeekList,接管后续处理
+        var tempInitWeekList = initWeekList;
+        initWeekList = function (day) {
+            if (data.data.maxDay && data.data.minDay) {
+                if (data.data.minDay)
+                    var beginDay = new Date(data.data.minDay);
+                if (data.data.maxDay)
+                    var endDay = new Date(data.data.maxDay);
+                if (endDay < day) {
+                    day.setDate(day.getDate() - 4);
+                }
+                if (day <= beginDay) {
+                    day = beginDay;
+                    $(".week-prev").on("click.prev", function () {
+                        mui.toast("没有更多了");
+                    })
+                } else {
+                    $(".week-prev").off("click.prev");
+                }
+            }
+            if (data.data.maxDay && data.data.minDay) {
+                $("#roomTime").show();
+                $('.goNext').parent().show();
+            } else {
+                $('.goNext').parent().remove();
+                $("#roomTime").hide();
+            }
+            tempInitWeekList(day);
+            if (endDay <= day) {
+                $(".week-next").on("click.next", function () {
+                    mui.toast("没有更多了");
+                })
+            } else {
+                $(".week-next").off("click.next");
+            }
+            orderTool.initWeekDay(day);
+        };
+    }
+
+    /*function goNext() {
+        $('.goNext').on('click', function () {
+            if (userid) {
+                dataInit.ajax({
+                    api: [[${apiPath.venueOrderCheck}]],
+                    params: {roomTimeId: $("#roomTimeValue").val(), userId: userid},
+                    fn: nextPage
+                });
+            } else {
+                mui.toast('请登录');
+            }
+        })
+    }
+
+    function nextPage(data) {
+        if (data.code == 0) {
+        } else {
+            mui.toast(data.msg || '正在操作此功能的用户众多，请稍后尝试');
+            return;
+        }
+
+    }*/
+</script>
+</body>
+</html>

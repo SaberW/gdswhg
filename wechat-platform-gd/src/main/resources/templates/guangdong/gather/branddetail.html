@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/public/detail.css'" >
+<div th:include="guangdong/public/leftBar :: copy"></div>
+<div id="page">
+    <div class="mui-content" style="padding-bottom: 0">
+        <div class="wrapper-detail">
+            <div class="wrapper-detail-box" id="brand-detail">
+                <!--<div class="img">
+                    <img class="lazy" src="http://183.131.126.132:8092/whgstatic/img/2017/201709/20170921/e7f2cf27ba3b41b680c1f10651db8800.jpg"/>
+                </div>
+                <div class="info">
+                    <div class="title">摄影社</div>
+                    <p class="gather-info">品牌介绍品牌介绍品牌介绍品牌介绍品牌介绍品牌介绍品牌介绍品牌介绍品牌介绍</p>
+                </div>-->
+            </div>
+            <div class="wrapper-detail-box">
+                <div class="gather-nav">
+                    <span class="gather-nav-list active">众筹项目</span>
+                    <span class="gather-nav-list">众筹风采</span>
+                </div>
+                <div class="gather-nav-content on" id="model-list-panel">
+                    <div class="act-list">
+                        <ul id="model-list">
+                        </ul>
+                    </div>
+                </div>
+                <div th:include="guangdong/resource/publicres :: copy" class="gather-nav-content" id="res-box">
+                    <!--<h2>培训图片</h2>
+                    <div class="res-box scroll-box mui-scroll-wrapper mui-slider-indicatorcode mui-segmented-control mui-segmented-control-inverted">
+                        <div class="mui-scroll">
+                            <a>
+                                <div class="mask">休息室</div>
+                                <img th:src="${basePath}+'/assets/img/img_demo/q1.jpg'" alt="demo">
+                            </a>
+                            <a>
+                                <div class="mask">录音室</div>
+                                <img th:src="${basePath}+'/assets/img/img_demo/q2.jpg'" alt="demo">
+                            </a>
+                            <a>
+                                <div class="mask">活动室</div>
+                                <img th:src="${basePath}+'/assets/img/img_demo/q3.jpg'" alt="demo">
+                            </a>
+                            <a>
+                                <div class="mask">休息室</div>
+                                <img th:src="${basePath}+'/assets/img/img_demo/q4.jpg'" alt="demo">
+                            </a>
+                            <a>
+                                <div class="mask">会议室</div>
+                                <img th:src="${basePath}+'/assets/img/img_demo/q5.jpg'" alt="demo">
+                            </a>
+                            <a>
+                                <div class="mask">休息室</div>
+                                <img th:src="${basePath}+'/assets/img/img_demo/q6.jpg'" alt="demo">
+                            </a>
+                        </div>
+                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<input type="hidden" id="temp_type" value="29">
+<script type="text/javascript" th:inline="javascript">
+    var itemId = dataInit.getUrlParam('id');
+    $().ready(function(){
+        dataInit.ajax({
+            api: [[${apiPath.brandinfo}]],
+            fn: showDetail,
+            params: {id: itemId}
+        });
+        modelData();
+        mui(".gather-nav").on("click",".gather-nav-list",function () {
+            $(this).addClass("active").siblings().removeClass("active");
+            $(".gather-nav-content").eq($(".gather-nav .gather-nav-list").index(this)).addClass("on").siblings().removeClass('on');
+
+            cont.init({
+                panelCls:"#gather-remark",
+                row:1
+            })
+        });
+    })
+
+    function showDetail(data) {
+        if(data && data.code == 0){
+            var model = data.data;
+            $("#brand-detail").html('');
+            var imgPath = data.imgPath + dataInit.getBigImage(model.imgurl);
+            var description = removeHTMLTag(model.description);
+            var html = '<div class="img">'+
+                '<img class="lazy" src="'+imgPath+'"/>'+
+                '</div>'+
+                '<div class="info">'+
+                '<div class="title">'+model.title+'</div>'+
+                '<p class="gather-info">'+description+'</p>'+
+                '</div>';
+            $("#brand-detail").html(html);
+        }else {
+            mui.toast(data.msg || '数据加载失败');
+        }
+    }
+
+    function modelData(page, size) {
+        var page = page || 1;
+        var size = size || 10000;
+        var params = {};
+        dataInit.ajax({
+            api: [[${apiPath.brandgatherlist}]],
+            params: {
+                page: page,
+                pageSize: size,
+                brandid: itemId,
+                cultid: $.cookie('cultid')
+            },
+            forceUpdate: false,
+            fn: function (data) {
+                showModelHtml(data);
+            }
+        })
+    }
+
+    function showModelHtml(data) {
+        $("#model-list").html('');
+        var html = "";
+        var __success = '众筹成功';
+        var __fail = '众筹失败';
+        var __underway = '众筹中';
+        var dataNow = data.data.now;
+        if (data.code == 0 && data.rows.length > 0) {
+            for (var i in data.rows) {
+                var model = data.rows[i];
+                var img = data.imgPath + dataInit.getBigImage(model.imgurl);
+                //判断众筹状态
+                var isOverdueSize = isOverdue(model.issuccess,model.timestart,model.timeend,dataNow);
+                var _zcState = '';
+                switch (isOverdueSize){
+                    case 0:
+                        _zcState = __fail;
+                        break;
+                    case 1:
+                        _zcState = __success;
+                        break;
+                    case 2:
+                        _zcState = __underway;
+                        break;
+                    case 3:
+                        _zcState = '未开始';
+                        break;
+                }
+                //获得众筹达成率
+                var _DCl = parseInt((model.orderCount/model.nummin)*100);
+                _DCl = _DCl>100?100:_DCl;
+                //获得众筹剩余份数
+                var _ZC_Max = model.numsum - model.orderCount;
+                _ZC_Max = _ZC_Max<0 ? 0 : _ZC_Max;
+                //获取剩余天数
+                var SY_Days = getDays(model.timeend,dataNow,model.timestart);
+                //判断众筹分类：4活动，5培训，0其他
+                var _href_detail = '',label = '';
+                if(model.etype == 4){
+                    _href_detail = 'actdetail?id='+model.id;
+                    label = '活动众筹';
+                }else if(model.etype == 5) {
+                    _href_detail = 'traindetail?id='+model.id;
+                    label = '培训众筹';
+                }else if(model.etype == 0){
+                    _href_detail = 'otherdetail?id='+model.id;
+                    label = '其他众筹';
+                }else {
+                    _href_detail = 'otherdetail?id='+model.id;
+                    label = '其他众筹';
+                }
+                html += '<li><a href="'+_href_detail+'">'+
+                    '<div class="img">'+
+                    '<img class="lazy" src="'+img+'">'+
+                    '<div class="gather-title">'+
+                    '<h2><span class="label">'+label+'</span>'+model.title+'</h2>'+
+                    '</div></div><div class="gather-info">'+
+                    '<div class="gather-state">'+
+                    '<div class="zc-state">'+_zcState+'</div>'+
+                    '<span>'+model.numsum+'份</span>'+
+                    '</div><div class="gather-progress-bar">'+
+                    '<span style="width: '+_DCl+'%;"></span>'+
+                    '</div><div class="progress-table mui-clearfix">'+
+                    '<div class="progress-table-list">'+
+                    '<span>'+SY_Days+'</span>'+
+                    '</div><div class="progress-table-list">'+
+                    '<span>剩余'+_ZC_Max+'份</span>'+
+                    '</div><div class="progress-table-list">'+
+                    '<span>完成'+_DCl+'%</span></div></div></div></a></li>';
+            }
+        } else {
+            html = '<div class="newbility-no-msg2"></div>';
+        }
+        $("#model-list").html(html);
+    }
+
+    //判断众筹是否过期
+    function isOverdue(issuccess,timestart,timeend,dataNow) {
+        if(dataNow>timeend){
+            if(issuccess == 1){
+                return 1;//已成功
+            }else {
+                return 0;//已结束
+            }
+        }else if(dataNow<timeend && dataNow>timestart){
+            return 2;//众筹中
+        }else {
+            return 3;//未开始
+        }
+    }
+
+    //获取剩余天数
+    function getDays(timeend,_dataNow,timestart) {
+        if(_dataNow>timeend){
+            return '已结束';
+        }else if(_dataNow>timestart){
+            return '剩余 '+moment(timeend).fromNow(true);
+        }else {
+            return '未开始';
+        }
+    }
+    //给消息过滤HTML标签
+    function removeHTMLTag(str) {
+        //str = str.replace(/<\/?[^>]*>/g,''); //去除HTML tag
+        str = str.replace(/[ | ]*\n/g,'\n'); //去除行尾空白
+        //str = str.replace(/\n[\s| | ]*\r/g,'\n'); //去除多余空行
+        str=str.replace(/&nbsp;/ig,'');//去掉&nbsp;
+        return str;
+    }
+</script>
+</body>
+</html>

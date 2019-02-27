@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/usercenter/usercenter.css'">
+<div th:include="guangdong/public/leftBar :: copy"></div>
+<div id="page">
+    <div class="mui-content">
+        <div id="model-list-panel" class="mui-scroll-wrapper">
+            <div class="mui-scroll">
+                <div id="model-list">
+                    <!--<div class="message">
+                        <div class="message-m">
+                            <div class="txt">
+                                <p>消息标题消息标题消息标题消息标题消题消息标题息标题消息标题消息标题消息标题消息标题消息标题消息标题消息标题消息标题</p>
+                            </div>
+                            <div class="time">
+                                <p>2017-01-23</p>
+                            </div>
+
+                        </div>
+                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" th:inline="javascript">
+    var userId = $("#temp_userId").val(), type = 0;
+    var itemId = dataInit.getUrlParam('id');
+    $(document).ready(function () {
+        modelData()
+    })
+    function modelData(page, size) {
+        var page = page || 1;
+        var size = size || 10;
+        //ajax请求
+        dataInit.ajax({
+            api: [[${apiPath.mytraCheckList}]],
+            params: {
+                userid: userId,
+                traid:itemId
+            },
+            //
+            forceUpdate: false,
+            fn: function (data) {
+                var params = {
+                    page: page,
+                    pageSize: size,
+                    total: data.total
+                }
+                // console.log(data.rows);
+                dataInit.htmlAdd(page, showModelHtml(data));
+                dataInit.pullUp(params, modelData);
+            }
+        })
+    }
+    function showModelHtml(data) {
+        // dataInit.setStorage("messageSizeWX",data.total);
+        var html = '';
+        if (data && data.code == 0 && data.rows.length > 0) {
+            for (var i = 0; i < data.rows.length; i++) {
+                var model = data.rows[i];
+                // var time = moment(model.starttime).format("YYYY-MM-DD");
+                var state = "<p>"+model.userKqText+"</p>";
+                if(model.userKqText === "缺勤"){
+                    state = '<p style="color:red">'+model.userKqText+'</p>';
+                }
+                html += '<div class="message">'+
+                    '    <div class="message-m">'+
+                    '<a href="javascript:void(0)">'+
+                    '        <div class="txt">'+
+                    '            <p>'+model.kechengTitle+'</p>'+
+                    '        </div>'+
+                    '        <div class="time">'+ state +
+                    '        </div>'+
+                    '    </div>'+
+                    '</a>'+
+                    '</div>';
+            }
+        } else {
+            html = "<div class='newbility-no-msg'></div>";
+        }
+        return html;
+    }
+</script>
+</body>
+</html>

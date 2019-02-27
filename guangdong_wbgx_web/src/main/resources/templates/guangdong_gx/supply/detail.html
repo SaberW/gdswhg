@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong_gx/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/style/supply_sys/supplyDetail.css'">
+<script th:src="${basePath}+'/assets/common/js/whg.maps.js'"></script>
+<div class="wrapper clearfix">
+    <div class="content">
+        <!--公共主头部开始-->
+        <div id="header" th:include="guangdong_gx/public/header :: copy"></div>
+        <!--公共主头部结束-->
+        <div class="sys-main-top">
+            <div class="main-cont">
+                <div class="user-name cult-name">&nbsp;</div>
+                <div class="demo-title">
+                    <span class="supply-title" id="supply-title">&nbsp;</span>
+                    <span class="stars-list">
+                    </span>
+                </div>
+                <div class="user-detail">
+                    <i class="iconfont icon-geren"></i>联系人：<span class="user-name">&nbsp;</span>
+                    <i class="iconfont icon-dianhua"></i>联系电话：<span id="phone">&nbsp;</span>
+                </div>
+                <div class="time">发布时间：<span id="statemdfdate">&nbsp;</span></div>
+                <div class="button-list">
+                    <a href="javascript:void(0)"><i class="iconfont icon-collection" id="fav-btn"></i>收藏</a>
+                    <a href="javascript:void(0)" class="go-send" onclick="openDialog()">发送信息</a>
+                    <a href="javascript:void(0)" class="go-next button-gx-send">申请配送</a>
+                </div>
+            </div>
+        </div>
+        <div class="sys-main-bottom">
+            <div class="main-cont clearfix">
+                <div class="left-cont">
+                    <div class="item-cont">
+                        <div class="sys-main-title">
+                            <div class="title title-gx-h1">供需信息</div>
+                            <hr>
+                        </div>
+                        <div class="sys-detail-list">
+                            <div class="title title-gx-h2">供需信息内容：</div>
+                            <div class="html-panel" id="description"></div>
+                        </div>
+                        <div class="sys-detail-list">
+                            <div class="title">配送范围</div>
+                            <div class="html-panel" id="range"></div>
+                        </div>
+                        <div class="sys-detail-list" id="rangeMemo">
+                            <div class="title">配送说明</div>
+                            <div class="html-panel" id="memo"></div>
+                        </div>
+                        <div class="sys-detail-list" id="auto_item_target">
+                            <div class="title">配送时间</div>
+                            <div class="html-panel">
+                                <div class="dg-train-info dg-train-table" style="margin-bottom: 20px">
+                                    <table>
+                                        <tbody id="timeList">
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!--分页开始-->
+                                <div class="green-black" id="artPagging" style="margin-bottom: 40px"></div>
+                                <!--分页结束-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="right-cont">
+                    <div class="item-cont">
+                        <div class="sys-main-title">
+                            <div class="title title-gx-macth">类似需求</div>
+                            <hr>
+                        </div>
+                        <div class="recommend-cont-list">
+                            <ul id="recommendList">
+                                <!--<li class="clearfix">
+                                    <div class="img"><img th:src="${basePath}+'/assets/img/servicealliance/ditu.png'"></div>
+                                    <div class="info">
+                                        <div class="title">相关供需标题</div>
+                                        <div class="release">
+                                            发布者：<span>老周</span>
+                                        </div>
+                                        <div class="time">
+                                            发布于：<span>2017-9-11</span>
+                                        </div>
+                                    </div>
+                                </li>-->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="message-box-bg none">
+    <div class="message-cont">
+        <textarea placeholder="请输入您的信息内容" name="message" maxlength="500"></textarea>
+        <div class="message-btn">
+            <a hrer="javascript" class="btn" onclick="sendMessage()">发 送</a>
+        </div>
+    </div>
+    <div class="msg-close"></div>
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong_gx/public/footer :: copy"></div>
+<!--底部结束-->
+<input type="hidden" id="temp_type" value="26">
+<div th:include="guangdong_gx/public/fav :: copy"></div>
+<script type="text/javascript" th:inline="javascript">
+    var itemId = dataInit.getUrlParam('id');
+    var userid = $("#temp_userId").val();
+    var crtuser = '';
+    var gxtype= '';
+    var pageTitle= '';
+    $(document).ready(function () {
+        dataInit.ajax({
+            api: [[${apiPath.canApply}]],
+            fn: function (data) {
+                if(data.data == true){
+                    $(".go-next").show();
+                        $(".go-next").on("click",function () {
+                            window.location.href = [[${basePath}]]+'/res-center/stepOpenDay?id='+itemId+'&st=1&fktype='+fav_type+ '&crtuser='+crtuser+'&gxtype='+gxtype+'&title='+encodeURI(encodeURI(pageTitle));
+                        })
+                }else {
+                    $(".go-next").hide();
+                }
+            },
+            params: {id: itemId}
+        });
+        dataInit.ajax({
+            api: [[${apiPath.supplyInfo}]],
+            fn: showDetail,
+            params: {id: itemId}
+        });
+        //供需推荐列表
+        dataInit.ajax({
+            api: [[${apiPath.supplyInfoMatchList}]],
+            fn: supplyInfoMatchList,
+            params: {id: itemId,size:5}
+        });
+        //供需配送时间列表
+        showTimeList();
+
+        //供需指数 星星
+        dataInit.ajax({
+            api: [[${apiPath.showStarts}]],
+            fn: showStarts,
+            params: {id: itemId}
+        });
+
+        //供需配送范围
+        dataInit.ajax({
+            api: [[${apiPath.supplyGetGxCity}]],
+            fn: supplyGetGxCity,
+            params: {id: itemId}
+        });
+    })
+    function showDetail(data) {
+        if(data.code == 0 && data.data !='false'){
+            var model = data.data;
+            $("#phone").text(model.phone);
+            $("#supply-title").text(model.title);
+            pageTitle = model.title;
+            crtuser = model.crtuser;
+            var memo = model.notice;
+            if(memo&&memo!=""){
+                $('#memo').html(memo);
+            }else{
+                $('#rangeMemo').hide();
+            }
+            gxtype=model.gxtype;
+            if(!(userid!=""&&crtuser!=""&&crtuser!=userid)){
+                $(".go-next").hide();//信息发布者与申请配送者不能一致
+                $(".go-send").hide();
+            }
+            $("#statemdfdate").text(moment(model.statemdfdate).format("YYYY-MM-DD"));
+            $(".user-name").text(model.contacts);
+            $("#description").html(model.content);
+            $(".cult-name").text(model.cultidText);
+            setPageInfo4gxtype(model.gxtype);
+
+            switch (model.etype){
+                case '1':
+                    addAutoItem(model, ['场地类型','人数','面积'], ['reftype','renshu','cgmianji']);
+                    break;
+                case '2':
+                    addAutoItem(model, ['培训类型','老师','课程关键字'], ['reftype','pxlaoshi','ekey']);
+                    break;
+                case '3':
+                    addAutoItem(model, ['类型','关键字'], ['reftype','ekey']);
+                    break;
+                case '4':
+                    addAutoItem(model, ['节目关键字','演员','演出时长','表演人数'], ['ekey','zyyanyuan','zyshichang','renshu']);
+                    break;
+                case '5':
+                    addAutoItem(model, ['展览类型','展览关键字'], ['reftype','ekey']);
+                    break;
+                case '6':
+                    addAutoItem(model, ['姓名','关键字','艺术门类'], ['zjxingming','ekey','arttype']);
+                    break;
+            }
+        }else {
+            rongDialog.init({
+                ico : 2, //1 勾  2 叉
+                type : 1,
+                desc : data.msg
+            });
+        }
+
+    }
+
+    function addAutoItem(info, names, keys){
+        var jqTarget = $("#auto_item_target");
+
+        var _temp = '<div class="sys-detail-list">\
+                <div class="title">配送范围</div>\
+                <div class="html-panel"></div>\
+                </div>';
+
+        for(var i=0; i<keys.length; i++){
+            if (!keys[i] || keys[i]=='' || !info[keys[i]] || info[keys[i]]==''){
+                continue;
+            }
+            var name = (i>=names.length)? "" : names[i];
+            var hitem = $(_temp);
+            hitem.find(".title").text(name);
+            hitem.find(".html-panel").html(info[keys[i]]);
+
+            jqTarget.before(hitem);
+        }
+    }
+
+    function setPageInfo4gxtype(gxtype){
+        var title_h1 = $(".title-gx-h1");
+        var title_h2 = $(".title-gx-h2");
+        var button_send = $(".button-gx-send");
+        var title_macth = $(".title-gx-macth");
+
+        if (gxtype && gxtype == "1") {
+            title_h1.text("需求信息");
+            button_send.text("提供配送");
+            title_macth.text("类似需求");
+        }else{
+            title_h1.text("供给信息");
+            button_send.text("申请配送");
+            title_macth.text("类似供给");
+        }
+        title_h2.text(title_h1.text()+"内容");
+    }
+
+    function showTimeList(page,rows) {
+        var params_page = page || 1;
+        var params_rows = rows || 3;
+        //page pageSize  cultid  type  styletype
+        var params = {
+            page: params_page,
+            pageSize: params_rows,
+            id: itemId
+        }
+        dataInit.ajax({
+            api: [[${apiPath.supplyTimeList}]],
+            fn: function (data) {
+                timeList(data);
+                dataInit.pageInit('artPagging', params_page, params_rows, data.total, showTimeList);
+            },
+            params: params
+        });
+    }
+    function timeList(data) {
+        if(data.code == 0 && data.rows.length>0){
+            var _timeList = data.rows;
+            if(_timeList.length<10 && data.total <10){
+                $("#artPagging").hide();
+            }
+            $("#timeList").empty();
+            var TimeListHtml = "";
+            for (var i in _timeList) {
+                var activeTime = moment(_timeList[i].timestart).format('YYYY-MM-DD HH:mm:ss');
+                var endTime = moment(_timeList[i].timeend).format('YYYY-MM-DD HH:mm:ss');
+                var j = parseInt(i) + 1;
+                TimeListHtml += '<tr>' +
+                    '<td class="not-conform">' + j + '</td>' +
+                    '<td class="not-conform">' + activeTime + '</td>' +
+                    '<td class="not-conform">' + endTime + '</td>' +
+                    '</tr>';
+            }
+            $("#timeList").html(TimeListHtml);
+        }else {
+            rongDialog.init({
+                ico : 2, //1 勾  2 叉
+                type : 1,
+                desc : data.msg
+            });
+        }
+    }
+    function supplyGetGxCity(data) {
+        if(data.data && data.code == 0){
+            $("#range").html(data.data.city);
+        }else {
+            rongDialog.init({
+                ico : 2, //1 勾  2 叉
+                type : 1,
+                desc : data.msg
+            });
+        }
+    }
+    function supplyInfoMatchList(data) {
+        if(data.data && data.code == 0){
+            //推荐列表
+            var tjvenlist = data.rows;
+            $("#recommendList").empty();
+            if(tjvenlist && tjvenlist.length){
+                var i_length = tjvenlist.length>3 ? 3 : tjvenlist.length;
+                for (var i=0;i<i_length;i++) {
+//                    var imgPathT = data.imgPath + dataInit.getBigImage(tjvenlist[i].image);
+                    var createTime = moment(tjvenlist[i].statemdfdate).format('YYYY-MM-DD');
+                    $("#recommendList").append(
+                        '<li class="clearfix">'+
+//                        '<div class="img"><img src=""></div>'+
+                        '<div class="info">'+
+                        '<div class="title"><a href="detail?id='+tjvenlist[i].id+'">'+tjvenlist[i].title+'</a></div>'+
+                        '<div class="release">'+
+                        '发布者：<span>'+tjvenlist[i].cultidName+'</span>'+
+                        '</div>'+
+                        '<div class="time">'+
+                        '发布于：<span>'+createTime+'</span>'+
+                        '</div>'+
+                        '</div>'+
+                        '</li>'
+                    );
+                }
+            }else {
+                $("#recommendList").append('<div class="public-no-message-detail"></div>');
+            }
+        }else {
+            rongDialog.init({
+                ico : 2, //1 勾  2 叉
+                type : 1,
+                desc : data.msg
+            });
+        }
+
+    }
+
+    //打开消息框
+    function openDialog(){
+        $('.message-box-bg').fadeIn();
+        $(window).keyup(function(e){
+            if(e.keyCode==27){
+                $('.message-box-bg').fadeOut();
+            }
+        });
+        $('.msg-close').on('click',function(){
+            $('.message-box-bg').fadeOut();
+        })
+    }
+
+    //发布信息
+    function sendMessage(){
+        var message = $("textarea[name='message']").val();
+        if(message.length <= 0){
+            rongDialog.init({
+                ico : 2,
+                type : 1,
+                desc : "请输入信息"
+            });
+        }else{
+            var params = {
+                type : 1,
+                message : message,
+                fromuserid : userid,
+                touserid : crtuser,
+                reftype : $("#temp_type").val(),
+                refid : itemId
+            }
+            dataInit.ajax({
+                api:[[${apiPath.sendMessage}]],
+                params:params,
+                fn:function(data){
+                    if(data.code == 0){
+                        $(".message-box-bg").fadeOut();
+                        rongDialog.init({
+                            ico : 1,
+                            type : 1,
+                            desc : data.msg || "发送成功",
+                            nextFn:function(){
+                                $("textarea[name='message']").val("");
+                            }
+                        });
+                    }else{
+                        rongDialog.init({
+                            ico : 2,
+                            type : 1,
+                            desc : data.msg || "系统异常"
+                        });
+                    }
+                }
+            })
+        }
+    }
+
+    $(function(){
+        var showDeliveryUrl = [[${apiPath.showDelivery}]];
+        ShowApplyList.init(showDeliveryUrl, dataInit.getUrlParam('id'));
+    });
+</script>
+<script th:src="${basePath}+'/assets/common/js/showapplylist.js'"></script>
+</body>
+</html>

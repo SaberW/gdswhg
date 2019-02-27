@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong_ytj/public/header :: copy"></head>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/activityList.css'">
+<body class="mui-content">
+<header>
+    <div class="black"><i class="mui-icon mui-icon-arrowleft"></i> 返回</div>
+    <div id="searchBtn" class="top-right-search">
+        <i class="mui-icon mui-icon-search"></i>
+    </div>
+</header>
+
+<nav id="topNav" class="noScroll">
+    <ul>
+        <li data-type="areas"><span>区域</span> <i class="mui-icon mui-icon-arrowdown"></i></li>
+        <li data-type="rtype"><span>类型</span> <i class="mui-icon mui-icon-arrowdown"></i></li>
+        <li data-type="type"><span>标签</span> <i class="mui-icon mui-icon-arrowdown"></i></li>
+        <li data-type="sort"><span>排序</span> <i class="mui-icon mui-icon-arrowdown"></i></li>
+    </ul>
+</nav>
+
+<div id="selectList">
+    <div class="mui-scroll-wrapper" id="areas">
+        <div class="mui-scroll">
+            <ul class="mui-table-view mui-table-view-radio">
+                <li class="mui-table-view-cell mui-selected" data-id="">
+                    <a class="mui-navigate-right">
+                        <span class="menus">全部</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="mui-scroll-wrapper" id="rtype">
+        <div class="mui-scroll">
+            <ul class="mui-table-view mui-table-view-radio">
+                <li class="mui-table-view-cell mui-selected" data-id="">
+                    <a class="mui-navigate-right">
+                        <span class="menus">全部</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="mui-scroll-wrapper" id="type">
+        <div class="mui-scroll">
+            <ul class="mui-table-view mui-table-view-radio">
+                <li class="mui-table-view-cell mui-selected" data-id="">
+                    <a class="mui-navigate-right">
+                        <span class="menus">全部</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="mui-scroll-wrapper" id="sort">
+        <div class="mui-scroll">
+            <ul class="mui-table-view mui-table-view-radio">
+                <li class="mui-table-view-cell mui-selected" data-id="">
+                    <a class="mui-navigate-right">
+                        <span class="menus">全部</span>
+                    </a>
+                </li>
+                <li class="mui-table-view-cell" data-id="1">
+                    <a class="mui-navigate-right">
+                        <span class="menus">可预定</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<main>
+
+    <!--下拉刷新容器-->
+    <div id="refreshContainer" class="mui-content mui-scroll-wrapper" style="margin-top: 170px;">
+        <div class="mui-scroll">
+            <!--数据列表-->
+            <ul class="mui-table-view mui-table-view-chevron data_list" id="psList"></ul>
+        </div>
+    </div>
+
+</main>
+
+<script th:inline="javascript">
+
+    var page__ = 1;
+    var keyword = '';
+
+    function init() {
+        mui('#areas,#type,#sort,#rtype').scroll({
+            bounce: false
+        });
+        mui.init({
+            pullRefresh : {
+                container:"#refreshContainer",
+                down : { // 下拉刷新
+                    height: 50,
+                    callback : function () {
+                        page__ = 1;
+                        keyword = '';
+                        setTimeout(function () {
+                            getList(1,function (data) {
+                                createList(data,1);
+                                mui('#refreshContainer').pullRefresh().endPulldownToRefresh();
+                                mui('#refreshContainer').pullRefresh().refresh(true);
+                            })
+                        },500)
+                    }
+                },
+                up : {  // 上拉加载
+                    height:100,//可选.默认50.触发上拉加载拖动距离
+                    auto:false,//可选,默认false.自动上拉加载一次
+                    contentrefresh : "正在加载...",//可选，正在加载状态时，上拉加载控件上显示的标题内容
+                    contentnomore:'没有更多数据了',//可选，请求完毕若没有更多数据时显示的提醒内容；
+                    callback :function () {
+                        setTimeout(function () {
+                            getList(page__,function (data) {
+                                var noMore = false;
+                                var allPage = Math.ceil(data.total / data.pageSize)+1;
+                                if( page__ > allPage ){
+                                    noMore = true
+                                }else{
+                                    createList(data);
+                                }
+                                mui('#refreshContainer').pullRefresh().refresh(true);
+                                //参数为true代表没有更多数据了。
+                                mui('#refreshContainer').pullRefresh().endPullupToRefresh(noMore);
+                            });
+                        },500);
+                    }
+                }
+            }
+        });
+        initContent();
+        bindEvent();
+        getList(1,function (e) {
+            createList(e,1);
+        });
+    }
+    init();
+
+    function initContent() {
+        // 获取场馆类型
+        $.post( [[${rootUrl}]] + 'api/comm/getTypes' ,{
+            type: 2,
+            cultid: $.cookie('cultid')
+        },function (r) {
+            var data = JSON.parse(r);
+            if(data.code == '0'){
+                var li = '';
+                $.each(data.rows,function (i, v) {
+                    li+= '<li class="mui-table-view-cell" data-id="'+v.id+'">' +
+                        '<a class="mui-navigate-right">' +
+                        '<span class="menus">'+v.name+'</span>' +
+                        '</a>' +
+                        '</li>';
+                });
+                $('#rtype').find('ul').append(li);
+            }else{
+                mui.alert(data.msg,'提示');
+            }
+        });
+        // 获取场馆标签
+        $.post( [[${rootUrl}]] + 'api/comm/getTags' ,{
+            type: 2,
+            cultid: $.cookie('cultid')
+        },function (r) {
+            var data = JSON.parse(r);
+            if(data.code == '0'){
+                var li = '';
+                $.each(data.rows,function (i, v) {
+                    li+= '<li class="mui-table-view-cell" data-id="'+v.id+'">' +
+                        '<a class="mui-navigate-right">' +
+                        '<span class="menus">'+v.name+'</span>' +
+                        '</a>' +
+                        '</li>';
+                });
+                $('#type').find('ul').append(li);
+            }else{
+                mui.alert(data.msg,'提示');
+            }
+        });
+
+        // 获取区域
+        var city = $.cookie('city');
+        if( city == '' || city == undefined || city == 'undefined'){
+            city = '广东省';
+            changeProvince(city, null, function(cityList){
+                var li = '';
+                $.each(cityList,function (i, v) {
+                    li += '<li class="mui-table-view-cell" data-name="'+v.name+'" data-id="'+v.id+'">' +
+                        '<a class="mui-navigate-right">' +
+                        '<span class="menus">'+v.name+'</span>' +
+                        '</a>' +
+                        '</li>'
+                });
+                $('#areas').find('ul').append(li);
+            });
+        }else {
+            changeCity(city, null, function(cityList){
+                if(cityList.length>0) {
+                    var li = '';
+                    $.each(cityList,function (i, v) {
+                        li += '<li class="mui-table-view-cell" data-name="'+v.name+'" data-id="'+v.id+'">' +
+                            '<a class="mui-navigate-right">' +
+                            '<span class="menus">'+v.name+'</span>' +
+                            '</a>' +
+                            '</li>'
+                    });
+                    $('#areas').find('ul').append(li);
+                }else{//为空时 说明检索的是 区域以下的镇街，此时要用部门来替换
+                    $.post([[${apiPath.depts}]],{cultid: $.cookie('cultid')},function (r) {
+                        if(r.code=='0' && r.data.length){
+                            var li= '';
+                            $.each(r.data,function (i, v) {
+                                li += '<li class="mui-table-view-cell" data-name="'+v.name+'" data-id="'+v.id+'">' +
+                                    '<a class="mui-navigate-right">' +
+                                    '<span class="menus">'+v.name+'</span>' +
+                                    '</a>' +
+                                    '</li>'
+                            });
+                            $('#areas').find('ul').append(li);
+                        }
+                    });
+                }
+            });
+        }
+
+    }
+
+
+    function bindEvent() {
+        $('#psList').on('tap','li',function () {
+            var id = $(this).attr('data-id');
+            location.href = 'venueDtl?id='+id;
+        });
+        $('.black').on('tap',function () {
+            location.href = 'index';
+        });
+        mui('#topNav').on('tap','li',function () {
+            if($(this).hasClass('active')){
+                $(this).removeClass('active');
+                $('#'+$(this).attr('data-type')).hide();
+            }else{
+                $(this).addClass('active').siblings('li').removeClass('active');
+                $('#'+$(this).attr('data-type')).show().siblings('.mui-scroll-wrapper').hide();
+            }
+        });
+        $('#areas,#type,#sort,#rtype').on('tap',function (e) {
+            var tar = e.target.id;
+            if(tar)$(this).hide();
+        });
+
+        mui('#selectList').on('selected','.mui-table-view-cell',function () {
+            var $m = $(this);
+            var text = $m.find('.menus').text();
+            var id = $m.parents('.mui-scroll-wrapper').attr('id');
+            getList(1,function (e) {
+                $('#'+id).hide();
+                $('[data-type="'+id+'"]').removeClass('active').find('span').text(text);
+                createList(e,1);
+                // mui('#refreshContainer').scroll().scrollTo(0,0,0);
+                mui('#refreshContainer').pullRefresh().scrollTo(0,0,0);
+                mui('#refreshContainer').pullRefresh().refresh(true);
+            });
+        });
+        $('#searchBtn').on('tap',function () {
+            mui.prompt('','','搜索',['确认','取消'],function (res) {
+                if(res.index){
+                    return ;
+                }
+                keyword = res.value;
+                page__ = 1;
+                getList(1,function (e) {
+                    createList(e,1);
+                });
+            },'div')
+        })
+    }
+
+    function getList(page_,callback) {
+        var cultid =    $.cookie('cultid');
+        var city =      $.cookie('city');
+        var province =  $.cookie('province');
+        var area =      $("#areas").find('.mui-selected').attr('data-name');
+        if( !cultid ){
+            city = area;
+            area = '';
+        }
+        var type =      $("#type").find('.mui-selected').attr('data-id');
+        var arttype =   $("#rtype").find('.mui-selected').attr('data-id');
+        var sort =      $("#sort").find('.mui-selected').attr('data-id');
+        var param = {
+            size:       12,
+            index:      page_,
+            content:    keyword,
+            cultid:     cultid,
+            province:   province, //省
+            city:       city, //市
+            area:       area, //区域
+            district:   area,
+            tag:        type,
+            type:       arttype,
+            isUse:      sort
+        };
+        for(var k in param){
+            if (!param[k] || param[k]=='' || param[k]=='undefined')
+                delete param[k];
+        }
+        $.post( [[${rootUrl}]] + 'api/venue/list' ,param,function (r) {
+            var data = JSON.parse(r);
+            if(data.code == '0'){
+                if(data.rows){
+                    page__ += 1;
+                    callback(data);
+                }
+            }else{
+                mui.alert(data.msg,'提示');
+            }
+        });
+    }
+
+    function createList(data,page_) {
+        if(!data.rows.length){
+            return $('#psList').html('<li class="noMsg">暂无数据</li>');
+        }
+        var li = '';
+        var imgUrl = data.imgPath;
+        $.each(data.rows,function (i, v) {
+            var image = imgUrl + v.image;
+            var sTime = new Date(v.starttime).format('yyyy-MM-dd');
+            var eTime = new Date(v.endtime).format('yyyy-MM-dd');
+            li += '<li class="infoItem clearfix" data-id="'+v.itemId+'">' +
+                '<img src="'+image+'">' +
+                '<div class="content">' +
+                '<div class="title">' +
+                v.title +
+                '</div>' +
+                '<div class="footer">' +
+                '<span>地点：'+ v.address + '</span>' +
+                '</div>' +
+                '</div>' +
+                '</li>';
+        });
+        if(page_ == '1'){
+            $('#psList').html(li);
+        }else{
+            $('#psList').append(li);
+        }
+    }
+
+</script>
+
+</body>
+</html>

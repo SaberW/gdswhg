@@ -1,0 +1,214 @@
+import java.text.SimpleDateFormat
+
+apply plugin: 'com.android.application'
+
+buildscript {
+    repositories {
+        mavenCentral()
+        mavenLocal()
+    }
+    dependencies {
+
+    }
+}
+
+def releaseTime() {
+    Date date = new Date();
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HHmmss", Locale.CHINA);
+    return sdf.format(date);
+}
+
+ext.buildProperty = null
+ext.appReleaseDir = ''
+
+def loadProperties() {
+    def proFile = file("gradle-build.properties")
+    Properties p = new Properties()
+    proFile.withInputStream { stream ->
+        p.load(stream)
+    }
+    buildProperty = p
+    appReleaseDir = p.appReleaseDir
+}
+
+loadProperties()
+
+android {
+    def app = rootProject.ext.android
+
+
+    compileSdkVersion 27;
+    defaultConfig {
+        applicationId "com.creatoo.guangdong_pos"
+        minSdkVersion app.minSdkVersion
+        targetSdkVersion app.targetSdkVersion
+        versionCode app.versionCode
+        versionName app.versionName
+        resConfigs app.resConfigs
+        testInstrumentationRunner app.testInstrumentationRunner
+        flavorDimensions app.flavorDimensions
+        multiDexEnabled true
+        ndk {
+            //设置支持的SO库架构
+            abiFilters "armeabi", "armeabi-v7a", "x86", "mips"
+        }
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = ["room.schemaLocation":
+                                     "$projectDir/schemas".toString()]
+            }
+        }
+    }
+
+    sourceSets {
+        androidTest.assets.srcDirs +=
+                files("$projectDir/schemas".toString())
+        main {
+            jni.srcDirs = []
+            jniLibs.srcDirs = ['src/main/jniLibs']
+        }
+
+
+        // Move the tests to tests/java, tests/res, etc...
+        androidTest.setRoot('tests')
+
+        // Move the build types to build-types/<type>
+        // For instance, build-types/debug/java, build-types/debug/AndroidManifest.xml, ...
+        // This moves them out of them default location under src/<type>/... which would
+        // conflict with src/ being used by the main source set.
+        // Adding new build types or product flavors should be accompanied
+        // by a similar customization.
+        debug.setRoot('build-types/debug')
+        release.setRoot('build-types/release')
+    }
+
+    packagingOptions {
+        exclude 'META-INF/*'
+    }
+
+    dexOptions {
+        javaMaxHeapSize "2g"
+        preDexLibraries = false
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+
+
+    signingConfigs {
+        debug {
+            //empty debug config
+            keyAlias buildProperty.keyAlias
+            keyPassword buildProperty.keyPassword
+            storeFile file(buildProperty.storeFile)
+            storePassword buildProperty.storePassword
+        }
+        release {
+            keyAlias buildProperty.keyAlias
+            keyPassword buildProperty.keyPassword
+            storeFile file(buildProperty.storeFile)
+            storePassword buildProperty.storePassword
+        }
+    }
+
+    buildTypes {
+        debug {
+            //print log
+            buildConfigField "boolean", "LOG_DEBUG", buildProperty.debug_LOG_DEBUG
+            buildConfigField "boolean", "isDev", buildProperty.debug_isDev
+            buildConfigField "String", "versionNameSuffix", buildProperty.debug_versionNameSuffix
+            // versionNameSuffix "-debug"  混淆配置
+            minifyEnabled Boolean.parseBoolean(buildProperty.debug_minifyEnabled)
+            zipAlignEnabled Boolean.parseBoolean(buildProperty.debug_zipAlignEnabled)
+            shrinkResources Boolean.parseBoolean(buildProperty.debug_shrinkResources)
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard.cfg'
+            testProguardFile file("proguard.test.cfg")
+            signingConfig signingConfigs.debug
+        }
+        release {
+            debuggable true
+            //do not print log
+            buildConfigField "boolean", "LOG_DEBUG", buildProperty.release_LOG_DEBUG
+            buildConfigField "boolean", "isDev", buildProperty.release_isDev
+            buildConfigField "String", "versionNameSuffix", buildProperty.release_versionNameSuffix
+            // versionNameSuffix "-release"
+            minifyEnabled Boolean.parseBoolean(buildProperty.release_minifyEnabled)
+            zipAlignEnabled Boolean.parseBoolean(buildProperty.release_zipAlignEnabled)
+            shrinkResources Boolean.parseBoolean(buildProperty.release_shrinkResources)
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard.cfg'
+            testProguardFile file("proguard.test.cfg")
+            signingConfig signingConfigs.release
+
+            applicationVariants.all { variant ->
+                variant.outputs.each { output ->
+                    def outputFile = output.outputFile
+                    if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                        def fileName = "creatoo_v${defaultConfig.versionName}_${releaseTime()}_${variant.productFlavors[0].name}.apk"
+                        // output.outputFile = new File(output.outputFile.parent, fileName)
+                        // for deliver
+                        if (Boolean.parseBoolean(buildProperty.deliver)) {
+                            output.outputFile = new File(appReleaseDir + '/' + releaseTime(), fileName)
+                        }
+                    }
+                }
+            }
+        }
+        //noinspection all
+        task copyNativeLibs(type: Copy) {
+            // third party lib so
+            from(new File(projectDir, 'libs')) { include 'armeabi/*.so' }
+            into new File(buildDir, 'native-libs')
+        }
+
+        tasks.withType(JavaCompile) {
+            compileTask ->
+                //noinspection all
+                compileTask.dependsOn copyNativeLibs
+        }
+    }
+    productFlavors {
+        'creatoo-pos-guangdong' {
+        }
+    }
+
+    productFlavors.all { flavors ->
+        flavors.manifestPlaceholders = [channelValue: name]
+    }
+
+    repositories {
+        flatDir {
+            dirs 'libs'
+        }
+    }
+
+    buildToolsVersion '27.0.3'
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation project(path: ':library')
+    implementation rootProject.ext.dependencies.SupportAppcompatV7
+    implementation rootProject.ext.dependencies.SupportCardViewV7
+    implementation rootProject.ext.dependencies.Constraintlayout
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
+    releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
+    testImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
+    annotationProcessor rootProject.ext.dependencies.AndroidAnnotations
+    api rootProject.ext.dependencies.AndroidAnnotationsApi
+    implementation files('libs/sdtapi.jar')
+    implementation files('libs/publicSecurityIDCardLib.jar')
+    implementation(name: 'printlib-debug', ext: 'aar')
+    implementation files('libs/AMap_Location_V4.0.0_20180423.jar')
+
+
+//    api (rootProject.ext.dependencies.XRecyclerview){
+//        exclude group: 'com.android.support', module: 'recyclerview-v7'
+//        exclude group: 'com.android.support', module: 'appcompat-v7'
+//        exclude group: 'com.android.support', module: 'support-v4'
+//    }
+}

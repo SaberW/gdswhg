@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/rl_number_input"
+    >
+    <RelativeLayout
+        android:id="@+id/rl_input"
+        android:background="@drawable/ticket_code_input_shape"
+        android:layout_width="290dp"
+        android:layout_centerHorizontal="true"
+        android:layout_height="52dp"
+        android:orientation="horizontal">
+        <EditText
+            android:id="@+id/et_ticket_code"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:background="@null"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:textSize="14sp"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:maxLength="12"
+            android:inputType="none"
+            android:textColor="@color/black_33"
+            android:textColorHint="@color/gray_99"
+            android:hint="@string/input_code"
+            />
+        
+        <Button
+            android:id="@+id/btn_confirm"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/selector_ticket_confirm_btn_bg"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:text="@string/confirm"
+            android:layout_alignParentEnd="true"
+            android:gravity="center"/>
+
+    </RelativeLayout>
+
+    <com.creatoo.guangdong_pos.mvp.ui.wedget.keyboard.NumberKeyboardView
+        android:id="@+id/kbv_number_input"
+        android:layout_width="290dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_below="@+id/rl_input"
+        android:layout_centerHorizontal="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:keyBackground="@drawable/selector_keyboard_btn_bg"
+        android:keyPreviewLayout="@layout/preview_keyboard"
+        android:keyTextColor="@color/selector_ticket_keyboard_text"
+        android:keyTextSize="18sp"
+        android:labelTextSize="16sp"
+        android:shadowColor="#ffffff"
+        android:shadowRadius="0"
+        />
+</RelativeLayout>

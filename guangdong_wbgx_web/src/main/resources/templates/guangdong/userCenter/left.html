@@ -1,0 +1,48 @@
+<div th:fragment="copy">
+  <ul class="ltp">
+      <li data-title="message"><a th:href="${basePath}+'/'+${cultsite}+'/center/message'"><i class="iconfont icon-message"></i>我的消息</a><span class="logon-on"><em></em></span></li>
+    <li data-title="info"><a th:href="${basePath}+'/'+${cultsite}+'/center/info'"><i class="iconfont icon-geren"></i>基本信息</a></li>
+    <li data-title="activity"><a th:href="${basePath}+'/'+${cultsite}+'/center/activity'"><i class="iconfont icon-activity"></i>我的活动</a></li>
+    <!--<li data-title="train"><a th:href="${basePath}+'/center/train'"><i class="iconfont icon-barrage"></i>我的培训</a></li>-->
+    <li data-title="venue"><a th:href="${basePath}+'/'+${cultsite}+'/center/venue'"><i class="iconfont icon-manage"></i>我的场馆</a></li>
+    <!--<li data-title="club"><a th:href="${basePath}+'/center/club'"><em class="ico i-9"></em>我的团体</a></li>
+    <li data-title="upload"><a th:href="${basePath}+'/center/upload'"><em class="ico i-4"></em>我的上传</a></li>-->
+    <li data-title="favorite"><a th:href="${basePath}+'/'+${cultsite}+'/center/favorite'"><i class="iconfont icon-collection"></i>我的收藏</a></li>
+
+    <!--<li data-title="comment"><a th:href="${basePath}+'/center/comment'"><em class="ico i-2"></em>我的点评</a></li>
+    <li data-title="reader"><a th:href="${basePath}+'/center/reader/index'"><em class="ico i-5"></em>读者空间</a></li>-->
+    <li data-title="safely"><a th:href="${basePath}+'/'+${cultsite}+'/center/safely'"><i class="iconfont icon-businesscard"></i>安全设置</a></li>
+  </ul>
+  <script type="text/javascript">
+    var leftNav = {
+      top:$('.leftPanel ul li'),
+      init:function(){
+        var m = this;
+        $(document).ready(function(){
+          m.active();
+        });
+        m.top.on('click',function(){
+          m.topChnage($(this));
+        });
+      },
+      topChnage: function(e){
+        $(e).addClass("active").siblings().removeClass("active");
+      },
+      active:function(){
+        var m = this;
+        var url = document.URL;
+        var act = "";
+        url = url.split("/");
+        for(var i=0; i<url.length; i++){
+          if(url[i] == "center"){
+            act = url[i+1];
+            break;
+          }
+        }
+        act = act.split(/[\/#?\.]/)[0];
+        $(".leftPanel ul").find("li[data-title='"+act+"']").addClass("active");
+      }
+    }
+    leftNav.init();
+  </script>
+</div>

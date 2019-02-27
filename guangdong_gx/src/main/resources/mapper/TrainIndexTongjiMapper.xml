@@ -1,0 +1,481 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.creatoo.hn.dao.mapper.admin.TrainIndexTongjiMapper">
+
+	<!-- 根据文化馆标识统计线下培训发布数量-截止到当前日期 -->
+	<select id="countAllTrainIndex" resultType="hashmap" parameterType="hashmap">
+		select count(*) as cnt, 'XX' as name
+		from whg_tra t1
+		where t1.biz = 'PT'  and t1.islive = 0 and t1.state = 6 and t1.delstate = 0 <if test="cultid != null">and t1.cultid = #{cultid}</if>
+		<if test="cultids != null">
+			AND t1.cultid IN
+			<foreach item="item" index="index" collection="cultids" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		UNION ALL
+		select count(*) as cnt, 'ZB' as name
+		from whg_tra t1
+		where t1.biz = 'PT' and t1.islive = 1 and t1.state = 6 and t1.delstate = 0 <if test="cultid != null">and t1.cultid = #{cultid}</if>
+		<if test="cultids != null">
+			AND t1.cultid IN
+			<foreach item="item" index="index" collection="cultids" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		UNION ALL select count(*) as cnt, 'WZ' as name
+		from whg_tra_major t1
+		where t1.state = 6
+		<if test="cultid != null">and t1.cultid = #{cultid}</if>
+		<if test="cultids != null">
+			AND t1.cultid IN
+			<foreach item="item" index="index" collection="cultids" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		UNION ALL
+		select count(*) as cnt, 'SZ' as name
+		from whg_tra_teacher t1
+		where t1.state = 6
+		<if test="cultid != null">and t1.cultid = #{cultid}</if>
+		<if test="cultids != null">
+			AND t1.cultid IN
+			<foreach item="item" index="index" collection="cultids" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		UNION ALL
+		select count(*) as cnt, 'ZY' as name
+		from whg_drsc t1
+		where t1.drscstate = 6
+		<if test="cultid != null">
+			and t1.drscvenueid = #{cultid}
+		</if>
+		<if test="cultids != null">
+			AND t1.drscvenueid IN
+			<foreach item="item" index="index" collection="cultids" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+	</select>
+
+	<!-- 根据文化馆标识统计线下培训发布数量-按区域 -->
+	<select id="countXXTrainArea" resultType="hashmap" parameterType="hashmap">
+		<if test="cultLevel == 1">
+			select count(ta.city) as cnt, ta.city as name
+			from whg_tra ta
+			where
+			ta.biz = 'PT'
+			and ta.islive = #{islive}
+			and ta.state = 6
+			and ta.delstate = 0
+			and ta.cultid = #{cultid}
+			GROUP BY ta.city
+		</if>
+		<if test="cultLevel == 2">
+			select count(ta.area) as cnt, ta.area as name
+			from whg_tra ta
+			where
+			ta.biz = 'PT'
+			and ta.islive = #{islive}
+			and ta.state = 6
+			and ta.delstate = 0
+			and ta.cultid = #{cultid}
+			GROUP BY ta.area
+		</if>
+		<if test="cultLevel == 3">
+			select count(ta.deptid) as cnt, (select name from whg_sys_dept t where t.id = ta.deptid) as name
+			from whg_tra ta
+			where
+			ta.biz = 'PT'
+			and ta.islive = #{islive}
+			and ta.state = 6
+			and ta.delstate = 0
+			and ta.cultid = #{cultid}
+			GROUP BY ta.deptid
+		</if>
+	</select>
+
+
+	<!-- 根据文化馆标识统计发布数量-微专业-按区域 -->
+	<select id="countMajorArea" resultType="hashmap" parameterType="hashmap">
+		<if test="cultLevel == 1">
+			select count(ta.city) as cnt, ta.city as name
+			from whg_tra_major ta
+			where ta.state = 6 and ta.delstate = 0
+			and ta.cultid = #{cultid}
+			GROUP BY ta.city
+		</if>
+		<if test="cultLevel == 2">
+			select count(ta.area) as cnt, ta.area as name
+			from whg_tra_major ta
+			where ta.state = 6 and ta.delstate = 0
+			and ta.cultid = #{cultid}
+			GROUP BY ta.area
+		</if>
+		<if test="cultLevel == 3">
+			select count(ta.deptid) as cnt, (select name from whg_sys_dept t where t.id = ta.deptid) as name
+			from whg_tra_major ta
+			where ta.state = 6 and ta.delstate = 0
+			and ta.cultid = #{cultid}
+			GROUP BY ta.deptid
+		</if>
+	</select>
+
+	<!-- 根据文化馆标识统计发布数量-师资-按区域 -->
+	<select id="countTeacherArea" resultType="hashmap" parameterType="hashmap">
+		<if test="cultLevel == 1">
+			select count(ta.city) as cnt, ta.city as name
+			from whg_tra_teacher ta
+			where ta.state = 6 and ta.delstate=0 and ta.cultid = #{cultid}
+			GROUP BY ta.city
+		</if>
+		<if test="cultLevel == 2">
+			select count(ta.area) as cnt, ta.area as name
+			from whg_tra_teacher ta
+			where ta.state = 6 and ta.delstate=0 and ta.cultid = #{cultid}
+			GROUP BY ta.area
+		</if>
+		<if test="cultLevel == 3">
+			select count(ta.deptid) as cnt, (select name from whg_sys_dept t where t.id = ta.deptid) as name
+			from whg_tra_teacher ta
+			where ta.state = 6 and ta.delstate=0 and ta.cultid = #{cultid}
+			GROUP BY ta.deptid
+		</if>
+	</select>
+
+	<!-- 根据文化馆标识统计发布数量-培训资源-按区域 -->
+	<select id="countDrscArea" resultType="hashmap" parameterType="hashmap">
+		<if test="cultLevel == 1">
+			select count(ta.city) as cnt, ta.city as name
+			from whg_drsc ta
+			where ta.drscstate = 6 and ta.delstate=0 and ta.drscvenueid = #{cultid}
+			GROUP BY ta.city
+		</if>
+		<if test="cultLevel == 2">
+			select count(ta.area) as cnt, ta.area as name
+			from whg_drsc ta
+			where ta.drscstate = 6 and ta.delstate=0 and ta.drscvenueid = #{cultid}
+			GROUP BY ta.area
+		</if>
+		<if test="cultLevel == 3">
+			select count(ta.deptid) as cnt, (select name from whg_sys_dept t where t.id = ta.deptid) as name
+			from whg_drsc ta
+			where ta.drscstate = 6 and ta.delstate=0 and ta.drscvenueid = #{cultid}
+			GROUP BY ta.deptid
+		</if>
+	</select>
+
+	<!-- 根据文化馆标识统计线下培训发布数量-按类型 -->
+	<select id="countXXTrainType" resultType="hashmap" parameterType="hashmap">
+		select t3.name
+			, (select count(*)
+			from whg_tra t1
+			where  t1.biz = 'PT'  and t1.islive = #{islive} and t1.state = 6 and t1.delstate = 0 <if test="cultid != null">and t1.cultid = #{cultid}</if> and t1.etype=t3.id) as cnt
+		from whg_ywi_type t3
+		where <if test="islive != null and islive == 0">t3.type = 5 </if> <if test="islive != null and islive == 1">t3.type = 16 </if>
+		and t3.state=1 and t3.delstate =0
+	</select>
+
+	<!-- 根据文化馆标识统计线下培训发布数量-按年查询月份 -->
+	<select id="countXXTrainMonth" resultType="hashmap" parameterType="hashmap">
+		select count(*) as cnt, '1月' as name
+		from whg_tra t1
+		where   t1.biz = 'PT' and t1.islive = #{islive} and t1.state = 6 and t1.delstate = 0 <if test="cultid != null">and t1.cultid = #{cultid}</if> and date_format(t1.statemdfdate, '%Y-%m') = concat(#{year},'-01')
+		UNION
+		select count(*) as cnt, '2月' as name
+		from whg_tra t1
+		where  t1.biz = 'PT' and t1.islive = #{islive} and t1.state = 6 and t1.delstate = 0 <if test="cultid != null">and t1.cultid = #{cultid}</if> and date_format(t1.statemdfdate, '%Y-%m') = concat(#{year},'-02')
+		UNION
+		select count(*) as cnt, '3月' as name
+		from whg_tra t1
+		where  t1.biz = 'PT'  and t1.islive = #{islive} and t1.state = 6 and t1.delstate = 0 <if test="cultid != null">and t1.cultid = #{cultid}</if> and date_format(t1.statemdfdate, '%Y-%m') = concat(#{year},'-03')
+		UNION
+		select count(*) as cnt, '4月' as name
+		from whg_tra t1
+		where t1.biz = 'PT'  and t1.islive = #{islive} and t1.state = 6 and t1.delstate = 0 <if test="cultid != null">and t1.cultid = #{cultid}</if> and date_format(t1.statemdfdate, '%Y-%m') = concat(#{year},'-04')
+		UNION
+		select count(*) as cnt, '5月' as name
+		from whg_tra t1
+		where  t1.biz = 'PT'  and t1.islive = #{islive} and t1.state = 6 and t1.delstate = 0 <if test="cultid != null">and t1.cultid = #{cultid}</if> and date_format(t1.statemdfdate, '%Y-%m') = concat(#{year},'-05')
+		UNION
+		select count(*) as cnt, '6月' as name
+		from whg_tra t1
+		where  t1.biz = 'PT'  and t1.islive = #{islive} and t1.state = 6 and t1.delstate = 0 <if test="cultid != null">and t1.cultid = #{cultid}</if> and date_format(t1.statemdfdate, '%Y-%m') = concat(#{year},'-06')
+		UNION
+		select count(*) as cnt, '7月' as name
+		from whg_tra t1
+		where  t1.biz = 'PT'  and t1.islive = #{islive} and t1.state = 6 and t1.delstate = 0 <if test="cultid != null">and t1.cultid = #{cultid}</if> and date_format(t1.statemdfdate, '%Y-%m') = concat(#{year},'-07')
+		UNION
+		select count(*) as cnt, '8月' as name
+		from whg_tra t1
+		where t1.biz = 'PT' and t1.islive = #{islive} and t1.state = 6 and t1.delstate = 0 <if test="cultid != null">and t1.cultid = #{cultid}</if> and date_format(t1.statemdfdate, '%Y-%m') = concat(#{year},'-08')
+		UNION
+		select count(*) as cnt, '9月' as name
+		from whg_tra t1
+		where t1.biz = 'PT'  and t1.islive = #{islive} and t1.state = 6 and t1.delstate = 0 <if test="cultid != null">and t1.cultid = #{cultid}</if> and date_format(t1.statemdfdate, '%Y-%m') = concat(#{year},'-09')
+		UNION
+		select count(*) as cnt, '10月' as name
+		from whg_tra t1
+		where  t1.biz = 'PT'  and t1.islive = #{islive} and t1.state = 6 and t1.delstate = 0 <if test="cultid != null">and t1.cultid = #{cultid}</if> and date_format(t1.statemdfdate, '%Y-%m') = concat(#{year},'-10')
+		UNION
+		select count(*) as cnt, '11月' as name
+		from whg_tra t1
+		where  t1.biz = 'PT'  and t1.islive = #{islive} and t1.state = 6 and t1.delstate = 0 <if test="cultid != null">and t1.cultid = #{cultid}</if> and date_format(t1.statemdfdate, '%Y-%m') = concat(#{year},'-11')
+		UNION
+		select count(*) as cnt, '12月' as name
+		from whg_tra t1
+		where  t1.biz = 'PT' and  t1.islive = #{islive} and t1.state = 6 and t1.delstate = 0 <if test="cultid != null">and t1.cultid = #{cultid}</if> and date_format(t1.statemdfdate, '%Y-%m') = concat(#{year},'-12')
+	</select>
+
+	<!-- 根据文化馆标识统计线下培训访问量 -->
+	<select id="countXXTrainVisit" resultType="hashmap" parameterType="hashmap">
+		select * from (
+			select t1.*
+			,(select COALESCE(sum(tv.visit_count),0) from whg_visit_data tv where tv.visit_eid = t1.id) totalvisit
+			,(select COALESCE(sum(tv.visit_count),0) from whg_visit_data tv where tv.visit_type=1 and tv.visit_eid = t1.id) pcvisit
+			,(select COALESCE(sum(tv.visit_count),0) from whg_visit_data tv where tv.visit_type=2 and tv.visit_eid = t1.id) wxvisit
+			from whg_tra t1
+			where   t1.biz = 'PT' and t1.islive = #{islive} and t1.state = 6 and t1.delstate = 0 <if test="cultid != null">and t1.cultid = #{cultid}</if>
+			<if test="title != null and title != ''">and t1.title like #{title}</if>
+		)t
+		<if test="sort != null and sort == 'totalvisit'">
+			order by t.totalvisit ${order}
+		</if>
+		<if test="sort != null and sort == 'pcvisit'">
+			order by t.pcvisit ${order}
+		</if>
+		<if test="sort != null and sort == 'wxvisit'">
+			order by t.wxvisit ${order}
+		</if>
+	</select>
+
+
+	<!-- 数据统计 -->
+	<select id="countXXTrainData" resultType="hashmap" parameterType="hashmap">
+		select * from (
+			select t1.*
+			,(select count(*) from whg_collection tc where tc.cmopttyp = 0 and tc.cmrefid = t1.id) as sc
+			,(select count(*) from whg_collection tc where tc.cmopttyp = 2 and tc.cmrefid = t1.id) as dz
+			,(select count(*) from whg_comment tx where tx.rmtyp = 0 and tx.rmrefid = t1.id) as pl
+			,(select count(*) from whg_tra_enrol te where te.state=6 and te.traid = t1.id) as totalbm
+			,(select count(*) from whg_tra_enrol te where te.state=6 and te.traid = t1.id and (te.client = 'pc' or te.client is null)) as pcbm
+			,(select count(*) from whg_tra_enrol te where te.state=6 and te.traid = t1.id and te.client='weixin') as wxbm
+			from whg_tra t1
+			where t1.biz = 'PT'  and t1.islive = #{islive} and t1.state = 6 and t1.delstate = 0 <if test="cultid != null">and t1.cultid = #{cultid}</if>
+			<if test="title != null and title != ''">and t1.title like #{title}</if>
+		) t
+		<if test="sort != null and sort == 'sc'">
+			order by t.sc ${order}
+		</if>
+		<if test="sort != null and sort == 'dz'">
+			order by t.dz ${order}
+		</if>
+		<if test="sort != null and sort == 'pl'">
+			order by t.pl ${order}
+		</if>
+		<if test="sort != null and sort == 'totalbm'">
+			order by t.totalbm ${order}
+		</if>
+		<if test="sort != null and sort == 'pcbm'">
+			order by t.pcbm ${order}
+		</if>
+		<if test="sort != null and sort == 'wxbm'">
+			order by t.pcbm ${order}
+		</if>
+	</select>
+
+
+
+
+
+
+	<!-- 根据文化馆标识统计发布数量-微专业-按年查询月份 -->
+	<select id="countMajorByYearAndCult" resultType="hashmap" parameterType="hashmap">
+		select count(*) as cnt, '1月' as name
+		from whg_tra_major t1
+		where t1.state = 6 and date_format(t1.statemdfdate, '%Y-%m') = concat(#{year},'-01')
+		<if test="cultid != null">and t1.cultid = #{cultid}</if>
+		UNION
+		select count(*) as cnt, '2月' as name
+		from whg_tra_major t1
+		where t1.state = 6 and date_format(t1.statemdfdate, '%Y-%m') = concat(#{year},'-02')
+		<if test="cultid != null">and t1.cultid = #{cultid}</if>
+		UNION
+		select count(*) as cnt, '3月' as name
+		from whg_tra_major t1
+		where t1.state = 6 and date_format(t1.statemdfdate, '%Y-%m') = concat(#{year},'-03')
+		<if test="cultid != null">and t1.cultid = #{cultid}</if>
+		UNION
+		select count(*) as cnt, '4月' as name
+		from whg_tra_major t1
+		where t1.state = 6 and date_format(t1.statemdfdate, '%Y-%m') = concat(#{year},'-04')
+		<if test="cultid != null">and t1.cultid = #{cultid}</if>
+		UNION
+		select count(*) as cnt, '5月' as name
+		from whg_tra_major t1
+		where t1.state = 6 and date_format(t1.statemdfdate, '%Y-%m') = concat(#{year},'-05')
+		<if test="cultid != null">and t1.cultid = #{cultid}</if>
+		UNION
+		select count(*) as cnt, '6月' as name
+		from whg_tra_major t1
+		where t1.state = 6 and date_format(t1.statemdfdate, '%Y-%m') = concat(#{year},'-06')
+		<if test="cultid != null">and t1.cultid = #{cultid}</if>
+		UNION
+		select count(*) as cnt, '7月' as name
+		from whg_tra_major t1
+		where t1.state = 6 and date_format(t1.statemdfdate, '%Y-%m') = concat(#{year},'-07')
+		<if test="cultid != null">and t1.cultid = #{cultid}</if>
+		UNION
+		select count(*) as cnt, '8月' as name
+		from whg_tra_major t1
+		where t1.state = 6 and date_format(t1.statemdfdate, '%Y-%m') = concat(#{year},'-08')
+		<if test="cultid != null">and t1.cultid = #{cultid}</if>
+		UNION
+		select count(*) as cnt, '9月' as name
+		from whg_tra_major t1
+		where t1.state = 6 and date_format(t1.statemdfdate, '%Y-%m') = concat(#{year},'-09')
+		<if test="cultid != null">and t1.cultid = #{cultid}</if>
+		UNION
+		select count(*) as cnt, '10月' as name
+		from whg_tra_major t1
+		where t1.state = 6 and date_format(t1.statemdfdate, '%Y-%m') = concat(#{year},'-10')
+		<if test="cultid != null">and t1.cultid = #{cultid}</if>
+		UNION
+		select count(*) as cnt, '11月' as name
+		from whg_tra_major t1
+		where t1.state = 6 and date_format(t1.statemdfdate, '%Y-%m') = concat(#{year},'-11')
+		<if test="cultid != null">and t1.cultid = #{cultid}</if>
+		UNION
+		select count(*) as cnt, '12月' as name
+		from whg_tra_major t1
+		where t1.state = 6 and date_format(t1.statemdfdate, '%Y-%m') = concat(#{year},'-12')
+		<if test="cultid != null">and t1.cultid = #{cultid}</if>
+	</select>
+
+	<!-- 根据文化馆标识统计发布数量-师资-按年查询月份 -->
+	<select id="countTeacherByYearAndCult" resultType="hashmap" parameterType="hashmap">
+		select count(*) as cnt, '1月' as name
+		from whg_tra_teacher t1
+		where t1.state = 6 and date_format(t1.statemdfdate, '%Y-%m') = concat(#{year},'-01')
+		<if test="cultid != null">and t1.cultid = #{cultid}</if>
+		UNION
+		select count(*) as cnt, '2月' as name
+		from whg_tra_teacher t1
+		where t1.state =6 and date_format(t1.statemdfdate, '%Y-%m') = concat(#{year},'-02')
+		<if test="cultid != null">and t1.cultid = #{cultid}</if>
+		UNION
+		select count(*) as cnt, '3月' as name
+		from whg_tra_teacher t1
+		where t1.state = 6 and date_format(t1.statemdfdate, '%Y-%m') = concat(#{year},'-03')
+		<if test="cultid != null">and t1.cultid = #{cultid}</if>
+		UNION
+		select count(*) as cnt, '4月' as name
+		from whg_tra_teacher t1
+		where t1.state = 6 and date_format(t1.statemdfdate, '%Y-%m') = concat(#{year},'-04')
+		<if test="cultid != null">and t1.cultid = #{cultid}</if>
+		UNION
+		select count(*) as cnt, '5月' as name
+		from whg_tra_teacher t1
+		where t1.state = 6 and date_format(t1.statemdfdate, '%Y-%m') = concat(#{year},'-05')
+		<if test="cultid != null">and t1.cultid = #{cultid}</if>
+		UNION
+		select count(*) as cnt, '6月' as name
+		from whg_tra_teacher t1
+		where t1.state = 6 and date_format(t1.statemdfdate, '%Y-%m') = concat(#{year},'-06')
+		<if test="cultid != null">and t1.cultid = #{cultid}</if>
+		UNION
+		select count(*) as cnt, '7月' as name
+		from whg_tra_teacher t1
+		where t1.state = 6 and date_format(t1.statemdfdate, '%Y-%m') = concat(#{year},'-07')
+		<if test="cultid != null">and t1.cultid = #{cultid}</if>
+		UNION
+		select count(*) as cnt, '8月' as name
+		from whg_tra_teacher t1
+		where t1.state = 6 and date_format(t1.statemdfdate, '%Y-%m') = concat(#{year},'-08')
+		<if test="cultid != null">and t1.cultid = #{cultid}</if>
+		UNION
+		select count(*) as cnt, '9月' as name
+		from whg_tra_teacher t1
+		where t1.state = 6 and date_format(t1.statemdfdate, '%Y-%m') = concat(#{year},'-09')
+		<if test="cultid != null">and t1.cultid = #{cultid}</if>
+		UNION
+		select count(*) as cnt, '10月' as name
+		from whg_tra_teacher t1
+		where t1.state = 6 and date_format(t1.statemdfdate, '%Y-%m') = concat(#{year},'-10')
+		<if test="cultid != null">and t1.cultid = #{cultid}</if>
+		UNION
+		select count(*) as cnt, '11月' as name
+		from whg_tra_teacher t1
+		where t1.state = 6 and date_format(t1.statemdfdate, '%Y-%m') = concat(#{year},'-11')
+		<if test="cultid != null">and t1.cultid = #{cultid}</if>
+		UNION
+		select count(*) as cnt, '12月' as name
+		from whg_tra_teacher t1
+		where t1.state = 6 and date_format(t1.statemdfdate, '%Y-%m') = concat(#{year},'-12')
+		<if test="cultid != null">and t1.cultid = #{cultid}</if>
+	</select>
+
+	<!-- 根据文化馆标识统计发布数量-培训资源-按年查询月份 -->
+	<select id="countDrscByYearAndCult" resultType="hashmap" parameterType="hashmap">
+		select count(*) as cnt, '1月' as name
+		from whg_drsc t1
+		where t1.drscstate = 6 and date_format(t1.drsccrttime, '%Y-%m') = concat(#{year},'-01')
+		<if test="cultid != null">and t1.drscvenueid = #{cultid}</if>
+		UNION
+		select count(*) as cnt, '2月' as name
+		from whg_drsc t1
+		where t1.drscstate = 6 and date_format(t1.drsccrttime, '%Y-%m') = concat(#{year},'-02')
+		<if test="cultid != null">and t1.drscvenueid = #{cultid}</if>
+		UNION
+		select count(*) as cnt, '3月' as name
+		from whg_drsc t1
+		where t1.drscstate = 6 and date_format(t1.drsccrttime, '%Y-%m') = concat(#{year},'-03')
+		<if test="cultid != null">and t1.drscvenueid = #{cultid}</if>
+		UNION
+		select count(*) as cnt, '4月' as name
+		from whg_drsc t1
+		where t1.drscstate = 6 and date_format(t1.drsccrttime, '%Y-%m') = concat(#{year},'-04')
+		<if test="cultid != null">and t1.drscvenueid = #{cultid}</if>
+		UNION
+		select count(*) as cnt, '5月' as name
+		from whg_drsc t1
+		where t1.drscstate = 6 and date_format(t1.drsccrttime, '%Y-%m') = concat(#{year},'-05')
+		<if test="cultid != null">and t1.drscvenueid = #{cultid}</if>
+		UNION
+		select count(*) as cnt, '6月' as name
+		from whg_drsc t1
+		where t1.drscstate = 6 and date_format(t1.drsccrttime, '%Y-%m') = concat(#{year},'-06')
+		<if test="cultid != null">and t1.drscvenueid = #{cultid}</if>
+		UNION
+		select count(*) as cnt, '7月' as name
+		from whg_drsc t1
+		where t1.drscstate = 6 and date_format(t1.drsccrttime, '%Y-%m') = concat(#{year},'-07')
+		<if test="cultid != null">and t1.drscvenueid = #{cultid}</if>
+		UNION
+		select count(*) as cnt, '8月' as name
+		from whg_drsc t1
+		where t1.drscstate = 6 and date_format(t1.drsccrttime, '%Y-%m') = concat(#{year},'-08')
+		<if test="cultid != null">and t1.drscvenueid = #{cultid}</if>
+		UNION
+		select count(*) as cnt, '9月' as name
+		from whg_drsc t1
+		where t1.drscstate = 6 and date_format(t1.drsccrttime, '%Y-%m') = concat(#{year},'-09')
+		<if test="cultid != null">and t1.drscvenueid = #{cultid}</if>
+		UNION
+		select count(*) as cnt, '10月' as name
+		from whg_drsc t1
+		where t1.drscstate = 6 and date_format(t1.drsccrttime, '%Y-%m') = concat(#{year},'-10')
+		<if test="cultid != null">and t1.drscvenueid = #{cultid}</if>
+		UNION
+		select count(*) as cnt, '11月' as name
+		from whg_drsc t1
+		where t1.drscstate = 6 and date_format(t1.drsccrttime, '%Y-%m') = concat(#{year},'-11')
+		<if test="cultid != null">and t1.drscvenueid = #{cultid}</if>
+		UNION
+		select count(*) as cnt, '12月' as name
+		from whg_drsc t1
+		where t1.drscstate = 6 and date_format(t1.drsccrttime, '%Y-%m') = concat(#{year},'-12')
+		<if test="cultid != null">and t1.drscvenueid = #{cultid}</if>
+	</select>
+</mapper>

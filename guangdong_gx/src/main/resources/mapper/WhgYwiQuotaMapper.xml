@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.creatoo.hn.dao.mapper.WhgYwiQuotaMapper">
+
+
+    <select id="selectQuotaList" resultType="com.creatoo.hn.dao.vo.WhgYwiQuotaVO">
+		SELECT
+			*
+		FROM
+			(
+			SELECT
+				a.*,
+			CASE
+					WHEN a.usedsize / a.size > #{per} THEN
+					2 ELSE 1
+				END usedstate
+		FROM
+			(
+			SELECT
+				t.`name`,
+			CASE
+
+					WHEN qt.size IS NULL THEN
+					( SELECT size * 1024 * 1024 * 1024 FROM whg_ywi_quota WHERE cultid IS NULL ) ELSE qt.size * 1024 * 1024 * 1024
+				END size,
+			qt.usedsize,
+			t.id cultid,
+			qt.id
+		FROM
+			whg_sys_cult t
+			LEFT JOIN whg_ywi_quota qt ON t.id = qt.cultid
+		WHERE
+			t.delstate = 0
+		ORDER BY
+			t.crtdate DESC
+			) a
+			) b
+		WHERE 1 = 1
+		<if test="usedstate != null">
+			and b.usedstate = #{usedstate}
+		</if>
+		<if test="name != null">
+			and b.name like CONCAT('%',#{name},'%')
+		</if>
+
+	</select>
+
+
+</mapper>

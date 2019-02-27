@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/style/center/center.css'">
+<div class="wrapper clearfix">
+    <div class="content">
+        <!--公共主头部开始-->
+        <div id="header" th:include="guangdong/public/header :: copy"></div>
+        <!--公共主头部结束-->
+        <!--主体开始-->
+        <div class="container res-center-bg">
+            <div class="sys-crumbs">
+                <span><a href="../index/index">首页</a></span>
+                <i class="icon iconfont icon-enter"></i>
+                <span><a href="index">用户中心</a></span>
+                <i class="icon iconfont icon-enter"></i>
+                <span class="active" id="title">我的收藏</span>
+            </div>
+            <div class="page-list">
+                <div class="center-nav">
+                    <ul class="clearfix">
+                        <li class="active" data-type="52">
+                            艺术人才
+                        </li>
+                        <li data-type="53">
+                            群文资源
+                        </li>
+                    </ul>
+                </div>
+                <!--线下培训列表开始-->
+                <ul class="center-list clearfix" id="modelList">
+                    <!--<li class="train-item">
+                        <a href="#" target="_blank"></a>
+                        <div class="img">
+                            <div class="desc">
+                                <i class="icon iconfont icon-time"></i>
+                                <span>报名结束仅剩12天</span>
+                            </div>
+                            <div class="state s-1">立即报名</div>
+                            <img th:src="${basePath}+'/assets/img/img_demo/demo.png'">
+                        </div>
+                        <div class="info">
+                            <h2>线下培训标题线下，标题线下培。标题线下培训标题</h2>
+                            <p>地点：<span>广州市天河区广州大道中12号海天盛宴</span></p>
+                            <p>时间：<span>2017-09-10至2017-10-10</span></p>
+                            <p>人数：<span>仅剩20人</span></p>
+                            <p>年龄：<span>7-12岁</span></p>
+                        </div>
+                    </li>-->
+                </ul>
+                <!--线下培训列表结束-->
+                <!--在线课程列表开始-->
+                <!--<ul class="center-list clearfix">
+                    <li class="live-item">
+                        <a href="#" target="_blank"></a>
+                        <div class="img">
+                            <div class="desc">
+                                <i class="icon iconfont icon-time"></i>
+                                <span>距直播还有10天</span>
+                            </div>
+                            <div class="state s-3">直播预告</div>
+                            <img th:src="${basePath}+'/assets/img/img_demo/demo.png'">
+                        </div>
+                        <div class="info">
+                            <h2>线下培训标题线下，标题线下培。标题线下培训标题</h2>
+                            <p>时间：<span>2017-09-10至2017-10-10</span></p>
+                            <p>人数：<span>仅剩20人</span></p>
+                            <p>年龄：<span>7-12岁</span></p>
+                        </div>
+                    </li>
+                </ul>-->
+                <!--在线课程列表结束-->
+                <!--培训师资开始-->
+                <!--<ul class="center-list clearfix">
+                    <li class="teacher-item">
+                        <a href="#" target="_blank"></a>
+                        <div class="img">
+                            <img th:src="${basePath}+'/assets/img/img_demo/demo.png'">
+                        </div>
+                        <div class="info">
+                            <h2>王粤娜</h2>
+                            <em>舞蹈</em>
+                            <p class="desc">1986年4月26日出生于四川省阿坝藏族羌族自治州汶川县，中国内地男演员、主持人，毕业于四川师范大学电影电视学院。2005年，与周翔宇两人以“羌族双煞”为名恶搞“白蛇传”和“爱情大魔咒”受到网友关注。</p>
+                            <p class="btn">查看详情</p>
+                        </div>
+                    </li>
+                </ul>-->
+                <!--培训师资结束-->
+                <!--培训资源开始-->
+                <!--<ul class="center-list clearfix">
+                    <li class="res-item">
+                        <a href="#" target="_blank"></a>
+                        <div class="img">
+                            <i class="icon iconfont icon-CombinedShape"></i>
+                            <img th:src="${basePath}+'/assets/img/img_demo/demo.png'">
+                        </div>
+                        <div class="info">
+                            <h2>广东省群艺馆图书室一楼</h2>
+                            <p>1986年4月26日出生于四川省阿坝藏族羌族自治州汶川县，中国内地男演员、主持人，毕业于四川师范大学电影电视学院。2005年，与周翔宇两人以“羌族双煞”为名恶搞“白蛇传”和“爱情大魔咒”受到网友关注。</p>
+                        </div>
+                    </li>
+                </ul>-->
+                <!--培训资源结束-->
+                <!--分页开始 -->
+                <div class="green-black" id="artPagging" style="padding-bottom: 50px"></div>
+                <!--分页结束-->
+            </div>
+        </div>
+        <!--主体结束-->
+    </div>
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong/public/footer :: copy"></div>
+<!--底部结束-->
+<a class="to-top"></a>
+<!--<script th:src="${basePath}+'/assets/js/activity/activitylist.js'" type="text/javascript"></script>-->
+<script type="text/javascript" th:inline="javascript">
+
+    var userid = $("#temp_userId").val();
+    var pageType = '52';
+    var bashPath = [[${basePath}]];
+
+    //程序初始化
+    $().ready(function(){
+        dataPage();
+        navChange();
+    })
+
+    //按钮切换
+    function navChange(){
+        $('.center-nav ul li').on('click',function(e){
+            $(this).addClass('active').siblings().removeClass('active');
+            pageType = $(this).attr('data-type');
+            dataPage();
+        })
+    }
+
+
+    function dataPage(page, rows) {
+        var params_page = page || 1;
+        var params_rows = rows || 12;
+        var params = {
+            page: params_page,
+            pageSize: params_rows,
+            cmreftyp: pageType,
+            userid: userid
+        }
+        dataInit.ajax({
+            api: [[${apiPath.userCollections}]],
+            params: params,
+            fn: function (data) {
+                showModelList(data);
+                dataInit.pageInit("artPagging", params_page, params_rows, data.total, dataPage);
+            }
+        })
+    }
+
+    var template_li;
+    function showModelList(data) {
+        var modelList = $("#modelList");
+        modelList.html("");
+
+        if (!data || !data.rows || !data.rows.length){
+            modelList.append("<div class='public-no-message'></div>");
+            return;
+        }
+
+        template_li = template_li ||
+            '<li class="train-item">\
+                <a  target="_blank"></a>\
+                <div class="img">\
+                    <a  target="_blank"><img ></a>\
+                </div>\
+                <div class="info">\
+                    <h2 name="cmtitle"></h2>\
+                    <p>收藏时间：<span name="cmdate"></span></p>\
+                </div>\
+            </li>';
+
+        var rows = data.rows;
+
+        for(var i in rows) {
+            var row = rows[i];
+            var rowsLi = $(template_li);
+
+            row.cmdate = moment(row.cmdate).format('YYYY-MM-DD');
+
+            rowsLi.find("[name]").each(function(){
+                var ent = $(this);
+                var name = ent.attr("name");
+                if (!name || name=='') return true;
+                ent.text(row[name]||'');
+            });
+
+            var imgurl = "", _href="";
+            switch (row.cmreftyp){
+                case "52":
+                    //imgurl = data.imgPath + dataInit.getSmallImage(row.imgurl);
+                    imgurl = data.imgPath + dataInit.getImage(row.imgurl, 300, 200);
+                    _href = bashPath+"/ysrc/detail?id="+row.cmrefid;
+                    break;
+                case "53":
+                    var resourcetype = row.resourcetype;
+                    var respicture = row.respicture;
+                    if($.inArray(resourcetype, ['img', 'video'])!=-1){
+                        imgurl = respicture;
+                    }else if(resourcetype == 'audio'){
+                        imgurl = bashPath+"/assets/img/brand/brand-music.jpg";
+                    }else{
+                        //imgurl = bashPath+"/assets/img/public/file.png"
+                        imgurl = [[${basePath}]] + dataInit.getFileTypeIcon(row.cmurl, '/assets/img/brand/xiazai.jpg');
+                    }
+
+                    var libid = row.libid;
+                    var resid = row.resid;
+                    if(libid && resid){
+                        _href = bashPath+"/qwzy/detail?libid="+libid+"&resid="+resid;
+                    }else{
+                        _href = "";
+                    }
+
+                    break;
+            }
+
+            rowsLi.find("img").attr("src", imgurl);
+            if (_href != ''){
+                rowsLi.find("a").attr("href", _href);
+            }else{
+                rowsLi.find("a").off().on("click",
+                    {cmid: row.cmid, cmuid: row.cmuid, cmrefid: row.cmrefid, cmreftyp: row.cmreftyp},
+                    function(event){
+                        //alert(event.data.cmid+" "+event.data.cmuid+" "+event.data.cmrefid);
+                        rongDialog.init({
+                            ico: 2,
+                            type: 2,
+                            desc: "资源已不存在,是否取消收藏?",
+                            nextFn: function(){
+                                var delurl = [[${apiPath.delListFav}]];
+                                $.post(delurl,
+                                    {
+                                        userId: userid,
+                                        cmuid: event.data.cmuid,
+                                        cmrefid: event.data.cmrefid,
+                                        cmreftyp: event.data.cmreftyp
+                                    },
+                                    function(data){
+                                        dataPage();
+                                    },
+                                    "JSON");
+                            }
+                        })
+                    })
+            }
+
+            modelList.append(rowsLi);
+        }
+
+    }
+</script>
+</body>
+</html>

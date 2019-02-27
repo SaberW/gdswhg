@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/public/detail.css'">
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/act/step.css'">
+<link rel="stylesheet" th:href="${basePath}+'/assets/js/picker/css/mui.picker.css'">
+<script th:src="${basePath}+'/assets/js/picker/js/mui.picker.min.js'" type="text/javascript"></script>
+<div th:include="guangdong/public/leftBar :: copy"></div>
+<div id="page">
+    <div class="mui-content">
+        <!-- Card Header -->
+        <!-- Card Body -->
+        <div class="mui-card no-corner">
+            <div class="detail-header clearfix">
+                <div class="img">
+                    <a href="javascript:void(0)">
+                        <img src=""  id="roomImg">
+                    </a>
+                </div>
+                <div class="info" id="roomInfo">
+                    <h2></h2>
+                    <p></p>
+                    <div class="state-cont mui-clearfix">
+                        <div class="other">
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mui-card no-corner step-table">
+            <div class="mui-card-content mui-input-group">
+                <div class="step-list mui-input-row">填写预订信息</div>
+                <div class="mui-input-row input-merge">
+                    <label>预订时间</label>
+                    <input id="params-time" type="text" class="mui-input-clear" data-input-clear="1" value="" readonly>
+                </div>
+                <div class="mui-input-row input-merge">
+                    <label>联系人</label>
+                    <input id="username" type="text" maxlength="15" class="mui-input-clear" placeholder="请输入联系人姓名"
+                           data-input-clear="1"><span
+                        class="mui-icon mui-icon-clear mui-hidden"></span>
+                </div>
+                <div class="mui-input-row">
+                    <label>手机号码</label>
+                    <input id="txtMobile" type="text" maxlength="11" class="mui-input-clear" placeholder="请输入联系电话"
+                           data-input-clear="1"><span
+                        class="mui-icon mui-icon-clear mui-hidden"></span>
+                </div>
+                <div class="mui-input-row">
+                    <label>预订用途</label>
+                    <input id="userpurpose" type="text" maxlength="30" class="mui-input-clear" placeholder="请输入预订用途"
+                           data-input-clear="1"><span
+                        class="mui-icon mui-icon-clear mui-hidden"></span>
+                </div>
+                <div class="mui-card-content-inner">
+                    <div class="help-info">
+                        <label><p><input id="readmeck" type="checkbox" checked="checked">&nbsp;&nbsp;我已阅读并接受<a
+                                href="readme">《场馆预订规则》</a>相关条款</p></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <nav class="mui-bar mui-bar-tab">
+        <div class="mui-tab-item"><a class="goNext" href="javascript:void(0)">下一步</a></div>
+    </nav>
+</div>
+<script type="text/javascript" th:inline="javascript">
+
+    var userid = $("#temp_userId").val();
+    var params = dataInit.getCache("venue-params");
+    var itemId,roomtimeid,username,stepInfo = {};
+
+    $(function () {
+        pageInit();
+        mui('.mui-tab-item').on('tap','.goNext',function(){
+            dealOrder();
+        });
+    });
+
+    function pageInit() {
+        if (!params) {
+            mui.toast("页面参数有误");
+            return
+        } else {
+            $("#username").val($("#temp_nickName").val());
+            $("#txtMobile").val($("#temp_mobile").val());
+            $("#params-time").val(params.timeday + " " + params.timestart);
+            var _txtmobile = $("#txtMobile").val();
+            if (_txtmobile && _txtmobile!=''){
+                $("#txtMobile").prop("readonly", "readonly");
+            }
+            var _username = $("#username").val();
+            if (_username && _username!=''){
+                $("#username").prop("readonly", "readonly");
+            }
+
+            stepInfo.timeday = params.timeday;
+            stepInfo.timestart = params.timestart;
+            stepInfo.roomtimeid = params.roomtimeid;
+            itemId = params.roomId;
+            roomtimeid = params.roomtimeid;
+            mui('.help-info').on('tap', 'label', function () {
+                if ($('#readmeck').is(':checked')) {
+                    $('#readmeck').val('no');
+                } else {
+                    $('#readmeck').val('yes');
+                }
+            })
+            loadPage();
+        }
+    }
+
+    function loadPage() {
+        dataInit.ajax({
+            api: [[${apiPath.roomdetail}]],
+            fn: function (data) {
+                showRoomDetail(data);
+            },
+            params: {id: itemId}
+        });
+    }
+
+    function showRoomDetail(data) {
+        if (data.code == 0) {
+            var model = data.data;
+            var img = data.imgPath + model.imgurl;
+            $("#roomImg").attr('src', img);
+            $("#roomInfo h2").text(model.title);
+            $("#roomInfo p").text(model.address);
+            $("#roomInfo .other span").eq(0).text(model.sizearea + ' 平米');
+            $("#roomInfo .other span").eq(1).text('容纳 ' + model.sizepeople + ' 人');
+            stepInfo.img = img;
+            stepInfo.venTitle = model.venTitle;
+            stepInfo.roomTitle = model.title;
+            stepInfo.roomAdr = model.address;
+        } else {
+            mui.toast(data.msg || '数据加载失败')
+        }
+    }
+
+    //前端验证
+    function verification() {
+        var reg = /^0?(13[0-9]|15[012356789]|17[013678]|18[0-9]|14[57])[0-9]{8}$/;
+        if ($("#username").val().length < 2 || $("#username").val().length > 15) {
+            mui.toast("请输入正确的姓名");
+            return false;
+        } else if (!reg.test(($("#txtMobile").val()))) {
+            mui.toast("请输入正确的手机号码");
+            return false;
+        }else if ($('#readmeck').val() == 'no') {
+            mui.toast("请接受《订票须知》条款");
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    function dealOrder() {
+        if (verification()) {
+            dataInit.ajax({
+                api: [[${apiPath.venueOrderCheck}]],
+                params: {roomTimeId: roomtimeid, userId: userid},
+                fn: nextPage
+            });
+        }
+    }
+
+    function nextPage(data) {
+        if (data.code == 0) {
+            var temp = {
+                roomTimeId: roomtimeid,
+                userId: userid,
+                username: $("#username").val(),
+                phone: $("#txtMobile").val(),
+                purpose: $('#userpurpose').val()
+            }
+            stepInfo = $.extend({},stepInfo,temp);
+            dataInit.setCache('venue-submit',stepInfo);
+            window.location.href = 'stepconfirm';
+        } else {
+            mui.toast(data.msg || '正在操作此功能的用户众多，请稍后尝试');
+        }
+
+    }
+
+
+</script>
+</body>
+</html>

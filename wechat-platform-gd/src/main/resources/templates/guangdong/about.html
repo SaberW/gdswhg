@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/news/news.css'">
+<style>
+    .main{
+        margin-top: 20px;
+        padding: 0 20px;
+    }
+    .main p{
+        margin: 0;
+    }
+    .title{
+        margin-bottom: 10px;
+        font-size: 14px !important;
+        position: relative;
+        padding: 5px 0;
+    }
+    .title span{
+        position: absolute;
+        width: 28px;
+        height: 1px;
+        background: #9c0707;
+        bottom: 0;
+        left: 14px;
+    }
+    .msg{
+        text-indent: 24px;
+    }
+</style>
+<div th:include="guangdong/public/leftBar :: copy"></div>
+<div id="page">
+    <div class="mui-content">
+        <div>
+            <img th:src="${basePath}+'/assets/img/about_bg.png'" style="width: 100%;">
+        </div>
+        <div class="main">
+            <div class="title">
+                关于我们<span></span>
+            </div>
+            <p class="msg">
+                “文化在线”——广东省公共数字文化联盟平台是在广东省文化厅的领导下，依托广东省文化联盟，由广东省文化馆打造的全省“1+21”文化馆公共数字文化服务总平台。“文化在线”——广东省公共数字文化联盟向上对接国家公共文化云，向下对接全省文化馆公共数字文化服务，是公共数字文化服务中转站。旨在面向全省用户提供活动预订、培训报名、场馆服务、数字展馆等线上线下相结合的菜单式、预约式、一站式公共文化服务，打通公共数字文化服务最后一公里，实现公共文化服务的均等化，标准化，实现全省公共文化服务资源共建共享，提升公共文化服务效能。
+            </p>
+        </div>
+        <div class="main">
+            <div class="title">
+                联系我们<span></span>
+            </div>
+            <p>地址：广州市天河区广州大道中1229号</p>
+            <p>邮编：510075</p>
+            <p>电话：020-87302466 ，020-87600956</p>
+            <p>邮箱：gdswhgxxjsb@163.com</p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/brand/brand.css'" >
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/resource/resdetail.css'" >
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/public/detail.css'" >
+<link rel="stylesheet" th:href="${basePath}+'/assets/js/live/skins/default/aliplayer-min.css'" />
+<script type="text/javascript" th:src="${basePath}+'/assets/js/live/aliplayer-min.js'"></script>
+<div th:include="guangdong/public/leftBar :: copy"></div>
+<div id="page">
+    <div class="mui-content">
+        <div class="image-info mui-clearfix">
+            <video id="J_prismPlayer" class="prism-player" controls="controls" preload="metadata"></video>
+        </div>
+    </div>
+    <nav class="mui-bar mui-bar-tab">
+        <div th:include="guangdong/public/collectionAndVoteup :: copy" class="zan-collection mui-tab-item"></div>
+    </nav>
+    <input type="hidden" id="temp_type" value="32">
+    <input type="hidden" id="commType">
+    <input type="hidden" id="toproject" value="ZXPX">
+</div>
+<script type="text/javascript" th:inline="javascript">
+    var itemId = dataInit.getUrlParam("id");
+    var userId = $('#temp_userId').val();
+    $(document).ready(function (){
+        dataInit.ajax({
+            api:[[${apiPath.traDescDetail}]],
+            params:{
+                userId: userId,
+                id:itemId
+            },
+            fn:function(data){
+                createModelHtml(data);
+            }
+        })
+
+    })
+    function createModelHtml(data) {
+        var model = data.data;
+        var imgPath = data.imgPath + model.drscpic,videoPath = '';
+        if(model.enturl){
+            videoPath = model.enturl.indexOf('http') >= 0 ? model.enturl : data.imgPath + model.enturl;
+        }
+        var drscfromstyle = model.drscfrom && model.drscfrom!=''?'': 'style="display:none"';
+        var infostyle = model.drscintro && model.drscintro!=''?'': 'style="display:none"';
+        $('.image-info').append('<div class="title">'+model.drsctitle+'<span '+drscfromstyle+'>来源：'+model.drscfrom+'</span></div><h2 '+infostyle+'>资源简介</h2><div class="info" '+infostyle+'>'+model.drscintro+'</div>');
+        $("#J_prismPlayer").attr('src',videoPath);
+        $("#J_prismPlayer").attr('poster',imgPath);
+        /*var player = new Aliplayer({
+            id: 'J_prismPlayer',
+            autoplay: true,
+            isLive:false,
+            playsinline:true,
+            controlBarVisibility:'always',
+            source:videoPath,
+            useH5Prism:true,
+            useFlashPrism:false,
+            x5_video_position:'top',
+            //prismplayer 2.0.1版本支持的属性，主要用户实现在android 微信上的同层播放
+            x5_type:'h5', //通过 video 属性 “x5-video-player-type” 声明启用同层H5播放器，支持的值：h5 https://x5.tencent.com/tbs/guide/video.html
+            cover: imgPath
+        });*/
+        if(dataInit.isAndroid()){
+            $(".assistive-wrap").hide();
+        }
+    }
+
+</script>
+</body>
+</html>

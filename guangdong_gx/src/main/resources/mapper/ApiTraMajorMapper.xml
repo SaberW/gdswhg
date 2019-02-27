@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.creatoo.hn.dao.mapper.api.ApiTraMajorMapper">
+
+    <select id="selindexTraMajorList" resultType="hashmap">
+        select t.*
+        from whg_tra_major t
+        where t.state = 6
+        <if test="cultid!=null ">
+            AND t.cultid IN
+            <foreach item="item" index="index" collection="cultid" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        order by t.recommend desc, t.statemdfdate DESC
+    </select>
+
+
+    <select id="selectTraMajorList4page" resultType="hashmap">
+        select t.*
+        from whg_tra_major t
+        where t.state = 6
+        <if test="etype!=null and etype!=''.toString()"> AND t.etype = #{etype} </if>
+        <if test="province!=null and province!=''.toString()"> AND t.province = #{province} </if>
+        <if test="city!=null and city!=''.toString()"> AND t.city = #{city} </if>
+        <if test="area!=null and area!=''.toString()"> AND t.area = #{area} </if>
+        <if test="name != null and name != ''">
+            and t.name like "%"#{name}"%"
+        </if>
+        <if test="cultid!=null">
+            AND t.cultid IN
+            <foreach item="item" index="index" collection="cultid" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="deptid != null">
+            AND t.deptid IN
+            <foreach item="item" index="index" collection="deptid" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+
+        <choose>
+            <when test="allprovince!=null">
+                ORDER BY t.toprovince DESC, t.statemdfdate DESC
+            </when>
+            <when test="allcity!=null">
+                ORDER BY t.tocity DESC, t.statemdfdate DESC
+            </when>
+            <otherwise>
+                order by t.statemdfdate DESC
+            </otherwise>
+        </choose>
+    </select>
+
+
+    <select id="selTra4mid" resultType="hashmap">
+       SELECT
+        t.*,
+        (SELECT COUNT(*) from whg_tra_enrol e WHERE e.traid = t.id AND e.state in (1,4,6)) enrolcount,
+        (SELECT COUNT(wc.cmid) FROM whg_collection wc WHERE wc.cmrefid = t.id AND wc.cmopttyp = 2) as dianzan,
+        (SELECT COUNT(wc.cmid) FROM whg_collection wc WHERE wc.cmrefid = t.id AND wc.cmopttyp = 0) as shoucang
+        FROM
+            whg_tra t,
+            whg_tra_major m,
+            whg_major_contact c
+        WHERE
+            c.entid = t.id
+        AND c.majorid = m.id
+        AND t.state = 6
+        AND m.id = #{id}
+    </select>
+
+
+
+    <select id="selTea4mid" resultType="hashmap">
+        SELECT
+        t.*
+        FROM
+        whg_tra_teacher t,
+        whg_tra_major m,
+        whg_major_contact c
+        WHERE
+        c.entid = t.id
+        AND c.majorid = m.id
+        AND m.id = #{id}
+    </select>
+
+
+    <select id="selDrsc4mid" resultType="hashmap">
+        SELECT
+        t.*
+        FROM
+        whg_drsc t,
+        whg_tra_major m,
+        whg_major_contact c
+        WHERE
+        c.entid = t.drscid
+        AND t.drsctyp = #{etype}
+        AND c.majorid = m.id
+        AND m.id = #{id}
+    </select>
+</mapper>

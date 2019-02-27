@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="base_header">
+        <item name="android:textSize">17sp</item>
+    </style>
+
+    <!-- 头部布局HeaderBackTopView统一样式 -->
+    <!-- 带点击效果的返回图标样式 -->
+    <style name="back_click_style">
+        <item name="android:layout_width">17.3px</item>
+        <item name="android:layout_height">13px</item>
+        <item name="android:layout_alignParentLeft">true</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:background">@mipmap/ic_back</item>
+    </style>
+
+    <!-- 头部左边字体样式 -->
+    <style name="header_left_text_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/selector_header_text</item>
+    </style>
+
+    <!-- 头部标题title样式 -->
+    <style name="header_title_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_centerInParent">true</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">20px</item>
+        <item name="android:textAppearance">@style/TextAppearance.FontPath.pfbzjc</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+
+
+    <style name="TextAppearance.FontPath.pfbzjc" parent="android:TextAppearance">
+        <!-- Custom Attr-->
+        <item name="fontPath">fonts/pfzc.ttf</item>
+    </style>
+
+    <!-- 头部右边字体样式 -->
+    <style name="header_right_text_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:paddingRight">13dp</item>
+        <item name="android:textSize">18px</item>
+        <item name="android:textColor">@color/selector_header_text</item>
+    </style>
+
+    <style name="dialog_theme" parent="@android:style/Theme.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <!-- 这个不设置的话，可能会出现边框黑线 -->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <!-- 模糊 -->
+        <item name="android:windowFullscreen">true</item>
+        <!-- 设置全屏 -->
+    </style>
+
+    <style name="aase.AppCompat.Dialog" parent="Theme.AppCompat.Dialog">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+</resources>

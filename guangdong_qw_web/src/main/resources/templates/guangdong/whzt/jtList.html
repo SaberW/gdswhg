@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/style/public/list.css'">
+<link th:href="${basePath}+'/assets/style/whzt/whzt.css'" rel="stylesheet">
+<div class="wrapper clearfix">
+    <div class="content">
+        <!--公共主头部开始-->
+        <div id="header" th:include="guangdong/public/header :: copy"></div>
+        <!--公共主头部结束-->
+        <!--主体开始-->
+        <!--通栏-->
+        <div class="banner" style="background-image: url('/assets/img/whzt_ysrc/banner.jpg')"></div>
+        <!--通栏-->
+
+        <!--导航栏-->
+        <div class="nav_m" th:include="guangdong/whzt/nav">
+            <!--<div class="nav_m-center w">
+                <ul class="clearfix">
+                    <li><a th:href="${basePath}+'/whzt/index?id='+${param.id[0]}">主页</a></li>
+                    <li><a th:href="${basePath}+'/whzt/zpList?id='+${param.id[0]}">作品库</a></li>
+                    <li><a th:href="${basePath}+'/whzt/rcList?id='+${param.id[0]}">艺术人才</a></li>
+                    <li><a th:href="${basePath}+'/whzt/winning?id='+${param.id[0]}">获奖作品</a></li>
+                    <li><a href="javascript:void(0)" class="active">创作讲坛</a></li>
+                    <li><a th:href="${basePath}+'/whzt/history?id='+${param.id[0]}">历届情况</a></li>
+                </ul>
+            </div>-->
+        </div>
+        <!--导航栏-->
+        <!--<div class="categoryChange">
+            <div class="row clearfix">
+                <div class="title">艺术类型：</div>
+                <div class="adrList" id="condition_1">
+                    <span class="item active"><a href="javascript:void(0)" onclick="conditionChange(this,1)">全部</a></span>
+                    <span class="item"><a href="javascript:void(0)" onclick="conditionChange(this,1)">艺术一</a></span>
+                    <span class="item"><a href="javascript:void(0)" onclick="conditionChange(this,1)">艺术二</a></span>
+                </div>
+            </div>
+            <div class="row clearfix">
+                <div class="title">子类型：</div>
+                <div class="adrList" id="condition_2">
+                    <span class="item active"><a href="javascript:void(0)" onclick="conditionChange(this,1)">全部</a></span>
+                    <span class="item"><a href="javascript:void(0)" onclick="conditionChange(this,1)">子类型一</a></span>
+                    <span class="item"><a href="javascript:void(0)" onclick="conditionChange(this,1)">子类型二</a></span>
+                    <span class="item"><a href="javascript:void(0)" onclick="conditionChange(this,1)">子类型三</a></span>
+                    <span class="item"><a href="javascript:void(0)" onclick="conditionChange(this,1)">子类型四</a></span>
+                </div>
+            </div>
+            <div class="row clearfix">
+                <div class="title">文件格式：</div>
+                <div class="adrList" id="condition_3">
+                    <span class="item active"><a href="javascript:void(0)" onclick="conditionChange(this,1)">全部</a></span>
+                    <span class="item"><a href="javascript:void(0)" onclick="conditionChange(this,1)">图片</a></span>
+                    <span class="item"><a href="javascript:void(0)" onclick="conditionChange(this,1)">音频</a></span>
+                    <span class="item"><a href="javascript:void(0)" onclick="conditionChange(this,1)">视频</a></span>
+                    <span class="item"><a href="javascript:void(0)" onclick="conditionChange(this,1)">其它</a></span>
+                </div>
+                <div class="search">
+                    <input id="searchValue" onkeydown="if(event.keyCode==13) searchList();" placeholder="输入关键词" type="text">
+                    <a href="javascript:searchList()"><i class="iconfont icon-search"></i></a>
+                </div>
+            </div>
+        </div>-->
+        <div class="container content">
+            <div class="page-list">
+                <ul class="jt-list clearfix" id="modelList">
+                    <!--<li>
+                        <a href="detail" target="_blank"></a>
+                        <div class="img">
+                            <img th:src="${basePath}+'/assets/img/img_demo/q1.jpg'" alt="demo">
+                            <div class="mask">
+                                <img th:src="${basePath}+'/assets/img/supply/play.png'" width="80" height="80">
+                            </div>
+                        </div>
+                        <div class="info">
+                            <div class="title">广东省群众广场排舞视频-天使之翼</div>
+                            <div class="teacher">主讲老师：<span>张三</span></div>
+                            <div class="teacher">发布时间：2017-10-30</div>
+                        </div>
+                        <div class="mask"></div>
+                    </li>
+                    <li>
+                        <a href="detail" target="_blank"></a>
+                        <div class="img">
+                            <img th:src="${basePath}+'/assets/img/img_demo/q2.jpg'" alt="demo">
+                            <div class="mask">
+                                <img th:src="${basePath}+'/assets/img/supply/play.png'" width="80" height="80">
+                            </div>
+                        </div>
+                        <div class="info">
+                            <div class="title">广东省群众广场排舞视频-天使之翼</div>
+                            <div class="teacher">主讲老师：<span>张三</span></div>
+                            <div class="teacher">发布时间：2017-10-30</div>
+                        </div>
+                        <div class="mask"></div>
+                    </li>
+                    <li>
+                        <a href="detail" target="_blank"></a>
+                        <div class="img">
+                            <img th:src="${basePath}+'/assets/img/img_demo/q3.jpg'" alt="demo">
+                            <div class="mask">
+                                <img th:src="${basePath}+'/assets/img/supply/play.png'" width="80" height="80">
+                            </div>
+                        </div>
+                        <div class="info">
+                            <div class="title">广东省群众广场排舞视频-天使之翼</div>
+                            <div class="teacher">主讲老师：<span>张三</span></div>
+                            <div class="teacher">发布时间：2017-10-30</div>
+                        </div>
+                        <div class="mask"></div>
+                    </li>
+                    <li>
+                        <a href="detail" target="_blank"></a>
+                        <div class="img">
+                            <img th:src="${basePath}+'/assets/img/img_demo/q4.jpg'" alt="demo">
+                            <div class="mask">
+                                <img th:src="${basePath}+'/assets/img/supply/play.png'" width="80" height="80">
+                            </div>
+                        </div>
+                        <div class="info">
+                            <div class="title">广东省群众广场排舞视频-天使之翼</div>
+                            <div class="teacher">主讲老师：<span>张三</span></div>
+                            <div class="teacher">发布时间：2017-10-30</div>
+                        </div>
+                        <div class="mask"></div>
+                    </li>
+                    <li>
+                        <a href="detail" target="_blank"></a>
+                        <div class="img">
+                            <img th:src="${basePath}+'/assets/img/img_demo/q5.jpg'" alt="demo">
+                            <div class="mask">
+                                <img th:src="${basePath}+'/assets/img/supply/play.png'" width="80" height="80">
+                            </div>
+                        </div>
+                        <div class="info">
+                            <div class="title">广东省群众广场排舞视频-天使之翼</div>
+                            <div class="teacher">主讲老师：<span>张三</span></div>
+                            <div class="teacher">发布时间：2017-10-30</div>
+                        </div>
+                        <div class="mask"></div>
+                    </li>
+                    <li>
+                        <a href="detail" target="_blank"></a>
+                        <div class="img">
+                            <img th:src="${basePath}+'/assets/img/img_demo/q6.jpg'" alt="demo">
+                            <div class="mask">
+                                <img th:src="${basePath}+'/assets/img/supply/play.png'" width="80" height="80">
+                            </div>
+                        </div>
+                        <div class="info">
+                            <div class="title">广东省群众广场排舞视频-天使之翼</div>
+                            <div class="teacher">主讲老师：<span>张三</span></div>
+                            <div class="teacher">发布时间：2017-10-30</div>
+                        </div>
+                        <div class="mask"></div>
+                    </li>-->
+                </ul>
+                <!--分页开始 -->
+                <div class="green-black" id="artPagging" style="margin-bottom: 40px;margin-top:60px;"></div>
+                <!--分页结束-->
+            </div>
+        </div>
+        <!--主体结束-->
+    </div>
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong/public/footer :: copy"></div>
+<!--底部结束-->
+<script type="text/javascript" th:inline="javascript">
+
+    $(function(){
+        MassInfoTool.init();
+    });
+
+    var MassInfoTool = {
+        bashPath: [[${basePath}]],
+        batchid: [[${param.id[0]}]],
+        brandid: [[${param.brandid[0]}]],
+
+        brandInfoUrl: [[${apiPath.brandinfo}]],
+        batchInfoUrl: [[${apiPath.batchinfo}]],
+
+        massResourceListUrl: [[${apiPath.massResourceList}]],
+
+        init: function(){
+            var me = this;
+
+            //调用导航设置
+            ZtnavTool.setNavhref(me.brandid, me.batchid);
+
+            me.loadBatchInfo();
+
+            me.loadResours();
+        },
+
+        loadBatchInfo: function(){
+            var me = this;
+            //取届次详细信息
+            $.post(me.batchInfoUrl, {id: me.batchid}, function(data){
+                if (data && data.data && data.data.brandid){
+                    me.loadBrandInfo(data.data.brandid);
+                }
+            }, "JSON");
+        },
+
+        loadBrandInfo: function (brandid) {
+            var me = this;
+
+            //取文化专题详细信息
+            $.post(me.brandInfoUrl, {id: brandid}, function(data){
+                if (data && data.data) {
+                    var imgPath = data.imgPath;
+                    var info = data.data;
+                    //$(".banner").css("background-image", "url("+imgPath+ info.bgimgurl+")");
+                    $(".banner").css({
+                        "background-image":"url("+imgPath+ info.bgimgurl+")",
+                        "background-position": "center"
+                    });
+                }
+            }, "JSON");
+        },
+
+        loadResours: function(page, pageSize){
+            var me = this;
+            //加载作品列表
+            me.resParams = me.resParams || {};
+            me.resParams.page = page || 1;
+            me.resParams.pageSize = pageSize || 6;
+            me.resParams.refid = me.batchid;
+            me.resParams.reftype = 56;
+            me.resParams.enttype = 2;
+
+            $.post(me.massResourceListUrl, me.resParams, function(data){
+                var rowsUl = $("#modelList");
+                rowsUl.empty();
+
+                if (!data || !data.rows || data.rows.length==0) {
+                    rowsUl.append("<div class='public-no-message'></div>");
+                    return;
+                }
+                var rows = data.rows;
+
+                me.srcLiTemp = me.srcLiTemp || '<li>\
+                        <a href="detail" target="_blank"></a>\
+                        <div class="img">\
+                            <img class="vm-img" alt="">\
+                            <div class="mask">\
+                                <img src="'+me.bashPath+'/assets/img/supply/play.png" width="80" height="80">\
+                            </div>\
+                        </div>\
+                        <div class="info">\
+                            <div class="title" name="name"></div>\
+                            <div class="teacher">主讲老师：<span name="extemcee">张三</span></div>\
+                            <div class="teacher" name="crtdate">发布时间：2017-10-30</div>\
+                        </div>\
+                        <div class="mask"></div>\
+                    </li>';
+
+                for (var i in rows){
+                    var row = rows[i];
+                    var rowsLi = $(me.srcLiTemp);
+
+                    row.crtdate = "发布时间：" + moment(row.crtdate).format("YYYY-MM-DD HH:mm:ss");
+
+                    rowsLi.find("[name]").each(function(){
+                        var ent = $(this);
+                        var name = ent.attr("name");
+                        if (!name || name=='') return true;
+                        ent.text(row[name]||'');
+                    });
+                    rowsLi.find("a").attr("href", me.bashPath+"/qwzy/detail?libid="+row.libid+"&resid="+row.resid);
+                    var img;
+                    switch (row.enttype){
+                        case "1": img = row.enturl; break;
+                        case "2": img = (row.deourl && row.deourl!='') ? row.deourl : me.bashPath+"/assets/img/brand/brand-music.jpg"; break;
+                        case "3": img = me.bashPath+"/assets/img/brand/brand-music.jpg"; break;
+                        default: //img = me.bashPath+"/assets/img/public/file.png";
+                            img = me.bashPath + dataInit.getFileTypeIcon(row.enturl, '/assets/img/brand/xiazai.jpg');
+                    }
+                    rowsLi.find(".vm-img").attr("src", img);
+
+                    rowsUl.append(rowsLi);
+                }
+
+                dataInit.pageInit("artPagging", me.resParams.page, me.resParams.pageSize, data.total,
+                    function(page, pageSize){
+                        me.loadResours(page, pageSize)
+                    });
+            }, "json");
+        }
+    }
+</script>
+</body>
+</html>

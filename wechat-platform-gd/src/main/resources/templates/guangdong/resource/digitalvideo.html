@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/brand/brand.css'" >
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/resource/resdetail.css'" >
+<link rel="stylesheet" th:href="${basePath}+'/assets/js/live/skins/default/aliplayer-min.css'" />
+<script type="text/javascript" th:src="${basePath}+'/assets/js/live/aliplayer-min.js'"></script>
+<div th:include="guangdong/public/leftBar :: copy"></div>
+<div id="page">
+    <div class="mui-content">
+        <div class="image-info mui-clearfix">
+            <video id="J_prismPlayer" class="prism-player" controls="controls" preload="metadata"></video>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" th:inline="javascript">
+    var rid = dataInit.getUrlParam("resid");
+    var lid = dataInit.getUrlParam("libid");
+
+    var id = dataInit.getUrlParam("id");
+    var reftype = dataInit.getUrlParam("reftype");
+    var refid = dataInit.getUrlParam("refid");
+
+    $(document).ready(function () {
+
+        if (id){
+            dataInit.ajax({
+                api: [[${apiPath.ppResourceList}]],
+                params: {
+                    page: 1,
+                    pageSize: 1000000000,
+                    refid: refid,
+                    reftype: reftype,
+                    wechat: 1,
+                    cultid: $.cookie("cultid")
+                },
+                forceUpdate: false,
+                fn: function (data) {
+                    createModelHtmlOld(data)
+                }
+            })
+        }else{
+            dataInit.ajax({
+                api: [[${apiPath.qwzyDetail}]],
+                params: {
+                    resid: rid,
+                    libid: lid
+                },
+                forceUpdate: false,
+                fn: function (data) {
+                    createModelHtml(data)
+                }
+            });
+        }
+
+        if (dataInit.isAndroid()) {
+            $(".assistive-wrap").hide();
+        }
+    });
+
+    function createModelHtml(data) {
+        if(data.code ==0){
+            var model = data.data;
+            if(model.libid == lid){
+                var imgPath = model.respicture;
+                var videoPath = model.resurl;
+                $('.image-info').append('<div class="title">' + model.resname + '</div>');
+                $("#J_prismPlayer").attr('src', videoPath);
+                $("#J_prismPlayer").attr('poster', imgPath);
+            }
+        }
+    }
+
+    function createModelHtmlOld(data) {
+        if(data.code ==0 && data.rows.length>0){
+            data.rows.forEach(function (model) {
+                if(model.id == id){
+                    var imgPath = data.imgPath + model.deourl, videoPath = '';
+                    if (model.enturl) {
+                        videoPath = model.enturl.indexOf('http') >= 0 ? model.enturl : param.imgPath + model.enturl;
+                    }
+                    $('.image-info').append('<div class="title">' + model.name + '</div>');
+                    $("#J_prismPlayer").attr('src', videoPath);
+                    $("#J_prismPlayer").attr('poster', imgPath);
+                }
+            })
+        }
+    }
+
+</script>
+</body>
+</html>

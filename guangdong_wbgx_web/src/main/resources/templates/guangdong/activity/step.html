@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link th:href="${basePath}+'/assets/style/activity/baoming.css'" rel="stylesheet">
+<script type="text/javascript" th:src="${basePath}+'/assets/js/activity/seatOrder.js'"></script>
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/rong.validate.js'"></script>
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/rong.message.js'"></script>
+<div class="wrapper clearfix">
+    <div class="content">
+        <!--公共主头部开始-->
+        <div id="header" th:include="guangdong/public/header :: copy"></div>
+        <!--公共主头部结束-->
+        <div id="act_baoming_step1" class="main-info-bg bg-color">
+            <ul class="crumbs crumbs-3 clearfix">
+                <li class="step-1">1. 填写基本信息<em class="arrow"></em></li>
+                <li class="step-2">2. 选择座位<em class="arrow"></em></li>
+                <li class="step-3">3. 填写取票信息<em class="arrow"></em></li>
+                <li class="step-4">4. 确认订单信息<em class="arrow"></em></li>
+                <li class="step-5 last">5. 完成报名<em class="arrow"></em></li>
+            </ul>
+            <div class="container-wrapper">
+                <div class="order-msg">
+                    <span class="msg-title">报名信息</span>
+                </div>
+                <div class="order-content clearfix">
+                    <div class="order-img">
+                        <img class="actImgPath" th:src="${basePath}+'/assets/img/public/loading.png'" width="249" height="170">
+                    </div>
+                    <div class="order-detail">
+                        <h1 class="title">&nbsp;</h1>
+                        <p><i class="iconfont icon-time"></i>时间：<span id="time"></span></p>
+                        <p><i class="iconfont icon-dianhua"></i>电话：<span id="phone"></span></p>
+                        <p><i class="iconfont icon-location"></i>地址：<span class="actAddress"></span></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dialog-signUP-content clearfix">
+                <div class="order-msg">
+                    <span class="msg-title">选择座位</span>
+                </div>
+                <div class="dialog-signUP-con">
+                    <div class="desc desc1">
+                        <div class="detail">
+                            <table class="tab1" width="100%">
+                                <tbody>
+                                <tr>
+                                    <td class="w500">
+                                        <span class="date_name fl">选择日期</span>
+                                        <select name="eventDate" id="eventDate" class="date fl dateChange" onchange="changeDate()" required>
+                                        </select>
+                                        <!--<span class="error-msg fl">请选择日期</span>-->
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="clearfix">
+                                        <span class="date_name fl">选择场次</span>
+                                        <select name="eventTime" id="eventTime" class="date fl dateChange" onchange="selectTime()" required>
+                                        </select>
+                                        <!--<span class="error-msg fl">请选择场次</span>-->
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <p>剩余票数/总票数：<span><span class="active" id="overNum"></span>/<span id="ticketnum"></span></span></p>
+                            <p>您已预定：<span class="active" id="ticketNum_"></span></p>
+                            <p id="ticketCount" style="display:none;">
+                                我要订
+                                <input id="ticket" class="ticket" type="number" min="1" onkeyup="value=value.replace(/[^\d]/g,'')">
+                                <span>张票</span>
+                                <span class="warning">( 本场活动最多可预订<span id="seats"></span>个座位 )</span>
+                            </p>
+                        </div>
+                        <div class="seat" id="seat_1" style="display: none">
+                            <!--座位渲染-->
+                            <div class="seat-container" id="seat"></div>
+                        </div>
+                        <div class="seat-msg" id="seat-msg" style="display: none">
+                            <div class="seat-img">
+                                <span><span class="kex"></span>可选</span>
+                                <span><span class="bkx"></span>不可选</span>
+                                <span><span class="yx"></span>已选</span>
+                            </div>
+                        </div>
+                        <div class="seat-on" id="seat-on" style="display: none">
+                            <div class="seat-on-message clearfix" id="seat-on-message">
+                                <span class="tt">已选座位</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dialog-signUP-content clearfix">
+                <div class="order-msg">
+                    <span class="msg-title">取票信息</span>
+                </div>
+                <form>
+                    <div class="form-list">
+                        <p>为了能顺利取票，请确保您的手机号码无误</p>
+                        <p><span>手机号码：</span><input id="mobilePhone" class="mobilePhone" name="mobilePhone" readonly="true" type="text" placeholder="请输入手机号码"><span class="color">*必填项</span></p>
+                        <p><span>姓名：</span><input id="ordername" type="text" readonly="true" placeholder="请输入姓名"><span class="color">*必填项</span></p>
+                        <!--<p><span>验证码：</span><input type="text" id="checkCode" name="checkCode"  placeholder="验证码" class="yz-code"><img th:src="${basePath}+'/pictureCheckCode'" id="CreateCheckCode" onclick="myReload()" width="88" height="34"><span class="color">*必填项</span></p>-->
+                    </div>
+                </form>
+                <div class="explain">
+                    <div class="explain-desc">
+                        <h3>订票须知</h3>
+                        <p>1、订票成功后，活动开始当日请提前入场，避免拥堵；</p>
+                        <p>2、如需退票，请在活动开始前办理相关手续；</p>
+                        <p>3、每场活动票数有限，退票后再次预订可能遇到票已售完，无法订票的情况，由用户自行负责；</p>
+                        <p>4、如累计超过2次订票却没有到场参加活动者，将取消本年度购票资格；</p>
+                        <p>5、如遇非人为可控因素或重大天气等影响，导致活动无法举办，举办方有权利延后或取消活动，并以短信和站内信形式告知订票人办理相关手续；</p>
+                        <p>6、活动最终解释权归举办方。</p>
+                    </div>
+                </div>
+            </div>
+            <div class="submit clearfix">
+                <div class="jf-checbox" id="checkbox1">
+                    <div class="checbox1">
+                        <input type="checkbox" value="1" id="checkboxOneInput">
+                        <label for="checkboxOneInput"><i class="selectx"></i></label>
+                    </div>
+                    <a href="javascript:void(0)">我已阅读并接受订票须知相关条款</a>
+                </div>
+                <a href="javascript:void(0)" id="submit-order" class="submit-order">提交订单</a>
+                <!--<a th:href="${basePath}+'/check/checkCode?checkCode=1234'" target="_blank" id="submit-order" class="submit-order">提交订单</a>-->
+            </div>
+        </div>
+        <div id="act_baoming_step2" class="main-info-bg bg-color" style="display: none">
+            <ul class="crumbs crumbs-4 clearfix">
+                <li class="step-1">1. 填写基本信息<em class="arrow"></em></li>
+                <li class="step-2">2. 选择座位<em class="arrow"></em></li>
+                <li class="step-3">3. 填写取票信息<em class="arrow"></em></li>
+                <li class="step-4">4. 确认订单信息<em class="arrow"></em></li>
+                <li class="step-5 last">5. 完成报名<em class="arrow"></em></li>
+            </ul>
+            <div class="container-wrapper">
+                <div class="order-msg">
+                    <span class="msg-title">确认订单信息</span>
+                    <a href="#" class="return" onclick="returnBack()">返回上一级修改信息</a>
+                </div>
+                <div class="order-content clearfix">
+                    <div class="order-img">
+                        <img class="actImgPath" th:src="${basePath}+'/assets/img/activity/order-img.jpg'" width="249" height="170">
+                    </div>
+                    <div class="order-detail">
+                        <h1 class="title"></h1>
+                        <p><i class="iconfont icon-time"></i>时间：<span id="orderTime"></span></p>
+                        <p><i class="iconfont icon-location"></i>地址：<span class="actAddress"></span></p>
+                        <p><i class="iconfont icon-barrage"></i>订票数：<span id="orderSeats"></span>张</p>
+                        <p><i class="iconfont icon-dianhua"></i>联系方式：<span id="telPhone"></span></p>
+                    </div>
+                </div>
+                <a href="javascript:void(0)" onclick="submitOrder()" class="submit" id="submitOrder">确认订单</a>
+            </div>
+        </div>
+        <div id="act_baoming_step3" class="main-info-bg bg-color" style="display:none;">
+            <ul class="crumbs crumbs-5 clearfix">
+                <li class="step-1">1. 填写基本信息<em class="arrow"></em></li>
+                <li class="step-2">2. 选择座位<em class="arrow"></em></li>
+                <li class="step-3">3. 填写取票信息<em class="arrow"></em></li>
+                <li class="step-4">4. 确认订单信息<em class="arrow"></em></li>
+                <li class="step-5 last">5. 完成报名<em class="arrow"></em></li>
+            </ul>
+            <div class="container-wrapper">
+                <div class="order-msg">
+                    <span class="msg-title">完成报名</span>
+                    <a th:href="${basePath}+'/'+${cultsite}+'/center/activity'" class="return">查看活动</a>
+                </div>
+                <div class="order-content clearfix">
+                    <div class="complete-order">
+                        <img th:src="${basePath}+'/assets/img/activity/complete-order.png'" width="61" height="61">
+                    </div>
+                    <div class="compltet-order-msg">
+                        <p>恭喜您，<em class="title"></em></p>
+                        <span>报名申请已提交，请关注订单状态！</span>
+                    </div>
+                </div>
+                <a href="" class="submit" id="returnDetail">返回活动详情</a>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong/public/footer :: copy"></div>
+<!--底部结束-->
+<a class="to-top"></a>
+<script th:src="${basePath}+'/assets/js/activity/seatOrder.js'" type="text/javascript"></script>
+<script th:src="${basePath}+'/assets/js/activity/activityDetail.js'" type="text/javascript"></script>
+<script type="text/javascript" th:inline="javascript">
+    var seatMax  = 0;
+    var seatSize = 0;
+    var seatSizeUser = 0 ;
+    var totalSeatSize = 0 ;
+    var flag = true ;
+    var nickName = $("#temp_nickName").val();
+    var userid = $("#temp_userId").val();
+    var ___userPhone = $("#temp_mobile").val();
+    //手机号码规则
+    var Phones = /^1[34578][0-9]\d{8}$/;
+    var itemId = dataInit.getUrlParam('id');
+    var model,selectData;
+    $(document).ready(function () {
+        dataInit.ajax({
+            api: [[${apiPath.actDetail}]],
+            fn: showActivityTime,
+            params: {actId: itemId}
+        });
+    })
+
+    function showActivityTime(data) {
+        var seatModel = data.data.actdetail;
+        var phone = seatModel.telephone;
+        var address = seatModel.address;
+        var title = seatModel.name;
+        var imgPath = [[${imgPath}]] + dataInit.getBigImage(seatModel.imgurl);
+        //用户手机号码
+        var mobilePhone = [[${session.wbgx_sessUserKey.mobile}]];
+        var begin = moment(seatModel.starttime).format('YYYY-MM-DD');
+        var end = moment(seatModel.endtime).format('YYYY-MM-DD');
+        var time = begin + ' ~ ' + end;
+        //图片地址
+        $(".actImgPath").attr('src',imgPath);
+        //返回活动详情
+        $("#returnDetail").attr("href",[[${basePath}]]+'/'+[[${cultsite}]]+"/hd/detail?id="+itemId)
+        $('#time').text(time);
+        $('#phone').text(phone);
+        $('.actAddress').text(address);
+        $('.title').text(title);
+        $('.mobilePhone').val(mobilePhone);
+        $("#eventDate").html('<option value="">--请选择--</option>');
+        model = data.data.timeList;
+        if(model && model.length){
+            for(var i in model){
+                $("#eventDate").append(
+                    '<option value="'+model[i].text+'">'+model[i].text+'</option>'
+                );
+            }
+        }
+
+        dataInit.ajax({
+            api: [[${apiPath.userInfo}]],
+            fn: showUserName,
+            params: {userId: userid}
+        });
+
+        function showUserName(data) {
+            if(data.code == 0) {
+                if(data.data.realName == ___userPhone){
+                    if(Phones.test(nickName)){
+                        nickName = nickName.substr(0,3)+"****"+nickName.substr(7);
+                        $("#ordername").val(nickName);
+                    }else {
+                        $("#ordername").val(nickName);
+                    }
+
+                }else {
+                    userName = data.data.realName ? data.data.realName : nickName;
+                    $("#ordername").val(userName);
+                }
+
+            }else {
+                $("#ordername").val(nickName);
+                rongDialog.init({ico : 2, type : 1, desc : data.msg || '获取数据失败！'});
+            }
+        }
+    }
+
+    function changeDate() {
+        $("#eventTime").html('<option value="">--请选择--</option>');
+        selectData = $("#eventDate").val();
+        if(model && model.length){
+            for(var i in model){
+                if(model[i].text == selectData){
+                    var timeListChildren = model[i].children;
+                    for(var j in timeListChildren){
+
+                        $("#eventTime").append(
+                            '<option value="'+timeListChildren[j].value+'">'+timeListChildren[j].text+'</option>'
+                        );
+                    }
+                }
+            }
+        }
+    }
+
+    function selectTime() {
+        var eventId = $("#eventTime").val();
+        loadData(eventId);
+    }
+
+    function loadData(eventId) {
+        dataInit.ajax({
+            api: [[${apiPath.actBooking}]],
+            fn: showActivitySeat,
+            params: {actId: itemId,eventId:eventId,userId:userid}
+        });
+    }
+
+    function showActivitySeat(data) {
+        var seatModel = data.data.act;
+        //用户可预订
+        seatMax  = data.data.act.seats;
+        if(seatMax  =='' || seatMax  ==null){
+            seatMax  = 5;
+        }
+        $('#seats').text(seatMax );
+        //用户预订最大数
+        $('#ticket').attr('max',seatMax );
+        //活动总票数
+        totalSeatSize = data.data.totalSeatSize;
+        $('#ticketnum').text(totalSeatSize);
+        //活动已预订票数
+        seatSize = data.data.seatSize;
+        var yupiao=totalSeatSize-seatSize;
+        if(yupiao>0){
+            $('#overNum').text(yupiao);//余票数
+        }
+
+        //用户已预订票数
+        seatSizeUser = data.data.seatSizeUser || 0;
+
+        var sellticket = seatModel.sellticket;
+        if(sellticket == 2){
+            $("#seat_1").css("display","none");
+            $("#seat").css("display","none");
+            $("#seat-msg").css("display","none");
+            $("#seat-on").css("display","none");
+            $("#ticketCount").css("display","block");
+        }
+        if(sellticket == 3){
+            $("#seat_1").css("display","none");
+            $("#seat").css("display","block");
+            $("#seat-msg").css("display","block");
+            $("#seat-on").css("display","block");
+            $("#ticketCount").css("display","none");
+        }
+        var staMap =  data.data.statusMap;
+        var typeMap = data.data.mapType;
+        seatMax = seatMax;
+        $("#ticketNum_").html(seatSizeUser+' / '+seatMax);
+        $("#seat").empty();
+        $('#seat-on-message').find("span.seat-list").remove();
+        if(staMap !=''){
+            $("#seat_1").css("display","block");
+            var option = {
+                map     :    staMap,      //座位地图
+                mapType :    typeMap,  //座位号和状态
+                seatMax :    seatMax,         //最大能预订票数
+                yupiao :    yupiao,         //最大能预订票数
+                seatSizeUser : seatSizeUser //当前用户已预订票数
+            }
+            initSeat(option);
+        }
+    }
+
+    /*
+     * 返回上一级
+     */
+    function returnBack(){
+        $("#act_baoming_step1").show();
+        $("#act_baoming_step2").hide();
+    }
+
+    /*
+     * 验证表单数据
+     */
+    function showDivStep2(){
+        var dateCont = $("#eventDate").val();
+        var mobilePhone = $("#mobilePhone").val();
+        var eventTime = $("#eventTime").val();
+        var actId = $("#eventDate").val();
+        var seatNum = $("#ticket").val();
+        var eventText = $("#eventTime option:checked").text();
+        var dateText = $("#eventDate option:checked").text();
+        var ordername = $("#ordername").val();
+        ordername = removeHTMLTag(ordername);
+        var seats = $("#ticket").val();
+        /*var checkCode=$("#checkCode").val();
+
+        if (checkCode == '' ) {
+            return rongDialog.init({ico : 2, type : 1, desc : "操作失败,验证码不能为空!"});
+        }*/
+        if (dateCont == '' ) {
+            return rongDialog.init({ico : 2, type : 1, desc : "操作失败,请选择活动日期!"});
+        }
+        if (mobilePhone == '') {
+            return rongDialog.init({ico : 2, type : 1, desc : "操作失败,请填写正确的手机号码!"});
+        }
+        if ( eventTime == '') {
+            return rongDialog.init({ico : 2, type : 1, desc : "操作失败,请选择活动场次!"});
+        }
+        if ( ordername == '') {
+            return rongDialog.init({ico : 2, type : 1, desc : "操作失败,请输入订票人姓名!"});
+        }
+        if(Number(seats) > Number(seatMax)){
+            return rongDialog.init({ico : 2, type : 1, desc : "本场次最多可选"+seatMax+"张票"});
+        }
+        var ticketNum_ = totalSeatSize - seatSize;//剩余票数
+        if(ticketNum_ < Number(seatNum)){
+            return rongDialog.init({ico : 2, type : 1, desc : "本场次最多可选"+ticketNum_+"张票"});
+        }
+        if(Number(seatSizeUser)+Number(seats) > Number(seatMax) ){
+            return rongDialog.init({ico : 2, type : 1, desc : "您最多可预定"+seatMax+"张票"});
+        }
+
+        var selection = $("#seat-on-message").find("span.seat-list");
+        var mySelectSeat = [];
+        for(var i = 0;i < selection.length;i++){
+            var item = selection[i];
+            mySelectSeat.push($(item).html());
+        }
+        if(mySelectSeat.length < 1 && seatNum < 1  ){
+            return rongDialog.init({ico : 2, type : 1, desc : "请选择座位或填写订票数量！"});
+        }
+        if (!checkPhone()) return;
+        $("#orderTime").html(dateText +" "+ eventText);
+        var ticketNum = mySelectSeat.length;
+        if(mySelectSeat.length<1){
+            ticketNum = seatNum;
+        }
+        $("#orderSeats").html(ticketNum);
+        $("#telPhone").html(mobilePhone);
+
+        /*$.ajax({
+            url: [[${basePath}]]+"/check/checkCode",
+            data:{"checkCode":checkCode},
+            type: "post",
+            async : true,
+            dataType: 'json',
+            success: function (data) {
+                if(data=="0"){
+                    return rongDialog.init({ico : 2, type : 1, desc : "验证码有误!"});
+                }else{
+                    $("#act_baoming_step2").show();
+                    $("#act_baoming_step1").hide();
+                }
+            }
+        })*/
+
+        $("#act_baoming_step2").show();
+        $("#act_baoming_step1").hide();
+
+    }
+
+    $(function () {
+        $('.submit').on("click", 'a.submit-order.red', function(){
+            showDivStep2();
+        })
+    });
+
+    /*
+     * 意见手机号码验证
+     */
+    function checkPhone(){
+        var telPhone = $("#mobilePhone").val();
+        if(!Phones.test(telPhone)){
+            rongDialog.init({ico : 2, type : 1, desc : "手机号码有误，请重填"});
+            return false;
+        }
+        return true;
+    }
+
+
+
+    /*
+     * 返回上一级
+     */
+    function returnBack(){
+        $("#act_baoming_step1").show();
+        $("#act_baoming_step2").hide();
+        $("#act_baoming_step3").hide();
+    }
+    
+    //提交订单
+    function submitOrder() {
+        var eventId = $("#eventTime").val();
+        var orderPhoneNo = $("#mobilePhone").val();
+        var name = $("#ordername").val();
+        var seatStr1 = [];
+        var seats2 = 0;
+        var selection = $("#seat-on-message").find("span.seat-list");
+        for (var i = 0; i < selection.length; i++) {
+            var item = selection[i];
+            seatStr1.push($(item).html());
+        }
+        if (seatStr1 && seatStr1.length > 0) {
+
+        } else {
+            seats2 = $("#ticket").val();
+        }
+        seatStr1 = seatStr1.join(",");
+
+        if (flag) {
+            flag = false;
+            dataInit.ajax({
+                api: [[${apiPath.checkActPublish}]],
+                fn: checkOrder,
+                params: {userId: userid, actId: itemId, eventId: eventId, seatStr: seatStr1, seats: seats2}
+            });
+        }
+
+        function checkOrder(data) {
+            if (data.code == 0) {
+                dataInit.ajax({
+                    api: [[${apiPath.actBookSave}]],
+                    fn: nextPage,
+                    params: {
+                        userId: userid,
+                        actId: itemId,
+                        eventId: eventId,
+                        orderPhoneNo: orderPhoneNo,
+                        name: name,
+                        seatStr: seatStr1,
+                        seats: seats2,
+                        devType: 0
+                    }
+                });
+            } else {
+                rongDialog.init({ico: 2, type: 1, desc: data.msg});
+                flag = true;
+            }
+        }
+
+        function nextPage(data) {
+            if (data.code == 0) {
+                $("#act_baoming_step1").hide();
+                $("#act_baoming_step2").hide();
+                $("#act_baoming_step3").show();
+            } else {
+                rongDialog.init({ico: 2, type: 1, desc: data.msg});
+                flag = true;
+            }
+        }
+    }
+
+    //给消息过滤HTML标签
+    function removeHTMLTag(str) {
+        str = str.replace(/<\/?[^>]*>/g,''); //去除HTML tag
+        str = str.replace(/[ | ]*\n/g,'\n'); //去除行尾空白
+        //str = str.replace(/\n[\s| | ]*\r/g,'\n'); //去除多余空行
+        str=str.replace(/&nbsp;/ig,'');//去掉&nbsp;
+        return str;
+    }
+
+    /*function myReload() {
+        document.getElementById("CreateCheckCode").src =
+            document.getElementById("CreateCheckCode").src+ "?nocache=" + new Date().getTime();
+    }*/
+
+</script>
+</body>
+</html>

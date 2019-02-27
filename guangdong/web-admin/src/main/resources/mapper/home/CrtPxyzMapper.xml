@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.creatoo.hn.mapper.home.CrtPxyzMapper">
+
+    <select id="selectPxyzList" resultType="hashmap">
+        select
+        (select count(*) from whg_tra_enrol e where e.traid= t.id and e.state in (1,4,6)) ordernum,
+        case
+        when t.enrollstarttime &lt; #{now} and t.enrollendtime &gt; #{now} and t.maxnumber &gt; (select count(*) from whg_tra_enrol e where e.traid= t.id and e.state in (1,4,6)) then 1
+        else 0
+        end as isbm,
+        t.*
+        from whg_tra t
+        where t.state = 6 and t.delstate = 0
+        <if test="cult != null and cult=='TOP'">
+            and t.cultid = 'TOP'
+        </if>
+        <if test="traarea!=null and traarea!=''">
+            and t.area = #{traarea}
+        </if>
+        <if test="typid!=null and typid!=''">
+            and t.arttype = #{typid}
+        </if>
+        <if test="tratype!=null and tratype!=''">
+            and t.etype = #{tratype}
+        </if>
+        <choose>
+            <when test="time!=null and time==2">
+                and t.endtime &gt;= #{now} and t.starttime &lt;= #{now}
+            </when>
+            <when test="time!=null and time==1">
+                and t.starttime &gt;= #{now}
+            </when>
+            <when test="time!=null and time==0">
+                and t.id is not null
+            </when>
+        </choose>
+        <if test="tratitle">
+            and t.title LIKE "%"#{tratitle}"%"
+        </if>
+
+        ORDER BY isbm desc,  t.statemdfdate desc
+    </select>
+
+</mapper>

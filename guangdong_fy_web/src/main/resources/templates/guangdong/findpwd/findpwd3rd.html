@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="public/resource :: copy"></head>
+<link th:href="${basePath}+'/assets/style/regist/regist.css'" rel="stylesheet">
+<body>
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/rong.validate.js'"></script>
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/rong.message.js'"></script>
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/jquery.md5.js'"></script>
+<div class="regist-logo"><a th:href="${basePath}+'/index'"></a></div>
+<ul class="crumbs crumbs-3rd clearfix">
+  <li class="step-1">1. 选择模式<em class="arrow"></em></li>
+  <li class="step-2">2. 验证信息<em class="arrow"></em></li>
+  <li class="step-3 last">3. 修改密码</li>
+</ul>
+<div class="main">
+  <div class="reg-msg">
+    <div class="msg success">
+      <h2><span></span>密码修改成功</h2>
+      <p>请牢记您的登录密码，请勿外泄您的密码!</p>
+      <p><a th:href="${basePath}+'/login'">立即登录</a></p>
+    </div>
+    <div class="msg err"></div>
+  </div>
+</div>
+<div class="mask none"></div>
+<!-- core public JavaScript --> 
+<script src="../../assets/js/public/jquery-1.11.0.min.js"></script> 
+<script src="../../assets/js/public/formUI.js"></script> 
+<script src="../../assets/js/public/jquery-migrate-1.0.0.js"></script> 
+<script src="../../assets/js/regist/regist.js"></script>
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/resource/resource.css'" >
+<div th:include="guangdong/public/leftBar :: copy"></div>
+<div id="page">
+    <div class="mui-content">
+        <!--文化众筹-->
+        <div class="culture">
+            <div class="banner">
+                <img class="lazy" src="http://mpic.tiankong.com/52f/77b/52f77bd9cec051508015480c4f3075ca/451-1511.jpg">
+            </div>
+            <div class="culture-nav mui-clearfix">
+                <ul>
+                    <li>
+                        <img th:src="${basePath}+'/assets/img/public/resource-a@2x.png'">
+                        <h3>文化专题</h3>
+                        <a th:href="${basePath}+'/resource/whzt'"></a>
+                    </li>
+                    <li>
+                        <img th:src="${basePath}+'/assets/img/public/resource-b@2x.png'">
+                        <h3>艺术人才</h3>
+                        <a th:href="${basePath}+'/resource/ysrc'"></a>
+                    </li>
+                    <li>
+                        <img th:src="${basePath}+'/assets/img/public/resource-c@2x.png'">
+                        <h3>数字资源</h3>
+                        <a th:href="${basePath}+'/resource/szzy'"></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!--文化众筹-->
+
+        <div class="culture-list">
+            <div class="culture-title">
+                <!--<img th:src="${basePath}+'/assets/img/public/title-ziyuan@2x.png'">-->
+                热门资源
+            </div>
+            <div class="brand-nav-content mui-clearfix">
+                <div class="picture" >
+                    <div class="photo" id="res-box">
+                        <div class="photo-l">
+                            <div class="img" id="res-box-1">
+                                <a href="#">
+                                    <img class="lazy" src="http://mpic.tiankong.com/9bc/194/9bc1942700305de600957c73cecf18c2/640.jpg"/>
+                                    <p>资源名称</p>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="photo-l">
+                            <div class="img" id="res-box-2">
+                                <a href="#">
+                                    <img class="lazy" src="http://mpic.tiankong.com/880/58a/88058a21f03d8eceeb57f977bb620ec5/640.jpg"/>
+                                    <p>视频名称</p>
+                                    <div class="video-mask">
+                                        <img th:src="${basePath}+'/assets/img/gather/play.png'">
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="photo-l">
+                            <div class="img" id="res-box-3">
+                                <a href="#">
+                                    <img class="lazy" src="http://mpic.tiankong.com/567/80c/56780cb691b0e1dd3f550a1f97ca614f/640.jpg"/>
+                                    <p>音频名称</p>
+                                    <div class="audio-mask">
+                                        <img th:src="${basePath}+'/assets/img/gather/macphone.png'">
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" th:inline="javascript">
+    $().ready(function () {
+        dataInit.ajax({
+            api: [[${apiPath.qwzyList}]],
+            params: {
+                page: 1,
+                pageSize: 8
+            },
+            forceUpdate: false,
+            fn: function (data) {
+                createModelHtml(data)
+            }
+        });
+    });
+    function createModelHtml(data) {
+        if(data.code == '0' && data.rows.length){
+            var html_ = '';
+            $.each(data.rows,function (i, v) {
+                var type = v.resourcetype;
+                var imgUrl = type == 'audio' ? [[${basePath}]]+'/assets/img/gather/mp3.jpg':
+                    type == 'file'?
+                        //[[${basePath}]]+'/assets/img/gather/music.jpg'
+                        [[${basePath}]] + dataInit.getFileTypeIcon(v.resurl, '/assets/img/gather/xiazai.jpg')
+                        : v.respicture;
+                var videoMask = '<div class="video-mask"><img src="'+[[${basePath}]]+'/assets/img/gather/play.png'+'"></div>';
+                var audioMask = '<div class="audio-mask"><img src="'+[[${basePath}]]+'/assets/img/gather/macphone.png'+'"></div>';
+                html_+= '<div class="photo-l">' +
+                    '   <div class="img" style="height: 100px;" id="res-box-1">' +
+                    '<a href="javascript: goPage(\''+v.libid+'\',\''+v.resid+'\',\''+v.resourcetype+'\')">' +
+                    '<img class="lazy" src="'+imgUrl+'"/>' +
+                    '<p>'+v.resname+'</p>' +
+                    ( type=='video'? videoMask : type=='audio'? audioMask :'' )+
+                    '</a>' +
+                    '</div>' +
+                    '</div>';
+            });
+            $('#res-box').html(html_);
+        }
+    }
+    function goPage(lid,rid,type) {
+        if(type == 'img'){
+            window.location.href = [[${basePath}]] + '/resource/digitalimage?libid='+lid+'&resid='+rid;
+        }else if(type == 'video') {
+            window.location.href = [[${basePath}]] + '/resource/digitalvideo?libid='+lid+'&resid='+rid;
+        }else if(type == 'audio') {
+            window.location.href = [[${basePath}]] + '/resource/digitalaudio?libid='+lid+'&resid='+rid;
+        }else if(type == 'file') {
+            window.location.href = [[${basePath}]] + '/resource/digitalfile?libid='+lid+'&resid='+rid;
+        }
+    }
+</script>
+</body>
+</html>

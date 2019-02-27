@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<script th:src="${basePath}+'/assets/js/field/fieldList.js'"></script>
+<div class="wrapper clearfix">
+    <div class="content">
+        <!--公共主头部开始-->
+        <div id="header" th:include="guangdong/public/header :: copy"></div>
+        <!--公共主头部结束-->
+        <!--主体开始-->
+        <div class="categoryChange">
+            <div class="row clearfix">
+                <div class="title">区域：</div>
+                <div class="adrList" id="adrList">
+                    <span class='item active'><a href='javascript:void(0)' onclick='setDistrict(this)'>全部</a></span>
+                    <span class='item'><a href='javascript:void(0)' onclick='setDistrict(this)'>全部</a></span>
+                    <span class='item'><a href='javascript:void(0)' onclick='setDistrict(this)'>全部</a></span>
+                    <span class='item'><a href='javascript:void(0)' onclick='setDistrict(this)'>全部</a></span>
+                    <span class='item'><a href='javascript:void(0)' onclick='setDistrict(this)'>全部</a></span>
+                    <span class='item'><a href='javascript:void(0)' onclick='setDistrict(this)'>全部</a></span>
+                    <span class='item'><a href='javascript:void(0)' onclick='setDistrict(this)'>全部</a></span>
+                    <span class='item'><a href='javascript:void(0)' onclick='setDistrict(this)'>全部</a></span>
+                    <span class='item'><a href='javascript:void(0)' onclick='setDistrict(this)'>全部</a></span>
+                    <span class='item'><a href='javascript:void(0)' onclick='setDistrict(this)'>全部</a></span>
+                </div>
+            </div>
+            <div class="row clearfix">
+                <div class="title">类型：</div>
+                <div class="adrList" id="regList">
+                    <span class='item active'><a href='javascript:void(0)' onclick='setDistrict(this)'>全部</a></span>
+                    <span class='item'><a href='javascript:void(0)' onclick='setDistrict(this)'>全部</a></span>
+                </div>
+            </div>
+            <input type="hidden" id="type">
+            <input type="hidden" id="district">
+        </div>
+        <div class="container content">
+            <div class="filter">
+                <div class="filter-list">
+                    <div class="clearfix">
+                        <span class="active"><a href="javascript:void(0)" onclick="setState(this,null)">智能排序</a></span>
+                        <span><a href="javascript:void(0)" onclick="setState(this,'1')">即将开始</a></span>
+                        <span><a href="javascript:void(0)" onclick="setState(this,'2')">正在进行</a></span>
+                        <span><a href="javascript:void(0)" onclick="setState(this,'3')">已结束</a></span>
+                        <span><a href="javascript:void(0)" onclick="setState(this,'4')">活动推荐</a></span>
+                    </div>
+                </div>
+                <div class="search">
+                    <input type="text" placeholder="输入关键词">
+                    <a href="javascript:void(0)"><i class="iconfont icon-search"></i></a>
+                </div>
+                <input type="hidden" id="sdate">
+            </div>
+            <div class="page-list">
+                <!--<div class="public-no-message"></div>-->
+                <div class="content-list" id="venueList">
+                    <ul class="clearfix">
+                        <li>
+                            <a href="detail">
+                                <div class="img">
+                                    <img th:src="${basePath}+'/assets/img/img_demo/activi-img1.jpg'" width="283"
+                                         height="190">
+                                </div>
+                            </a>
+                            <div class="detail">
+                                <h2>台州戏剧节丨《莫欺少年穷》经典演段 不容错过</h2>
+                                <p><span class="tt">地点：</span><span class="desc">台州市广场中路58号台州文化艺术中心一楼1202室</span></p>
+                                <p><span class="tt">时间：</span><span class="desc">2016-10-15</span></p>
+                                <p><span class="tt">余票：</span><span class="desc">50</span></p>
+                            </div>
+                            <div class="button clearfix">
+                                <a href="#">马上预定</a>
+                                <div class="likes on">
+                                    <i class="iconfont icon-praise"></i>
+                                    <span>23</span>
+                                </div>
+                                <div class="collection on">
+                                    <i class="iconfont icon-collection"></i>
+                                    <span>5</span>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <!--分页开始 -->
+                <div class="green-black" id="artPagging" style="margin-bottom: 40px"></div>
+                <!--分页结束-->
+            </div>
+        </div>
+        <!--主体结束-->
+    </div>
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong/public/footer :: copy"></div>
+<!--底部结束-->
+<a class="to-top"></a>
+<script type="text/javascript" th:inline="javascript">
+    var pxtype = dataInit.getUrlParam('pxtype');
+    var userid = $("#temp_userId").val();
+    $(document).ready(function () {
+        var parms = {
+            type: 5,
+            page: 1,
+            rows: 15,
+        }
+        dataInit.ajax({
+            api: [[${apiPath.getTypes}]],
+            fn: showTrainCate,
+            params: parms
+        });
+        dataInit.ajax({
+            api: [[${apiPath.getTags}]],
+            fn: artType,
+            params: parms
+        });
+        dataPage();
+    })
+    function dataPage(page, rows) {
+        var params_page = page || 1;
+        var params_rows = rows || 12;
+        var params = {
+            page: params_page,
+            pageSize: params_rows,
+            arttype: $("#type").val(),
+            district: $("#district").val(),
+            sort: $("#sort").val(),
+            userId: userid
+        }
+        //$(".adrCont").hide();
+        dataInit.ajax({
+            api: [[${apiPath.trainList}]],
+            params: params,
+            fn: function (data) {
+                showTrainList(data);
+                dataInit.pageInit('artPagging', params_page, params_rows, data.total, dataPage);
+            }
+        })
+
+    }
+
+    function showTrainCate(data) {
+        $("#adrList,#regList").html("");
+        var cate = data.rows;
+        var adrList = $("#adrList");
+        adrList.append("<span class='item active'><a href='javascript:void(0)' onclick='setArea(this," + null + ")'>全部</a></span>")
+        for (var i in cate) {
+            adrList.append("<span class='item'><a href='javascript:void(0)' onclick='setArea(this," + cate[i].id + ")'>" + cate[i].name + "</a></span>");
+        }
+    }
+    function artType(data) {
+        var region = data.rows;
+        var regList = $("#regList");
+        regList.append("<span class='item active'><a href='javascript:void(0)' onclick='setType(this," + null + ")'>全部</a></span>")
+        for (var i in region) {
+            regList.append("<span class='item'><a href='javascript:void(0)' onclick=setType(this,'"+ region[i].id + "')>" + region[i].name + "</a></span>");
+        }
+    }
+    function showTrainList(data) {
+        // console.log(data);
+        if (data.data) {
+            $("#train-banner").show();
+            var bannerImg = [[${imgPath}]] + data.data.picture;
+            $("#imgUrl").attr('src', bannerImg);
+        }
+        $("#venueList").html("");
+        var model = data.rows;
+        var modelList = $("#venueList");
+        var typeName = '';
+        if (model.length) {
+            modelList.append("<ul class='group clearfix'></ul>");
+            for (var i in model) {
+                if (model[i].trainimg)
+                    var imgPath = data.imgPath + dataInit.getBigImage(model[i].trainimg);
+                // console.log(data.imgPath);
+                var maxNumber = null;
+                if (model[i].typename) {
+                    typeName = model[i].typename;
+                } else {
+                    typeName = '';
+                }
+
+                if (model[i].isshowmaxnumber) {
+                    maxNumber = "/" + model[i].maxnumber + "人";
+                } else {
+                    maxNumber = '';
+                }
+
+                var a_label = '';
+                if (model[i].canSign == 0) {
+                    a_label = '<a href="detail?id=' + model[i].id + '">立即报名</a>';
+                } else if (model[i].canSign == 104) {
+                    a_label = '<a href="detail?id=' + model[i].id + '">即将开始</a>';
+                } else if (model[i].canSign == 105) {
+                    a_label = '<a href="detail?id=' + model[i].id + '" style="background-color: #A6BBCE">报名已结束</a>';
+                } else if (model[i].canSign == 103) {
+                    a_label = '<a href="detail?id=' + model[i].id + '">人数已满</a>';
+                } else if (model[i].canSign == 108) {
+                    a_label = '<a href="detail?id=' + model[i].id + '">立即报名</a>';
+                } else {
+                    a_label = '<a href="detail?id=' + model[i].id + '">查看详情</a>';
+                }
+                /*var _etype = model[i].etype.split(',');
+                 var __etype = '';
+                 for(var j in _etype){
+                 __etype += '，'+dataInit.checkDict(_etype[j]);
+                 }
+                 __etype = __etype.substring(1);*/
+                modelList.children("ul").append(
+                    '<li>' +
+                    '<a href="detail?id=' + model[i].id + '">' +
+                    '<div class="img">' +
+                    '<img src="' + imgPath + '" width="280" height="210">' +
+                    '<div class="mask"></div>' +
+                    '</div>' +
+                    '</a>' +
+                    '<div class="detail">' +
+                    '<h2>' + model[i].title + '</h2>' +
+                    '<p><span class="tt">类型：</span><span class="desc">' + typeName + '</span></p>' +
+                    '<p><span class="tt">人数：</span><span class="desc"><em>' + model[i].enrolCount + '</em>' + maxNumber + '</span></p>' +
+                    '<p><span class="tt">地址：</span><span class="desc">' + model[i].address + '</span></p>' +
+                    '</div>' +
+                    '<div class="button clearfix">' + a_label +
+                    '</div>' +
+                    '</li>'
+                );
+            }
+        } else {
+            modelList.append("<div class='public-no-message'></div>");
+        }
+
+    }
+    function setActive(dom) {
+        $(dom).parent('span').addClass("active").siblings().removeClass("active");
+    }
+
+    function setArea(dom, id) {
+        $("#district").val(id);
+        dataPage();
+        setActive(dom);
+    }
+
+    function setType(dom, id) {
+        $("#type").val(id);
+        dataPage();
+        setActive(dom);
+    }
+
+    function setState(dom, id) {
+        $("#sort").val(id);
+        dataPage();
+        setActive(dom);
+    }
+</script>
+</body>
+</html>

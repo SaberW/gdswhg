@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link th:href="${basePath}+'/assets/style/login/login.css'" rel="stylesheet">
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/rong.validate.js'"></script>
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/rong.message.js'"></script>
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/jquery.md5.js'"></script>
+<div class="bg-img">
+    <div class="login-cont">
+        <div class="logo">
+            <a href="index"><img th:src="${basePath}+'/assets/img/login/logo.png'"></a>
+        </div>
+        <!--<div class="help">使用广东省文化馆账号登录</div>-->
+        <form th:action="${basePath}+'/_cultsite_/doLogin'" method="post" id="loginForm">
+            <input type="hidden" name="history_url" th:value="${temp_url}">
+            <div class="form-cont">
+                <div class="input-cont phone-cont">
+                    <div class="left-icon"></div>
+                    <!--valid error-->
+                    <input type="text" class="input-row" id="phoneNum" name="phoneNum"  placeholder="手机号"  maxlength="11" required>
+                </div>
+                <div class="input-cont pwd-cont">
+                    <div class="left-icon"></div>
+                    <input type="password" class="input-row" placeholder="密码" id="password" name="password" maxlength="18" required>
+                </div>
+                <div class="other clearfix">
+                <span class="left">
+                    <a href="regist">立即注册</a>
+                </span>
+                    <span class="right">
+                    <a href="pwd/find">忘记密码</a>
+                </span>
+                </div>
+                <div class="go-next">
+                    <button type="submit" class="login-btn goNext">登录</button>
+                    <!--<a href="javascript:void(0)">登录</a>-->
+                </div>
+                <div class="otherLogin">
+                    <!--第三方登录：<i class="weixin-icon-img"></i>-->
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- core public JavaScript -->
+<script type="text/javascript" th:inline="javascript">
+    $(window).resize(function(){
+        positionCenter($('.login-cont'));
+    })
+    $().ready(function () {
+        var cultsite = $.cookie("cultsite");
+        var _action = $("#loginForm").attr("action");
+        _action = _action.replace("_cultsite_", cultsite);
+        $("#loginForm").attr("action", _action);
+
+        positionCenter($('.login-cont'));
+        var msg = [[${loginErrMsg}]];
+        if (msg) {
+            msg = msg.replace(/\"/g, "");
+            rongDialog.init({
+                ico: 2,
+                type: 1,
+                desc: msg
+            });
+        }
+        //手机号格式
+        $.validator.addMethod("phoneType", function (value) {
+            var reg = /^0?(13[0-9]|15[012356789]|17[013678]|18[0-9]|14[57])[0-9]{8}$/;
+            return reg.test(value);
+        }, '请输入正确的手机号码');
+        $("#loginForm").validate({
+            errorElement: "em",
+            rules: {
+                phoneNum: "phoneType",
+                password: "required"
+            },
+            messages: {
+                phoneNum: {
+                    required: "请输入您的手机号"
+                },
+                password: {
+                    required: "请输入您的登录密码"
+                }
+            },
+            submitHandler: function (form) {
+                var pwd = $.md5($('#password').val());
+                $('#password').val(pwd);
+                form.submit();
+            }
+        });
+    });
+
+    function positionCenter (dom) {
+        dom.css({
+            position: 'fixed',
+            left: ($(window).width() - dom.outerWidth()) / 2,
+            top: ($(window).height() - dom.outerHeight()) / 2,
+            zIndex: 1
+        })
+    }
+</script>
+</body>
+</html>

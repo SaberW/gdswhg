@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong_gx/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/style/public/detail.css'">
+<link rel="stylesheet" th:href="${basePath}+'/assets/style/center/center.css'">
+<script th:src="${basePath}+'/assets/common/js/whg.maps.js'"></script>
+<div class="wrapper clearfix">
+    <div class="content">
+        <!--公共主头部开始-->
+        <div id="header" th:include="guangdong_gx/public/header :: copy"></div>
+        <!--公共主头部结束-->
+        <!--主体开始-->
+        <div class="sys-crumbs">
+            <span><a th:href="${basePath}+'/'+${cultsite}+'/index'">首页</a></span>
+            <i class="icon iconfont icon-enter"></i>
+            <span><a href="list">线下培训</a></span>
+            <i class="icon iconfont icon-enter"></i>
+            <span class="active" id="title">培训标题</span>
+        </div>
+        <div class="sys-main-info">
+            <div class="img">
+                <img th:src="${basePath}+'/assets/img/public/loading.png'" id="detail_img">
+            </div>
+            <div class="info">
+                <h1 id="detail-title"></h1>
+                <p class="tag-list" id="types"></p>
+                <p class="desc">
+                    主办单位：<span id="hostVal"></span>
+                </p>
+                <p class="desc">
+                    培训讲师：<span id="teacher"></span>
+                </p>
+                <p class="desc">
+                    报名时间：<span id="applyingTime"></span>
+                </p>
+                <p class="desc">
+                    培训时间：<span id="trainingTime"></span>
+                </p>
+                <p class="desc">
+                    联系电话：<span id="phone"></span>
+                </p>
+                <p class="desc">
+                    培训地址：<span id="address"></span>
+                </p>
+
+                <div class="go-next"><a href="javascript:void(0)">Loading...</a></div>
+
+                <div class="order-info none" style="display: block;">
+                    仅剩<span class="surplus" id="surplus"></span>个，
+                    总名额<span class="more" id="maxNum"></span>个
+                    ( <span class="more" id="age"></span> )
+                </div>
+                <div class="other-cont clearfix">
+                    <div class="fav-vote-cont clearfix">
+                        <div class="sys-vote" title="点赞">
+                            <i class="icon iconfont icon-praise icon-praise_fill" id="good"></i><span>0</span>
+                        </div>
+                        <div class="sys-fav" title="收藏">
+                            <i class="icon iconfont icon-collection icon-collection_fill" id="collection"></i><span>0</span>
+                        </div>
+                        <div class="sys-fav" title="访问量"><i class="icon iconfont icon-search icon-collection_fill" id="visitCount"></i><span>0</span></div>
+                    </div>
+                    <!--点赞和收藏封装的代码start-->
+                    <div th:include="guangdong_gx/public/fav :: copy"></div>
+                    <div th:include="guangdong_gx/public/voteup :: copy"></div>
+                    <!--temp_type 的 值需和 WJQ 对接-->
+                    <input type="hidden" id="temp_type" value="5">
+                    <input type="hidden" id="commType">
+                    <!--点赞和收藏封装的代码end-->
+                    <div class="sns-cont" title="分享">
+                        分享到
+                        <a href="javascript:void(0);" target="_blank" class="fxweix"><i class="icon iconfont icon-wechat"></i></a>
+                        <a href="javascript:void(0);" target="_blank" class="fxweibo"><i class="icon iconfont icon-xinlang"></i></a>
+                        <a href="javascript:void(0);" target="_blank" class="fxqq"><i class="icon iconfont icon-kongjian"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="sys-main-bottom">
+            <div class="main-cont clearfix">
+                <div class="left-cont">
+                    <div class="help-msg">
+                        温馨提示：<span>需要报名培训，请点击“立即报名”按钮进行报名，有任何问题欢迎拨打电话咨询</span>
+                    </div>
+                    <div class="item-cont">
+                        <div class="sys-main-title">
+                            <div class="title">课程详情</div>
+                            <hr>
+                        </div>
+
+                        <!-- 如果配置了直播则显示 -->
+                        <div class="sys-detail-list" style="display: none;" id="liveContainer">
+                            <div class="title">培训直播</div>
+                            <div class="html-panel">
+                                <div class="live-list-cont">
+                                    <ul id="detail-course">
+                                        <li>
+                                            <a href="live" onclick="javascript:void(0);"></a>
+                                            <span class="time">
+                                                2017-09-29 15:00-18:00
+                                            </span>
+                                            <span class="title">
+                                                在线课程神童麻将教学（第一章）
+                                            </span>
+                                            <div class="btn">进入直播</div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="sys-detail-list">
+                            <div class="title">查看课程表</div>
+                            <div class="html-panel">
+                                <div class="dg-train-info dg-train-table" id="modelList">
+
+                                </div>
+                                <!--分页开始 -->
+                                <div class="green-black" id="artPagging" style="margin-top: 40px"></div>
+                                <!--分页结束-->
+                            </div>
+                        </div>
+                        <div class="sys-detail-list">
+                            <div class="title">课程简介</div>
+                            <div class="html-panel" id="intro"></div>
+                        </div>
+                        <div class="sys-detail-list">
+                            <div class="title">课程内容</div>
+                            <div class="html-panel" id="outline"></div>
+                        </div>
+                        <div class="sys-detail-list">
+                            <div class="title">老师简介</div>
+                            <div class="html-panel" id="teacherdesc"></div>
+                        </div>
+                        <div class="sys-detail-list">
+                            <div class="title">培训地址</div>
+                            <div class="map-panel amap-container" id="maps_ven_target">
+                            </div>
+                        </div>
+                        <div class="sys-detail-list" id="res-cont">
+                            <div class="title">相关资源：</div>
+                            <div class="html-panel">
+                                <div class="res-detail-cont">
+                                    <div class="res-filter">
+                                        <div class="filter-list">
+                                            <div class="clearfix" id="fileter-nav">
+                                                <span onclick="resDate(1)"class="active"><a href="javascript:void(0)">图片</a></span>
+                                                <span onclick="resDate(2)"><a href="javascript:void(0)">视频</a></span>
+                                                <span onclick="resDate(3)"><a href="javascript:void(0)">音频</a></span>
+                                                <span onclick="resDate(4)"><a href="javascript:void(0)">文档</a></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="style-list">
+                                        <div class="content-list">
+                                            <ul class="clearfix" id="modelList_2"></ul>
+                                        </div>
+                                        <!--分页开始 -->
+                                        <div class="green-black" id="artPagging_2" style="margin-bottom: 40px"></div>
+                                        <!--分页结束-->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="right-cont">
+                    <div class="item-cont" id="kczl_div" style="display: none">
+                        <div class="sys-main-title">
+                            <div class="title">培训资料</div>
+                            <hr>
+                        </div>
+                        <div class="train-res-cont">
+                            <ul class="clearfix" id="detail-docs">
+                                <!--<li>
+                                    <a href="#">课件（一）<i class="icon iconfont icon-download-copy"></i></a>
+                                </li>-->
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="item-cont" id="train_people_cont">
+                        <div class="sys-main-title">
+                            <div class="title">培训人员公示</div>
+                            <hr>
+                        </div>
+                        <div class="train-recommend-cont">
+                            <ul class="clearfix" id="train_people">
+
+                            </ul>
+                            <a href="javascript:void(0);" style="margin-left: 210px; display: none;" id="morePeople">更多&gt;</a>
+                        </div>
+                    </div>
+                    <div class="item-cont" id="recomment_cont">
+                        <div class="sys-main-title">
+                            <div class="title">相关推荐</div>
+                            <hr>
+                        </div>
+                        <div class="recommend-cont">
+                            <ul id="recomment">
+
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="item-cont" id="_zixun">
+                        <div class="sys-main-title">
+                            <div class="title">相关资讯</div>
+                            <hr>
+                        </div>
+                        <div class="recommend-cont">
+                            <ul id="zixun">
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--主体结束-->
+    </div>
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong_gx/public/footer :: copy"></div>
+<!--底部结束-->
+<script th:src="${apiPath.myvisitnote}" id="whgtongji"></script>
+<a class="to-top"></a>
+
+
+
+
+
+
+
+<!--人员公示-->
+<div class="message-box-bg none">
+    <div class="message-cont" style="height: auto; width: 960px;">
+        <h2>培训人员公示</h2>
+        <div class="train-recommend-cont" style="overflow-y: auto; overflow-x:hidden; border-bottom: 1px solid #ccc; height: 500px;">
+            <ul id="train_people_dialog">
+            </ul>
+        </div>
+        <div class="message-btn" style="text-align: center; clear: both;">
+            <a hrer="javascript:void(0);" class="btn btn-close-qj" style="background-color: #eee; background-image: none; border: 1px solid #ccc; color: black;">关闭</a>
+        </div>
+    </div>
+</div>
+
+<script th:src="${basePath}+'/assets/js/FilteDatail.js'"></script>
+<script type="text/javascript" th:inline="javascript">
+    var itemId = dataInit.getUrlParam('id');
+    var userId = $("#temp_userId").val();
+    var basePath = [[${basePath}]];
+    var trainTitle = '';
+
+    $().ready(function(){
+        initDetail(dataPage);
+        //dataPage();
+        resDate();
+        dataTrainPeople();
+        dataRecomment();
+        $("#fileter-nav span").on('click',function(){
+            $(this).addClass('active').siblings().removeClass('active');
+        });
+        zx_dataPage();//线下培训资讯
+
+        getVisitSumCount4url(itemId, function(count){
+            $("#visitCount").next("span").text(count);
+        });
+    })
+
+    function initDetail(afterFn){
+        dataInit.ajax({
+            api:[[${apiPath.pxDetail}]],
+            params:{
+                userid: userId,
+                id:itemId
+            },
+            fn:function(data){
+                FilteDatail.options({
+                    toUrl: [[${basePath}]]+'/'+[[${cultsite}]]+'/index',
+                    info: data.data.tra
+                }).filte();
+
+                createModelHtml(data);
+                if($.isFunction(afterFn)) afterFn();
+            }
+        })
+    }
+
+    //数据渲染
+    function createModelHtml(data){
+        if(data.code == 0){
+            var model = data.data.tra;
+            var row=data.rows;
+            var img = data.imgPath + dataInit.getBigImage(model.image);
+            var title = trainTitle = model.title;
+            var notice = model.notice;
+            var applyBegin = moment(model.applyBegin).format('YYYY-MM-DD HH:mm:ss');
+            var applyEnd = moment(model.applyEnd).format('YYYY-MM-DD HH:mm:ss');
+            var trainingBegin = moment(model.trainingBegin).format('YYYY-MM-DD');
+            var trainingEnd = moment(model.trainingEnd).format('YYYY-MM-DD');
+            var phone = model.phone ? model.phone : '';
+            var address = model.address;
+            var maxApplyNum = parseInt(model.maxApplyNum);
+            var lastApplyNum = maxApplyNum - model.enrolcount;
+            var age = model.age ? model.age.split(',') : "不限制年龄";
+            var teachername= model.teachername;
+            if(teachername == undefined){
+                teachername =  "";
+            }else{
+                teachername = (teachername.substring(teachername.length-1)==',') ? teachername.substring(0,teachername.length-1) : teachername;
+            }
+            teachername = teachername ? teachername.split(',') : '';
+            var tag = model.tagname ? model.tagname.split(',') : "";
+            age = age == "不限制年龄" ? age : '限制年龄： '+age[0] + '-' + age[1] + ' 岁';
+            $("#detail_img").attr("src",img);
+            $('#hostVal').text(model.host);
+            $("#title,#detail-title").text(title);
+            if(notice == undefined){
+                $(".help-msg span").text("需要报名培训，请点击“立即报名”按钮进行报名，有任何问题欢迎拨打电话咨询");
+            }else{
+                $(".help-msg span").text(notice);
+            }
+            if(teachername){
+                $("#teacher").text(teachername);
+            }else{
+                $("#teacher").parent('p').hide();
+            }
+            $("#applyingTime").text(applyBegin+" 至 "+applyEnd);
+            $("#trainingTime").text(trainingBegin+" 至 "+trainingEnd);
+            if(phone){
+                $("#phone").text(phone);
+            }else{
+                $("#phone").parent('p').hide();
+            }
+            if(address){
+                $("#address").text(address);
+            }else{
+                $("#address").parent('p').hide();
+            }
+            $("#maxNum").text(maxApplyNum);
+            $("#surplus").text(lastApplyNum<0?0:lastApplyNum);
+            $("#age").text(age);
+            if(tag){
+                for(var j in tag){
+                    $("#types").append("<span class='tag'>"+tag[j]+"</span>");
+                }
+            }else{
+                $("#types").hide()
+            }
+
+            var state,state_cls,date_cls = '';
+            if(data.data.tra.date > model.applyEnd ){
+                state = '报名结束';
+                state_cls = 's-4';
+            }else if(lastApplyNum <= 0){
+                state = '名额已满';
+                state_cls = 's-4';
+            }else{ //未报名
+                if(model.applyBegin > data.data.tra.date){
+                    state = '即将开始';
+                    state_cls = 's-3';
+                }else if(model.applyBegin < data.data.tra.date && data.data.tra.date < model.applyEnd){
+                    state = model.enrolstate ? '已报名' : '立即报名';
+                    state_cls = model.enrolstate ? 's-4' : 's-1';
+
+                    //是否有培训组限制
+                    if(state == '立即报名' && data.data.limitEnrolForTrainGroup){
+                        $('.go-next').after('<div class="order-info">注意：<span style="color: #ec7168;">已超过该专题培训报名限制班数</span></div>');
+                        state_cls = 's-4';
+                    }
+                }
+            }
+            $('.go-next').addClass(state_cls).addClass(date_cls).text(state);
+            if(data.data.gatherid&&data.data.gatherid!=""){
+                $('.go-next').after('<div class="go-gather"><a href="javascript:void(0)">关联众筹</a></div>');
+                $('.go-gather').addClass('s-1').addClass(date_cls);
+                $('.go-gather').on('click',function(){
+                    window.location.href=[[${rootUrl}]]+"gdzcweb"+'/'+[[${cultsite}]]+"/project/traindetail?id="+data.data.gatherid;
+                }).css('display','inline-block');
+            }else{
+               // $('.go-gather').css('display','none');
+            }
+            $('.s-1').on('click',function(e){
+                checkUserTrain();
+            })
+
+            var intro = model.intro;
+            var outline = model.outline;
+            var teacherdesc = model.teacherdesc;
+            if(intro){
+                $('#intro').html(intro);
+            }else{
+                $('#intro').parent().hide();
+            }
+            if(outline){
+                $('#outline').html(outline);
+            }else{
+                $('#outline').parent().hide();
+            }
+            if(teacherdesc){
+                $('#teacherdesc').html(teacherdesc);
+            }else{
+                $('#teacherdesc').parent().hide();
+            }
+
+            var docs_html="";
+            //学习资料===============================
+            for(var i=0; i<row.length; i++){
+                var obj = row[i];
+                docs_html += '<li><a href="'+data.imgPath+obj.uplink+'" ><span style="font-size:12px;">'+obj.upname+'</span><i class="icon iconfont icon-download-copy"></i></a></li>';
+            }
+            if(row.length>0){
+                $('#detail-docs').html(docs_html);
+                $("#kczl_div").show();
+            }
+            //学习资料===============================END
+
+            //调分享接口
+            dataInit.share(title,img);
+
+            //获取经纬度
+            var latitude,longitude,venueAddress;
+            if(model.latitude)
+                latitude = model.latitude;
+            if(model.longitude)
+                longitude = model.longitude;
+            venueAddress = model.address;
+            WhgMap.showMap('maps_ven_target', venueAddress, longitude, latitude);
+
+            //活动直播
+            var liveInfo = data.data.liveInfo;
+            if(liveInfo.hasLive == '1'){
+                var state = liveInfo.state;
+                var livehref = '';
+                switch(state){
+                    case '1':
+                        state = '查看直播';
+                        livehref = 'href="live?id='+model.itemId+'"';
+                        break;
+                    case '2':
+                        state = '直播未开始';
+                        livehref = 'href="live?id='+model.itemId+'"';
+                        break;
+                    case '3':
+                        state = '直播已结束';
+                        break;
+                    case '4':
+                        state = '精彩回顾';
+                        livehref = 'href="live?id='+model.itemId+'"';
+                        break;
+                }
+
+                var html = '\
+                <li>\
+                    <a '+livehref+'></a>\
+                    <span class="time">'+liveInfo.time+'</span>\
+                    <span class="title">'+liveInfo.title+'</span>\
+                    <div class="btn">'+state+'</div>\
+                </li>\
+                ';
+                $('#detail-course').html(html);
+                $('#liveContainer').show();
+            }
+        }
+
+    }
+    //验证该用户是否可以报名
+    function checkUserTrain(){
+        dataInit.ajax({
+            api:[[${apiPath.checkEnrol}]],
+            params:{
+                userid:userId,
+                id:itemId
+            },
+            fn:function(data){
+                if(data.code == 0) {
+                    window.location.href = "step?id=" + itemId + "";
+                }else if (data.code == 200){
+                    rongDialog.init({
+                        type: 2,
+                        desc: data.msg||'您还未完成实名认证，请先完成实名认证！',
+                        nextFn: function(){
+                            window.location.href = [[${basePath}]]+'/'+[[${cultsite}]]+'/usercenter/realUser';
+                        }
+                    });
+                }else{
+                    rongDialog.init({ico: 2, type: 1, desc: data.msg || '报名异常'});
+                }
+            }
+        })
+    }
+
+    //加载课程表数据
+    function dataPage(page,rows) {
+        var params_page = page || 1;
+        var params_rows = rows || 10;
+        var params = {
+            page:params_page,
+            pageSize:rows,
+            id:itemId
+        }
+        //调用接口
+        dataInit.ajax({
+            api: [[${apiPath.pxCourse}]],
+            params: params,
+            fn: function(data){
+                showModelList(data);
+                dataInit.pageInit('artPagging', params_page, params_rows, data.total, dataPage);
+            }
+        })
+    }
+    //渲染课程表
+    function showModelList(data){
+        var modelList = $("#modelList");
+        modelList.html("");
+        if (data.code == 0) {
+            if (data.rows.length > 0) {
+                var cut = (data.page - 1)*10;
+                modelList.append('\
+                    <table>\
+                        <tbody>\
+                            <tr>\
+                                <th>序列</th>\
+                                <th>课程名称</th>\
+                                <th>开课时间</th>\
+                                <th>结束时间</th>\
+                            </tr>\
+                        </tbody>\
+                    <tbody id="syllabus">\
+                    </tbody>\
+                    </table>\
+                ');
+                for (var i in data.rows) {
+                    var model = data.rows[i];
+                    var index = cut + Number(i)+1;
+                    var courseTitle = model.title || (trainTitle+"第"+index+"课");
+                    $('#syllabus').append('\
+                    <tr>\
+                        <td class="not-conform">'+index+'</td>\
+                        <td class="not-conform">'+courseTitle+'</td>\
+                        <td class="not-conform">'+moment(model.starttime).format("YYYY-MM-DD HH:mm:ss")+'</td>\
+                        <td class="not-conform">'+moment(model.endtime).format("YYYY-MM-DD HH:mm:ss")+'</td>\
+                    </tr>');
+                }
+            } else {
+                modelList.append("<div class='public-no-message'></div>");
+            }
+        } else {
+            rongDialog.init({ico: 2, type: 1, desc: data.msg});
+        }
+    }
+
+    //获取资源数据
+    function resDate(type){
+        var enttype = type ? type : 1;
+        dataInit.ajax({
+            api:[[${apiPath.resourceList}]],
+            params:{
+                refid:itemId,
+                reftype:5,
+                enttype:enttype
+            },
+            fn:function(data){
+                showResList(data,enttype);
+            }
+        })
+    }
+    //生成资源列表
+    function showResList(data,type){
+        var modelUL = $("#modelList_2");
+        var type = type+"";
+        modelUL.empty();
+        if(data.code == 0){
+            if (data.data.length > 0) {
+                for (var i in data.data) {
+                    var module = data.data[i];
+                    var html = $('<li>\
+                                    <div class="img">\
+                                        <img >\
+                                    </div>\
+                                    <div class="info">\
+                                        <div class="title">'+module.name+'</div>\
+                                    </div>\
+                                    <div class="mask"><img></div>\
+                                    <a href="javascript:void(0)"></a>\
+                                    </li>');
+                    if(module.enturl){
+                        var _enturl = module.enturl.indexOf('http') >= 0 ? module.enturl : data.imgPath + module.enturl;
+                    }
+                    var resBasePath = [[${basePath}]];
+                    switch (type){
+                        case "1" : //图片
+                            html.find(".img img").attr("src", dataInit.getRemoteURL(data.imgPath,dataInit.getMidImage(module.enturl)));
+                            html.find(".mask").empty();
+                            html.find("a:last").attr("onClick", "rongDialog.init({\
+                                            ico : 1,\
+                                            type : 6,\
+                                            imgUrl : '"+_enturl+"',\
+                                            title : '"+ module.name +"'\
+                                        });"
+                            );
+                            break;
+                        case "2" :  //视频
+                            html.find(".img img").attr("src", dataInit.getRemoteURL(data.imgPath, dataInit.getMidImage(module.deourl)));
+                            html.find(".mask img").attr("src", [[${basePath}]] + '/assets/img/brand/play.png');
+                            html.find("a:last").attr("onClick", "rongDialog.init({\
+                                            type : 5,\
+                                            vedioUrl : '"+_enturl+"',\
+                                            vedioImg : '',\
+                                            vedioTitle : '"+module.name+"',\
+                                            basePath : '"+resBasePath+"'\
+                                        })"
+                            );
+                            break;
+                        case "3" :  //音频
+                            //alert(resBasePath+"/assets/img/brand/brand-music.jpg");
+                            html.find(".img img").attr("src", [[${basePath}]] + '/assets/img/brand/brand-music.jpg');
+                            html.find(".mask img").attr("src", [[${basePath}]] + '/assets/img/brand/macphone.png');
+                            html.find("a:last").attr("onClick", "rongDialog.init({\
+                                            type : 5,\
+                                            vedioUrl : '"+_enturl+"',\
+                                            vedioType: 'mp3',\
+                                            vedioImg : '"+resBasePath+"/assets/img/brand/brand-music.jpg',\
+                                            vedioTitle : '"+module.name+"',\
+                                            basePath : '"+resBasePath+"'\
+                                        });setWidth();"
+                            );
+                            break;
+                        case "4" : //文档
+                            var iconImg = dataInit.getFileTypeIcon(module.enturl, '/assets/img/brand/xiazai.jpg');
+                            html.find(".img img").attr("src", [[${basePath}]] + iconImg);
+                            //html.find(".img img").attr("src", [[${basePath}]] + '/assets/img/brand/xiazai.jpg');
+                            html.find(".mask").empty();
+                            html.find("a:last").attr({
+                                target:"_blank",
+                                href: dataInit.getRemoteURL(data.imgPath,module.enturl)
+                            });
+                            break;
+
+                        default:
+                            html.find(".mask").empty();
+                    }
+                    modelUL.append(html);
+                }
+            } else {
+                modelUL.append("<div class='public-no-message'></div>");
+            }
+        }else {
+            $("#res-cont").hide();
+        }
+    }
+
+    //加载培训人员数据
+    function dataTrainPeople(){
+        dataInit.ajax({
+            api:[[${apiPath.getEnrolPerson}]],
+            params:{
+                id:itemId
+            },
+            fn:function(data){
+                showTrainPeople(data);
+            }
+        })
+    }
+
+    //渲染培训人员
+    function showTrainPeople(data){
+        //console.log(data);
+        var panel = $("#train_people");
+        panel.html("");
+        if(data.code == 0){
+            if (data.data.length > 0) {
+                /*var _data = [];
+                for(var i=0; i<10; i++){
+                    _data.push(data.data[0]);
+                }
+                data.data = _data;*/
+                for (var i in data.data) {
+                    var model = data.data[i];
+                    var nickname = model.nickname.substring(0,1)+"**";
+                    if (i >= 6)break;
+                    panel.append('\
+                        <li>\
+                            <div class="img">\
+                                 <img src="'+basePath+'/assets/img/field/teacher-logo.png">\
+                            </div>\
+                            <p>' + nickname + '</p>\
+                        </li>\
+                    ');
+                }
+                if(data.data.length > 6){
+                    $('#morePeople').show();
+                    var ul_dialog = $("#train_people_dialog");
+                    for (var i in data.data) {
+                        var model = data.data[i];
+                        var nickname = model.nickname.substring(0,1)+"**";
+                        ul_dialog.append('\
+                            <li>\
+                                <div class="img">\
+                                     <img src="'+basePath+'/assets/img/field/teacher-logo.png">\
+                                </div>\
+                                <p>' + nickname + '</p>\
+                            </li>\
+                        ');
+                    }
+                    var dialog_h = 500;
+                    var body_h = $("body").height();
+                    var p_h;
+                    if((dialog_h+143) < body_h){
+                        p_h = parseInt((body_h-dialog_h-143)/2,10).toFixed(0);
+                    }else{
+                        p_h = 10;
+                        dialog_h = body_h - 143 - p_h -p_h;
+                    }
+                    ul_dialog.parent('div').css('height', dialog_h+"px");
+                    $('.message-box-bg .message-cont').css('margin-top', p_h+"px");
+
+                    $('#morePeople').on('click', function () {
+                        $('.message-box-bg').fadeIn();
+                        $('.message-box-bg .btn-close-qj').on('click', function () {
+                            $('.message-box-bg').fadeOut();
+                        });
+                    });
+                }
+            }else{
+                $("#train_people_cont").hide();
+            }
+        } else {
+            rongDialog.init({ico: 2, type: 1, desc: data.msg});
+        }
+    }
+
+    //加载相关推荐数据
+    function dataRecomment(){
+        dataInit.ajax({
+            api:[[${apiPath.getRecommendTra}]],
+            params:{
+                cultid:$.cookie('cultid'),
+                id:itemId
+            },
+            fn:function(data){
+                showRecomment(data);
+            }
+        })
+    }
+    //渲染相关推荐数据
+    function showRecomment(data){
+        //console.log(data);
+        var panel = $("#recomment");
+        panel.html("");
+        if(data.code == 0) {
+            if (data.rows.length > 0) {
+                for(var i in data.rows){
+                    if(i>=3)break;
+                    var model = data.rows[i];
+                    var img  = data.imgPath + dataInit.getSmallImage(model.trainimg);
+                    panel.append('\
+                    <li>\
+                        <div class="img">\
+                            <a href="detail?id='+model.id+'">\
+                            <img src="'+img+'">\
+                            </a>\
+                        </div>\
+                        <p><a href="detail?id='+model.id+'">'+model.title+'</a></p>\
+                    </li>');
+                }
+            }else{
+                $("#recomment_cont").hide();
+            }
+        }else{
+            rongDialog.init({ico: 2, type: 1, desc: data.msg});
+        }
+    }
+
+    /**
+     * 加载培训资讯内容
+     */
+    function zx_dataPage(){
+        var params = {};
+        params.entityid = itemId;
+        params.clnftype = '2016111900000021';
+        dataInit.ajax({
+            api: [[${apiPath.xgzxList}]],
+            params: params,
+            fn: function(data){
+                zx_showModelList(data);
+            }
+        })
+    }
+
+    /**
+     * 根据加载的资讯数据,展示页面
+     * @param data
+     */
+    function zx_showModelList(data){
+        var modelUL = $("#zixun");
+        modelUL.empty();
+        var acttj = data.data;
+        if(acttj && acttj.length){
+            var i_length = acttj.length > 3 ? 3 : acttj.length;
+            for (var i=0;i<i_length;i++) {
+                $("#zixun").append(
+                    '<li> ' +
+                    '<a href="../pxzx/detail?id='+acttj[i].clnfid+'">'+acttj[i].clnftltle+'</a> ' +
+                    '<p class="time">'+moment(acttj[i].clnfcrttime).format('YYYY-MM-DD HH:mm:ss')+'</p> ' +
+                    '</li>'
+                );
+            }
+        }else {
+            $("#_zixun").hide();
+            $("#zixun").append('<div class="public-no-message-detail"></div>');
+        }
+    }
+</script>
+</body>
+</html>

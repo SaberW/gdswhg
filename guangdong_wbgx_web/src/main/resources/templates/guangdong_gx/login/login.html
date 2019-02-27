@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong_gx/public/resource :: copy"></head>
+<body>
+<link th:href="${basePath}+'/assets/style/supply_sys/login/login.css'" rel="stylesheet">
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/rong.validate.js'"></script>
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/rong.message.js'"></script>
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/jquery.md5.js'"></script>
+<div class="login-content">
+    <div class="regist-logo"><a href="index"></a></div>
+
+    <div class="login-main clearfix">
+        <form th:action="${basePath}+'/res-gx/doLogin'" method="post" id="loginForm">
+            <!--<input type="hidden" name="history_url" th:value="${temp_url}">-->
+            <input type="hidden" name="history_url" value="">
+            <h1>登录</h1>
+            <div class="input-row id-bg">
+                <i class="person"></i>
+                <input class="login-input" id="account" name="account" placeholder="请输入您的用户名" maxlength="11"
+                       required>
+            </div>
+            <div class="input-row pwd-bg">
+                <i class="code"></i>
+                <input type="password" class="login-input" minlength="6" placeholder="请输入您的登录密码" id="password"
+                       name="password" required>
+            </div>
+            <div class="find-pwd">
+                <!--<a th:href="${basePath}+'/center/findpwd'">忘记密码?</a>-->
+            </div>
+            <button type="submit" class="login-btn goNext">登录</button>
+            <!--<div class="regist-btn">
+                没有账号？<a href="regist">立即注册</a>
+            </div>-->
+        </form>
+    </div>
+    <!--<div class="weixin">
+        <a href="javascript:void(0)" title="微信"></a>
+    </div>-->
+</div>
+<!-- core public JavaScript -->
+<script type="text/javascript" th:inline="javascript">
+    //手机号格式
+    $(document).ready(function () {
+        var msg = [[${loginErrMsg}]];
+        if (msg) {
+            msg = msg.replace(/\"/g, "");
+            rongDialog.init({
+                ico: 2, //1 勾  2 叉
+                type: 1,
+                desc: msg
+            });
+        }
+        $("#loginForm").validate({
+            errorElement: "em",
+            rules: {
+                password: "required"
+            },
+            messages: {
+                account: {
+                    required: "请输入您的用户名"
+                },
+                password: {
+                    required: "请输入您的登录密码"
+                }
+            },
+            submitHandler: function (form) {
+                var pwd = $.md5($('#password').val());
+                $('#password').val(pwd);
+                form.submit();
+            }
+        });
+    });
+</script>
+</body>
+</html>

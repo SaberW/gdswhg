@@ -1,0 +1,398 @@
+/*---------------------------------------------------------------------
+	* Filename:         search.css
+	* Description:      search
+	* Version:          1.0.0 (2017-10-09)
+	* Website:          hn.sun3d.com
+	* Author:           JackyZeng (zrongs@vip.qq.com)
+---------------------------------------------------------------------*/
+@charset "UTF-8";
+@import "../public/config";
+
+.digitalSearch{
+  position: relative;
+  width: 1200px;
+  margin: 0 auto;
+  .searchPosition {
+    position: absolute;
+    right: 20px;
+    bottom: -10px;
+    width: 230px;
+    height: 28px;
+    border: solid 1px @-border-color-2;
+    .border-radius(20px);
+    background: #fff;
+    overflow: hidden;
+    input{
+      border: none;
+      width: 175px;
+      padding: 0px 5px 0px 15px;
+      font-size: 13px;
+      vertical-align: text-top;
+      color: @-font-color-2;
+    }
+    i{
+      font-size: 21px;
+      line-height: 30px;
+      color: @-main-color;
+    }
+  }
+}
+
+.brand-main{
+  width:1200px;
+  margin:73px auto 200px auto;
+  ul li{
+    position:relative;
+    height:460px;
+    margin-bottom:40px;
+    a{
+      .a();
+    }
+    .img{
+      height:460px;
+      width:690px;
+      overflow: hidden;
+      .border-radius();
+      background-color:#eee;
+      float:left;
+      img{
+        height:460px;
+        width:690px;
+      }
+    }
+    .info-cont{
+      padding:25px 60px;
+      z-index:10;
+      position:absolute;
+      right:0px;
+      top:60px;
+      height:250px;
+      width:400px;
+      //background-color:#fff;
+      background-color:rgba(180,180,180,.3);
+      .border-radius();
+      .box-shadow(3px,10px,10px,.2);
+      h2{
+        .textFormat();
+         font-size:24px;
+        color:@-font-color-1;
+        margin-bottom:20px;
+      }
+      p{
+        font-size:16px;
+        color:@-font-color-3;
+        line-height:200%;
+        max-height:128px;
+        overflow: hidden;
+      }
+      .btn-cont{
+        margin-top:30px;
+        .btn{
+          position:relative;
+          .button();
+          i{
+            width:20px;
+            height:2px;
+            overflow: hidden;
+            background-color:#fff;
+            position:absolute;
+            right:0px;
+            top:15px;
+          }
+        }
+        .icon-jiantou1{
+          font-size:70px;
+          color:@-main-color;
+        }
+      }
+      a{
+        display: block;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        left: 0px;
+        top: 0px;
+      }
+    }
+  }
+  ul .db{
+    .img{
+      float:right;
+    }
+    .info-cont{
+      left:0px;
+      right:auto;
+    }
+  }
+}
+
+//品牌详情页
+.brand-dtail{
+  background: url(../../img/brand/brand-bg.jpg) repeat-x 50% 0 #fff;
+  div.brand-content{
+    width: 1200px;
+    margin: 0 auto;
+    padding-top: 60px;
+    div.brand-image{
+      width: 766px;
+      background: #fff;
+      margin: 0px auto;
+      overflow: hidden;
+      .border-radius();
+      .box-shadow(5px,10px,20px,.1);
+      img{
+        width: 750px;
+        height: 550px;
+        display: block;
+        margin: 8px;
+      }
+    }
+    div.brand-text{
+      margin-top: 50px;
+      padding-bottom: 30px;
+      h1{
+        font-size: 18px;
+        text-align: center;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        margin-bottom: 15px;
+      }
+      div.text{
+        width: 1040px;
+        margin: 0 auto;
+        padding: 0 20px;
+        font-size: 14px;
+        line-height: 24px;
+        height: 72px;
+        overflow: hidden;
+        color: @-font-color-3;
+        position: relative;
+        &>div{
+          width: 1000px;
+        }
+        div.scrollbar{
+          position: absolute;
+          right: 40px;
+          top: 5px;
+          width: 2px;
+          height: 62px;
+          background: @-font-color-2;
+          display: none;
+          div.handle{
+            width: 6px;
+            background: @-main-color;
+            position: absolute;
+            right: -2px;
+            top: 0px;
+          }
+        }
+      }
+    }
+  }
+}
+
+.brand-demo {
+  width: 1200px;
+  margin: 0 auto;
+  padding: 80px 0;
+  .brand-news{
+    margin-bottom: 80px;
+    div.brand-news-title{
+      font-size: 16px;
+      text-align: center;
+    }
+    div.brand-news-list{
+      margin: 40px 0 0 0;
+      .new-group{
+        margin-bottom:40px;
+        li{
+          .transition(all,.3s);
+          padding:30px 150px 30px 15px;
+          position:relative;
+          //background: rgba(200,200,200,0.3);
+          border-bottom:1px @-border-color solid;
+          a{
+            .a();
+          }
+          h2{
+            .textFormat();
+            font-size:20px;
+            color:@-font-color-1;
+            margin-bottom:10px;
+          }
+          p{
+            color:@-font-color-3;
+            font-size:14px;
+            margin-bottom:10px;
+            span{
+              margin-right:30px;
+            }
+          }
+          .info{
+            .textFormat();
+            color:@-font-color-3;
+            font-size:14px;
+          }
+          .date-cont{
+            position:absolute;
+            right:0px;
+            top:20px;
+            width:120px;
+            border-left:@-border-color 1px solid;
+            text-align: center;
+            .day{
+              font-size:50px;
+              color:@-main-color!important;
+            }
+            .year{
+              color:@-main-color!important;
+            }
+          }
+          &:hover{
+            .box-shadow(3px,10px,10px,.2);
+          }
+        }
+      }
+    }
+  }
+  .brand-activity{
+    margin-bottom: 80px;
+    div.brand-activity-title{
+      font-size: 16px;
+      text-align: center;
+    }
+    div.brand-act-list{
+      margin: 40px 0 0 0;
+      ul{
+        margin-right: -20px;
+      }
+      ul>li{
+        .transition(all,0.4s);
+        width: 283px;
+        background: #fff;
+        float: left;
+        margin: 0px 20px 0px 0;
+        .border-radius(3px);
+        border:solid 1px @-border-color-2;
+        overflow: hidden;
+        position: relative;
+        div.img{
+          width: 283px;
+          height: 190px;
+          overflow: hidden;
+          position: relative;
+          img{
+            width: 100%;
+            height: 100%;
+            display: block;
+          }
+        }
+        div.detail{
+          padding: 15px 15px 10px;
+          h2{
+            font-size: 16px;
+            line-height: 26px;
+            color: @-font-color-1;
+            margin: 0 0 5px 0;
+            height: 26px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+          p{
+            font-size: 14px;
+            color: @-font-color-3;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            margin: 0 0 0px 0;
+            max-height: 24px;
+            overflow: hidden;
+            line-height: 24px;
+          }
+        }
+        a{
+          display: block;
+          width: 100%;
+          height: 100%;
+          position: absolute;
+          left: 0px;
+          top: 0px;
+        }
+      }
+      ul>li:hover{
+        .box-shadow(5px,10px,20px,.1);
+      }
+    }
+  }
+  .brand-resources {
+    div.brand-resources-title{
+      font-size: 16px;
+      text-align: center;
+      span{
+        display: inline-block;
+        margin: 0 15px;
+        padding: 5px 15px;
+        overflow: hidden;
+        .border-radius();
+        cursor: pointer;
+      }
+      span.active{
+        background: @-main-color;
+        color: #fff;
+      }
+    }
+    div.brand-resources-list{
+      margin: 30px 0 100px 0;
+      ul{
+        margin-right: -30px;
+      }
+      ul>li{
+        .transition(all,0.4s);
+        width: 380px;
+        height: 300px;
+        float: left;
+        margin: 0px 30px 10px 0;
+        .border-radius(3px);
+        overflow: hidden;
+        position: relative;
+        cursor: pointer;
+        div.img{
+          width: 380px;
+          height: 253px;
+          overflow: hidden;
+          position: relative;
+          img{
+            width: 100%;
+            height: 100%;
+            display: block;
+          }
+        }
+        div.detail{
+          padding: 10px 15px;
+          h2{
+            font-size: 16px;
+            line-height: 26px;
+            color: @-font-color-1;
+            text-align: center;
+            height: 26px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+        }
+        a{
+          display: block;
+          width: 100%;
+          height: 100%;
+          position: absolute;
+          left: 0px;
+          top: 0px;
+        }
+      }
+      /*ul>li:hover{
+        .box-shadow(5px,10px,20px,.1);
+      }*/
+    }
+  }
+}

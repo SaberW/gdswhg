@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong_gx/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/style/public/list.css'">
+<div class="wrapper clearfix">
+    <div class="content">
+        <!--公共主头部开始-->
+        <div id="header" th:include="guangdong_gx/public/header :: copy"></div>
+        <!--公共主头部结束-->
+        <!--主体开始-->
+        <div class="categoryChange">
+            <div class="row clearfix">
+                <div class="title">区域：</div>
+                <div class="adrList" id="areList"></div>
+            </div>
+            <div class="row clearfix">
+                <div class="title">艺术类型：</div>
+                <div class="adrList" id="condition_1"></div>
+            </div>
+        </div>
+        <div class="container content">
+            <div class="filter">
+                <div class="search">
+                    <input id="searchValue" onkeydown="if(event.keyCode==13) searchList();" placeholder="输入关键词" type="text">
+                    <a href="javascript:searchList()"><i class="iconfont icon-search"></i></a>
+                </div>
+            </div>
+            <div class="page-list">
+                <ul class="center-list clearfix" id="modelList">
+
+                </ul>
+                <!--分页开始 -->
+                <div class="green-black" id="artPagging" style="margin-bottom: 40px;margin-top:60px;"></div>
+                <!--分页结束-->
+            </div>
+        </div>
+        <!--主体结束-->
+    </div>
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong_gx/public/footer :: copy"></div>
+<!--底部结束-->
+<a class="to-top"></a>
+<script type="text/javascript" th:inline="javascript">
+    var userId = $("#temp_userId").val();
+
+    //筛选条件  condition_1为关键词
+    var condition_1 = "", searhVal = "";
+
+    //程序初始化
+    $().ready(function () {
+        showAre($.cookie("city"));
+        cateCreate();
+        dataPage();
+    })
+
+
+    //筛选条件切换
+    function conditionChange(dom,index,data) {
+        var that = $(dom);
+        setActive(dom);
+        if (data) {
+            condition_1 = data;
+        } else{
+            condition_1 = "";
+        }
+        dataPage();
+        //alert(condition_1+'\n'+searhVal);
+    }
+
+    //加载分类
+    function cateCreate(){
+        dataInit.ajax({
+            api:[[${apiPath.getTypes}]],
+            params:{cultid:$.cookie('cultid'),type:1},
+            fn:function(data){
+                cateCondition_1(data);
+            }
+        })
+    }
+
+    //生成艺术分类
+    function cateCondition_1(data){
+        if(data.code == 0 && data.rows.length > 0){
+            var panel = $('#condition_1');
+            panel.html("");
+            panel.append('<span class="item active"><a href="javascript:void(0)" onclick="conditionChange(this,1)">全部</a></span>');
+            for(var i in data.rows){
+                var model = data.rows[i];
+                panel.append('<span class="item"><a href="javascript:void(0)" onclick="conditionChange(this,1,\''+model.id+'\')">'+model.name+'</a></span>');
+            }
+        }
+    }
+
+    //加载数据
+    function dataPage(page,rows) {
+        var params_page = page || 1;
+        var params_rows = rows || 12;
+        var params = {
+            page:params_page,
+            pageSize:params_rows,
+            title:searhVal,
+            arttype:condition_1,
+            cultid:$.cookie('cultid'),
+            deptid: $("#deptid").val(), //部门id
+            area: $("#area").val(), //区域
+            city: $("#city").val(), //市
+            province: $("#province").val() //省
+        }
+        //调用接口
+        rongDialog.init({ico: 3, type: 1, desc: '', overTime: 8000});
+        dataInit.ajax({
+             api: [[${apiPath.teaList}]],
+             params: params,
+             fn: function(data){
+                 rongDialog.closeMaskPanel();
+             showModelList(data);
+             dataInit.pageInit('artPagging', params_page, params_rows, data.total, dataPage);
+             }
+        })
+    }
+
+    //生成HTML
+    function showModelList(data) {
+        var modelList = $("#modelList");
+        modelList.html("");
+        if (data.code == 0) {
+            if (data.rows.length > 0) {
+                for (var i in data.rows) {
+                    var model = data.rows[i];
+                    var img = data.imgPath + dataInit.getSmallImage(model.teacherpic);
+                    var tagHtml = '';
+                    if(model.typname){
+                        var tag = model.typname.split(',');
+                        if(tag){
+                            for(var j in tag){
+                                if(j<3){
+                                    tagHtml+= '<em>'+tag[j]+'</em>'
+                                }
+                            }
+                        }
+                    }
+
+
+
+                    modelList.append('\
+                        <li class="teacher-item">\
+                            <a href="detail?id='+model.id+'" target="_blank"></a>\
+                            <div class="img">\
+                                <img src="'+img+'">\
+                            </div>\
+                            <div class="info">\
+                                <h2>'+model.name+'</h2>\
+                                '+tagHtml+'\
+                                <p class="desc"></p>\
+                                <p class="btn">查看详情</p>\
+                            </div>\
+                        </li>');
+                }
+            } else {
+                modelList.append("<div class='public-no-message'></div>");
+            }
+        } else {
+            rongDialog.init({ico: 2, type: 1, desc: data.msg});
+        }
+    }
+
+    //搜索框
+    function searchList() {
+        if($("#searchValue").val()){
+            searhVal = $("#searchValue").val();
+            dataPage();
+        }else {
+            searhVal = "";
+            dataPage();
+        }
+    }
+
+    function setActive(dom){
+        $(dom).parent('span').addClass("active").siblings().removeClass("active");
+    }
+
+    function setArea(dom, id) {
+        var _province=$(dom).attr("_province");
+        var _city=$(dom).attr("_city");
+        var _area=$(dom).attr("_area");
+        $("#province").val("");
+        $("#city").val("");
+        $("#area").val("");
+        if(_province&&_province!=""){
+            $("#province").val(_province);
+        }
+        if(_city&&_city!=""){
+            $("#city").val(_city);
+        }
+        if(_area&&_area!=""){
+            $("#area").val(_area);
+        }
+        dataPage();
+        setActive(dom);
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.creatoo.hn.dao.mapper.admin.WhgYunweiLbtCustomMapper">
+    <!-- 区域管理员查询轮播图配置 -->
+    <select id="queryList" resultType="hashmap">
+        select t.*
+        from whg_ywi_lbt t
+        where
+        <if test="province != null">
+            t.province = #{province} and t.type=#{type}
+            <if test="state != null"> and t.state=#{state} </if>
+            order by t.province desc, t.areaidx, t.crtdate desc
+        </if>
+        <if test="city != null">
+            t.city = #{city} and t.type=#{type}
+            <if test="state != null"> and t.state=#{state} </if>
+            order by t.city desc, t.areaidx, t.crtdate desc
+        </if>
+    </select>
+
+    <select id="queryList4Province" resultType="hashmap">
+        select t.*
+        from whg_ywi_lbt t
+        where
+        t.cultid in (select id from whg_sys_cult c where c.province=#{province} and c.level > 0) and t.province is NULL and t.state = 1 and t.type=#{type}
+        <if test="name != null">
+            and t.name like #{name}
+        </if>
+        order by t.province desc, t.crtdate
+    </select>
+
+    <select id="queryList4City" resultType="hashmap">
+        select t.*
+        from whg_ywi_lbt t
+        where
+        t.cultid in (select id from whg_sys_cult c where c.city=#{city} and c.level > 1) and t.city is NULL and t.state = 1 and t.type=#{type}
+        <if test="name != null">
+            and t.name like #{name}
+        </if>
+        order by t.city desc, t.crtdate
+    </select>
+</mapper>

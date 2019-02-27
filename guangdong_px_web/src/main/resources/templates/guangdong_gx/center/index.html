@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong_gx/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/style/center/center.css'">
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/rong.validate.js'"></script>
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/rong.message.js'"></script>
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/jquery.md5.js'"></script>
+<div class="wrapper clearfix">
+    <div class="content">
+        <!--公共主头部开始-->
+        <div id="header" th:include="guangdong_gx/public/header :: copy"></div>
+        <!--公共主头部结束-->
+        <!--主体开始-->
+        <div class="container res-center-bg user-home">
+            <!-- <div class="sys-crumbs">
+                 <span><a href="../index">首页</a></span>
+                 <i class="icon iconfont icon-enter"></i>
+                 <span class="active">用户中心</span>
+             </div>-->
+            <form method="post" id="supplyForm" enctype="multipart/form-data">
+                <div class="page-list">
+                    <div class="user-face">
+                        <img th:src="${basePath}+'/assets/img/supply/face.png'">
+                    </div>
+                    <p class="user-name"></p>
+                    <div class="user-ct-item">
+                        <a th:href="${basePath}+'/'+${cultsite}+'/usercenter/myMessage'"></a>
+                        <i class="icon iconfont icon-xin left-icon"></i>
+                        <div class="info">
+                            <h2>我的消息</h2>
+                            <p>快速浏览站内其他用户给自己发送的站内消息，也可查看系统推送消息</p>
+                        </div>
+                        <span class="logon-on"><em></em></span>
+                        <i class="icon iconfont icon-enter right-icon"></i>
+                    </div>
+                    <div class="user-ct-item">
+                        <a th:href="${basePath}+'/'+${cultsite}+'/usercenter/editInfo'"></a>
+                        <i class="icon iconfont icon-bianjishuru left-icon"></i>
+                        <div class="info">
+                            <h2>编辑资料</h2>
+                            <p>加强账号安全，可编辑账户的登录密码、联系人、联系电话等。</p>
+                        </div>
+                        <i class="icon iconfont icon-enter right-icon"></i>
+                    </div>
+                    <div class="user-ct-item">
+                        <a th:href="${basePath}+'/'+${cultsite}+'/usercenter/myTrain'"></a>
+                        <i class="icon iconfont icon-peixun1 left-icon"></i>
+                        <div class="info">
+                            <h2>我的培训</h2>
+                            <p>自已申请的培训，可以此页面查看当前培训的申请状态，和上课时间等... </p>
+                        </div>
+                        <i class="icon iconfont icon-enter right-icon"></i>
+                    </div>
+                    <div class="user-ct-item">
+                        <a th:href="${basePath}+'/'+${cultsite}+'/usercenter/myFav'"></a>
+                        <i class="icon iconfont icon-shoucang left-icon"></i>
+                        <div class="info">
+                            <h2>我的收藏</h2>
+                            <p>快速找查自己已收藏的各类培训信息</p>
+                        </div>
+                        <i class="icon iconfont icon-enter right-icon"></i>
+                    </div>
+                    <div class="user-ct-item">
+                        <a th:href="${basePath}+'/'+${cultsite}+'/usercenter/timeTable'"></a>
+                        <i class="icon iconfont icon-rili left-icon"></i>
+                        <div class="info">
+                            <h2>课程表</h2>
+                            <p>可以在此页面查看自己每周上的课程</p>
+                        </div>
+                        <i class="icon iconfont icon-enter right-icon"></i>
+                    </div>
+                    <div class="user-ct-item">
+                        <a th:href="${basePath}+'/'+${cultsite}+'/usercenter/pwdChange'"></a>
+                        <i class="icon iconfont icon-shenfenzheng left-icon"></i>
+                        <div class="info">
+                            <h2>安全设置</h2>
+                            <p>让账号更安全，参加报名更方便</p>
+                        </div>
+                        <i class="icon iconfont icon-enter right-icon"></i>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+        <!--主体结束-->
+    </div>
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong_gx/public/footer :: copy"></div>
+<!--底部结束-->
+<a class="to-top"></a>
+<!--<script th:src="${basePath}+'/assets/js/activity/activitylist.js'" type="text/javascript"></script>-->
+<script type="text/javascript" th:inline="javascript">
+
+    $(function () {
+        var userId = $("#temp_userId").val();
+        dataInit.ajax({
+            api: [[${apiPath.userInfo}]],
+            params: {
+                userId: userId
+            },
+            fn: function (data) {
+                var model = data.data;
+                var img  = model.avatarUrl ? model.avatarUrl : "" ;
+                var title = model.nickName;
+                $(".user-name").text(title);
+                if(img){
+                    $(".user-face").attr("img",img);
+                }
+            }
+        })
+    })
+</script>
+</body>
+</html>

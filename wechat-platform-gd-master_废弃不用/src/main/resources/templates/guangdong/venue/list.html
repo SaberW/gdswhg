@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/public/list.css'">
+<div th:include="guangdong/public/leftBar :: copy"></div>
+<div id="page">
+    <div class="mui-content">
+        <div id="category-cont"
+             class="category-cont mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+            <div class="mui-scroll">
+                <a href="javascript:void(0)" class="mui-control-item" data-index="c-1">区域<i></i></a>
+                <a href="javascript:void(0)" class="mui-control-item" data-index="c-2">类型<i></i></a>
+                <a href="javascript:void(0)" class="mui-control-item" data-index="c-3">标签<i></i></a>
+                <a href="javascript:void(0)" class="mui-control-item" data-index="c-4">排序<i></i></a>
+            </div>
+        </div>
+        <div class="category-mask none">
+            <div class="category-group none" data-index="c-1">
+                <ul class="clearfix" id="areList">
+                    <!--<li class="active" data-txt="区域">全部</li>
+                    <li item-data="0">雨花区</li>
+                    <li item-data="1">天心区</li>
+                    <li item-data="2">开福区</li>
+                    <li item-data="3">岳麓区</li>
+                    <li item-data="4">芙蓉区</li>-->
+                </ul>
+            </div>
+            <div class="category-group none" data-index="c-2">
+                <ul class="clearfix" id="regList">
+                    <!--<li item-data="9" class="active" data-txt="活动类型">全部</li>
+                    <li item-data="10">声乐</li>
+                    <li item-data="11">舞蹈</li>
+                    <li item-data="12">器乐</li>
+                    <li item-data="13">戏剧</li>
+                    <li item-data="14">曲艺</li>
+                    <li item-data="15">书法</li>
+                    <li item-data="16">美术</li>
+                    <li item-data="17">摄影</li>
+                    <li item-data="18">粤剧</li>
+                    <li item-data="19">化妆</li>
+                    <li item-data="20">太极拳</li>
+                    <li item-data="21">健身操</li>
+                    <li item-data="22">语言艺术</li>
+                    <li item-data="23">剪纸</li>
+                    <li item-data="24">其它</li>-->
+                </ul>
+            </div>
+            <div class="category-group none" data-index="c-3">
+                <ul class="clearfix" id="tagList">
+
+                </ul>
+            </div>
+            <div class="category-group none" data-index="c-4">
+                <ul class="clearfix">
+                    <li item-data="0" class="active" data-txt="排序">全部</li>
+                    <li item-data="1">可预订</li>
+                </ul>
+            </div>
+        </div>
+        <!--下拉刷新容器-->
+        <div id="model-list-panel" class="mui-content mui-scroll-wrapper" style="top:45px;">
+            <div class="mui-scroll">
+                <!--数据列表-->
+                <div class="public-list">
+                    <ul id="model-list">
+                        <!--<li><a href="detail?id=2017110150729841">
+                            <div class="img">
+                                <div class="tag"><span>演出</span><span>演出</span><span>演出</span></div>
+                                <img class="lazy"
+                                     src="http://120.77.85.181:8001/whgstatic/img/2017/201711/20171101/a242501801c6482aae48e07d6c48ae39_740_555.png">
+                            </div>
+                            <div class="abstract venue">
+                                <div class="info">
+                                    <div class="title">歌剧《阿依达》</div>
+                                </div>
+                                <div class="adr"><i class="iconfont icon-coordinates_fill"></i>湖南省长沙市天心区三兴街三兴商场4栋209
+                                </div>
+                                <div class="other">
+                                    <span class="zan"><i class="iconfont icon-praise"></i>3</span>
+                                    <span class="favorite"><i class="iconfont icon-like"></i>2</span></div>
+                            </div>
+                        </a></li>
+                        <li><a href="detail?id=2017110150729841">
+                            <div class="img">
+                                <div class="tag"><span>演出</span><span>演出</span><span>演出</span></div>
+                                <img class="lazy"
+                                     src="http://120.77.85.181:8001/whgstatic/img/2017/201711/20171101/a242501801c6482aae48e07d6c48ae39_740_555.png">
+                            </div>
+                            <div class="abstract venue">
+                                <div class="info">
+                                    <div class="title">歌剧《阿依达》</div>
+                                </div>
+                                <div class="adr"><i class="iconfont icon-coordinates_fill"></i>湖南省长沙市天心区三兴街三兴商场4栋209
+                                </div>
+                                <div class="other">
+                                    <span class="zan"><i class="iconfont icon-praise"></i>3</span>
+                                    <span class="favorite"><i class="iconfont icon-like"></i>2</span></div>
+                            </div>
+                        </a></li>-->
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" th:inline="javascript">
+    var keywords = dataInit.getCache('sgkeywords');
+    dataInit.resetCache('sgkeywords');
+    $().ready(function () {
+        dataInit.ajax({
+            api: [[${apiPath.actCate}]],
+            params: {
+                type: 2,//场馆分类
+                cultid: $.cookie('cultid')
+            },
+            fn: showVenueClass
+        });
+        dataInit.ajax({
+            api: [[${apiPath.actTag}]],
+            params: {
+                type: 2,//场馆分类
+                cultid: $.cookie('cultid')
+            },
+            fn: showTagClass
+        });
+        select.create(modelData );
+        dataInit.showAre($.cookie("city"),[[${apiPath.depts}]]);
+        modelData();
+    })
+
+    function modelData(page, size) {
+        var page = page || 1;
+        var size = size || 10;
+        dataInit.ajax({
+            api: [[${apiPath.venueList}]],
+            params: {
+                page: page,
+                pageSize: size,
+                cultid: $.cookie('cultid'),
+                content: keywords?keywords:'',
+                type: $("#c-2").val(),
+                tag: $("#c-3").val(),
+                city: $("#city").val(), //市
+                area: $("#area").val(), //区
+                deptid: $("#deptid").val(), //服务站
+                province: $("#province").val(), //省
+                isUse: $("#c-4").val()
+            },
+            forceUpdate: false,
+            fn: function (data) {
+                var params = {
+                    page: page,
+                    size: size,
+                    total: data.total
+                }
+                dataInit.htmlAdd(page, showModelHtml(data));
+                dataInit.pullUp(params, modelData);
+            }
+        })
+    }
+
+    function showModelHtml(data) {
+        var html = "";
+        if(data.code == 0 && data.rows.length > 0){
+            for (var i in data.rows) {
+                var model = data.rows[i];
+                var img = data.imgPath + dataInit.getBigImage(model.image);
+                var tag = "";
+                var tag_html = '';
+                if(model.tag){
+                    tag = model.tag.split(',');
+                    tag_html += "<div class='tag'>";
+                    for(var j in tag){
+                        tag_html += '<span>'+tag[j]+'</span>'
+                    }
+                    tag_html += "</div>";
+                }
+
+
+                html += '<li><a href="detail?id='+model.itemId+'">\
+                <div class="img">\
+                '+tag_html+'\
+                <img class="lazy"\
+            src="'+img+'">\
+                </div>\
+                <div class="abstract venue">\
+                <div class="info">\
+                <div class="title">'+model.title+'</div>\
+            </div>\
+            <div class="adr"><i class="iconfont icon-coordinates_fill"></i>'+model.address+'\
+                </div>\
+                <div class="other">\
+                <span class="zan"><i class="iconfont icon-praise"></i>'+model.dianzan+'</span>\
+                <span class="favorite"><i class="iconfont icon-like"></i>'+model.shoucang+'</span></div>\
+                </div>\
+                </a></li>';
+            }
+        }else{
+            html = "<div class='newbility-no-msg'></div>";
+        }
+
+        return html;
+    }
+
+
+    function showVenueClass(data) {
+        $("#regList").html("");
+        var panel = $("#regList");
+        panel.append('<li class="active" item-data="" data-txt="类型">全部</li>');
+        for (var i in data.rows) {
+            var model = data.rows[i];
+            panel.append('<li item-data="' + model.id + '">' + model.name + '</li>');
+        }
+    }
+
+    function showTagClass(data) {
+        $("#tagList").html("");
+        var panel = $("#tagList");
+        panel.append('<li class="active" item-data="" data-txt="标签">全部</li>');
+        for (var i in data.rows) {
+            var model = data.rows[i];
+            panel.append('<li item-data="' + model.id + '">' + model.name + '</li>');
+        }
+    }
+</script>
+</body>
+</html>

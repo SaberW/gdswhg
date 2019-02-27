@@ -1,0 +1,412 @@
+@charset "UTF-8";
+@import "../public/config";
+body{
+  background: @-bg-color;
+}
+div.banner {
+  height: 430px;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  .big-banner{
+    height: 430px;
+    width: 1920px;
+    top: auto;
+    left: 50%;
+    position: absolute;
+    .banner-count{
+      width: 1920px;
+      height: 430px;
+      left: -960px;
+      right: auto;
+      position: absolute;
+      li{
+        width: 1920px;
+        height: 430px;
+        float: left;
+        cursor: pointer;
+        position: relative;
+        background-position: 50% 0%;
+        background-repeat: no-repeat;
+        a{
+          position: absolute;
+          display: block;
+          width: 100%;
+          height: 100%;
+          top: 0px;
+          left: 0px;
+        }
+      }
+    }
+  }
+  div.pages {
+    position: absolute;
+    bottom: 30px;
+    left: 0px;
+    width: 100%;
+    height: 5px;
+    text-align: center;
+    span{
+      display: inline-block;
+      width: 25px;
+      height: 5px;
+      margin: 0 5px;
+      background: #fff;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    span.active{
+      background: @-main-color;
+    }
+  }
+}
+//模快样式
+.index-module {
+  text-align: center;
+  margin-top: 40px;
+  .index-module-title {
+    width: 1200px;
+    margin: 0px auto;
+    .text{
+      position: relative;
+      span{
+        display: inline-block;
+        font-size: 30px;
+        color: @-font-color-1;
+        padding: 20px 90px;
+        border-bottom: solid 1px @-border-color;
+        position: relative;
+      }
+      span:after{
+        content: "";
+        width: 10px;
+        height: 10px;
+        display: block;
+        position: absolute;
+        background: @-main-color;
+        bottom: -5px;
+        left: 145px;
+        border-radius: 3px;
+      }
+      a{
+        position: absolute;
+        right: 15px;
+        top: 30px;
+      }
+    }
+  }
+  //模块1 - 众筹项目
+  .index-module-content {
+    margin-top: 50px;
+    width: 100%;
+    height: 365px;
+    position: relative;
+    div.index-module-list {
+      width: 100%;
+      height: 330px;
+      &>ul>li{
+        width: 1200px;
+        height: 320px;
+        float: left;
+        .opacity(0.2);
+        ul li {
+          width: 285px;
+          float: left;
+          border-radius: 4px;
+          overflow: hidden;
+          margin-right: 15px;
+          position: relative;
+          -webkit-transition: all .4s linear;
+          -moz-transition: all .4s linear;
+          -o-transition: all .4s linear;
+          -ms-transition: all .4s linear;
+          transition: all .4s linear;
+          div.img {
+            width: 100%;
+            img{
+              width: 100%;
+              height: 190px;
+              display: block;
+            }
+          }
+          div.info {
+            padding: 15px;
+            background: #fff;
+            text-align: left;
+            .title {
+              text-align: left;
+              font-size: 15px;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+            }
+            .progress-bar {
+              margin-top: 10px;
+              height: 10px;
+              border-radius: 10px;
+              background: #e3e4e8;
+              overflow: hidden;
+              span{
+                display: block;
+                background: @-main-color;
+                height: 10px;
+                width: 0;
+                -webkit-transition: width .6s ease;
+                -o-transition: width .6s ease;
+                transition: width .6s ease;
+              }
+            }
+            .progress-table {
+              margin-top: 10px;
+              .progress-table-list {
+                width: 74px;
+                float: left;
+                margin: 0 15px 0 0;
+                border-right: solid 1px @-border-color;
+                span{
+                  display: block;
+                  font-size: 16px;
+                }
+                span.text{
+                  font-size: 13px;
+                  color: @-font-color-3;
+                  margin-top: 5px;
+                }
+              }
+            }
+          }
+          &>a {
+            position: absolute;
+            display: block;
+            width: 100%;
+            height: 100%;
+            left: 0px;
+            top: 0px;
+          }
+        }
+        ul li:hover{
+          -webkit-box-shadow: 0 5px 15px 0 rgba(7,17,27,0.2);
+          -moz-box-shadow: 0 5px 15px 0 rgba(7,17,27,0.2);
+          box-shadow: 0 5px 15px 0 rgba(7,17,27,0.2);
+        }
+      }
+      &>ul>li.active{
+        .opacity(1);
+      }
+    }
+    div.pages2 {
+      position: absolute;
+      bottom: 30px;
+      left: 0px;
+      width: 100%;
+      height: 5px;
+      text-align: center;
+      span{
+        display: inline-block;
+        width: 70px;
+        height: 7px;
+        margin: 0 5px;
+        background: #fff;
+        border-radius: 10px;
+        cursor: pointer;
+      }
+      span.active{
+        background: @-main-color;
+      }
+    }
+  }
+  //模块2 - 众筹品牌
+  .index-module-content-2{
+    width: 1200px;
+    margin: 50px auto 0;
+    div.index-module-list {
+      height: 450px;
+      &>ul>li {
+        width: 300px;
+        height: 450px;
+        float: left;
+        position: relative;
+        div.top-title {
+          height: 225px;
+          background: #fff;
+          position: relative;
+          div.text{
+            padding: 85px 30px 0 30px;
+            font-size: 25px;
+            text-align: center;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+          span.line {
+            display: inline-block;
+            height: 3px;
+            width: 60px;
+            border-radius: 3px;
+            background: @-main-color;
+          }
+        }
+        div.top-title:after{
+          position: absolute;
+          border-left: 9px solid transparent;
+          border-right: 9px solid transparent;
+          border-top: 9px solid #fff;
+          content: " ";
+          display: block;
+          width: 0;
+          height: 0;
+          bottom: -9px;
+          left: 47%;
+        }
+        div.bottom-img {
+          height: 225px;
+          img{
+            width: 100%;
+            height: 100%;
+            display: block;
+          }
+        }
+        &>a{
+          position: absolute;
+          display: block;
+          width: 100%;
+          height: 100%;
+          top: 0px;
+          left: 0px;
+        }
+      }
+      &>ul>li.even{
+        div.top-title:before{
+          position: absolute;
+          border-left: 9px solid transparent;
+          border-right: 9px solid transparent;
+          border-bottom: 9px solid #fff;
+          content: " ";
+          display: block;
+          width: 0;
+          height: 0;
+          top: -9px;
+          left: 50%;
+        }
+        div.top-title:after{
+          display: none;
+        }
+      }
+      &>ul>li:hover{
+        div.top-title{
+          background: @-main-color;
+          div.text{
+            color: #fff;
+          }
+          span.line{
+            background: #fff;
+          }
+        }
+        div.top-title:after{
+          border-top-color: @-main-color;
+        }
+        div.top-title:before{
+          border-bottom-color: @-main-color;
+        }
+      }
+    }
+  }
+  //模块2 - 众筹资讯
+  .index-module-content-3 {
+    width: 1200px;
+    margin: 50px auto 0;
+    div.index-module-list {
+      height: 300px;
+      margin-right: -41px;
+      ul>li {
+        float: left;
+        width: 275px;
+        margin-right: 35px;
+        position: relative;
+        cursor: pointer;
+        div.time {
+          padding: 15px 0;
+          span {
+            display: block;
+          }
+          span.days {
+            font-size: 25px;
+            color: @-font-color-1;
+            text-align: center;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+          span.years {
+            font-size: 16px;
+            color: @-font-color-2;
+            text-align: center;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+        }
+        div.info {
+          padding: 25px;
+          background: @-bg-color;
+          position: relative;
+          div.title {
+            font-size: 18px;
+            color: @-font-color-1;
+            margin-bottom: 10px;
+            text-align: left;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+          div.text{
+            text-align: left;
+            font-size: 14px;
+            line-height: 24px;
+            height: 96px;
+            overflow: hidden;
+            color: @-font-color-2;
+          }
+          i{
+            position: absolute;
+            right: 2px;
+            bottom: 1px;
+            font-size: 35px;
+            color: #fff;
+            display: none;
+          }
+          &>a{
+            .a();
+          }
+        }
+        div.info:hover{
+          background: @-main-color;
+          div.title {
+            color: #fff;
+          }
+          div.text{
+            color: #fff;
+          }
+          i{
+            display: block;
+          }
+        }
+      }
+    }
+  }
+}
+.index-module-bg-white {
+  background: #fff;
+  margin-top: 80px;
+  padding-top: 30px;
+}
+.index-module-bg-white-end {
+  background: #fff;
+  margin-top: 0px;
+  padding-top: 30px;
+  padding-bottom: 50px;
+}
+.no-border {
+  border: none!important;
+  margin: 0!important;
+}

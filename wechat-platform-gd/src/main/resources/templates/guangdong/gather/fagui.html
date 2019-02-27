@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/news/news.css'">
+<div th:include="guangdong/public/leftBar :: copy"></div>
+<div id="page">
+    <div class="mui-content">
+        <!--下拉刷新容器-->
+        <div id="model-list-panel" class="mui-content mui-scroll-wrapper">
+            <div class="mui-scroll">
+                <!--数据列表-->
+                <div class="news-list">
+                    <ul id="model-list">
+                        <!--<li>
+                            <div class="img">
+                                    <img th:src="${basePath}+'/assets/img/img_demo/q1.jpg'" alt="demo">
+                            </div>
+                            <div class="info">
+                                <h2>戏剧排练厅</h2>
+                                <div class="abstract">
+                                    <div class="source">来源：广东省文化馆</div>
+                                    <div class="time">2017-11-8</div>
+                                </div>
+                            </div>
+                            <a href="javascript:void(0)"></a>
+                        </li>-->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" th:inline="javascript">
+    $().ready(function () {
+        modelData();
+    })
+
+    function modelData(page, size) {
+        var page = page || 1;
+        var size = size || 10;
+        dataInit.ajax({
+            api: [[${apiPath.infolist}]],
+            params: {
+                index: page,
+                size: size,
+                cultid:$.cookie("#cultid"),
+                fromproject:"ZC",
+                type:"2017101245327169" //众筹法规
+            },
+            forceUpdate: false,
+            fn: function (data) {
+                var params = {
+                    page: page,
+                    size: size,
+                    total: data.total
+                }
+                dataInit.htmlAdd(page, showModelHtml(data));
+                dataInit.pullUp(params, modelData);
+            }
+        })
+    }
+
+    function showModelHtml(data) {
+        var html = "";
+        if(data.code == 0 && data.rows.length > 0){
+            for (var i in data.rows) {
+                var model = data.rows[i];
+                var imgHtml = '';
+                if(model.clnfbigpic){
+                var img = data.imgPath + dataInit.getBigImage(model.clnfbigpic);
+                    imgHtml = '    <div class="img">'+
+                        '        <img src="'+img+'">'+
+                        '    </div>';
+                }
+                var clnfsource = model.clnfsource?model.clnfsource:'无';
+                var clnfopttime = moment(model.clnfopttime).format("YYYY-MM-DD");
+                html += '<li>'+imgHtml+
+                    '    <div class="info">'+
+                    '        <h2>'+model.clnftltle+'</h2>'+
+                    '        <div class="abstract">'+
+                    '            <div class="source">来源：'+clnfsource+'</div>'+
+                    '            <div class="time">'+clnfopttime+'</div>'+
+                    '        </div>'+
+                    '    </div>'+
+                    '    <a href="newsdetail?id='+model.clnfid+'"></a>'+
+                    '</li>';
+            }
+        }else{
+            html = "<div class='newbility-no-msg'></div>";
+        }
+
+        return html;
+    }
+</script>
+</body>
+</html>

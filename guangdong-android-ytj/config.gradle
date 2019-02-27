@@ -1,0 +1,153 @@
+ext {
+    // thanks for brucezz
+    android = [
+            compileSdkVersion: 27,
+            buildToolsVersion: "27.0.3",
+            applicationId    : "com.creatoo.guangdong_pos",
+            minSdkVersion    : 19,
+            targetSdkVersion : 27,
+            versionCode      : 6,
+            versionName      : "1.006",
+            resConfigs       : "zh",
+            testInstrumentationRunner : "android.support.test.runner.AndroidJUnitRunner",
+            flavorDimensions : "versionCode"
+    ]
+
+
+    def supportVersion = "27.1.1"
+    def constraintlayout = "1.1.0"
+    def butterKnifeVersion = "7.0.0"
+    def glideVersion = "4.6.1"
+    def glideOkhttpVer = "4.6.1@aar"
+    def glidetransformations = "3.1.1"
+    def glidetransformationslibrary = "1.4.1"
+    def retrofitVersion = "2.4.0"
+    def gsonVersion = "2.8.2"
+    def okHttpVersion = '3.9.0'
+    def okioVersion = "1.6.0"
+
+    def rxJavaVersion = "2.x.y"
+    def rxAndroidVersion = "2.0.2"
+    def rxPermission = "0.7.0@aar"
+    def rxBinding = "0.4.0"
+    def rxLifecycle = "0.6.0"
+
+    def eventbus = "3.1.1"
+    def stetho = "1.5.0"
+    def sonic = "3.0.0"
+    def once = "1.2.2"
+    def toasty = "1.2.8"
+    def autolayout = "1.4.5"
+    def multidex = "1.0.3"
+    def materialdialogs = "0.8.6.1"
+    def plmRecyclerview = "1.0.7"
+    def xRecyclerview = "1.5.9"
+
+
+    def rxlifecycle2 = "2.2.1"
+
+    def AAVersion = '4.3.1'
+
+    def VMLiveData = "1.1.1"
+    def room = "1.0.0"
+    def paging = "1.0.0-beta1"
+
+    def easyPermissions = "1.2.0"
+
+    dependencies = [
+
+            // Android support library
+            SupportAppcompatV7      : "com.android.support:appcompat-v7:$supportVersion",
+            SupportDesign           : "com.android.support:design:$supportVersion",
+            SupportRecyclerViewV7   : "com.android.support:recyclerview-v7:$supportVersion",
+            SupportCardViewV7       : "com.android.support:cardview-v7:$supportVersion",
+            SupportAppcompatV4      : "com.android.support:support-v4:$supportVersion",
+            Constraintlayout        : "com.android.support.constraint:constraint-layout:$constraintlayout",
+
+            // Nice utils
+//            Butterknife             : "com.jakewharton:butterknife:$butterKnifeVersion",
+            Glide                   : "com.github.bumptech.glide:glide:$glideVersion",
+            GlideOkHttp             : "com.github.bumptech.glide:okhttp3-integration:$glideOkhttpVer",
+            GlideTransformations    : "jp.wasabeef:glide-transformations:$glidetransformations",
+            GlideTransLibrary       : "jp.co.cyberagent.android.gpuimage:gpuimage-library:$glidetransformationslibrary",
+
+            // Rx ..
+            RxJava                  : "io.reactivex.rxjava2:rxjava:$rxJavaVersion",
+            RxAndroid               : "io.reactivex.rxjava2:rxandroid:$rxAndroidVersion",
+            RxPermission            : "com.tbruyelle.rxpermissions:rxpermissions:$rxPermission",
+            RxBinding               : "com.jakewharton.rxbinding:rxbinding:$rxBinding",
+            RxBindingSupportV4      : "com.jakewharton.rxbinding:rxbinding-support-v4:$rxBinding",
+            RxBindingSupportV7      : "com.jakewharton.rxbinding:rxbinding-appcompat-v7:$rxBinding",
+            RxBindingDesign         : "com.jakewharton.rxbinding:rxbinding-design:$rxBinding",
+            RxBindingRecyclerView   : "com.jakewharton.rxbinding:rxbinding-recyclerview-v7:$rxBinding",
+            RxLifecycle             : "com.trello:rxlifecycle:$rxLifecycle",
+
+            // Network
+            Okttp                   : "com.squareup.okhttp3:okhttp:$okHttpVersion",
+            Okio                    : "com.squareup.okio:okio:$okioVersion",
+            Retrofit                : "com.squareup.retrofit2:retrofit:$retrofitVersion",
+            RetrofitConverterGson   : "com.squareup.retrofit2:converter-gson:$retrofitVersion",
+            RetrofitAdapterRxJava   : "com.squareup.retrofit2:adapter-rxjava:$retrofitVersion",
+            RetrofitAdapterRxJava2  : "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion",
+            OkHttpLoggingInterceptor: "com.squareup.okhttp3:logging-interceptor:$okHttpVersion",
+            Gson                    : "com.google.code.gson:gson:$gsonVersion",
+
+            EventBus                : "org.greenrobot:eventbus:$eventbus",
+            Stetho                  : "com.facebook.stetho:stetho:$stetho",
+            Sonic                   : "com.tencent.sonic:sdk:$sonic",
+            Once                    : "com.jonathanfinerty.once:once:$once",
+            Toasty                  : "com.github.GrenderG:Toasty:$toasty",
+            Autolayout              : "com.zhy:autolayout:$autolayout",
+            Multidex                : "com.android.support:multidex:$multidex",
+            MaterialDialogs         : "com.afollestad.material-dialogs:core:$materialdialogs",
+            PullloadmoreRecyclerview: "com.wuxiaolong.pullloadmorerecyclerview:library:$plmRecyclerview",
+            XRecyclerview           : "com.jcodecraeer:xrecyclerview:$xRecyclerview",
+
+
+            // widget
+//            RVanimators             : "jp.wasabeef:recyclerview-animators:$rvAnimatorsVer",
+
+            //AndroidAnnotations
+            AndroidAnnotations      : "org.androidannotations:androidannotations:$AAVersion",
+            AndroidAnnotationsApi   : "org.androidannotations:androidannotations-api:$AAVersion",
+
+            //Architecture Component
+            // ViewModel and LiveData
+            ViewModelAndLiveData    : "android.arch.lifecycle:extensions:$VMLiveData",
+            // alternatively, just ViewModel
+            ViewModel               : "android.arch.lifecycle:viewmodel:$VMLiveData",
+            // alternatively, just LiveData
+            LiveData                : "android.arch.lifecycle:livedata:$VMLiveData",
+
+            VMLiveDataCompiler      : "android.arch.lifecycle:compiler:$VMLiveData",
+
+            LifecycleJava           : "android.arch.lifecycle:common-java8:$VMLiveData",
+
+            // Room (use 1.1.0-beta2 for latest beta)
+            Room                    : "android.arch.persistence.room:runtime:$room",
+            RoomCompiler            :"android.arch.persistence.room:compiler:$room",
+            RoomLiveData            :"android.arch.lifecycle:reactivestreams:$VMLiveData",
+            RoomLiveRxjava          :"android.arch.persistence.room:rxjava2:$room",
+
+            // Paging
+            Paging                  : "android.arch.paging:runtime:$paging",
+            PagingRxjava            : "android.arch.paging:rxjava2:1.0.0-alpha1",
+
+            // Test helpers for LiveData
+            LiveDataTesting         : "android.arch.core:core-testing:$VMLiveData",
+
+            // Test helpers for Room
+            RoomTesting             : "android.arch.persistence.room:testing:$room",
+
+            //rxlifecycle
+
+            Rxlifecycle             : "com.trello.rxlifecycle2:rxlifecycle:$rxlifecycle2",
+            RxlifecycleComponents   : "com.trello.rxlifecycle2:rxlifecycle-components:$rxlifecycle2",
+            RxlifecycleAndroid      : "com.trello.rxlifecycle2:rxlifecycle-android-lifecycle:$rxlifecycle2",
+
+            //Permissions
+            EasyPermissions         : "pub.devrel:easypermissions:$easyPermissions"
+
+
+    ]
+}

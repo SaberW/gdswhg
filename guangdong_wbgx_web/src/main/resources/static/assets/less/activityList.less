@@ -1,0 +1,116 @@
+@import "listHeader";
+
+nav.noScroll{
+  height: 60px !important;
+  ul{
+    background: #fff;
+    height: 60px !important;
+    //width: 1200px !important;
+    li{
+      float: left;
+      padding: 0;
+      width: 25%;
+      font-size: 18px;
+      height: 40px;
+      line-height: 40px;
+      margin: 10px 0;
+      color: #666;
+      border-bottom: 0;
+      text-align: center;
+      i.mui-icon{
+        font-size: 20px;
+      }
+    }
+    li.active{
+      border-bottom: 0;
+      color: @bg_red;
+    }
+  }
+}
+
+#areas,#type,#rtype,#sort{
+  margin-top: 170px;
+  z-index: 10;
+  display: none;
+  background: rgba(3,3,3,.3);
+  li{
+    padding: 15px 45px 15px 15px;
+  }
+  a{
+    margin: -15px -45px -15px -15px;
+    font-size: 18px;
+    line-height: 25px;
+  }
+  a:after{
+    color: @bg_red;
+    right: 30px;
+    font-size: 40px;
+  }
+}
+
+.data_list{
+  background: #eee;
+  padding: 15px;
+  .noMsg{
+    font-size: 18px;
+    line-height: 55px;
+    text-align: center;
+    padding: 20px 0;
+  }
+  .infoItem{
+    border-bottom: 1px solid #f2f2f2;
+    margin-bottom: 15px;
+    background: #fff;
+    img{
+      width: 100%;
+      display: block;
+    }
+    .content{
+      padding: 15px;
+      position: relative;
+      .title{
+        font-size: 18px;
+        line-height: 30px;
+      }
+      .footer{
+        margin: 5px 0;
+        font-size: 14px;
+        line-height: 20px;
+        color: #afafaf;
+      }
+      .right_btn{
+        position: absolute;
+        right: 20px;
+        bottom: 60px;
+        font-size: 14px;
+        border: 1px solid @bg_red;
+        color: @bg_red;
+        background: #f7dfdf;
+        padding: 0 10px;
+        border-radius: 5px;
+        &.disabled{
+          border: 1px solid #aaa;
+          color: #aaa;
+          background: #f2f2f2;
+        }
+      }
+      .bottom_msg{
+        font-size: 14px;
+        line-height: 20px;
+        color: #4d4d4d;
+        border-top: 1px solid #f2f2f2;
+        padding-top: 10px;
+        .like_{
+          float: right;
+          color: #a6a6a6;
+          .iconfont{
+            font-size: 18px;
+            line-height: 20px;
+            margin: 0 5px 0 20px;
+          }
+        }
+      }
+    }
+  }
+}
+

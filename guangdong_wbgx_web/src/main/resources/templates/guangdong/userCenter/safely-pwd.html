@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link th:href="${basePath}+'/assets/style/userCenter/userCenter.css'" rel="stylesheet">
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/rong.validate.js'"></script>
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/rong.message.js'"></script>
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/jquery.md5.js'"></script>
+<div class="wrapper clearfix">
+    <div class="content">
+        <!--公共主头部开始-->
+        <div id="header" th:include="guangdong/public/header :: copy"></div>
+        <!--公共主头部结束-->
+        <div class="main main-boder clearfix">
+            <div class="leftPanel" th:include="guangdong/userCenter/left :: copy"></div>
+            <form action="" method="post" id="pwdForm">
+                <div class="rightPanel">
+                    <div class="crumbs clearfix">
+                        <div class="tt">设置登录密码</div>
+                        <div class="goBack"><a href="../safely"></a></div>
+                    </div>
+                    <dl class="clearfix" id="oldPwdDiv">
+                        <dt class="float-left">* 原始密码</dt>
+                        <dd class="float-left">
+                            <input class="in-txt" minlength="6" maxlength="18" placeholder="原始账号登录密码" type="password" id="oldPassword" name="oldPassword" required>
+                            <em></em>
+                        </dd>
+                    </dl>
+                    <dl class="clearfix">
+                        <dt class="float-left">* 新密码</dt>
+                        <dd class="float-left">
+                            <input class="in-txt" minlength="6" maxlength="18" placeholder="6-18位数字字母符号组合" type="password" id="password" name="password" required>
+                            <em></em>
+                        </dd>
+                    </dl>
+                    <dl class="clearfix">
+                        <dt class="float-left">* 确认密码</dt>
+                        <dd class="float-left">
+                            <input class="in-txt" maxlength="18" placeholder="确认密码" type="password" id="password_again" name="password_again">
+                            <em></em>
+                        </dd>
+                    </dl>
+                    <dl class="clearfix">
+                        <dt class="float-left">&nbsp;</dt>
+                        <dd class="float-left">
+                            <input class="submit none" type="submit" value="Submit">
+                            <div class="goNext float-left">确 定</div>
+                        </dd>
+                    </dl>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong/public/footer :: copy"></div>
+<!--底部结束-->
+<!-- core public JavaScript -->
+<script type="text/javascript" th:inline="javascript">
+    //密码格式
+    $.validator.addMethod("pwdType", function(value) {
+        var reg = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$/;
+        return reg.test(value);
+    }, '密码必须由6-18位的数字和字母组成');
+
+    $(document).ready(function() {
+        //判断是改密码还是初始密码
+        dataInit.ajax({
+            api:[[${apiPath.getUserInfo}]],
+            params:{
+                userId:[[${session.wbgx_sessUserKey.userId}]]
+            },
+            fn:function(data){
+                if(data.code == 0){
+                    //是否绑定的手机
+                    if(data.data.pwd == 'no'){//初始密码
+                        $("#oldPassword").removeAttr("required");
+                        $("#oldPassword").val('init');
+                        $('#oldPwdDiv').hide();
+                    }
+                }
+            }
+        });
+
+        $("#pwdForm").validate({
+            errorElement:"em",
+            rules: {
+                password: "required",
+                password: "pwdType",
+                password_again: {
+                    equalTo: "#password"
+                }
+            },
+            messages: {
+                oldPassword: {
+                    required : "请输入您的登录密码",
+                    minlength : "密码长度不能小于6个字符"
+                },
+                password: {
+                    required : "请输入您的新登录密码",
+                    minlength : "密码长度不能小于6个字符"
+                },
+                password_again: {
+                    equalTo: "两次密码输入不一致"
+                }
+            },
+            submitHandler:function() {
+                dataInit.ajax({
+                   api:[[${apiPath.setPassword}]],
+                   params:{
+                       passWord:$.md5($('#oldPassword').val()),
+                       newPwdMd5:$.md5($('#password').val()),
+                       userId:[[${session.wbgx_sessUserKey.userId}]]
+                   },
+                   fn:function(data){
+                       if(data.code == 0){
+                           rongDialog.init({
+                               ico : 1,
+                               type : 1,
+                               desc : "密码修改成功",
+                               nextFn:function(){
+                                   window.location.href= [[${basePath}]]+'/'+[[${cultsite}]]+"/center/safely";
+                               }
+                           });
+                       }else{
+                           rongDialog.init({
+                               ico : 2,
+                               type : 1,
+                               desc : data.msg || "密码修改失败"
+                           });
+                       }
+                   }
+               })
+            }
+        });
+    });
+    $(".goNext").on("click",function(){
+        $(".submit").click();
+    })
+</script>
+</body>
+</html>

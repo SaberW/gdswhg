@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong_gx/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/style/supply_sys/center.css'">
+<div class="wrapper clearfix">
+    <div class="content">
+        <!--公共主头部开始-->
+        <div id="header" th:include="guangdong_gx/public/header :: copy"></div>
+        <!--公共主头部结束-->
+        <!--主体开始-->
+        <div class="container res-center-bg">
+            <div class="sys-crumbs">
+                <span><a href="../res-gx/index">首页</a></span>
+                <i class="icon iconfont icon-enter"></i>
+                <span><a href="index">用户中心</a></span>
+                <i class="icon iconfont icon-enter"></i>
+                <span class="active" id="title">我的供给</span>
+            </div>
+            <div class="page-list">
+                <div class="center-nav">
+                    <ul class="clearfix">
+                        <li class="active" data-type="1">
+                            当前配送
+                        </li>
+                        <li data-type="2">
+                            历史配送
+                        </li>
+                    </ul>
+                </div>
+                <ul class="control-switch clearfix">
+                    <li class="active" data-type="1">我主动提供的</li>
+                    <li  data-type="0">其它文化馆申请的</li>
+                </ul>
+                <ul class="center-list" id="modelList">
+
+                </ul>
+                <!--分页开始 -->
+                <div class="green-black" id="artPagging"></div>
+                <!--分页结束-->
+            </div>
+
+        </div>
+        <!--主体结束-->
+    </div>
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong_gx/public/footer :: copy"></div>
+<!--底部结束-->
+<a class="to-top"></a>
+<script type="text/javascript" th:inline="javascript">
+
+    var userId = $("#temp_userId").val();
+    var type = 1; // 当前配送 || 历史配送
+    var cs = 1; // 其它文化馆申请的 || 我主动提供的
+
+    $().ready(function(){
+        dataPage();
+        $(".center-nav ul li").on("click",function(){
+            $(this).addClass("active").siblings().removeClass("active");
+            type = $(this).attr("data-type");
+            dataPage();
+        })
+        $(".control-switch li").on("click",function(){
+            $(this).addClass("active").siblings().removeClass("active");
+            cs = $(this).attr("data-type");
+            dataPage();
+        })
+    })
+
+    function dataPage(page,rows) {
+        var params_page = page || 1;
+        var params_rows = rows || 12;
+        var params = {
+            index: params_page,
+            size: params_rows,
+            id: userId,
+            type: cs,
+            deliveryType:type
+        }
+        if(cs == 0){
+            params.touser = userId;
+        }else{
+            params.crtuser = userId;
+        }
+        dataInit.ajax({
+            api: [[${apiPath.myDelivery}]],
+            params: params,
+            fn: function(data){
+                //console.log(data);
+                showModelList(data,cs);
+                dataInit.pageInit("artPagging", params_page, params_rows, data.total, dataPage);
+            }
+        })
+    }
+
+    function showModelList(data,cs) {
+        $("#modelList").html("");
+        var modelList = $("#modelList");
+        if(data.code == 0){
+            if (data.rows.length > 0) {
+                for (var i in data.rows) {
+                    var model = data.rows[i];
+                    var state = model.state;
+                    var time =  dataInit.getTimeDiff(model.crtdate);
+                    var modelStr="";
+                    var state_txt = "";
+                    var tgdw="";
+                    switch (state){
+                        case 0:
+                            state_txt = "审核失败";
+                            break;
+                        case 1:
+                            state_txt = "审核中";
+                            break;
+                        case 2:
+                            state_txt = "配送中";
+                            break;
+                        case 3:
+                            state_txt = "配送成功";
+                            break;
+                        case 4:
+                            state_txt = "已失效";
+                            break;
+                    }
+                    if(cs == 0){
+                        tgdw='提供单位：'+model.crtuser;
+                    }else{
+                        tgdw='需求单位：'+model.touser;
+                    }
+                    if(tgdw=="2015121200000000"){
+                        tgdw="广东省文化馆";
+                    }
+                    modelStr= '<li class="dist-item"><a href="#"></a>' +
+                        '<em class="dist-type">'+state_txt+'</em>' +
+                        '<div class="apply-user"> ' +
+                        '<div class="img"> ' +
+                        '<img src="'+[[${basePath}]]+'/assets/img/supply/face.png"> ' +
+                        '</div>' +
+                        '<i class="iconfont icon-dunpai"></i> ' +
+                        '<div class="user-name">'+tgdw+'</div> ' +
+                        '</div> ' +
+                        '<h2>'+model.name+'<em><span>'+time+'</span>发布</em></h2> ';
+                        if(model.region&&model.region.length>10){
+                            modelStr+='<p>配送对象：<span>'+model.region.substring(0,10)+'...</span></p> ';
+                        }else{
+                            modelStr+='<p>配送对象：<span>'+model.region+'</span></p> ';
+                        }
+                    modelStr+='<div class="info-cont"> ' +
+                        '<ul>' +
+                        '<li>申请单位：<span>'+model.crtuser+'</span></li>' +
+                        '<li>申请配送时间：<span>'+model.memo+'</span></li>' +
+                        '<li>申请配送区域：<span>'+model.region+'</span></li>' +
+                        '<li>配送单号：<span>'+model.id+'</span></li>' +
+                        '</ul>'+
+                        '</div>' +
+                        '</li>';
+                    modelList.append(modelStr);
+                }
+
+            } else {
+                modelList.append("<div class='public-no-message'></div>");
+            }
+        }else {
+            rongDialog.init({ico : 2, type : 1, desc : data.msg});
+        }
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong_ytj/public/header :: copy"></head>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/digitDtl.css'">
+<script th:src="${apiPath.myvisitnote}" id="whgtongji"></script>
+<body class="mui-content">
+
+<header>
+    <div class="black"><i class="mui-icon mui-icon-arrowleft"></i> 返回</div>
+</header>
+
+<main class="mui-content">
+    <div class="title" id="dtl_title"></div>
+    <div class="content">
+        <div>
+            <div class="title_">
+                <span></span>
+                课程表
+            </div>
+            <div class="msg clearfix" id="dtl_card">
+                <table>
+                    <thead><tr><td>序</td><td>开始时间</td><td>结束时间</td></tr></thead>
+                    <tbody id="table_card">
+                        <!--<tr>
+                            <td>1</td><td>1991-11-11 10:12</td><td>1991-11-11 10:12</td>
+                        </tr>
+                        <tr>
+                            <td>1</td><td>1991-11-11 10:12</td><td>1991-11-11 10:12</td>
+                        </tr>
+                        <tr>
+                            <td>1</td><td>1991-11-11 10:12</td><td>1991-11-11 10:12</td>
+                        </tr>-->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div>
+            <div class="title_">
+                <span></span>
+                课程简介
+            </div>
+            <div class="msg clearfix" id="dtl_info"></div>
+        </div>
+        <div>
+            <div class="title_">
+                <span></span>
+                老师介绍
+            </div>
+            <div class="msg clearfix" id="teacherdesc"></div>
+        </div>
+        <div>
+            <div class="title_">
+                <span></span>
+                相关资讯
+            </div>
+            <div class="msg clearfix" id="dtl_rel_info"></div>
+        </div>
+    </div>
+    <div class="img_box" id="resource_box">
+        <ul id="resourceNav"></ul>
+        <div class="img_ clearfix" id="images_box"></div>
+        <div class="img_ clearfix" id="videos_box"></div>
+        <div class="img_ clearfix" id="audios_box"></div>
+        <!--<div class="img_ clearfix" id="files_box"></div>-->
+    </div>
+</main>
+
+<div class="qrCode">
+    <div>
+        <div>
+            <div id="qrCode_"></div>
+        </div>
+        <div>
+            请扫描二维码，
+            微信登陆后报名。
+        </div>
+    </div>
+</div>
+
+<div class="videoView">
+    <div class="box">
+        <span class="close iconfont icon-close"></span>
+        <video id="video___" autoplay="autoplay" loop="loop" controls="controls" controlsList="nodownload"></video>
+    </div>
+</div>
+<div class="audioView">
+    <div class="box">
+        <span class="close iconfont icon-close"></span>
+        <audio id="audio___" autoplay controls="controls" controlsList="nodownload"></audio>
+    </div>
+</div>
+
+<script th:inline="javascript">
+
+    function init() {
+        var id = getUrlParam('id');
+        $('#qrCode_').qrcode({
+            width:  240,
+            height: 240,
+            text: [[${yuMing}]]+"wechat/train/detail?id=" + id
+        });
+        getDZSC();
+        bindEvent();
+    }
+
+    init();
+
+    function getDetail(sc,dz) {
+        var param = {};
+        param.id = getUrlParam('id');
+        param.cultid = $.cookie('cultid');
+        for(var k in param){
+            if (!param[k] || param[k]=='' || param[k]=='undefined')
+                delete param[k];
+        }
+        $.post( [[${rootUrl}]] + 'api/px/detail' ,param,function (r) {
+            var data = JSON.parse(r);
+            if(data.code == '0'){
+                var dtl = data.data;
+                var tra = dtl.tra;
+                var imgUrl = data.imgPath + tra.image;
+
+                var maxApplyNum = parseInt(tra.maxApplyNum);
+                var lastApplyNum = maxApplyNum - tra.enrolcount;
+                var state = '<div class="btn" id="order">立即报名</div>';
+
+                if(tra.date > tra.applyEnd ){
+                    state = '<div class="btn disabled" id="order">报名结束</div>';
+                }else if(lastApplyNum == 0){
+                    state = '<div class="btn disabled" id="order">名额已满</div>';
+                }else{ //未报名
+                    if(tra.applyBegin > tra.date){
+                        state = '<div class="btn disabled" id="order">即将开始</div>';
+                    }else if(tra.applyBegin < tra.date && tra.date < tra.applyEnd){
+                        state = tra.enrolstate ?
+                            '<div class="btn disabled" id="order">已报名</div>' :
+                            '<div class="btn" id="order">立即报名</div>';
+                        //是否有培训组限制
+                        if( dtl.limitEnrolForTrainGroup ){
+                            state = '<div class="btn disabled" id="order">' +
+                                '<small>已超培训组限制,不能报名</small></div>';
+                        }
+                    }
+                }
+
+                var num = tra.maxApplyNum - tra.enrolcount;
+                var age = tra.age ?
+                    (tra.age.split(",")[0] + ' 至 ' + tra.age.split(",")[1] + ' 岁') :
+                    '不限';
+                //培训时间
+                var begin = new Date(tra.trainingBegin).format('yyyy-MM-dd');
+                var end = new Date(tra.trainingEnd).format('yyyy-MM-dd');
+                //报名时间
+                var regBegin = new Date(tra.applyBegin).format('yyyy-MM-dd');
+                var regEnd = new Date(tra.applyEnd).format('yyyy-MM-dd');
+
+                var html = '<img src="'+imgUrl+'">' +
+                    (dtl.tra.tagname?'<span class="label">'+dtl.tra.tagname+'</span>':'') +
+                    '        <div class="btn_group clearfix">' +
+                    (tra.date > tra.applyEnd ? '': '<span class="label_">仅剩 <a>'+ num +'</a> 名</span>')+
+                    '<div class="zan"><i class="iconfont icon-praise"></i>点赞（'+dz+'）</div>' +
+                    '<div class="like"><i class="iconfont icon-like"></i>收藏（'+sc+'）</div>'
+                    + state +
+                    '        </div>' +
+                    '        <div class="title_">'+tra.title+'<span id="visitCount"></span></div>' +
+                    '        <div class="footer">' +
+                    (tra.teachername ? '<div class="items">讲师：'+ tra.teachername + '</div>': '') +
+                    '            <div class="items">' +
+                    '                年龄段：'+ age +
+                    '            </div>' +
+                    '            <div class="items">' +
+                    '                报名时间：'+ regBegin +' 至 '+ regEnd +
+                    '            </div>' +
+                    '            <div class="items">' +
+                    '                培训时间：'+ begin +' 至 '+ end +
+                    '            </div>' +
+                    '            <div class="items">' +
+                    '                培训地点：'+ tra.host +
+                    '            </div>' +
+                    (tra.phone?
+                        '<div class="items">' + '联系电话：'+ tra.phone + '</div>':'') +
+                    '        </div>';
+                $('#dtl_title').html(html);
+                $('#dtl_info').html(tra.intro);
+                if(tra.teacherdesc)
+                    $('#teacherdesc').html(tra.teacherdesc);
+                else
+                    $('#teacherdesc').parent().hide();
+
+                // 浏览量
+                getVisitSumCount4url(param.id, function(count){
+                    $('#visitCount').text('浏览量：'+count)
+                });
+            }else{
+                mui.alert(data.msg);
+            }
+        });
+
+        $.post( [[${rootUrl}]] + 'api/comm/glzx' ,{
+            entityid: param.id,
+            clnftype: '2016111900000018'
+        },function (r) {
+            var data = JSON.parse(r);
+            if(data.code == '0'){
+                if(data.data.length){
+                    var html = '';
+                    $.each(data.data,function (i, v) {
+                        var date = new Date(v.clnfopttime).format('yyyy-MM-dd');
+                        html+='<div class="text" data-id="'+ v.clnfid +'">' + v.clnftltle +
+                            '<span class="left_">来源：'+ v.clnfsource +'</span>' +
+                            '<span class="right_">时间：'+ date +'</span>' +
+                            '</div>';
+                        //if(i>10)return false
+                    });
+                    $('#dtl_rel_info').html(html);
+                }else{
+                    $('#dtl_rel_info').parent().hide();
+                }
+            }else{
+                mui.alert(data.msg);
+            }
+        });
+        $.post( [[${rootUrl}]] + 'api/comm/resource' ,{
+            refid: param.id,
+            reftype: 5
+        },function (r) {
+            var data = JSON.parse(r);
+            var imgPath = data.imgPath;
+            if(data.code == '0'){
+                if(data.data.length){
+                    var image = '';
+                    var video = '';
+                    var audio = '';
+                    var files = '';
+                    var imgUrl= '';
+                    $.each(data.data,function (i, v) {
+                        if(v.enttype == '1'){
+                            imgUrl = v.enturl.indexOf('http://')>=0 ? v.enturl : imgPath + v.enturl;
+                            image += '<div data-id="'+ v.id +'">' +
+                                '<img src="'+ imgUrl +'" data-preview-src data-preview-group="1">' +
+                                '<h5>'+v.name+'</h5>' +
+                                '</div>';
+                        }
+                        if(v.enttype == '2'){
+                            imgUrl = v.deourl.indexOf('http://')>=0 ? v.deourl : imgPath + v.deourl;
+                            video += '<div data-id="'+ v.id +'" data-src="'+ v.enturl +'">' +
+                                '<img src="'+ imgUrl +'">' +
+                                '<h5>'+v.name+'</h5>' +
+                                '</div>';
+                        }
+                        if(v.enttype == '3'){
+                            audio += '<div data-id="'+ v.id +'" data-src="'+ v.enturl +'">' +
+                                '<img src="'+[[${basePath}]]+'/assets/imac/img/mp3.jpg">' +
+                                '<h5>'+v.name+'</h5>' +
+                                '</div>';
+                        }
+                        if(v.enttype == '4'){
+                            files += '<div data-id="'+ v.id +'" data-src="'+ v.enturl +'">' +
+                                '<img src="'+[[${basePath}]]+'/assets/imac/img/mp3.jpg">' +
+                                '<h5>'+v.name+'</h5>' +
+                                '</div>';
+                        }
+                        //if(i>10)return false;
+                    });
+                    var resourceNav = '';
+                    if(image){
+                        resourceNav += '<li data-fn="images">培训图片</li>';
+                    }
+                    if(audio){
+                        resourceNav += '<li data-fn="audios">培训音频</li>';
+                    }
+                    if(video){
+                        resourceNav += '<li data-fn="videos">培训视频</li>';
+                    }
+                    /*if(files){
+                        resourceNav += '<li data-fn="files">活动文件</li>';
+                    }*/
+                    $('#resourceNav').html(resourceNav).find('li:first-child').addClass('active').trigger('tap');
+                    $('#images_box').html(image);
+                    $('#videos_box').html(video);
+                    $('#audios_box').html(audio);
+                    // $('#files_box').html(files);
+                    mui.previewImage();
+                }else{
+                    $('#resource_box').hide();
+                }
+            }else{
+                $('#resource_box').hide();
+                // mui.alert(data.msg);
+            }
+        });
+
+        $.post( [[${rootUrl}]] + 'api/px/course' ,{
+            pageSize: 6,
+            page:1,
+            id: param.id
+        },function (r) {
+            var data = JSON.parse(r);
+            if(data.code == '0'){
+                if(data.rows.length){
+                    var html = '';
+                    $.each(data.rows,function (i, v) {
+                        var begin = new Date(v.starttime).format('yyyy-MM-dd hh:mm');
+                        var end = new Date(v.endtime).format('yyyy-MM-dd hh:mm');
+                        html+= '<tr>' +
+                            '<td>'+(i+1)+'</td><td>'+begin+'</td><td>'+end+'</td>' +
+                            '</tr>'
+                    });
+                    $('#table_card').html(html);
+                }else{
+                    //$('#dtl_rel_info').parent().hide();
+                }
+            }else{
+                mui.alert(data.msg);
+            }
+        });
+
+    }
+
+    // 获取收藏数,点赞数
+    function getDZSC() {
+        var id = getUrlParam('id');
+        $.post( [[${rootUrl}]] + 'api/comm/isLightenColle',{cmrefid:id,cmreftyp:5},function (r) {
+            var data = JSON.parse(r);
+            if(data.code=='0'){
+                var sc = data.data.scNum;
+                $.post( [[${rootUrl}]] + 'api/comm/isLightenGood',{cmrefid:id,cmreftyp:5},function (r) {
+                    var data = JSON.parse(r);
+                    if(data.code=='0'){
+                        var dz = data.data.num;
+                        getDetail(sc,dz);
+                    }
+                });
+            }
+        });
+
+    }
+
+
+    function bindEvent() {
+
+        $('#dtl_title').on('tap','#order',function () {
+            if($(this).hasClass('disabled')) return false;
+            $('.qrCode').show().addClass('active');
+        });
+
+        $('.qrCode').on('tap',function (e) {
+            var tar = e.target.className;
+            if(tar.indexOf('qrCode')>=0) $(this).removeClass('active').hide();
+
+        });
+
+        $('.black').on('tap',function () {
+            var from = getUrlParam('from');
+            if(window.sessionStorage.back){
+                var href_ = window.sessionStorage.back;
+                window.sessionStorage.back = '';
+                return location.href = href_;
+            }
+            if(from)return location.href = 'index';
+            location.href = 'trainList';
+        });
+
+        $('#resourceNav').on('tap','li',function () {
+            $(this).addClass('active').siblings().removeClass('active');
+            var id = $(this).attr('data-fn');
+            $('#'+id+'_box').show().siblings('.img_').hide();
+        });
+
+        $('#dtl_rel_info').on('tap','.text',function () {
+            var id = $(this).attr('data-id');
+            window.sessionStorage.back = 'trainDtl?id=' + getUrlParam('id');
+            location.href = 'infoDtl?id=' + id;
+        });
+
+        var player_ ;
+        $('#videos_box').on('tap','div',function () {
+            var src = $(this).attr('data-src');
+            /*var videoObject = {
+                container: '#video___',//“#”代表容器的ID，“.”或“”代表容器的class
+                variable: 'player_',//该属性必需设置，值等于下面的new chplayer()的对象
+                flashplayer:false,//如果强制使用flashplayer则设置成true
+                loop:true,//	播放结束后是否循环播放
+                autoplay:true,//	是否自动播放
+                mobileCkControls: true,
+                video:src//视频地址
+            };
+            player_=new ckplayer(videoObject);
+            player_.videoPlay();*/
+            $('.videoView').show().find('#video___').attr('src',src);
+            $('#video___')[0].play();
+        });
+        $('.videoView').on('tap',function (e) {
+            if(e.target.className == 'videoView' || e.target.nodeName == 'SPAN'){
+                /*player_.videoPause();
+                player_.videoClear();
+                player_ = null;*/
+                $('#video___')[0].pause();
+                $('.videoView').hide();
+            }
+        });
+
+        var audio = $('#audio___')[0];
+        $('#audios_box').on('tap','div',function () {
+            $('.audioView').show();
+            var src = $(this).attr('data-src');
+            $(audio).attr('src',src);
+        });
+        $('.audioView').on('tap',function (e) {
+            if(e.target.className == 'audioView' || e.target.nodeName == 'SPAN'){
+                audio.pause();
+                $('.audioView').hide();
+            }
+        });
+
+    }
+
+</script>
+
+</body>
+</html>

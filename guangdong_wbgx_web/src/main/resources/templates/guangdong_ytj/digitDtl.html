@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong_ytj/public/header :: copy"></head>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/digitDtl.css'">
+<script th:src="${apiPath.myvisitnote}" id="whgtongji"></script>
+<body class="mui-content">
+
+<header>
+    <div class="black"><i class="mui-icon mui-icon-arrowleft"></i> 返回</div>
+</header>
+
+<main>
+    <div class="title" id="dig_dtl">
+        <!--<img th:src="${basePath}+'/assets/img/index/search-bg2.jpg'">
+        <div class="title_">阿三顶顶发挥规范化阿三顶顶发挥规范化</div>
+        <div class="footer">
+            阿三顶顶发挥规范化阿三顶顶发挥规范化
+        </div>-->
+    </div>
+    <div class="content">
+        <div>
+            <div class="title_">
+                <span></span>
+                展览简介
+            </div>
+            <div class="msg clearfix" id="dig_info">
+                往昔的欢笑往昔的欢笑往昔的欢笑往昔的欢笑往昔的欢笑往昔的欢笑往昔的欢笑往昔的欢笑往昔的欢笑往昔的欢笑往昔的欢笑往昔的欢笑往昔的欢笑往昔的欢笑往昔的欢笑往昔的欢笑往昔的欢笑往昔的欢笑往昔的欢笑往昔的欢笑往昔的欢笑往昔的欢笑往昔的欢笑
+            </div>
+        </div>
+        <div>
+            <div class="title_">
+                <span></span>
+                展览作品
+            </div>
+            <div class="msg clearfix" id="works">
+                <!--<div class="img">
+                    <img th:src="${basePath}+'/assets/img/index/search-bg2.jpg'">
+                    <div>往昔的欢笑</div>
+                </div>
+                <div class="img">
+                    <img th:src="${basePath}+'/assets/img/index/search-bg2.jpg'">
+                    <div>往昔的欢笑</div>
+                </div>
+                <div class="img">
+                    <img th:src="${basePath}+'/assets/img/index/search-bg2.jpg'">
+                    <div>往昔的欢笑</div>
+                </div>
+                <div class="img">
+                    <img th:src="${basePath}+'/assets/img/index/search-bg2.jpg'">
+                    <div>往昔的欢笑</div>
+                </div>-->
+            </div>
+            <div class="bottomMoreBtn" style="text-align: center;color: #999;padding: 15px">
+                <span>查看更多 <i class="iconfont icon-unfold"></i></span>
+                <span class="mui-spinner"></span>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script th:inline="javascript">
+    var DtlId = getUrlParam('id');
+    var wordsPage = 1;
+    mui.init();
+    var getMidImage = function (url) {
+        var img = url.split('.');
+        if (img.length > 1)
+            return url.substring(0,url.indexOf('.'+img[img.length-1]))+ '_750_500.'+ img[img.length-1];
+        return url;
+    };
+    function init() {
+        getData();
+        bindEvent();
+    }
+    init();
+    function getData(){
+        var param = {};
+        param.id = getUrlParam('id');
+        $.post( [[${rootUrl}]] + 'api/digitalExhibition/detail' ,param,function (r) {
+            var data = JSON.parse(r);
+            if(data.code == '0'){
+                var img = data.data.imgurl.indexOf('http://')>=0 ? data.data.imgurl : data.imgPath + data.data.imgurl;
+                //var img = data.imgPath + data.data.imgurl;
+                var html = '<img src="'+ img +'">' +
+                    '<div class="title_">'+data.data.title+'<span id="visitCount"></span></div>' +
+                    '<div class="footer">主办：' + data.data.host +
+                    '</div>';
+                $('#dig_dtl').html(html);
+                $('#dig_info').html(data.data.remark);
+
+                // 浏览量
+                getVisitSumCount4url(DtlId, function(count){
+                    $('#visitCount').text('浏览量：'+count)
+                });
+            }else{
+                mui.alert(data.msg);
+            }
+        });
+        getWords(1);
+    }
+    function getWords(page,size){
+        $.post( [[${rootUrl}]] + 'api/comm/resource' ,{
+            refid: DtlId,
+            reftype:40,
+            pageSize: size || 12,
+            page: page || 1,
+            enttype:1
+        },function (r) {
+            var data = JSON.parse(r);
+            if(data.code == '0'){
+                if(data.data.length){
+                    var div = '';
+                    var imgPath = data.imgPath;
+                    var placeholder = [[${basePath}]]+'/assets/imac/img/no-img.jpg';
+                    $.each(data.rows,function (i, v) {
+                        var imgUrl = v.enturl.indexOf('http://')>=0 ? v.enturl : imgPath + v.enturl;
+                        // var regx = /<[^>]*>|<\/[^>]*>/gm;
+                        // var summary = v.summary.replace(regx,"");
+                        div+= '<div class="img">' +
+                            '<img src="'+placeholder+'" class="lazy" data-lazyload="'+getMidImage(imgUrl)+'" data-original="'+getMidImage(imgUrl)+'" data-preview-src="'+imgUrl+'" data-preview-group="1" data-preview-title="'+v.name+'">' +
+                            // '<img src="'+placeholder+'" class="lazy" data-lazyload="'+getMidImage(imgUrl)+'" data-original="'+getMidImage(imgUrl)+'" data-preview-src="'+imgUrl+'" data-preview-group="1" data-preview-title="'+v.name+'" data-preview-msg="'+summary+'">' +
+                            '<div>'+v.name+'</div>' +
+                            '</div>';
+                    });
+                    if(page>1){
+                        $('#works').append(div);
+                    }else{
+                        $('#works').html(div);
+                    }
+                    mui('#works').imageLazyload({
+                        placeholder: placeholder,
+                        effect : "fadeIn"
+                    });
+                    //$('img.lazy').lazyload();
+                    mui.previewImage();
+                    $('.bottomMoreBtn').removeClass('active');
+                    if(data.total <= 12){
+                        $('.bottomMoreBtn').hide();
+                    }
+                    if(wordsPage >= data.total/data.pageSize){
+                        $('.bottomMoreBtn').off('tap').find('span').html('没有更多了');
+                    }
+                    wordsPage += 1;
+                }
+            }else{
+                //mui.alert(data.msg);
+                $('#works').parent().hide();
+            }
+        });
+    }
+    function bindEvent() {
+        $('.black').on('tap',function () {
+            var from = getUrlParam('from');
+            if(from)return location.href = 'index';
+            location.href = 'digitList';
+        });
+        $('.bottomMoreBtn').on('tap',function () {
+            var $this = $(this);
+            if($this.hasClass('active')){
+                return false;
+            }else{
+                $this.addClass('active');
+                getWords(wordsPage);
+            }
+        })
+    }
+
+
+
+</script>
+
+</body>
+</html>

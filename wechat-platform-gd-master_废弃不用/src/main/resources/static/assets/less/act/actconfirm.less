@@ -1,0 +1,207 @@
+// out: ../../css/activity/activityconfirm.css, sourcemap: false, compress: true 
+
+@import "../public/config";
+
+.mui-table-view.mui-table-view-chevron {
+  overflow: hidden;
+}
+
+.mui-table-view-cell:after {
+  left: 10px;
+  right: 10px;
+}
+
+.mui-table-view .mui-media-object {
+  width: 20px;
+  height: 20px
+}
+
+.mui-media-body {
+  color: @-font-color-1;
+  font-size: 12px;
+  position: relative
+}
+
+.mui-media-body.label {
+  position: absolute;
+  font-size: 14px;
+  color: @-font-color-1;
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  display: -webkit-inline-flex;
+  -webkit-box-pack: left;
+      -ms-flex-pack: left;
+          justify-content: left;
+  -webkit-box-align: top;
+      -ms-flex-align: top;
+          align-items: top
+}
+
+.mui-table-view-cell .detail {
+  display: inline-block;
+  color: @-font-color-3;
+  font-size: 14px;
+  width: 100%;
+  text-align: right;
+  position: relative;
+  left: 80px;
+  padding-right: 30px;
+  word-wrap: break-word;
+  word-break: break-all;
+  white-space: normal;
+  overflow: visible
+}
+
+.mui-table-view-cell .detail#seat {
+  line-height: 15px
+}
+
+.mui-table-view .mui-media, .mui-table-view .mui-media-body {
+  overflow: visible;
+}
+
+.mui-table-view-cell > a:not(.mui-btn) {
+  position: relative
+}
+.mui-table-view-cell{
+  padding: 13px 15px;
+}
+.mui-checkbox, .mui-table-view-cell .note, .mui-table-view-cell .note p {
+  color: @-font-color-3;
+  font-size: 12px
+}
+
+.mui-table-view-cell .note p {
+  word-wrap: break-word;
+  word-break: break-all;
+  white-space: normal;
+  overflow: hidden
+}
+
+.mui-table-view-chevron .mui-table-view-cell.note {
+  padding-right: 40px
+}
+
+ol {
+  list-style-type: demical;
+  padding: 0 0 0 16px
+}
+
+ol li {
+  list-style-position: outside;
+  word-wrap: break-word;
+  word-break: break-all;
+  white-space: normal
+}
+
+.mui-content-padded {
+  position: fixed;
+  bottom: 0px;
+  left: 0px;
+  width: 100%;
+  margin: 0;
+  padding: 10px;
+}
+.mui-content-padded .button {
+  .button();
+  width: 100%;
+}
+#btnAgreement {
+  position: relative
+}
+
+.button-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: transparent
+}
+
+.content-bg {
+  position: relative;
+  top: 0;
+  left: 0;
+  z-index: 1
+}
+
+.content-bg img {
+  vertical-align: top
+}
+
+.mui-card.no-corner {
+  margin: 0px 10px 0 10px;
+  border-radius: 0;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+.mui-card.no-corner:first-child {
+  margin-top: 10px;
+}
+.mui-card .mui-card-header.wrapper-par {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin: 0 15px;
+  background: #fff;
+  padding: 20px 0;
+  position: relative;
+  &:after{
+    .after();
+  }
+}
+.mui-card .mui-card-header.wrapper-par .left-wrapper, .mui-card .mui-card-header.wrapper-par .right-wrapper {
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+}
+.mui-card .mui-card-header.wrapper-par .left-wrapper {
+  -webkit-box-flex: 0;
+  -ms-flex: 0 0 120px;
+  flex: 0 0 120px;
+  width: 120px;
+}
+.mui-card .mui-card-header.wrapper-par .right-wrapper {
+  padding-left: 10px;
+}
+.mui-card .mui-card-header.wrapper-par .left-wrapper #pageImg {
+  width: 120px;
+  height: 80px;
+  vertical-align: top;
+}
+.mui-card .mui-card-header.wrapper-par .right-wrapper .page-title {
+  font-size: 15px;
+  line-height: 25px;
+  color: @-font-color-1;
+}
+.mui-card .mui-card-header.wrapper-par .right-wrapper div.time {
+  font-size: 12px;
+  line-height: 22px;
+  color: @-font-color-2;
+  position: relative;
+}
+
+.mui-card-footer:before, .mui-card-header:after {
+  height: 0;
+}
+span.seat-list {
+  display: inline-block;
+  border: dashed 1px @-main-color;
+  color: @-main-color;
+  font-size: 12px;
+  width: 60px;
+  margin-left: 10px;
+  margin-bottom: 10px;
+  height: 22px;
+  line-height: 21px;
+  text-align: center;
+}
+.mui-card .mui-card-header.wrapper-par .right-wrapper div.time i {
+  font-size: 14px;
+  color: @-font-color-2;
+  position:relative;
+  top:1px;
+  margin-right:2px;
+}

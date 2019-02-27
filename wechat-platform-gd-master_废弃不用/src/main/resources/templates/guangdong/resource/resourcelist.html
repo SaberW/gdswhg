@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/brand/brand.css'" >
+<div th:include="guangdong/public/leftBar :: copy"></div>
+<div id="page">
+    <div class="mui-content">
+        <div class="inform">
+            <!--滚动栏-->
+            <div class="inform-nav-bar mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+                <div class="mui-scroll" id="nav-bar">
+                    <a class="mui-control-item mui-active" href="javascript:void(0)">
+                        全部
+                    </a>
+                    <a class="mui-control-item" href="javascript:void(0)">
+                        图片
+                    </a>
+                    <a class="mui-control-item" href="javascript:void(0)">
+                        视频
+                    </a>
+                    <a class="mui-control-item" href="javascript:void(0)">
+                        音频
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div id="model-list-panel" class="mui-content mui-scroll-wrapper" style="top:46px">
+            <div class="mui-scroll">
+                <div class="pic-list" id="model-list">
+                    <!--精选品牌-->
+                    <!-- <div class="brand">
+                         <div class="img">
+                             <p>品牌名称</p>
+                             <a href="#">
+                                 <img class="lazy" src="http://mpic.tiankong.com/bbd/0e1/bbd0e1190ec0ae9e134732eeb4e4135e/640.jpg">
+                             </a>
+                         </div>
+                     </div>-->
+                    <!--精选品牌-->
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <input type="hidden" id="enttype" value="">
+</div>
+<script type="text/javascript" th:inline="javascript">
+    var itemId = dataInit.getUrlParam("id");
+    var reftype = dataInit.getUrlParam("reftype");
+    $(document).ready(function (){
+        modelData();
+        mui("#nav-bar").on('tap','a',function () {
+            if($(this).index() == 0){
+                $("#enttype").val('');
+            }else {
+                $("#enttype").val($(this).index());
+            }
+            refreshPage();
+        })
+    })
+
+    function refreshPage() {
+        $("#model-list").html('');
+        modelData();
+        mui('#model-list-panel').pullRefresh().scrollTo(0,0,0);
+        mui('#model-list-panel').pullRefresh().refresh(true);
+    }
+
+    function modelData(page, size){
+        var page = page || 1;
+        var size = size || 10;
+        //ajax请求
+        dataInit.ajax({
+            api: [[${apiPath.ppResourceList}]],
+            params: {
+                page: page,
+                pageSize: size,
+                refid: itemId,
+                reftype: reftype,
+                wechat: 1,
+                enttype: $("#enttype").val(),
+                cultid: $.cookie("cultid")
+            },
+            forceUpdate: false,
+            fn: function (data) {
+                var params = {
+                    page: page,
+                    size: size,
+                    total: data.total
+                }
+                dataInit.htmlAdd(page, showBrandSelect(data));
+                dataInit.pullUp(params, modelData);
+            }
+        })
+    }
+
+    function showBrandSelect(data) {
+        var html = "";
+        if (data.code == 0 && data.rows.length > 0) {
+            for (var i in data.rows) {
+                var resList = {};
+                resList.imgPath = data.imgPath;
+                resList.rows = data.rows;
+                dataInit.setCache('resList',resList);
+                var model = data.rows[i],resBasePath = [[${basePath}]];
+                var _enturl = '',mask_img = '',imgUrl = '';
+                if(model.enturl){
+                    _enturl = model.enturl.indexOf('http') >= 0 ? model.enturl : data.imgPath + model.enturl;
+                }
+                if(model.enttype == 2){
+                    if(model.deourl){
+                        imgUrl = data.imgPath + dataInit.getBigImage(model.deourl);
+                    }else {
+                        imgUrl = data.imgPath + '/assets/img/gather/mp3.jpg';
+                    }
+                    mask_img = '<div class="mask"><img src="'+resBasePath+'/assets/img/gather/play.png"></div>';
+                }else if(model.enttype == 3){
+                    imgUrl = resBasePath + '/assets/img/gather/mp3.jpg';
+                    mask_img = '<div class="mask"><img src="'+resBasePath+'/assets/img/gather/macphone.png"></div>';
+                }else if(model.enttype == 4){
+                    //imgUrl = resBasePath + '/assets/img/gather/music.jpg';
+                    imgUrl = resBasePath + dataInit.getFileTypeIcon(model.enturl, '/assets/img/gather/xiazai.jpg');
+                }else {
+                    imgUrl = data.imgPath + dataInit.getBigImage(model.enturl);
+                }
+                html +='<div class="brand">'+
+                    '<div class="img">'+
+                    '<p>'+model.name+'</p>'+
+                    '<img class="lazy" src="'+imgUrl+'">'+mask_img+
+                    '<a href="javascript:goPage(\''+model.id+'\',\''+model.enttype+'\')"></a>' +
+                    '</div>' +
+                    '</div>';
+            }
+        } else {
+            html = '<div class="newbility-no-msg"></div>';
+
+        }
+        return html;
+    }
+    function goPage(resid,enttype) {
+        if(enttype == 1){
+            window.location.href = [[${basePath}]] + '/resource/digitalimage?id='+resid+'&reftype='+reftype+'&refid='+itemId;
+        }else if(enttype == 2) {
+            window.location.href = [[${basePath}]] + '/resource/digitalvideo?id='+resid+'&reftype='+reftype+'&refid='+itemId;
+        }else if(enttype == 3) {
+            window.location.href = [[${basePath}]] + '/resource/digitalaudio?id='+resid+'&reftype='+reftype+'&refid='+itemId;
+        }else if(enttype == 4) {
+            window.location.href = [[${basePath}]] + '/resource/digitalfile?id='+resid+'&reftype='+reftype+'&refid='+itemId;
+        }
+    }
+</script>
+</body>
+</html>

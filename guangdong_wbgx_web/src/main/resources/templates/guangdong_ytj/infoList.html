@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong_ytj/public/header :: copy"></head>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/infoList.css'">
+<body class="mui-content">
+
+<header>
+    <div class="black"><i class="mui-icon mui-icon-arrowleft"></i> 返回</div>
+    <div id="searchBtn" class="top-right-search">
+        <i class="mui-icon mui-icon-search"></i>
+    </div>
+</header>
+
+<nav id="topNav" class="mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+    <div class=""></div>
+    <ul class="mui-scroll" id="nav_type">
+        <!--<li class="active">公告</li>
+        <li class="">工作动态</li>
+        <li class="">热点聚焦</li>
+        <li class="">活动资讯</li>
+        <li class="">培训资讯</li>-->
+    </ul>
+</nav>
+
+<main>
+
+    <!--下拉刷新容器-->
+    <div id="refreshContainer" class="mui-content mui-scroll-wrapper" style="margin-top: 170px;">
+        <div class="mui-scroll">
+            <!--数据列表-->
+            <ul class="mui-table-view mui-table-view-chevron data_list" id="psList">
+                <!--<li class="infoItem clearfix">
+                    <img th:src="${basePath}+'/assets/img/index/search-bg2.jpg'">
+                    <div class="content">
+                        <div class="title">
+                            关于来源：广东省文化馆来源：广东省文化馆
+                            <div class="footer">
+                                <span class="left_">
+                                    来源：广东省文化馆
+                                </span>
+                                <span class="right_">
+                                    时间：2012-02-20
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="infoItem clearfix">
+                    <div class="content noImg">
+                        <div class="title">
+                            关于来源：广东省文化馆来源：广东省文化馆
+                            <div class="footer">
+                                <span class="left_">
+                                    来源：广东省文化馆
+                                </span>
+                                <span class="right_">
+                                    时间：2012-02-20
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </li>-->
+            </ul>
+        </div>
+    </div>
+
+</main>
+
+<script th:inline="javascript">
+    var page__ = 1;
+    var keyword = '';
+    function init() {
+        mui.init({
+            pullRefresh : {
+                container:"#refreshContainer",
+                down : { // 下拉刷新
+                    height: 50,
+                    callback : function () {
+                        page__ = 1;
+                        keyword = '';
+                        setTimeout(function () {
+                            getList(1,function (data) {
+                                createList(data,1);
+                                mui('#refreshContainer').pullRefresh().endPulldownToRefresh();
+                                mui('#refreshContainer').pullRefresh().refresh(true);
+                            })
+                        },500)
+                    }
+                },
+                up : {  // 上拉加载
+                    height:100,//可选.默认50.触发上拉加载拖动距离
+                    auto:false,//可选,默认false.自动上拉加载一次
+                    contentrefresh : "正在加载...",//可选，正在加载状态时，上拉加载控件上显示的标题内容
+                    contentnomore:'没有更多数据了',//可选，请求完毕若没有更多数据时显示的提醒内容；
+                    callback :function () {
+                        setTimeout(function () {
+                            getList(page__,function (data) {
+                                var noMore = false;
+                                var allPage = Math.ceil(data.total / data.pageSize)+1;
+                                if( page__ > allPage ){
+                                    noMore = true
+                                }else{
+                                    createList(data);
+                                }
+                                mui('#refreshContainer').pullRefresh().refresh(true);
+                                //参数为true代表没有更多数据了。
+                                mui('#refreshContainer').pullRefresh().endPullupToRefresh(noMore);
+                            });
+                        },500);
+                    }
+                }
+            }
+        });
+        bindEvent();
+        $.post( [[${rootUrl}]] + 'api/information/infcolumn' ,function (r) {
+            var data = JSON.parse(r);
+            if(data.code == '0'){
+                var li = '';
+                var width = 10;
+                $.each(data.rows,function (i, v) {
+                    li+= '<li data-id="'+v.id+'">'+v.coltitle+'</li>';
+                    var length_ = v.coltitle.length;
+                    width += length_*18 + 30;
+                });
+                $('#nav_type').css('width',width+'px').html(li).find('li:first-child').addClass('active');
+                mui('#topNav').scroll();
+                getList(1,function (e) {
+                    createList(e,1);
+                });
+            }else{
+                mui.alert(data.msg);
+            }
+        });
+    }
+    init();
+
+    function bindEvent() {
+        $('#psList').on('tap','li',function () {
+            var id = $(this).attr('data-id');
+            location.href = 'infoDtl?id='+id;
+        });
+        $('.black').on('tap',function () {
+            location.href = 'index';
+        });
+        $('#nav_type').on('tap','li',function () {
+            $(this).addClass('active').siblings().removeClass('active');
+            getList(1,function (e) {
+                createList(e,1);
+            });
+            mui('#refreshContainer').pullRefresh().scrollTo(0,0,0);
+            mui('#refreshContainer').pullRefresh().refresh(true);
+        });
+        $('#searchBtn').on('tap',function () {
+            mui.prompt('','','搜索',['确认','取消'],function (res) {
+                if(res.index){
+                    return ;
+                }
+                keyword = res.value;
+                page__ = 1;
+                getList(1,function (e) {
+                    createList(e,1);
+                });
+            },'div')
+        })
+    }
+
+    function getList(page_,callback) {
+        var cultid =    $.cookie('cultid');
+        //var city =      $.cookie('city');
+        //var province =  $.cookie('province');
+        //var area =      $("#areas").find('.mui-selected').attr('data-name');
+        if( !cultid ){
+            //city = area;
+            //area = '';
+        }
+        var type =   $('#nav_type').find('.active').attr('data-id');
+        var param = {
+            size:       12,
+            index:      page_,
+            cultid:     cultid,
+            searcheKey:    keyword,
+            //province:   province, //省
+            //city:       city, //市
+            //area:       area, //区域
+            type:    type
+        };
+        for(var k in param){
+            if (!param[k] || param[k]=='' || param[k]=='undefined')
+                delete param[k];
+        }
+        $.post( [[${rootUrl}]] + 'api/information/infolist' ,param,function (r) {
+            var data = JSON.parse(r);
+            if(data.code == '0'){
+                if(data.rows){
+                    page__ += 1;
+                    callback(data);
+                }
+            }else{
+                mui.alert(data.msg,'提示');
+            }
+        });
+    }
+
+    function createList(data,page_) {
+        if(!data.rows.length){
+            return $('#psList').html('<li class="noMsg">暂无数据</li>');
+        }
+        var li = '';
+        var imgUrl = data.imgPath;
+        $.each(data.rows,function (i, v) {
+            var date = new Date(v.clnfopttime);
+            date = date.format('yyyy-MM-dd');
+            if(v.clnfpic){
+                var image = imgUrl + v.clnfpic;
+                li += '<li class="infoItem clearfix" data-id="'+v.clnfid+'">' +
+                    '<img src="'+image+'">' +
+                    '<div class="content">' +
+                    '<div class="title">' +
+                    v.clnftltle +
+                    '<div class="footer">' +
+                    '<span class="left_">' +
+                    '来源：'+ v.clnfsource +
+                    '</span>' +
+                    '<span class="right_">' +
+                    '时间：'+ date +
+                    '</span>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>' +
+                    '</li>';
+            }else{
+                li += '<li class="infoItem clearfix" data-id="'+v.clnfid+'">' +
+                    '<div class="content noImg">' +
+                    '<div class="title">' +
+                    v.clnftltle +
+                    '<div class="footer">' +
+                    '<span class="left_">' +
+                    '来源：'+ v.clnfsource +
+                    '</span>' +
+                    '<span class="right_">' +
+                    '时间：'+ date +
+                    '</span>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>' +
+                    '</li>';
+            }
+
+        });
+        if(page_ == '1'){
+            $('#psList').html(li);
+        }else{
+            $('#psList').append(li);
+        }
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/resource/digital.css'">
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/resource/resdetail.css'" >
+<div th:include="guangdong/public/leftBar :: copy"></div>
+<div id="page">
+    <div class="mui-content">
+        <div id="category-cont"
+             class="category-cont mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+            <div class="mui-scroll">
+                <a href="javascript:void(0)" class="mui-control-item" data-index="c-1">类型<i></i></a>
+                <a href="javascript:void(0)" class="mui-control-item" data-index="c-2">子分类<i></i></a>
+                <!--<a href="javascript:void(0)" class="mui-control-item" data-index="c-3">排序<i></i></a>-->
+            </div>
+        </div>
+        <div class="category-mask none">
+            <div class="category-group none" data-index="c-1">
+                <ul class="clearfix">
+                    <li class="active" item-data="">全部</li>
+                    <li item-data="img">图片</li>
+                    <li item-data="video">视频</li>
+                    <li item-data="audio">音频</li>
+                    <li item-data="file">文件</li>
+                </ul>
+            </div>
+            <div class="category-group none" data-index="c-2">
+                <ul class="clearfix" id="typeClass">
+                    <!--<li item-data="1" class="active">最新发布</li>
+                    <li item-data="0">智能排序</li>-->
+                </ul>
+            </div>
+        </div>
+        <!--下拉刷新容器-->
+        <div id="model-list-panel" class="mui-content mui-scroll-wrapper" style="margin-top: 46px">
+            <div class="mui-scroll">
+                <!--数据列表-->
+                <div class="digital-list">
+                    <ul id="model-list">
+                        <!--<li>
+                            <a href="detail?id=2017110127436518">
+                                <img src="http://183.131.126.132:8092/whgstatic/img/2017/201709/20170921/e7f2cf27ba3b41b680c1f10651db8800.jpg" class="img-re">
+                            </a>
+                            <div class="dg_title">
+                                资源名称
+                            </div>
+                        </li>-->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" th:inline="javascript">
+    $().ready(function () {
+        dataInit.ajax({
+            api: [[${apiPath.qwzyTypes}]],
+            params: {
+                cultid: $.cookie('cultid')
+            },
+            fn: showTypeClass
+        });
+        select.create(modelData);
+        $('#c-1').val('');
+        modelData();
+    });
+    function modelData(page, size) {
+        var page = page || 1;
+        var size = size || 8;
+        var params = {};
+        var _param = {
+            page: page,
+            pageSize: size,
+            restype: $("#c-1").val(),
+            libid: $("#c-2").val(),
+            cultid: $.cookie('cultid')
+        };
+        for(var k in _param){
+            if (!_param[k] || _param[k]=='' || _param[k]=='undefined')
+                delete _param[k];
+        }
+        _param.restype = _param.restype || '';
+        if(!_param.restype){
+            $('#typeClass').find('li').show();
+        }else if(_param.restype == 'img'){
+            $('#typeClass').find('li').hide();
+            $('#typeClass').find('li[data-type="img"]').show();
+        }else if(_param.restype == 'vedio'){
+            $('#typeClass').find('li').hide();
+            $('#typeClass').find('li[data-type="vedio"]').show();
+        }else if(_param.restype == 'audio'){
+            $('#typeClass').find('li').hide();
+            $('#typeClass').find('li[data-type="audio"]').show();
+        }else if(_param.restype == 'file'){
+            $('#typeClass').find('li').hide();
+            $('#typeClass').find('li[data-type="file"]').show();
+        }
+        dataInit.ajax({
+            api: [[${apiPath.qwzyList}]],
+            params: _param,
+            forceUpdate: false,
+            fn: function (data) {
+                params = {
+                    page: page,
+                    size: size,
+                    total: data.total
+                };
+                dataInit.htmlAdd(page, showModelHtml(data));
+                dataInit.pullUp(params, modelData);
+            }
+        })
+    }
+    function showModelHtml(data) {
+        var html = "";
+        if (data.code == 0 && data.rows.length > 0) {
+            for (var i in data.rows) {
+                var model = data.rows[i];
+                var img = model.resourcetype == 'audio' ? [[${basePath}]]+'/assets/img/gather/mp3.jpg':
+                    model.resourcetype == 'file'?
+                        //[[${basePath}]]+'/assets/img/gather/music.jpg'
+                        [[${basePath}]] + dataInit.getFileTypeIcon(model.resurl, '/assets/img/gather/xiazai.jpg')
+                        : model.respicture;
+                html += '<li>' +
+                    '    <a data-lid="'+model.libid+'" data-rid="'+model.resid+'" data-type="'+model.resourcetype+'" href="javascript: goPage(\''+model.libid+'\',\''+model.resid+'\',\''+model.resourcetype+'\')">' +
+                    '        <img src="'+img+'" class="img-re">' +
+                    '    <div class="'+(model.resourcetype=='audio' ? 'mask_audio' :model.resourcetype=='video' ? 'mask_video':'')+'"></div>' +
+                    '    <div class="dg_title">' + model.resname +'</div>' +
+                    '    </a>' +
+                    '</li>';
+            }
+        } else {
+            html = '<div class="newbility-no-msg"></div>';
+        }
+        return html;
+    }
+    function goPage(lid,rid,type) {
+        if(type == 'img'){
+            window.location.href = [[${basePath}]] + '/resource/digitalimage?libid='+lid+'&resid='+rid;
+        }else if(type == 'video') {
+            window.location.href = [[${basePath}]] + '/resource/digitalvideo?libid='+lid+'&resid='+rid;
+        }else if(type == 'audio') {
+            window.location.href = [[${basePath}]] + '/resource/digitalaudio?libid='+lid+'&resid='+rid;
+        }else if(type == 'file') {
+            window.location.href = [[${basePath}]] + '/resource/digitalfile?libid='+lid+'&resid='+rid;
+        }
+    }
+
+    function showTypeClass(data) {
+        var ul = $('#typeClass');
+        var li = '<li class="active" item-data="">全部</li>';
+        if(data){
+            $.each(data,function (i, v) {
+                if(v.child && v.child.length){
+                    $.each(v.child,function (j, k) {
+                        li += '<li item-data="'+k.id+'" data-type="'+v.value+'">'+k.name+'</li>'
+                    })
+                }
+            });
+        }
+        ul.html(li);
+    }
+</script>
+</body>
+</html>

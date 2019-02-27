@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link th:href="${basePath}+'/assets/style/userCenter/userCenter.css'" rel="stylesheet">
+<div class="wrapper clearfix">
+    <div class="content">
+        <!--公共主头部开始-->
+        <div id="header" th:include="guangdong/public/header :: copy"></div>
+        <!--公共主头部结束-->
+        <div class="main main-boder clearfix">
+            <div class="leftPanel" th:include="guangdong/userCenter/left :: copy"></div>
+            <div class="rightPanel">
+                <ul class="commBtn clearfix">
+                    <li class="active"><a href="javascript:void(0)" data-type="now">进行中</a></li>
+                    <li><a href="javascript:void(0)" data-type="old">已结束</a></li>
+                </ul>
+                <div class="sysmsg">
+                    <div class="ad"></div>
+                    <p>暂无您预定场馆的订单信息</p>
+                </div>
+                <ul class="group clearfix">
+                    <!--<li class="item">
+                      <div class="orderCont clearfix">
+                        <div class="orderTime float-left">预定时间：<span>2016-09-29 18:40</span></div>
+                      </div>
+                      <div class="infoCont">
+                        <h2><a target="_blank" href="http://taizhou.fm918.top:80/agdcgfw/venroominfo?roomid=2017060500000001">广东大舞台</a></h2>
+                        <p>场馆地址 :<span>空</span></p>
+                        <p>场馆电话 :<span>空</span></p>
+                        <p class="tickets">取票码 :<span>空</span></p>
+                        <p class="timeday">预订场次 :<span>空</span></p>
+                        <p>预定人 :<span>空</span></p>
+                        <p class="ordercontactphone">预定人电话 :<span>空</span></p>
+                        <p class="ticketstatus">票务状态 :<span>空</span></p>
+                        <p class="ordersummary none">拒绝理由 :<span></span></p>
+                        <p class="time"></p>
+                        <a class="orderKick" href="javascript:void(0)">取消预订</a>
+                      </div>
+                    </li>-->
+                </ul>
+                <!--分页开始 -->
+                <div class="green-black" id="artPagging" style="margin-bottom: 40px"></div>
+                <!--分页结束-->
+            </div>
+        </div>
+        <input type="hidden" id="type" value="now">
+    </div>
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong/public/footer :: copy"></div>
+<!--底部结束-->
+<!-- core public JavaScript -->
+<script type="text/javascript" th:inline="javascript">
+    $(document).ready(function () {
+        $('.commBtn li a').on('click', function () {
+            var type = $(this).attr("data-type");
+            $("#type").val(type);
+            $(this).parent('li').addClass("active").siblings().removeClass("active");
+            dataPage();
+        })
+        dataPage();
+    })
+
+    function dataPage(page, rows) {
+        var params_page = page || 1;
+        var params_rows = rows || 5;
+        var params = {
+            userId: [[${session.wbgx_sessUserKey.userId}]],
+            page: params_page,
+            pageSize: params_rows,
+            nowtype: $("#type").val() || 'now'
+        }
+        rongDialog.init({ico: 3, type: 1, desc: '', overTime: 8000});
+        dataInit.ajax({
+            api: [[${apiPath.myVenue}]],
+            params: params,
+            fn: function (data) {
+                rongDialog.closeMaskPanel();
+                showActList(data);
+                dataInit.pageInit('artPagging', params_page, params_rows, data.total, dataPage);
+            }
+        })
+    }
+
+    function showActList(data){
+        var group = $('.group');
+        var type  = $("#type").val();
+        var model = data.rows;
+        group.html("");
+        if(model.length == 0){
+            $('.sysmsg').show();
+        }else{
+            $('.sysmsg').hide();
+            for(var i in model){
+                var ordercreatetime = moment(model[i].crtdate).format('YYYY-MM-DD HH:mm:ss');//订单生成时间
+                var state = model[i].state;
+                var status =''; //订单状态
+
+                var showordernumber = 'style="display:none"';
+                switch(state)
+                {
+                    case 0:
+                        status = "申请中";
+                        break;
+                    case 1:
+                        status = "已取消";
+                        break;
+                    case 2:
+                        status = "申请失败";
+                        break;
+                    default:
+                        showordernumber = '';
+                        status = "预订成功"
+                }
+                var venueid = model[i].roomid; //场馆id
+                var name = model[i].title; //场馆名称
+                var address = model[i].address + model[i].location; //场馆地址
+                var orderphoneno = model[i].venTelephone || '' ;//model[i].phone;  //取票手机号
+                var ordernumber = model[i].orderid; //取票码
+                var seatCode = model[i].ticketstatus; //取票状态
+                var actUrl = [[${basePath}]]+'/'+[[${cultsite}]]+"/cg/venueroom?id="; //场馆详情页链接
+                var id = model[i].orderid; //场馆订单ID
+                var orderUser = model[i].ordercontact; //预订联系人
+                var orderPhone = model[i].ordercontactphone; //预订联系手机号
+                var ticketcheckstate = model[i].ticketcheckstate == 1 ?  "未验票" : "已验票";  //验票状态
+                var ticketstatus = model[i].ticketstatus == 1 ?  "未取票" : "已取票"; //取票状态
+                var ordersummary  = model[i].ordersummary; //订单摘要
+                var showType =  state == 2 ? "" : "none";
+                var delId = model[i].id; //为了删除而加的ID
+                var orderTime = model[i].timeday;
+                var orderStart = model[i].timestart;
+                var orderEnd = model[i].timeend;
+                //活动室开始时间
+                var actTime = moment(orderTime+orderStart).format("x");
+                orderTime = moment(orderTime).format("YYYY-MM-DD")+" "+moment(orderStart).format("HH:mm")+"-"+moment(orderEnd).format("HH:mm");
+                var delBtn = "";
+                //状态为未取票时或活动开始时间离当前时间只剩48小时
+                if(model[i].state == 0 && type == "now" && data.data.twoDayAgo < actTime){
+                    delBtn = "<div><a class=\"orderKick\"href=\"javascript:void(0)\" onclick=\"delOrder("+delId+")\">取消预订</a></div>";
+                }
+                if(type == "old" && state == 1){
+                    delBtn = "<div><a class=\"orderKick\"href=\"javascript:void(0)\" onclick=\"delThis("+delId+")\">删除订单</a></div>";
+                }
+                var li =
+                    "<li class=\"item\">" +
+                    "<div class=\"orderCont clearfix\">" +
+                    "<div class=\"orderTime float-left\">预定时间 ：<span>"+ordercreatetime+"</span></div><div class=\"orderType\">"+status+"</div></div>" +
+                    "<div class=\"infoCont\">" +
+                    "<h2>" +
+                    "<a href=\""+actUrl+venueid+"\" target=\"_blank\">"+name+"</a>" +
+                    "</h2>" +
+                    "<p>场馆地址 : <span>"+address+"</span></p>" +
+                    "<p>固定电话 : <span>"+orderphoneno+"</span></p>" +
+                    "<p class=\"tickets\" "+showordernumber+">取票码: <span>"+ordernumber+"</span></p>" +
+                    "<p>预订场次 : <span>"+orderTime+"</span></p>" +
+                    "<p>预定人 : <span>"+ orderUser +"</span></p>" +
+                    "<p class=\"ordercontactphone\">预定人电话 : <span>"+orderPhone+"</span></p>" +
+                    "<p class=\"ticketstatus\">票务状态 : <span>"+ticketcheckstate+"/"+ticketstatus+"</span></p>" +
+                    "<p class=\"ordersummary "+showType+"\">拒绝理由 :<span>"+ordersummary+"</span></p>" + delBtn +
+                    "</div>" +
+                    "</li>";
+                group.append(li);
+            }
+        }
+    }
+    //删除订单
+    function delThis(id) {
+        var orderId = id;
+        rongDialog.init({
+            ico: 2,
+            type: 2,
+            desc: '您确定删除订单吗',
+            nextFn: function () {
+                dataInit.ajax({
+                    api: [[${apiPath.delVen}]],
+                    params: {
+                        orderId: id
+                    },
+                    fn: function (data) {
+                        if (data.code == 0) {
+                            rongDialog.init({
+                                ico: 1,
+                                type: 1,
+                                desc: "订单删除成功",
+                                nextFn: function () {
+                                    dataPage();
+                                }
+                            });
+                        } else {
+                            rongDialog.init({
+                                ico: 2,
+                                type: 1,
+                                desc: "订单删除失败"
+                            });
+                        }
+                    }
+                })
+            }
+        })
+    }
+    //取消订单
+    function delOrder(id) {
+        var orderId = id;
+        rongDialog.init({
+            ico: 2,  //1 感叹号  2 问号  3 叉叉
+            type: 2,
+            desc: '您确定取消预订吗？',
+            nextFn: function () {
+                dataInit.ajax({
+                    api: [[${apiPath.venueUnOrder}]],
+                    params: {
+                        userId: [[${session.wbgx_sessUserKey.userId}]],
+                        orderId: orderId
+                    },
+                    fn: function (data) {
+                        //console.log(data);
+                        if (data.code == "0") {
+                            rongDialog.init({
+                                ico: 1, //1 勾  2 叉
+                                type: 1,
+                                desc: "活动室取消成功",
+                                nextFn: function () {
+                                    dataPage();
+                                }
+                            });
+                        } else {
+                            rongDialog.init({
+                                ico: 2, //1 勾  2 叉
+                                type: 1,
+                                desc: data.msg || "活动取消失败"
+                            });
+                        }
+                    }
+
+                })
+            }
+        })
+    }
+</script>
+</body>
+</html>

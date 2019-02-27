@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong_ytj/public/header :: copy"></head>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/activityList.css'">
+<body class="mui-content">
+
+<header>
+    <div class="black"><i class="mui-icon mui-icon-arrowleft"></i> 返回</div>
+    <div id="searchBtn" class="top-right-search">
+        <i class="mui-icon mui-icon-search"></i>
+    </div>
+</header>
+
+<nav id="topNav" class="noScroll">
+    <ul>
+        <li data-type="areas" style="width: 50%;"><span>区域</span> <i class="mui-icon mui-icon-arrowdown"></i></li>
+        <li data-type="rtype" style="width: 50%;"><span>艺术类型</span> <i class="mui-icon mui-icon-arrowdown"></i></li>
+    </ul>
+</nav>
+
+<div id="selectList">
+    <div class="mui-scroll-wrapper" id="areas">
+        <div class="mui-scroll">
+            <ul class="mui-table-view mui-table-view-radio">
+                <li class="mui-table-view-cell mui-selected" data-id="">
+                    <a class="mui-navigate-right">
+                        <span class="menus">区域</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="mui-scroll-wrapper" id="rtype">
+        <div class="mui-scroll">
+            <ul class="mui-table-view mui-table-view-radio">
+                <li class="mui-table-view-cell mui-selected" data-id="">
+                    <a class="mui-navigate-right">
+                        <span class="menus">艺术类型</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<main>
+
+    <!--下拉刷新容器-->
+    <div id="refreshContainer" class="mui-content mui-scroll-wrapper" style="margin-top: 170px;">
+        <div class="mui-scroll">
+            <!--数据列表-->
+            <ul class="mui-table-view mui-table-view-chevron data_list" id="psList"></ul>
+        </div>
+    </div>
+
+</main>
+
+<script th:inline="javascript">
+
+    var page__ = 1;
+    var keyword = '';
+
+    function init() {
+        mui('#topNav').scroll();
+        mui.init({
+            pullRefresh : {
+                container:"#refreshContainer",
+                down : { // 下拉刷新
+                    height: 50,
+                    callback : function () {
+                        page__ = 1;
+                        keyword = '';
+                        setTimeout(function () {
+                            getList(1,function (data) {
+                                createList(data,1);
+                                mui('#refreshContainer').pullRefresh().endPulldownToRefresh();
+                                mui('#refreshContainer').pullRefresh().refresh(true);
+                            })
+                        },500)
+                    }
+                },
+                up : {  // 上拉加载
+                    height:100,//可选.默认50.触发上拉加载拖动距离
+                    auto:false,//可选,默认false.自动上拉加载一次
+                    contentrefresh : "正在加载...",//可选，正在加载状态时，上拉加载控件上显示的标题内容
+                    contentnomore:'没有更多数据了',//可选，请求完毕若没有更多数据时显示的提醒内容；
+                    callback :function () {
+                        setTimeout(function () {
+                            getList(page__,function (data) {
+                                var noMore = false;
+                                var allPage = Math.ceil(data.total / data.pageSize)+1;
+                                if( page__ > allPage ){
+                                    noMore = true
+                                }else{
+                                    createList(data);
+                                }
+                                mui('#refreshContainer').pullRefresh().refresh(true);
+                                //参数为true代表没有更多数据了。
+                                mui('#refreshContainer').pullRefresh().endPullupToRefresh(noMore);
+                            });
+                        },500);
+                    }
+                }
+            }
+        });
+        bindEvent();
+        $.post( [[${rootUrl}]] + 'api/comm/getTypes',{type: 1,cultid: $.cookie('cultid')} ,function (r) {
+            var data = JSON.parse(r);
+            if(data.code == '0'){
+                var li = '<li>全部</li>';
+                var width = 70;
+                var name = '';
+                $.each(data.rows,function (i, v) {
+                    li+= '<li data-id="'+v.id+'">'+v.name+'</li>';
+                    var length_ = v.name.length;
+                    width += length_*18 + 30;
+                    name += v.name+','
+                });
+                $('#nav_type').css('width',width+'px').html(li).find('li:first-child').addClass('active');
+                mui('#topNav').scroll();
+                getList(1,function (e) {
+                    createList(e,1);
+                });
+            }else{
+                mui.alert(data.msg);
+            }
+        });
+    }
+    init();
+    initContent();
+
+    function bindEvent() {
+        $('#psList').on('tap','li',function () {
+            var id = $(this).attr('data-id');
+            location.href = 'digitDtl?id='+id;
+        });
+        $('.black').on('tap',function () {
+            location.href = 'index';
+        });
+        mui('#topNav').on('tap','li',function () {
+            if($(this).hasClass('active')){
+                $(this).removeClass('active');
+                $('#'+$(this).attr('data-type')).hide();
+            }else{
+                $(this).addClass('active').siblings('li').removeClass('active');
+                $('#'+$(this).attr('data-type')).show().siblings('.mui-scroll-wrapper').hide();
+            }
+        });
+        $('#areas,#type,#sort,#rtype').on('tap',function (e) {
+            var tar = e.target.id;
+            if(tar)$(this).hide();
+        });
+        mui('#selectList').on('selected','.mui-table-view-cell',function () {
+            var $m = $(this);
+            var text = $m.find('.menus').text();
+            var id = $m.parents('.mui-scroll-wrapper').attr('id');
+            getList(1,function (e) {
+                $('#'+id).hide();
+                $('[data-type="'+id+'"]').removeClass('active').find('span').text(text);
+                createList(e,1);
+                // mui('#refreshContainer').scroll().scrollTo(0,0,0);
+                mui('#refreshContainer').pullRefresh().scrollTo(0,0,0);
+                mui('#refreshContainer').pullRefresh().refresh(true);
+            });
+        });
+        $('#searchBtn').on('tap',function () {
+            mui.prompt('','','搜索',['确认','取消'],function (res) {
+                if(res.index){
+                    return ;
+                }
+                keyword = res.value;
+                page__ = 1;
+                getList(1,function (e) {
+                    createList(e,1);
+                });
+            },'div')
+        })
+
+    }
+
+    function getList(page_,callback) {
+        var cultid =    $.cookie('cultid');
+        var city =      $.cookie('city');
+        var province =  $.cookie('province');
+        var area =      $("#areas").find('.mui-selected').attr('data-name');
+        if( !cultid ){
+            city = area;
+            area = '';
+        }
+        var arttype =   $("#rtype").find('.mui-selected').attr('data-id');
+
+        var param = {
+            size:       12,
+            index:      page_,
+            keywords:   keyword,
+            cultid:     cultid,
+            province:   province, //省
+            city:       city, //市
+            //area:       area, //区域
+            district:   area,
+            arttype:    arttype
+        };
+        for(var k in param){
+            if (!param[k] || param[k]=='' || param[k]=='undefined')
+                delete param[k];
+        }
+        $.post( [[${rootUrl}]] + 'api/digitalExhibition/list' ,param,function (r) {
+            var data = JSON.parse(r);
+            if(data.code == '0'){
+                if(data.rows){
+                    page__ += 1;
+                    callback(data);
+                }
+            }else{
+                mui.alert(data.msg,'提示');
+            }
+        });
+    }
+
+    function createList(data,page_) {
+        if(!data.rows.length){
+            return $('#psList').html('<li class="noMsg">暂无数据</li>');
+        }
+        var li = '';
+        var imgPath = data.imgPath;
+        $.each(data.rows,function (i, v) {
+            var imgUrl = '';
+            if(v.imgurl){
+                imgUrl = v.imgurl.indexOf('http://')>=0 ? v.imgurl : imgPath + v.imgurl;
+            }
+            var times =  new Date(v.crtdate).format('yyyy-MM-dd');
+            li += '<li class="infoItem clearfix" data-id="'+v.id+'">' +
+                '<img class="lazy" src="'+ imgUrl +'">' +
+                '<div class="content">' +
+                '<div class="title">' +
+                v.title +
+                '</div>' +
+                '<div class="footer">时间：' + times +
+                '</div>' +
+                '<div class="footer">' +
+                '<span class="left_">' +
+                '主办：'+ v.host +
+                '</span>' +
+                '</div>' +
+                '</div>' +
+                '</li>';
+        });
+        if(page_ == '1'){
+            $('#psList').html(li);
+        }else{
+            $('#psList').append(li);
+        }
+        /*$('img.lazy').lazyload({
+            threshold : 600,
+            skip_invisible : false,
+            effect : "fadeIn",
+            effectspeed:400
+        });*/
+    }
+
+    function initContent() {
+        // 获取艺术分类
+        $.post( [[${rootUrl}]] + 'api/comm/getTypes' ,{
+            type: 1,
+            cultid: $.cookie('cultid')
+        },function (r) {
+            var data = JSON.parse(r);
+            if(data.code == '0'){
+                var li = '';
+                $.each(data.rows,function (i, v) {
+                    li+= '<li class="mui-table-view-cell" data-id="'+v.id+'">' +
+                        '<a class="mui-navigate-right">' +
+                        '<span class="menus">'+v.name+'</span>' +
+                        '</a>' +
+                        '</li>';
+                });
+                $('#rtype').find('ul').append(li);
+            }else{
+                mui.alert(data.msg,'提示');
+            }
+        });
+        // 获取区域
+        var city = $.cookie('city');
+        if( city == '' || city == undefined || city == 'undefined'){
+            city = '广东省';
+            changeProvince(city, null, function(cityList){
+                var li = '';
+                $.each(cityList,function (i, v) {
+                    li += '<li class="mui-table-view-cell" data-name="'+v.name+'" data-id="'+v.id+'">' +
+                        '<a class="mui-navigate-right">' +
+                        '<span class="menus">'+v.name+'</span>' +
+                        '</a>' +
+                        '</li>'
+                });
+                $('#areas').find('ul').append(li);
+            });
+        }else {
+            changeCity(city, null, function(cityList){
+                if(cityList.length>0) {
+                    var li = '';
+                    $.each(cityList,function (i, v) {
+                        li += '<li class="mui-table-view-cell" data-name="'+v.name+'" data-id="'+v.id+'">' +
+                            '<a class="mui-navigate-right">' +
+                            '<span class="menus">'+v.name+'</span>' +
+                            '</a>' +
+                            '</li>'
+                    });
+                    $('#areas').find('ul').append(li);
+                }else{//为空时 说明检索的是 区域以下的镇街，此时要用部门来替换
+                    $.post([[${apiPath.depts}]],{cultid: $.cookie('cultid')},function (r) {
+                        if(r.code=='0' && r.data.length){
+                            var li= '';
+                            $.each(r.data,function (i, v) {
+                                li += '<li class="mui-table-view-cell" data-name="'+v.name+'" data-id="'+v.id+'">' +
+                                    '<a class="mui-navigate-right">' +
+                                    '<span class="menus">'+v.name+'</span>' +
+                                    '</a>' +
+                                    '</li>'
+                            });
+                            $('#areas').find('ul').append(li);
+                        }
+                    });
+                }
+            });
+        }
+    }
+
+</script>
+
+</body>
+</html>

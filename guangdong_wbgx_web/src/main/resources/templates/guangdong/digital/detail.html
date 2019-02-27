@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<link rel="stylesheet" th:href="${basePath}+'/assets/js/plugins/imgViewer/viewer.min.css'">
+<script th:src="${basePath}+'/assets/js/plugins/imgViewer/viewer.js'"></script>
+<body>
+<script th:src="${basePath}+'/assets/common/js/whg.maps.js'"></script>
+<style>
+    .bottomMoreBtn{
+        text-align: center;color: #999;padding: 15px;cursor: pointer;
+    }
+    .bottomMoreBtn:hover{
+        color: #666;
+    }
+    .viewer-play{
+        display: none;
+    }
+</style>
+<div class="wrapper clearfix">
+    <div class="content">
+        <!--公共主头部开始-->
+        <div id="header" th:include="guangdong/public/header :: copy"></div>
+        <!--公共主头部结束-->
+        <div class="sys-crumbs">
+            <span><a href="../index">首页</a></span>
+            <i class="icon iconfont icon-enter"></i>
+            <span><a href="list">数字展馆</a></span>
+            <i class="icon iconfont icon-enter"></i>
+            <span class="active" id="crumbs-title"></span>
+        </div>
+        <div class="sys-main-info" style="margin-bottom: 40px;">
+            <div class="img">
+                <img id="imgPath" th:src="${basePath}+'/assets/img/img_demo/demo2017b.jpg'">
+            </div>
+            <div class="info">
+                <h1 id="title">陌上花开，可缓缓归矣</h1>
+                <p class="desc digital-desc">
+                    时间：<span id="time">2018-05-22 17:13:52</span>
+                </p>
+                <div class="digital-brief" id="remark" style="overflow: auto; max-height: 200px;">
+                </div>
+
+                <div class="other-cont clearfix">
+                    <div class="fav-vote-cont clearfix">
+                        <div class="sys-fav" title="访问量"><i class="icon iconfont icon-search icon-collection_fill" id="visitCount"></i><span>0</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container content">
+            <div class="module-title" id="res-list">展览展示</div>
+            <div class="page-list" style="margin-top: 0;">
+                <!--<div class="public-no-message"></div>-->
+                <div class="content-list digitalList" >
+                    <ul class="clearfix" id="modelList_2">
+
+
+                    </ul>
+                    <div class="bottomMoreBtn">
+                        <span>查看更多 <i class="iconfont icon-unfold"></i></span>
+                    </div>
+                </div>
+                <!--分页开始 -->
+                <!--<div class="green-black" id="artPagging" style="margin-bottom: 40px"></div>-->
+                <!--分页结束-->
+
+            </div>
+        </div>
+
+    </div>
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong/public/footer :: copy"></div>
+<!--底部结束-->
+<script th:src="${apiPath.myvisitnote}" id="whgtongji"></script>
+
+<script th:src="${basePath}+'/assets/js/FilteDatail.js'"></script>
+<script type="text/javascript" th:inline="javascript">
+
+    var itemId = dataInit.getUrlParam('id');
+    var userid = $("#temp_userId").val();
+    var modePage = 1;
+    $(document).ready(function () {
+        dataInit.ajax({
+            api: [[${apiPath.digitalDetail}]],
+            fn: showActivityDetail,
+            params: {id: itemId,cultid:cultid}
+        });
+
+        getModeList(1);
+        $('.bottomMoreBtn').on('click',function () {
+            getModeList(modePage);
+        })
+        //zx_dataPage();
+       // dataPage();
+       /* $("#fileter-nav").on("click", "span>a", function(){
+            $(this).parents("span").addClass("active").siblings().removeClass("active");
+            dataPage();
+        });*/
+
+        getVisitSumCount4url(itemId, function(count){
+            $("#visitCount").next("span").text(count);
+        });
+    });
+
+    function getModeList(page, size) {
+        var params = {};
+        params.refid = itemId;
+        params.page = page || 1;
+        params.pageSize =size || 12;
+        params.reftype=40;
+        params.enttype=1;
+
+        dataInit.ajax({
+            api: [[${apiPath.resourceList}]],
+            params: params,
+            fn: function(data){
+                showModelList(data);
+                modePage += 1;
+//                dataInit.pageInit('artPagging_2', params.page, params.pageSize, data.total, dataPage);
+            }
+        })
+    }
+
+    function showModelList(data){
+        var modelUL = $("#modelList_2");
+        if(modePage==1){
+            modelUL.empty();
+        }
+        if(data.code == 0){
+            if (data.rows.length) {
+                for (var i in data.rows) {
+                    var module = data.rows[i];
+                    var regx = /<[^>]*>|<\/[^>]*>/gm;
+                    var summary = module.summary.replace(regx,"");
+                    var html = $('<li style="height: 300px;">\
+                        <div class="img">\
+                            <img style="width: 100%" alt="'+module.name+'" data-dtl="'+summary+'">\
+                        </div>\
+                        <div class="detail">\
+                            <h2>'+module.name+'</h2>\
+                            <p>\
+                                <span class="tt">时间：</span>\
+                                <span class="desc">'+moment(module.crtdate).format('YYYY-MM-DD')+'</span>\
+                            </p>\
+                            <p>\
+                                <span class="describe">概述：</span>\
+                                <span class="desc">'+summary+'</span>\
+                            </p>\
+                        </div>\
+                        <div class="mask"><img></div>\
+                        <a href="javascript:void(0)"></a>\
+                    </li>');
+                    if(module.enturl)
+                        var _enturl = module.enturl.indexOf('http') >= 0 ? module.enturl : data.imgPath + module.enturl;
+
+                    html.find(".img img").attr("src",dataInit.getRemoteURL(data.imgPath ,dataInit.getMidImage(module.enturl)));
+                    html.find(".img img").attr("data-original",dataInit.getRemoteURL(data.imgPath,module.enturl));
+                    html.find(".mask").empty();
+                    /*html.find("a:last").attr("onClick",
+                        "rongDialog.init({ico : 1,type : 6,imgUrl : '"+_enturl+"',title:'"+module.name+"'});"
+                    );*/
+                    html.data("imgUrl", _enturl);
+                    html.data("title", module.name);
+                    modelUL.append(html);
+                }
+                if(modePage == 1){
+                    modelUL.viewer({
+                        navbar:false,
+                        rotatable:false,
+                        scalable:false,
+                        fullscreen:false,
+                        minZoomRatio: 0.5,
+                        maxZoomRatio: 2,
+                        url:'data-original'
+                    });
+                }else{
+                    modelUL.viewer('update');
+                }
+                if(data.total <= 12){
+                    $('.bottomMoreBtn').hide();
+                }
+                if(modePage >= data.total/data.pageSize){
+                    $('.bottomMoreBtn').off('click').find('span').html('没有更多了');
+                }
+            } else {
+                modelUL.append("<div class='public-no-message'></div>");
+            }
+        }else {
+            $("#res-list").hide();
+        }
+    }
+
+    function showActivityDetail(data) {
+   /*     FilteDatail.options({
+            toUrl: [[${basePath}]]+'/'+[[${cultsite}]]+'/index',
+            info: data.data.actdetail
+        }).filte();*/
+        if(data && data.code == 0) {
+            var model = data.data;
+            var remark = model.remark;
+            var acturl = model.acturl;
+            var title = model.title;
+            //活动时间
+            var begin = moment(model.starttime).format('YYYY-MM-DD');
+            var end = moment(model.endtime).format('YYYY-MM-DD');
+            var time = begin + ' ~ ' + end;
+            if (begin == end) {
+                time = begin;
+            }
+            var imgPath = [[${imgPath}]] + dataInit.getBigImage(model.imgurl);
+            $('#remark').html(remark);
+            $('#time').text(time);
+            $('#title').text(title);
+            $('#imgPath').attr('src', imgPath);
+
+        }
+    }
+
+    /*$('#modelList_2').on('click','li',function () {
+        //var imgurl = $(this).attr('src');
+        //var title = $(this).attr('data-title');
+        var imgurl = $(this).data("imgUrl");
+        var title = $(this).data("title");
+        rongDialog.init({
+            ico : 1,
+            type : 6,
+            imgUrl : imgurl,
+            title : title
+        });
+    })*/
+</script>
+</body>
+</html>

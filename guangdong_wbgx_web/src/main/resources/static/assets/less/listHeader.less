@@ -1,0 +1,65 @@
+@bg_red: #ac1828;
+
+header{
+  background: @bg_red;
+  height: 110px;
+  line-height: 110px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  .black{
+    position: relative;
+    z-index: 10;
+    i{
+      font-size: 18px;
+    }
+    color: #fff;
+    float: left;
+    margin-left: 20px;
+    font-size: 18px;
+    padding-right: 13px;
+    transition: background .2s;
+    &:hover{
+      background: rgba(255,255,255,.3);
+    }
+  }
+  &:before{
+    content: ' ';
+    display: block;
+    position: absolute;
+    top: 20px;
+    left: 0;
+    right: 0;
+    height: 70px;
+    background: url(../imac/img/logo_.png) no-repeat center;
+    background-size: contain;
+  }
+}
+
+nav{
+  height: 60px !important;
+  margin-top: 110px;
+  ul{
+    background: #eee;
+    height: 60px !important;
+    //width: 1200px !important;
+    li{
+      float: left;
+      padding: 0;
+      font-size: 18px;
+      height: 40px;
+      line-height: 40px;
+      margin: 10px 15px;
+      color: #666;
+      border-bottom: 1px solid transparent;
+    }
+    li.active{
+      border-bottom: 1px solid @bg_red;
+      color: @bg_red;
+    }
+  }
+}
+
+

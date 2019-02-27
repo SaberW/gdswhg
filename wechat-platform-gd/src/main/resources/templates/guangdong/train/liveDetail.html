@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/brand/brand.css'" >
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/public/detail.css'" >
+<script th:src="${apiPath.statistics}" id="whgtongji"></script>
+<input type="hidden" id="a_open" value="0">
+<div th:include="guangdong/public/leftBar :: copy"></div>
+<div id="page">
+    <div class="mui-content">
+        <div class="wrapper-detail" id="train-info">
+            <!--<div class="wrapper-detail-box">
+                <div class="img">
+                    <marquee scrollamount="3">温馨提示：需要报名培训，请点击“立即报名”按钮进行报名，有任何问题欢迎拨打电话咨询</marquee>
+                    <img id="image" class="lazy" th:src="${basePath}+'/assets/img/img_demo/q3.jpg'"/>
+                </div>
+                <div class="info">
+                    <div class="title">广东省文化馆-展览大厅</div>
+                    <p>讲师：张劲涛 麦泳婷</p>
+                    <p>人数：10/20</p>
+                    <p>年龄段：7-12岁</p>
+                    <p>报名周期：2017-07-17 09:15 至 2017-07-28 17:00</p>
+                    <p>培训周期：2017-08-07 至 2017-08-11</p>
+                </div>
+                <a href="tel:15012345645"><div class="phone">电话：<span id="phone">130****1545</span></div></a>
+            </div>
+            <div class="wrapper-detail-box">
+                <h2>课程表</h2>
+                <div class="detail-box-text">
+                    <div class="train-table">
+                        <ul>
+                            <li>
+                                <h3>课程1-广东省群众广场排舞教学-南方欢乐</h3>
+                                <p>2017-11-11 10:20 <em class="s-1">直播中</em></p>
+                            </li>
+                            <li>
+                                <h3>课程2-广东省群众广场排舞教学-南方欢乐</h3>
+                                <p>2017-11-11 10:20 <em class="s-2">精彩回顾</em></p>
+                            </li>
+                            <li>
+                                <h3>课程3-广东省群众广场排舞教学-南方欢乐</h3>
+                                <p>2017-11-11 10:20 <em class="s-2">精彩回顾</em></p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="wrapper-detail-box">
+                <h2>培训详情</h2>
+                <div class="detail-box-text" id="desc-cont">
+                    1885年的伦敦，杰克医生因其父亲患有疾病，决定开始寻找其根源的研究，但因医院理事会全员的反对而告吹。律师厄特森为了安慰杰克，带他来到西区的酒吧，邂逅了舞女露西。无路可走的杰克把自己作为实验对象，却分裂出了双重人格，白天是善良正直的医生杰克，晚上则化身成邪恶的海德，对曾经反对他的理事会成员实施谋杀计划。他终日徘徊在善恶之间，被内心的负罪感和犯罪快感拉扯撕裂。同时，与出身高贵的未婚妻和底层舞女的情感纠葛也令他无所适从……
+                </div>
+            </div>
+            <div class="wrapper-detail-box">
+                <h2>讲师介绍</h2>
+                <div class="detail-box-text" id="teacher-cont">
+                    辛雪峰老师具有多年外企上市集团、国内企业高管经历，具有丰富的实战管理和培训经验，浓缩多年的管理精华，总结出一系列实战、有效、可持续的培训课程，辛老师的课程理论与实践相结合、案例分析、实景演练、互动分享、幽默风趣，深受学员好评，特邀服务全国知名企业数百家。<br>
+                    辛老师多年来举办和参与中华优秀传统文化讲座，大力弘扬中华传统文化，《家庭幸福-企业发展-社会和谐系列讲座》等课程，走进学校、机关、企业，深受各界人士的欢迎，听众累计达数万人。
+                </div>
+            </div>-->
+        </div>
+        <div class="wrapper-detail">
+            <div class="wrapper-detail-box">
+                <h2>相关资源</h2>
+                <div class="picture" >
+                    <div th:include="guangdong/resource/publicres :: copy" class="photo" id="res-box">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="wrapper-detail">
+            <div class="wrapper-detail-box" id="pxgs-list-div">
+                <h2>培训人员公示</h2>
+                <div class="mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted" style="height: 120px">
+                    <div id="pxgs-list" class="mui-scroll"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <nav class="mui-bar mui-bar-tab">
+        <div th:include="guangdong/public/collectionAndVoteup :: copy" class="zan-collection mui-tab-item"></div>
+        <div class="mui-tab-item"><a class="goNext" href="javascript:void(0)">Loading...</a></div>
+    </nav>
+    <input type="hidden" id="temp_type" value="16">
+    <input type="hidden" id="commType">
+    <input type="hidden" id="toproject" value="ZXPX">
+</div>
+<script type="text/javascript" th:inline="javascript">
+    var itemId = dataInit.getUrlParam('id');
+    var userId = $("#temp_userId").val();
+    var cache = {};
+    $().ready(function(){
+        dataInit.ajax({
+            api: [[${apiPath.traliveDetail}]],
+            params: {
+                id:itemId,
+                userId:userId
+            },
+            fn: showModelInfo
+        });
+
+        dataTrainPeople();
+    })
+
+    //渲染基本数据
+    function showModelInfo(data) {
+        if(data && data.code == 0){
+            var panel = $("#train-info");
+            panel.html('');
+            var model = data.data;
+            var img = data.imgPath + dataInit.getBigImage(model.trainimg);
+            var title = model.title;
+            var notice = model.notice || "需要报名培训，请点击“立即报名”按钮进行报名，有任何问题欢迎拨打电话咨询";
+            var enroltime = model.enrollstarttime ? moment(model.enrollstarttime).format('YYYY-MM-DD HH:mm')+" 至 "+ moment(model.enrollendtime).format('YYYY-MM-DD HH:mm') :'';
+
+            var teacherNameNone = model.teachername?'':'none';
+            var teacherName = model.teachername || '不详';
+            var phoneNone = model.phone?'':'none';
+            var phone = model.phone || '无';
+
+            //报名按钮===============================
+            //enrolstate: 0-未开始，1-可报名, 2-已报满, 3-已结束, 4-不满足条件, 5-已报名
+            var state_cls = 's-4';
+            var state_txt = '无需报名';
+            var condi_html = '';
+            var age_html = '';
+            if(model.enrolState == 0){
+                state_txt = '即将开始';
+                state_cls = 's-3';
+                if(model.mustsignup == 1){
+                    condi_html = '总名额<span class="more">'+model.maxnumber+'</span>个';
+                }
+            }else if(model.enrolState == 1){
+                state_txt = '立即报名';
+                state_cls = 's-1';
+                if(model.mustsignup == 1){
+                    condi_html = model.curtPeoples+' / '+model.maxnumber+' 个';
+                }
+
+            }else if(model.enrolState == 2){
+                state_txt = '已报满';
+
+                if(model.mustsignup == 1){
+                    condi_html = '已满';
+                }
+            }else if(model.enrolState == 3){
+                state_txt = '报名结束';
+                if(model.mustsignup == 1){
+                    condi_html = "<p><i class=\"iconfont icon-group\"></i> 人数："+model.curtPeoples+"/"+model.maxnumber+" 个</p>";
+                }
+
+            }else if(model.enrolState == 4){
+                state_txt = '立即报名';
+                state_cls = 's-1';
+                if(model.mustsignup == 1){
+                    //condi_html = model.curtPeoples+' / '+model.maxnumber+' 个';
+                    condi_html = "<p><i class=\"iconfont icon-group\"></i> 人数："+model.curtPeoples+"/"+model.maxnumber+" 个</p>";
+                }
+
+            }else if(model.enrolState == 5){
+                state_txt = '已报名';
+                if(model.mustsignup == 1){
+                    //condi_html = model.curtPeoples+' / '+model.maxnumber+' 个';
+                    condi_html = "<p><i class=\"iconfont icon-group\"></i> 人数："+model.curtPeoples+"/"+model.maxnumber+" 个</p>";
+                }
+            }
+            if(model.mustsignup == 1){
+                if(model.age && model.age.length > 0){
+                    //<p><i class="iconfont icon-dynamic"></i> 年龄段：'+age_html+'</p>
+                    //age_html = ' ( 限制年龄<span class="more">'+model.age+'</span>'+model.ageUnit+' )';
+                    age_html = "<p><i class=\"iconfont icon-dynamic\"></i> 年龄段：( 限制年龄<span class=\"more\">"+model.age+"</span>"+model.ageUnit+" )</p>";
+                }else{
+                    age_html = ' ';
+                }
+            }
+
+
+            $(".goNext").text(state_txt).addClass(state_cls);
+
+            //报名按钮===============================END
+
+            //详情
+            var coursedesc = dataInit.removeHTMLTag(model.coursedesc);
+            var outline = dataInit.removeHTMLTag(model.outline);
+            var teacherdesc = dataInit.removeHTMLTag(model.teacherdesc);
+            var show_1 = 'none',show_2 ='none',show_3 = 'none';
+            show_1 = coursedesc ? "" : show_1;
+            show_2 = outline ? "" : show_2;
+            show_3 = teacherdesc ? "" : show_3;
+
+
+            //直播课程目录===============================
+            var courses = model.courses || [];
+            var course_html = '';
+            var _livestime = '', _liveetime = '';
+            for(var i=0; i<courses.length; i++){
+                var row = courses[i];
+                var rowid = row.id;
+                var _time = moment(row.starttime).format('YYYY-MM-DD HH:mm')+" - "+moment(row.endtime).format('HH:mm');
+
+                //通过课程时间计算培训的直播开始和结束时间
+                if(!_livestime) _livestime = row.starttime;
+                _liveetime = row.endtime;
+
+                var _title = row.title+'（第'+(i+1)+'课）';
+                var listState = row.listState;//0-未开始, 1-正在直播, 2-已结束;
+                var canSee = row.canSee;//能否观看直播
+                var btnCls = '', btnTxt = '', livelink = '';
+                if(canSee){//当前会员可以观看直播
+                    if(listState == 0){
+                        btnCls = 's-3';
+                        btnTxt = '直播未开始';
+                    }else if(listState == 1){
+                        btnCls = 's-1';
+                        btnTxt = '进入直播';
+                        livelink = '<a href="liveNow?id='+rowid+'" class="liveNow-a"></a>';
+                    }else if(listState == 2){
+                        btnCls = 's-4';
+                        btnTxt = '查看回顾';
+                        livelink = '<a href="liveBack?id='+rowid+'" class="liveNow-a"></a>';
+                    }
+                }else{//当前会员不能观看直播
+                    livelink = '<a href="javascript:void(0);" class="reg-btn" onclick="showNoSee()"></a>';
+                    if(listState == 0){
+                        btnCls = 's-3';
+                        btnTxt = '直播未开始';
+                    }else if(listState == 1){
+                        btnCls = 's-1';
+                        btnTxt = '正在直播';
+                    }else if(listState == 2){
+                        btnCls = 's-2';
+                        btnTxt = '直播已结束';
+                    }
+                }
+                course_html += '<li>\
+                                   '+livelink+'\
+                                   <h3>'+_title+'</h3>\
+                                   <p>'+_time+'<em class="'+btnCls+'">'+btnTxt+'</em></p>\
+                                </li>';
+            }
+            var traintime =  _livestime ? moment(_livestime).format('YYYY-MM-DD HH:mm')+" 至 "+ moment(_liveetime).format('YYYY-MM-DD HH:mm') :'';
+            $('#detail-traintime').text(traintime);
+            //直播课程目录=============================== END
+
+            var _style_none = '';
+            if (model.mustsignup == 0){
+                _style_none = 'style="display:none"';
+            }
+
+            var html = '<div class="wrapper-detail-box">\
+                            <div class="img">\
+                                <marquee scrollamount="3">温馨提示：'+notice+'</marquee>\
+                                <img id="image" class="lazy" src="'+img+'"/>\
+                            </div>\
+                            <div class="info">\
+                                <div class="title">'+title+'<span id="visitCount"></span></div>\
+                                <p class="'+teacherNameNone+'"><i class="iconfont icon-geren"></i> 讲师：'+teacherName+'</p>\
+                                '+condi_html+'\
+                                '+age_html+'\
+                                <p><i class="iconfont icon-geren"></i> 主办单位：'+model.host+'</p>\
+                                <p '+_style_none+'><i class="iconfont icon-time"></i> 报名周期：'+enroltime+'</p>'+
+                                (traintime ? '<p><i class="iconfont icon-time"></i> 培训周期：'+traintime+'</p>' : '' ) +
+                                '</div>\
+                            <a class="'+phoneNone+'" href="tel:'+phone+'"><div class="phone"><i class="iconfont icon-dianhua"></i> 电话：<span">'+phone+'</span></div></a>\
+                        </div>\
+                        <div class="wrapper-detail-box">\
+                            <h2>课程表</h2>\
+                            <div class="detail-box-text">\
+                                <div class="train-table">\
+                                    <ul>\
+                                        '+course_html+'\
+                                    </ul>\
+                                </div>\
+                            </div>\
+                        </div>\
+                        <div class="wrapper-detail-box '+show_1+'">\
+                            <h2>课程简介</h2>\
+                            <div class="detail-box-text" id="desc-cont-1">'+coursedesc+'</div>\
+                        </div>\
+                        <div class="wrapper-detail-box '+show_2+'">\
+                            <h2>课程内容 </h2>\
+                            <div class="detail-box-text" id="desc-cont-2">'+outline+'</div>\
+                        </div>\
+                        <div class="wrapper-detail-box '+show_3+'">\
+                            <h2>老师简介</h2>\
+                            <div class="detail-box-text" id="desc-cont-3">'+teacherdesc+'</div>\
+                        </div>';
+
+            panel.html(html);
+            cache.itemId = itemId;
+            cache.img = img;
+            cache.title = model.title;
+
+            cache.applyTime = enroltime;
+            cache.trainTime = traintime;
+            cont.init({
+                panelCls:"#desc-cont-1,#desc-cont-2,#desc-cont-3",
+                row:5
+            })
+            mui('.train-table').on('tap','.reg-btn',function(){
+                showNoSee()
+            });
+
+            mui('.train-table').on('tap','.liveNow-a',function(){document.location.href=this.href});
+            mui('.wrapper-detail-box').on('tap','a',function(){document.location.href=this.href});
+
+            mui('.mui-tab-item').on('tap','.s-1',function(){
+                checkUserTrain();
+            });
+
+        }else {
+            mui.toast(data.msg);
+        }
+
+        getVisitSumCount4url(itemId, function(count){
+            $("#visitCount").text(' (访问量 '+count+')');
+        });
+    }
+
+    //未报名提示
+    function showNoSee(){
+        mui.toast('报名后即可在线观看');
+    }
+
+    //判断是否可以报名
+    function checkUserTrain(){
+        dataInit.ajax({
+            api:[[${apiPath.checkEnrol}]],
+            params:{
+                userid:userId,
+                id:itemId
+            },
+            fn:function(data){
+                if(data.code == 0){
+                    dataInit.setCache('train-step',cache);
+                    window.location.href = "step?id="+itemId+"";
+                }else if (data.code==200){
+                    mui.confirm(data.msg, '友情提示',['确定','取消'], function(e){
+                        if (e.index==0){
+                            window.location.href = [[${basePath}]] + '/usercenter/myusersecurityreal'
+                        }
+                    });
+                }else{
+                    mui.toast(data.msg || '服务器异常');
+                }
+            }
+        })
+    }
+
+    function dataTrainPeople(){
+        var pxgs_div = $("#pxgs-list-div");
+        pxgs_div.hide();
+        dataInit.ajax({
+            api:[[${apiPath.getEnrolPerson}]],
+            params:{
+                id:itemId
+            },
+            fn:function(data){
+                if (data.code != 0 || !data.data || data.data.length==0){
+                    return;
+                }
+                pxgs_div.show();
+                var panel = $("#pxgs-list");
+                var basePath = [[${basePath}]];
+                for (var i in data.data){
+                    var row = data.data[i];
+                    var nickname = row.nickname.substring(0,1)+"**";
+                    panel.append('\
+                        <a class="mui-control-item" href="javascript:void(0)" style="width:90px;height: 120px;display: inline-block; overflow: hidden; position: relative">\
+                            <div class="img">\
+                                 <img src="'+basePath+'/assets/img/index/user@2x.png">\
+                            </div>\
+                            <p>' + nickname + '</p>\
+                        </a>\
+                    ');
+                }
+            }
+        })
+    }
+</script>
+</body>
+</html>

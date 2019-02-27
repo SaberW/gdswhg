@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link th:href="${basePath}+'/assets/style/regist/login.css'" rel="stylesheet">
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/rong.validate.js'"></script>
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/rong.message.js'"></script>
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/jquery.md5.js'"></script>
+<div class="regist-logo"><a href="index"></a></div>
+<form th:action="${basePath}+'/doLogin'" method="post" id="loginForm">
+    <input type="hidden" name="history_url" th:value="${temp_url}">
+    <div class="main clearfix" style="height:500px;">
+        <div class="login-cont">
+            <div class="form-cont">
+                <h1>用户登录/USER LOGIN</h1>
+                <div class="input-row id-bg">
+                    <input class="login-input" id="phoneNum" name="phoneNum" placeholder="输入11位手机号码" maxlength="11"
+                           required>
+                </div>
+                <div class="input-row pwd-bg">
+                    <input type="password" class="login-input" minlength="6" placeholder="请输入登录密码" id="password"
+                           name="password" required>
+                </div>
+                <div class="find-pwd">
+                    <a th:href="${basePath}+'/center/findpwd'">忘记密码</a>
+                </div>
+                <button type="submit" class="login-btn goNext">登录</button>
+                <div class="regist-btn">
+                    没有账号？<a href="regist">立即注册</a>
+                </div>
+            </div>
+        </div>
+        <div class="line-middle">
+            <em>OR</em>
+        </div>
+        <div class="other-cont">
+            <div class="third-party">
+                <h2>使用微信扫描直接登录</h2>
+                <!--<ul class="clearfix">
+                    <li class="ico-1"><a href="#"><em></em><span>新浪微博</span></a></li>
+                    <li class="ico-2"><a href="#"><em></em><span>QQ登录</span></a></li>
+                    <li class="ico-3"><a href="#"><em></em><span>微信登录</span></a></li>
+                </ul>-->
+                <div class="img">
+                    <img th:src="${basePath}+'/assets/img/public/code.png'">
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<!-- core public JavaScript -->
+<script type="text/javascript" th:inline="javascript">
+    //手机号格式
+    $.validator.addMethod("phoneType", function (value) {
+        var reg = /^0?(13[0-9]|15[012356789]|17[013678]|18[0-9]|14[57])[0-9]{8}$/;
+        return reg.test(value);
+    }, '请输入正确的手机号码');
+    $(document).ready(function () {
+        var msg  = [[${loginErrMsg}]];
+        if(msg){
+            msg = msg.replace(/\"/g, "");
+            rongDialog.init({
+                ico : 2, //1 勾  2 叉
+                type : 1,
+                desc : msg
+             });
+        }
+        $("#loginForm").validate({
+            errorElement: "em",
+            rules: {
+                phoneNum: "required",
+                phoneNum: "phoneType",
+                password: "required"
+            },
+            messages: {
+                phoneNum: {
+                    required: "请输入您的手机号码"
+                },
+                password: {
+                    required: "请输入您的登录密码"
+                }
+            },
+            submitHandler: function (form) {
+                var pwd = $.md5($('#password').val());
+                $('#password').val(pwd);
+                form.submit();
+            }
+        });
+    });
+</script>
+</body>
+</html>

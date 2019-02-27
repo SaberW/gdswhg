@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link th:href="${basePath}+'/assets/style/regist/regist.css'" rel="stylesheet">
+<div class="regist-logo"><a href="../indexminor.html"></a></div>
+<ul class="crumbs crumbs-3rd clearfix">
+  <li class="step-1">1. 基本资料<em class="arrow"></em></li>
+  <li class="step-2">2. 完善资料<em class="arrow"></em></li>
+  <li class="step-3 last">3. 注册成功</li>
+</ul>
+<div class="main">
+  <div class="reg-msg">
+    <div class="msg success">
+    	<h2><span></span>注册成功</h2>
+        <p>恭喜您成为文化在线-广东公共数字文化联盟注册会员</p>
+        <p><a href="index">返回首页</a></p>
+    </div>
+    <div class="msg err"></div>
+  </div>
+</div>
+<div class="mask none"></div>
+<!-- core public JavaScript -->
+<script th:src="${basePath}+'/assets/js/public/formUI.js'"></script>
+<script th:src="${basePath}+'/assets/js/regist/regist.js'"></script>
+</body>
+</html>

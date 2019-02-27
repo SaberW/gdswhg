@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/style/news/news.css'" >
+<style>
+    .file-download-cont{line-height:50px;border:1px #ccc dashed;border-width:1px 0px;}
+    .file-download-cont ul li{height:32px; line-height:32px; padding-left:42px; position:relative; margin:15px 0px;}
+    .file-download-cont ul li a{color:#333; display:block;}
+    .file-download-cont ul li i{height:32px; width:32px; position:absolute; background:url(../assets/img/public/fileBtn.png) no-repeat 50% 50%; left:0px; bottom:0px;}
+    .file-download-cont ul li a:hover{color:#c8161d;}
+</style>
+<div class="wrapper clearfix">
+    <div class="content">
+        <!--公共主头部开始-->
+        <div id="header" th:include="guangdong/public/header :: copy"></div>
+        <!--公共主头部结束-->
+        <!--面包屑开始-->
+        <div class="sys-crumbs">
+            <span><a th:href="${basePath}+'/index'">首页</a></span>
+            <i class="icon iconfont icon-enter"></i>
+            <span><a th:href="${basePath}+'/news/list'">资讯</a></span>
+            <i class="icon iconfont icon-enter"></i>
+            <span class="active" id="crumbs-title" name="clnftltle">这个一个很好标题</span>
+        </div>
+        <!--面包屑结束-->
+        <div class="sys-main-bottom">
+            <div class="main-cont clearfix">
+                <div class="left-cont">
+                    <div class="news-detail">
+                        <h1 id="title" name="clnftltle">这个一个很好标题</h1>
+                        <div class="title-share">
+                            来源：<span id="source" name="clnfsource">分享</span>
+                            关键字：<span id="key" name="clnfkey">分享</span>
+                            时间：<span id="time" name="clnfcrttime">2017-11-14 19:33:34</span>
+                            <!--<div class="sns-cont" title="分享">
+                                分享到
+                                <a href="javascript:void(0);" target="_blank" class="fxweix"><i class="icon iconfont icon-wechat"></i></a>
+                                <a href="javascript:void(0);" target="_blank" class="fxweibo"><i class="icon iconfont icon-xinlang"></i></a>
+                                <a href="javascript:void(0);" target="_blank" class="fxqq"><i class="icon iconfont icon-kongjian"></i></a>
+                            </div>-->
+                        </div>
+                        <div class="detail-text val-type-html" id="info" name="clnfdetail">
+                            各地级及以上市文化馆、顺德文化艺术发展中心：
+
+                            为深入贯彻落实习近平总书记在文艺座谈会上的重要讲话精神和《中共中央关于繁荣发展社会主义文艺的意见》,着力提升我省中青年群众文艺创作骨干的创作水平，现定于2017年11月7日—9日（共3天），在广东省文化馆（广州市天河区广州大道中1229号）8楼会议室举办广东省文化馆第二批特聘创作员（名单详见附件1）培训班，请各单位按时组织人员参训。
+
+                            特此通知。
+
+
+
+                            附件（下载见文末）：1.2017年广东省文化馆第二批特聘创作员名单
+
+                            2.广东省文化馆第二批特聘创作员培训课程安排表
+
+                            3.广东省文化馆第二批特聘创作员培训班报名回执
+                        </div>
+                        <!-- 下载 -->
+                        <div class="file-download-cont" style="display: none">
+                            <ul id="downloadFile">
+                            </ul>
+                        </div>
+                        <!--<div class="prev-page">上一篇：<a href="">hahah哈哈哈哈</a></div>
+                        <div class="next-page">下一篇：<a href="">hahah哈哈哈哈</a></div>-->
+                    </div>
+
+                </div>
+                <div class="right-cont">
+                    <div class="item-cont">
+                        <div class="sys-main-title">
+                            <div class="title">相关推荐</div>
+                            <hr>
+                        </div>
+                        <div class="recommend-cont" id="recomment-list">
+                            <div class="recommend-list">
+                                <div class="recomment-title"><a href="detail?id=">这是一本标题</a></div>
+                                <div class="recomment-time">这是一本标题2222</div>
+                            </div>
+                            <div class="recommend-list">
+                                <div class="recomment-title"><a href="detail?id=">这是一本标题</a></div>
+                                <div class="recomment-time">这是一本标题2222</div>
+                            </div>
+                            <div class="recommend-list">
+                                <div class="recomment-title"><a href="detail?id=">这是一本标题</a></div>
+                                <div class="recomment-time">这是一本标题2222</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong/public/footer :: copy"></div>
+<!--底部结束-->
+<a class="to-top"></a>
+<script type="text/javascript" th:inline="javascript">
+
+    $(function(){
+        PageTool.init();
+    });
+
+    var PageTool = {
+        bashPath: [[${basePath}]],
+
+        infoldetailURL: [[${apiPath.infoldetail}]],
+        infolistURL: [[${apiPath.infolist}]],
+        id: [[${param.id[0]}]],
+
+        init: function () {
+            var me = this;
+            $.post(me.infoldetailURL, {id: me.id}, function(data){
+                me.showInfo(data);
+            }, "JSON");
+
+            me.loadList(me.id);
+        },
+
+        showInfo: function (data) {
+            $("[name]").text('');
+
+            if (!data || !data.data) {
+                return;
+            }
+            //var imgPath = data.imgPath;
+            var info = data.data;
+            var row=data.rows;
+            info.clnfcrttime = moment(info.clnfcrttime).format("YYYY-MM-DD");
+            for (var i in row) {
+                var obj = row[i];
+                var html = $('<li><a href="'+data.imgPath+obj.uplink+'" target="_blank" class="js-urlencode"><i></i>附件:'+obj.upname+'</a></li>');
+                $("#downloadFile").append(html);
+            }
+            if(row.length>0){
+                $(".file-download-cont").show();
+            }
+            $("[name]").each(function(){
+                var ent = $(this);
+                var name = ent.attr("name");
+                if (!name || name=='') {
+                    return true;
+                }
+                if (ent.hasClass("val-type-html")){
+                    ent.html(info[name]||'');
+                }else{
+                    ent.text(info[name]||'');
+                }
+            });
+        },
+
+        loadList : function(id){
+            var me = this;
+            var params = {
+                index: 1,
+                size: 10,
+                cultid: $.cookie('cultid'),
+                fromproject: "QWZY"
+            };
+
+            var UL = $("#recomment-list");
+            UL.empty();
+
+            var litemp = '<div class="recommend-list">\
+                                <div class="recomment-title"><a href="detail?id=">这是一本标题</a></div>\
+                                <div class="recomment-time">这是一本标题2222</div>\
+                            </div>';
+            $.post(me.infolistURL, params, function(data){
+                if (!data || !data.rows || !data.rows.length) {
+                    UL.append("<div class='public-no-message'></div>");
+                    return;
+                }
+                for(var i in data.rows) {
+                    var row = data.rows[i];
+
+                    if (row.clnfid == id) continue;
+
+                    var LI = $(litemp);
+                    LI.find(".recomment-title a").text(row.clnftltle)
+                            .attr("href", me.bashPath+"/news/detail?id="+row.clnfid);
+                    LI.find(".recomment-time").text(moment(row.clnfcrttime).format("YYYY-MM-DD"));
+
+                    UL.append(LI);
+                }
+            }, "JSON");
+        }
+    }
+
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

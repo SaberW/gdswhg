@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<script th:src="${basePath}+'/assets/common/js/whg.maps.js'"></script>
+<div class="wrapper clearfix">
+    <div class="content">
+        <!--公共主头部开始-->
+        <div id="header" th:include="guangdong/public/header :: copy"></div>
+        <!--公共主头部结束-->
+        <div class="sys-crumbs">
+            <span><a href="../index">首页</a></span>
+            <i class="icon iconfont icon-enter"></i>
+            <span><a href="list">众筹项目</a></span>
+            <i class="icon iconfont icon-enter"></i>
+            <span class="active" id="crumbs-title"></span>
+        </div>
+        <div class="sys-main-info">
+            <div class="zc-state"></div>
+            <div class="img">
+                <img th:src="${basePath}+'/assets/img/public/loading.png'" id="imgPath">
+            </div>
+            <div class="info" id="infoDetail">
+                <!--<h1 id="title">&nbsp;</h1>
+                <p class="desc"><i class="iconfont icon-time"></i>众筹时间：<span><span>2017-9-26 16:16</span> 至 <span>2017-9-26 16:16</span></span></p>
+                <p class="desc"><i class="iconfont icon-activity"></i>培训周期：<span>2017-9-26 至 2017-10-26</span></p>
+                <p class="desc"><i class="iconfont icon-dianhua"></i>联系电话：<span>13554564582</span></p>
+                <p class="desc"><i class="iconfont icon-location"></i>活动地址：<span>这是一个地址</span></p>
+                <p class="desc"><i class="iconfont icon-geren"></i>培训讲师：<span>讲师1号</span></p>
+                <p class="desc"><i class="iconfont icon-id"></i>适合年龄：<span>18-100岁</span></p>
+                <p class="desc"><i class="iconfont icon-label"></i>众筹标签：<span class="tag">活动众筹</span></p>
+                <div class="progress clearfix">
+                    <div class="text float-left"><span>已筹到: <i>5</i> 份</span></div>
+                    <div class="text float-right"><span>上限: <i>20</i> 份</span></div>
+                </div>
+                <div class="progress-bar">
+                    <span style="width: 25%"></span>
+                </div>
+                <div class="progress-end clearfix">
+                    <div class="text text-1 float-left "><span>目标分数: <i>15</i> 份</span></div>
+                    <div class="text text-2 float-left"><span>剩余天数: <i>20</i> 天</span></div>
+                    <div class="text text-3 float-left"><span>剩余份数: <i>10</i> 份</span></div>
+                </div>
+                <a class="go-next" href="javascript:goSignUp()">我要支持</a>-->
+            </div>
+        </div>
+        <div class="sys-main-bottom">
+            <div class="main-cont clearfix">
+                <div class="left-cont">
+                    <div class="item-cont">
+                        <div class="sys-detail-list">
+                            <div class="title">众筹介绍：</div>
+                            <div class="html-panel" id="descriptions">
+
+                            </div>
+                        </div>
+                        <div class="sys-detail-list">
+                            <div class="title">活动详情：</div>
+                            <div class="html-panel" id="remark"></div>
+                        </div>
+                        <div class="sys-detail-list">
+                            <div class="title">文件下载：</div>
+                            <div class="html-panel" id="fileDownload">
+                                <div class="fileName"><i class="iconfont icon-download-copy"></i><a href="javascript:void(0)">文件名称</a></div>
+                            </div>
+                        </div>
+                        <div class="sys-detail-list">
+                            <div class="title">相关资源：</div>
+                            <div class="html-panel">
+                                <div class="res-detail-cont">
+                                    <div class="res-filter">
+                                        <div class="filter-list">
+                                            <div class="clearfix" id="fileter-nav">
+                                                <span class="active"><a href="javascript:void(0)">全部</a></span>
+                                                <span><a href="javascript:void(0)">图片</a></span>
+                                                <span><a href="javascript:void(0)">视频</a></span>
+                                                <span><a href="javascript:void(0)">音频</a></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="style-list">
+                                        <div class="content-list">
+                                            <ul class="clearfix" id="modelList_2">
+                                                <!--<li>
+                                                    <div class="img">
+                                                        <img src="http://183.131.126.132:8092/whgstatic/img/2017/201709/20170921/a768d33e5359460e910de9c08ce4425d_750_500.jpg">
+                                                    </div>
+                                                    <div class="info">
+                                                        <div class="title">供需标题</div>
+                                                    </div>
+                                                    <div class="mask"><img th:src="${basePath}+'/assets/img/brand/macphone.png'"></div>
+                                                    <a href="javascript:void(0)"></a>
+                                                </li>
+                                                <li>
+                                                    <div class="img">
+                                                        <img src="http://183.131.126.132:8092/whgstatic/img/2017/201709/20170921/e7f2cf27ba3b41b680c1f10651db8800_750_500.jpg">
+                                                    </div>
+                                                    <div class="info">
+                                                        <div class="title">供需标题</div>
+                                                    </div>
+                                                    <div class="mask"><img th:src="${basePath}+'/assets/img/brand/play.png'"></div>
+                                                    <a href="javascript:void(0)" onclick="rongDialog.init({
+                type : 5,
+                vedioUrl : 'http://szwhg-gds.oss-cn-shenzhen.aliyuncs.com/2016%E5%B9%B4%E9%A6%86%E9%95%BF%E5%9F%B9%E8%AE%AD%E7%8F%AD/%E7%8E%B0%E4%BB%A3%E5%85%AC%E5%85%B1%E6%96%87%E5%8C%96%E6%9C%8D%E5%8A%A1%E4%BD%93%E7%B3%BB%E5%BB%BA%E8%AE%BE%E6%9C%80%E6%96%B0%E6%94%BF%E7%AD%96%E8%A7%A3%E8%AF%BB2%E2%80%94%E7%A5%81%E8%BF%B0%E8%A3%95.mp4',
+                vedioImg : '',
+                vedioTitle : 'RongDialog视频测试2'
+            });"></a>
+                                                </li>
+                                                <li>
+                                                    <div class="img">
+                                                        <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1507548990671&di=6c7760dcd561c63f7f5386bd4614cf03&imgtype=0&src=http%3A%2F%2Fimg5.duitang.com%2Fuploads%2Fitem%2F201407%2F27%2F20140727202737_sZLAX.jpeg">
+                                                    </div>
+                                                    <div class="info">
+                                                        <div class="title">供需标题</div>
+                                                    </div>
+                                                    <div class="mask"></div>
+                                                    <a href="javascript:void(0)"  onclick="rongDialog.init({
+                ico : 1,
+                type : 6,
+                imgUrl : 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1507548990671&di=6c7760dcd561c63f7f5386bd4614cf03&imgtype=0&src=http%3A%2F%2Fimg5.duitang.com%2Fuploads%2Fitem%2F201407%2F27%2F20140727202737_sZLAX.jpeg'
+            });"></a>
+                                                </li>-->
+                                            </ul>
+                                        </div>
+                                        <!--分页开始 -->
+                                        <div class="green-black" id="artPagging_2" style="margin-bottom: 40px"></div>
+                                        <!--分页结束-->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="right-cont">
+                    <div class="share clearfix">
+                        <div class="share-list" id="collection">
+                            <i class="iconfont icon-collection icon-collection_fill"></i><span>收藏</span>
+                        </div>
+                        <div class="share-list fengxiang">
+                            <i class="iconfont icon-share"></i><span>分享</span>
+                            <div class="drop-wrap">
+                                <a href="javascript:void(0)" title="QQ空间" target="_blank" class="fxqq"><i class="iconfont icon-kongjian"></i></a>
+                                <a href="javascript:void(0)" title="微信" class="fxweix"><i class="iconfont icon-wechat"></i></a>
+                                <a href="javascript:void(0)" title="微博" target="_blank" class="fxweibo"><i class="iconfont icon-xinlang"></i></a>
+                            </div>
+                        </div>
+                        <div class="share-list dianzan" id="good">
+                            <i class="iconfont icon-praise icon-praise_fill"></i>点赞(<span>0</span>)
+                        </div>
+                    </div>
+                    <div class="explain">
+                        <div class="title">说明</div>
+                        <div class="info" id="explains"></div>
+                    </div>
+                    <div class="explain">
+                        <div class="title">众筹发起人</div>
+                        <div class="info clearfix" id="ZCFQR">
+                            <!--<div class="img">
+                                <img src="http://120.77.85.181:8001/whgstatic/img/2017/201709/20170925/7a84db3ee1174d67a36da0a8c0a1e498_740_555.jpg">
+                            </div>
+                            <div class="text">
+                                <div class="text-title">发起人名称</div>
+                                <div class="text-info">发了些什么发了些什么发了些什么发了些什么发了些什么发了些什么发了些什么发了些什么发了
+                                    些什么发了些什么发了些什么发了些什么发了些什么发了些什么些什么发了些什么发了些什么发了些什么发了些什么发了些什么
+                                    些什么发了些什么发了些什么发了些什么发了些什么发了些什么
+                                    些什么发了些什么发了些什么发了些什么发了些什么发了些什么</div>
+                            </div>-->
+                        </div>
+                    </div>
+                    <div class="explain">
+                        <div class="title">众筹须知</div>
+                        <div class="info" id="notice"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div th:include="guangdong/public/fav :: copy"></div>
+        <div th:include="guangdong/public/voteup :: copy"></div>
+        <input type="hidden" id="temp_type" value="28">
+        <input type="hidden" id="commType">
+    </div>
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong/public/footer :: copy"></div>
+<!--底部结束-->
+<script type="text/javascript" th:inline="javascript">
+    var itemId = dataInit.getUrlParam('id');
+    var userid = $("#temp_userId").val();
+    $(document).ready(function () {
+        dataInit.ajax({
+            api: [[${apiPath.zcProjectDetail}]],
+            fn: showDetail,
+            params: {id: itemId}
+        });
+        dataPage();
+        $("#fileter-nav").on("click", "span>a", function(){
+            $(this).parents("span").addClass("active").siblings().removeClass("active");
+            dataPage();
+        });
+    })
+    function goSignUp(actId) {
+        dataInit.ajax({
+            api: [[${apiPath.checkActPublish}]],
+            fn: goNext,
+            params: {actId: actId,zcId:itemId,userId:userid}
+        });
+        function goNext(data) {
+            if(data.code == 0){
+                window.location.href='actliucheng?id='+itemId+'&actId='+actId;
+            }else {
+                rongDialog.init({ico : 2, type : 1, desc : data.msg});
+            }
+        }
+    }
+    function showDetail(data) {
+        if(data && data.code == 0){
+            var model = data.data;
+            var imgPath = [[${imgPath}]] + dataInit.getBigImage(model.imgurl);
+            var title = model.title;
+            //调分享接口
+            dataInit.share(title,imgPath);
+            $('#crumbs-title').text(title);
+            $('#imgPath').attr("src",imgPath);
+            //判断众筹状态
+            var isOverdueSize = isOverdue(model.issuccess,model.timeend,model.now);
+            var __success = [[${basePath}]] + '/assets/img/zcproject/success.png';
+            var __fail = [[${basePath}]] + '/assets/img/zcproject/fail.png';
+            var __underway = [[${basePath}]] + '/assets/img/zcproject/underway.png';
+            var _zcState = '',zcButtonState = '';
+            switch (isOverdueSize){
+                case 0:
+                    _zcState = '<img src="'+__fail+'">';
+                    zcButtonState = '<a class="go-next go-next-fail" href="javascript:void(0)">已结束</a>';
+                    break;
+                case 1:
+                    _zcState = '<img src="'+__success+'">';
+                    zcButtonState = '<a class="go-next go-next-success" href="javascript:void(0)">众筹成功</a>'
+                    break;
+                case 2:
+                    _zcState = '<img src="'+__underway+'">';
+                    zcButtonState = '<a class="go-next" href="javascript:goSignUp('+model.refinfo.id+')">我要支持</a>'
+                    break;
+                case 3:
+                    _zcState = '';
+                    zcButtonState = '';
+                    break;
+            }
+            $(".zc-state").html(_zcState);
+            //获得众筹达成率
+            var _DCl = parseInt((model.orderCount/model.nummin)*100);
+            _DCl = _DCl>100?100:_DCl;
+            //获得众筹剩余份数
+            var _ZC_Max = model.numsum - model.orderCount;
+            _ZC_Max = _ZC_Max<0 ? 0 : _ZC_Max;
+            //获取剩余天数
+            var SY_Days = getDays(model.timeend,model.now,model.timestart);
+            //获取众筹标签
+            var zc_tag = '';
+            if(model.etype == 4){
+                zc_tag = '活动众筹';
+            }else if(model.etype == 5) {
+                zc_tag = '培训众筹';
+            }else if(model.etype == 0){
+                zc_tag = '其他众筹';
+            }else {
+                zc_tag = '其他众筹';
+            }
+            //是否存在联系电话
+            var telPhone = '';
+            if (model.phone) {
+                telPhone = '<p class="desc"><i class="iconfont icon-dianhua"></i>联系电话：<span>' + model.phone + '</span></p>';
+            }
+            var _html = '<h1>'+model.title+'</h1>'+
+                '<p class="desc"><i class="iconfont icon-time"></i>众筹时间：<span><span>'+moment(model.timestart).format("YYYY-MM-DD HH:mm:ss")+'</span> 至 <span>'+moment(model.timeend).format("YYYY-MM-DD HH:mm:ss")+'</span></span></p>'+
+                '<p class="desc"><i class="iconfont icon-activity"></i>活动时间：<span>'+moment(model.refinfo.starttime).format("YYYY-MM-DD")+' 至 '+moment(model.refinfo.endtime).format("YYYY-MM-DD")+'</span></p>'+telPhone+
+                '<p class="desc"><i class="iconfont icon-location"></i>活动地址：<span>'+model.refinfo.address+'</span></p>'+
+                '<p class="desc"><i class="iconfont icon-label"></i>众筹标签：<span class="tag">'+zc_tag+'</span></p>'+
+                '<div class="progress clearfix">'+
+                '    <div class="text float-left"><span>已筹到: <i>'+model.orderCount+'</i> 份</span></div>'+
+                '    <div class="text float-right"><span>上限: <i>'+model.numsum+'</i> 份</span></div>'+
+                '</div>'+
+                '<div class="progress-bar">'+
+                '    <span data-progress-bar="'+_DCl+'"></span>'+
+                '</div>'+
+                '<div class="progress-end clearfix">'+
+                '    <div class="text text-1 float-left "><span>目标分数: <i>'+model.nummin+'</i> 份</span></div>'+
+                '    <div class="text text-2 float-left"><span>剩余时间: <i>'+SY_Days+'</i></span></div>'+
+                '    <div class="text text-3 float-left"><span>剩余份数: <i>'+_ZC_Max+'</i> 份</span></div>'+
+                '</div>'+zcButtonState;
+            $("#infoDetail").html(_html);
+            $("#explains").html(model.explains);
+            $("#notice").html(model.notice);
+            $("#descriptions").html(model.descriptions);
+            $("#remark").html(model.refinfo.remark);
+
+            setTimeout(function () {
+                //进度条动画
+                $(".progress-bar span").each(function () {
+                    var bar_size = $(this).attr("data-progress-bar");
+                    $(this).css("width",bar_size+"%");
+                })
+            },200)
+
+            //文件下载
+            var fileHtml = '';
+            if(model.enclosure){
+                var filePath = data.imgPath + model.enclosure;
+                $('#filePath').attr('href',filePath);
+                var index = filePath.lastIndexOf("\/");
+                var fileName = filePath.substring(index + 1, filePath.length);
+                fileHtml = '<div class="fileName"><i class="iconfont icon-download-copy"></i><a href="'+filePath+'">'+fileName+'</a></div>';
+                $("#fileDownload").html(fileHtml);
+            }else {
+                $("#fileDownload").parent(".sys-detail-list").hide();
+            }
+
+
+            dataInit.ajax({
+                api: [[${apiPath.query}]],
+                fn: queryVenue, //查询现属场馆
+                params: {
+                    id: model.cultid
+                }
+            });
+        }else {
+            rongDialog.init({
+                ico : 2, //1 勾  2 叉
+                type : 1,
+                desc : data.msg
+            });
+        }
+
+    }
+
+    function queryVenue(data) {
+        var _html = '';
+        if (data.code == 0 && data.data) {
+            var queryVenueImgPath = data.imgPath + data.data.picture;
+            _html = '<div class="img">'+
+                '    <img src="'+queryVenueImgPath+'">'+
+                '</div>'+
+                '<div class="text">'+
+                '    <div class="text-title">'+data.data.name+'</div>'+
+                '    <div class="text-info">'+data.data.introduction+'</div>'+
+                '</div>';
+        }
+        $("#ZCFQR").html(_html);
+    }
+    //判断众筹是否过期
+    function isOverdue(issuccess,timeend,dataNow) {
+        if(dataNow>timeend && issuccess !=1){
+            return 0;//已结束
+        }else if(dataNow<timeend && issuccess !=1){
+            return 2;//众筹中
+        }else if(issuccess ==1) {
+            return 1;//已成功
+        }else {
+            return 3;//其他状态
+        }
+    }
+
+    //获取剩余天数
+    function getDays(timeend,_dataNow,timestart) {
+        if(_dataNow>timeend){
+            return '已结束';
+        }else if(_dataNow>timestart){
+            return moment(timeend).fromNow(true);
+        }else {
+            return '未开始';
+        }
+    }
+
+    function dataPage(page,rows){
+        var params = {};
+        params.id = itemId;
+        params.page = page || 1;
+        params.pageSize = rows || 12;
+
+        var filterIdx = $("#fileter-nav").find("span.active").index();
+        switch (filterIdx){
+            case 1:
+            case 2:
+            case 3:
+                params.enttype = filterIdx;
+                break;
+            default: params.enttype = '';
+        }
+
+        dataInit.ajax({
+            api: [[${apiPath.gatherresourcelist}]],
+            params: params,
+            fn: function(data){
+                showModelList(data);
+                dataInit.pageInit('artPagging_2', params.page, params.pageSize, data.total, dataPage);
+            }
+        })
+    }
+
+    function showModelList(data){
+        var modelUL = $("#modelList_2");
+        modelUL.empty();
+        if(data.code == 0){
+            if (data.rows && data.rows.length > 0) {
+                for (var i in data.rows) {
+                    var module = data.rows[i];
+
+                    var html = $('<li>\
+                                    <div class="img">\
+                                        <img >\
+                                    </div>\
+                                    <div class="info">\
+                                        <div class="title">'+module.name+'</div>\
+                                    </div>\
+                                    <div class="mask"><img></div>\
+                                    <a href="javascript:void(0)"></a>\
+                                    </li>');
+                    if(module.enturl)
+                        var _enturl = module.enturl.indexOf('http') >= 0 ? module.enturl : data.imgPath + module.enturl;
+                    var resBasePath = [[${basePath}]];
+                    switch (module.enttype){
+                        case "1" : //图片
+                            html.find(".img img").attr("src", data.imgPath + dataInit.getSmallImage(module.enturl));
+                            html.find(".mask").empty();
+                            html.find("a:last").attr("onClick", "rongDialog.init({\
+                                            ico : 1,\
+                                            type : 6,\
+                                            imgUrl : '"+_enturl+"'\
+                                        });"
+                            );
+                            break;
+                        case "2" :  //视频
+                            html.find(".img img").attr("src", data.imgPath + dataInit.getSmallImage(module.deourl));
+                            html.find(".mask img").attr("src", [[${basePath}]] + '/assets/img/brand/play.png');
+                            html.find("a:last").attr("onClick", "rongDialog.init({\
+                                            type : 5,\
+                                            vedioUrl : '"+_enturl+"',\
+                                            vedioImg : '',\
+                                            vedioTitle : '"+module.name+"',\
+                                            basePath : '"+resBasePath+"'\
+                                        })"
+                            );
+                            break;
+                        case "3" :  //音频
+                            html.find(".img img").attr("src", [[${basePath}]] + '/assets/img/brand/brand-music.jpg');
+                            html.find(".mask img").attr("src", [[${basePath}]] + '/assets/img/brand/macphone.png');
+                            html.find("a:last").attr("onClick", "rongDialog.init({\
+                                            type : 5,\
+                                            vedioUrl : '"+_enturl+"',\
+                                            vedioImg : '',\
+                                            vedioTitle : '"+module.name+"',\
+                                            basePath : '"+resBasePath+"'\
+                                        })"
+                            );
+                            break;
+
+                        default:
+                            html.find(".mask").empty();
+                    }
+
+                    modelUL.append(html);
+                }
+            } else {
+                modelUL.append("<div class='public-no-message'></div>");
+            }
+        }else {
+            rongDialog.init({ico : 2, type : 1, desc : data.msg});
+        }
+    }
+</script>
+</body>
+</html>

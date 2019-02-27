@@ -1,0 +1,47 @@
+<header th:fragment="copy" xmlns:th="http://www.w3.org/1999/xhtml">
+    <script th:src="${basePath}+'/assets/js/public/fav.js'"></script>
+    <script type="text/javascript" th:inline="javascript">
+        var id = dataInit.getUrlParam("id");
+        var userId = $("#temp_userId").val();
+        $().ready(function () {
+            favInit();
+        });
+        function favInit(){
+            fav.init({
+                api: [[${apiPath.initFav}]],
+                userId: userId,
+                cmuid: userId,
+                cmrefid: id,
+                cmreftyp: $("#temp_type").val()
+            });
+        }
+        $('#collection').on('click', function () {
+            var commType  = $("#commType").val();
+            if(commType == "1"){
+                fav.del({
+                    api: [[${apiPath.delFav}]],
+                    userId: userId,
+                    cmuid: userId,
+                    itemId: id,
+                    type: $("#temp_type").val()
+                });
+                setTimeout(function(){
+                    favInit()
+                },500)
+            }else{
+                fav.add({
+                    api: [[${apiPath.addFav}]],
+                    userId: userId,
+                    itemId: id,
+                    operateType: 0,
+                    toproject: "WLPX",
+                    type: $("#temp_type").val(), //活动1 场馆2 活动室3
+                    refurl: window.location.href
+                });
+                setTimeout(function(){
+                    favInit()
+                },500)
+            }
+        })
+    </script>
+</header>

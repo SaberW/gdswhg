@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link th:href="${basePath}+'/assets/style/supply_sys/login/login.css'" rel="stylesheet">
+<script type="text/javascript" th:src="${basePath}+'/assets/js/public/sly.js'"></script>
+<input type="hidden" name="history_url" th:value="${temp_url}">
+<input type="hidden" id="temp_url" th:value="${basePath}">
+<div class="wrapper clearfix">
+    <div class="content">
+        <div class="main-header clearfix">
+        <div class="login-state">
+            <div class="login" style="display: none;"><!--登录前-->
+                <div class="login-in">
+                    <a href="http://localhost:8383/res-gx/login">登录</a>
+                </div>
+            </div>
+            <div class="logon"><!--登录后-->
+                <div class="exit">
+                    <a th:href="${basePath}+'/res-gx/doLogout'">退出</a>
+                </div>
+                <div class="logon-on">
+                    <a th:href="${basePath}+'/res-center/index'">个人中心</a>
+                </div>
+                <!--<div class="logon-on">
+                    <a th:href="${basePath}+'/center/info'">消息</a>
+                </div>-->
+                <div class="search">
+                    <a href="http://localhost:8383/res-gx/index"><i class="iconfont icon-search"></i></a>
+                </div>
+            </div>
+        </div>
+        </div>
+
+
+        <div class="nav-list">
+            <ul class="clearfix">
+                <li class="active"><a th:href="${basePath}+'/res-gx/index'">首页</a></li>
+                <li><a th:href="${basePath}+'/res-cg/list'">场馆</a></li>
+               <!-- <li><a th:href="${basePath}+'/res-hd/list'">活动</a></li>-->
+                <li><a th:href="${basePath}+'/res-px/list'">培训</a></li>
+                <li><a th:href="${basePath}+'/res-jm/list'">文艺演出</a></li>
+                <li><a th:href="${basePath}+'/res-zl/list'">展览展示</a></li>
+                <li><a th:href="${basePath}+'/res-rc/list'">文艺专家</a></li>
+                <li><a th:href="${basePath}+'/res-ss/list'">文艺辅材</a></li>
+
+            </ul>
+            <!--<a class="login" id="index_login" th:href="${basePath}+'/res-gx/login'">登录</a>-->
+            <script type="text/javascript" th:inline="javascript">
+                if ([[${session.SysSessionUserKey}]] != null) {
+                    $("#index_login").text('退出');
+                    $("#index_login").attr("href",[[${basePath}]]+'/res-gx/doLogout')
+                    /*$("#index_login").text([[${session.SysSessionUserKey.contact}]]);
+                    $("#index_login").attr("href",[[${basePath}]]+'/res-center/index')*/
+                }
+            </script>
+        </div>
+        <div class="login-content">
+            <div class="regist-logo" style="margin-top: 200px"><a href="index"></a></div>
+            <div class="searchGx">
+                <div class="search-list">
+                    <input class="search-text" id="cityValue" value="选择城市" readonly>
+                    <input type="hidden" id="cityValue2" >
+                    <div class="opation-content">
+                        <div class="opation-list" id="city-list">
+                            <ul id="cityUl">
+                            </ul>
+                            <div class="scrollbar" id="scrollbar1">
+                                <div class="handle"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="search-list">
+                    <input class="search-text" id="typeValue" value="服务类型" readonly>
+                    <input type="hidden" id="typeValue2" >
+                    <div class="opation-content">
+                        <div class="opation-list" id="type-list">
+                            <ul id="fwUl">
+                            </ul>
+                            <div class="scrollbar" id="scrollbar2">
+                                <div class="handle"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" name="searchType">
+                </div>
+                <input type="text" name="searchKey" placeholder="请输入搜索关键字..." id="searchKey" onkeydown="if(event.keyCode==13) searchList();">
+                <a href="javascript:void(0)" id="search-button">搜索</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong_gx/public/footer :: copy"></div>
+<!--底部结束-->
+<script type="text/javascript" th:inline="javascript">
+    $("#search-button").on("click", function () {
+        var searchKey = $("#searchKey").val();
+        searchKey = $.trim(searchKey);
+        var city=$.trim($("#cityValue2").val());
+        var type=$("#typeValue2").val();
+        if (searchKey.length > 0) {
+            window.location.href = [[${basePath}]]+'/res-supply/list?cityValue='+encodeURI(encodeURI(city))+'&typeValue='+type+'&searchKey='+encodeURI(encodeURI(searchKey));
+        }else {
+            window.location.href = [[${basePath}]]+'/res-supply/list?cityValue='+encodeURI(encodeURI(city))+'&typeValue='+type+'&searchKey=';
+            //rongDialog.init({ico : 2, type : 1, desc : '请输入搜索关键字'});
+        }
+    });
+    function searchList() {
+        $("#search-button").click();
+    }
+    function showCitys() {
+        var cityUl = $("#cityUl");
+        $("#cityUl").html("");
+        changeProvince('广东省', null, function(cityLists){
+            cityUl.append("<li data-value=''>全省</li>");
+            for (var i in cityLists) {
+                cityUl.append("<li data-value='"+cityLists[i].name+"'>"+cityLists[i].name+"</li>");
+            }
+            if(cityLists.length>0){
+                $("#city-list").sly({
+                    itemNav: "smart",
+                    dragContent: 1,
+                    scrollBy: 1,
+                    scrollBar:"#scrollbar1",
+                    elasticBounds: 1
+                });
+            }
+        });
+        $("#city-list ul li").on("click",function () {
+            $("#cityValue").val($(this).text());
+            $("#cityValue2").val($(this).attr("data-value"));
+        });
+    }
+    function showGXType(data) {
+        var region = data.rows||[];
+        var typeList = $("#fwUl");
+        typeList.append("<li data-value=''>全部</li>");
+        for (var i in region) {
+            typeList.append("<li data-value='"+region[i].value+"'>"+region[i].name+"</li>");
+        }
+        if(region.length>0) {
+            $("#type-list").sly({
+                itemNav: "smart",
+                dragContent: 1,
+                scrollBy: 1,
+                scrollBar: "#scrollbar2",
+                elasticBounds: 1
+            });
+        }
+
+        $("#type-list ul li").on("click",function () {
+            $("#typeValue").val($(this).text());
+            $("#typeValue2").val($(this).attr("data-value"));
+        });
+    }
+
+    $(document).ready(function () {
+        showCitys();
+        dataInit.ajax({
+            api: [[${apiPath.gxTypes}]],
+            fn: showGXType
+        });
+
+        var _this = '';
+        $(".search-list").on("click",function (e) {
+            stopPropagation(e);
+            _this = $(".opation-content");
+            if($(this).find(".opation-content").hasClass('on')){
+                $(this).find(".opation-content").removeClass('on');
+            }else {
+                $(this).find(".opation-content").addClass('on');
+            }
+        })
+        function stopPropagation(e) {
+            if (e.stopPropagation)
+                e.stopPropagation();
+            else
+                e.cancelBubble = true;
+        }
+
+        $(document).on('click',function(){
+            $(".opation-content").removeClass('on');
+        });
+
+
+    })
+</script>
+</body>
+</html>

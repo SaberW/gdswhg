@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong_ytj/public/header :: copy"></head>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/infoDtl.css'">
+<script th:src="${apiPath.myvisitnote}" id="whgtongji"></script>
+<body class="mui-content">
+
+<header>
+    <div class="black"><i class="mui-icon mui-icon-arrowleft"></i> 返回</div>
+</header>
+
+<main>
+    <!--<div class="title">
+        阿三顶顶发挥规范化阿三顶顶发挥规范化
+        <div class="footer clearfix">
+            <span class="left_">来源：上嘀咕嘀咕</span>
+            <span class="right_">时间：2015-12-15</span>
+        </div>
+    </div>
+    <div class="content">
+        阿三顶顶发挥规范化,阿三，顶顶发挥规范/化阿三顶顶发挥规范化阿三顶，顶发挥规范化阿三顶顶发挥。规范化阿.三，顶顶发挥规范化阿三顶顶发挥规范/，。化阿三顶顶发挥规范化/阿三顶顶发。挥规范化阿三顶顶发挥，规范化
+    </div>-->
+</main>
+
+<script th:inline="javascript">
+    var param = {};
+    param.id = getUrlParam('id');
+    $.post( [[${rootUrl}]] + 'api/information/infoldetail' ,param,function (r) {
+        var data = JSON.parse(r);
+        if(data.code == '0'){
+            var date = new Date(data.data.clnfopttime);
+            date = date.format('yyyy-MM-dd');
+            // var dtl = data.data.clnfdetail.replace(/&amp;＃40;/g,'(');
+            // dtl = dtl.replace(/&amp;＃41;/g,')');
+            // dtl = dtl.replace(/line\-height\:([^;]*?);/g,'line-height: 30px;');
+            $('main').html(
+                '   <div class="title">' + data.data.clnftltle +
+                '       <div class="footer clearfix">' +
+                '           <span class="left_">来源：'+data.data.clnfsource+' &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span id="visitCount"></span></span>' +
+                '           <span class="right_">时间：'+date+'</span>' +
+                '       </div>' +
+                '    </div>' +
+                '    <div class="content"><div class="msg">' + data.data.clnfdetail + '</div></div>'
+            );
+            // 浏览量
+            getVisitSumCount4url(param.id, function(count){
+                $('#visitCount').text('浏览量：'+count)
+            });
+        }else{
+            mui.alert(data.msg,'提示');
+        }
+    });
+    $('.black').on('tap',function () {
+        var from = getUrlParam('from');
+        if(window.sessionStorage.back){
+            var href_ = window.sessionStorage.back;
+            window.sessionStorage.back = '';
+            return location.href = href_;
+        }
+        if(from)return location.href = 'index';
+        location.href = 'infoList';
+    })
+
+</script>
+
+</body>
+</html>

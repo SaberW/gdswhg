@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<div class="wrapper clearfix">
+    <div class="content">
+        <!--公共主头部开始-->
+        <div id="header" th:include="guangdong/public/header :: copy"></div>
+        <!--公共主头部结束-->
+        <div class="wrapper-banner">
+            <img th:src="${basePath}+'/assets/img/public/body-bg.jpg'">
+        </div>
+        <!--主体开始-->
+        <div class="container">
+            <div class="filter">
+                <div class="filter-nav">
+                    <ul class="clearfix">
+                        <li class="active"><span>非遗活动</span></li>
+                        <li><span>绝技传承</span></li>
+                        <li><span>非遗展览</span></li>
+                        <li><span>非遗培训</span></li>
+                        <li><span class="no-border">非遗收徒</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="categoryChange">
+            <div class="row clearfix">
+                <div class="title">区域：</div>
+                <div class="adrList" id="areList">
+                </div>
+            </div>
+            <div class="row clearfix">
+                <div class="title">类别：</div>
+                <div class="adrList" id="regList">
+                    <span class="item active"><a href="javascript:void(0)" onclick="setType(this, null)">全部</a></span>
+                    <span class="item"><a href="javascript:void(0)" onclick="setType(this, '4')">传统音乐</a></span>
+                    <span class="item"><a href="javascript:void(0)" onclick="setType(this, '5')">传统舞蹈</a></span>
+                    <span class="item"><a href="javascript:void(0)" onclick="setType(this, '0')">传统医药</a></span>
+                </div>
+            </div>
+            <div class="row clearfix">
+                <div class="title">类型：</div>
+                <div class="adrList" id="progress">
+                    <span class="item active"><a href="javascript:void(0)" onclick="setJd(this, '0')">全部</a></span>
+                    <span class="item"><a href="javascript:void(0)" onclick="setJd(this, '1')">演出</a></span>
+                    <span class="item"><a href="javascript:void(0)" onclick="setJd(this, '2' )">讲座</a></span>
+                    <span class="item"><a href="javascript:void(0)" onclick="setJd(this, '3' )">展览</a></span>
+                    <span class="item"><a href="javascript:void(0)" onclick="setJd(this, '4' )">赛事活动</a></span>
+                    <!--<span class="item"><a href="javascript:setJd(this, 5)">众筹失败</a></span>-->
+                </div>
+            </div>
+            <input type="hidden" id="type">
+            <input type="hidden" id="px">
+            <input type="hidden" id="searchId">
+            <input type="hidden" id="jd">
+        </div>
+        <div class="container">
+            <div class="filter">
+                <div class="filter-list">
+                    <div class="clearfix">
+                        <span class="active"><a href="javascript:void(0)" onclick="setPx(this,'0')">智能排序</a></span>
+                        <span><a href="javascript:void(0)" onclick="setPx(this,'1')">即将开始</a></span>
+                        <span><a class="no-before" href="javascript:void(0)" onclick="setPx(this,'2')">即将结束</a></span>
+                    </div>
+                </div>
+                <!--<div class="search">
+                    <input type="text" id="searchValue" onkeydown="if(event.keyCode==13) searchList();" placeholder="请输入您要搜索的内容">
+                    <a href="javascript:searchList()"><i class="iconfont icon-search"></i></a>
+                </div>-->
+            </div>
+            <div class="page-list">
+                <!--<div class="public-no-message"></div>-->
+                <div class="content-list">
+                    <ul class="clearfix" id="activityList">
+                        <li>
+                            <div class="img">
+                                <img src="http://183.131.126.132:8092/whgstatic/img/2017/201709/20170921/a768d33e5359460e910de9c08ce4425d_750_500.jpg">
+                            </div>
+                            <div class="info">
+                                <div class="title">供需标题</div>
+                                <span class="label">传统音乐</span>
+                                <p>时间：<span>2017-10-27 11:46:02</span></p>
+                                <p>地址：<span>广东省文化馆</span></p>
+                                <p>余票：<span class="ticket">50</span></p>
+                            </div>
+                            <div class="button clearfix">
+                                <a href="detail" class="just-go">立即预订</a>
+                                <div class="likes on"><i class="iconfont icon-praise_fill"></i><span>150</span></div>
+                                <div class="collection on"><i class="iconfont icon-collection_fill"></i><span>55</span></div>
+                            </div>
+                            <a href="actdetail"></a>
+                        </li>
+                        <li>
+                            <div class="img">
+                                <img src="http://183.131.126.132:8092/whgstatic/img/2017/201709/20170921/a768d33e5359460e910de9c08ce4425d_750_500.jpg">
+                            </div>
+                            <div class="info">
+                                <div class="title">供需标题</div>
+                                <span class="label">传统音乐</span>
+                                <p>时间：<span>2017-10-27 11:46:02</span></p>
+                                <p>地址：<span>广东省文化馆</span></p>
+                                <p>人数：<span class="ticket">10</span>/50</p>
+                            </div>
+                            <div class="button clearfix">
+                                <a href="detail" class="just-go">立即预订</a>
+                                <div class="age-group">年龄段：7-12岁</div>
+                            </div>
+                            <a href="traindetail"></a>
+                        </li>
+                        <li>
+                            <div class="img">
+                                <img src="http://183.131.126.132:8092/whgstatic/img/2017/201709/20170921/a768d33e5359460e910de9c08ce4425d_750_500.jpg">
+                            </div>
+                            <div class="info">
+                                <div class="title">供需标题</div>
+                                <span class="label">传统音乐</span>
+                                <p>时间：<span>2017-10-27 11:46:02</span></p>
+                                <p>地址：<span>广东省文化馆</span></p>
+                                <p>余票：<span class="ticket">50</span></p>
+                            </div>
+                            <div class="button clearfix">
+                                <a href="detail" class="just-go">立即预订</a>
+                                <div class="likes on"><i class="iconfont icon-praise_fill"></i><span>150</span></div>
+                                <div class="collection on"><i class="iconfont icon-collection_fill"></i><span>55</span></div>
+                            </div>
+                            <a href="actdetail"></a>
+                        </li>
+                        <li>
+                            <div class="img">
+                                <img src="http://183.131.126.132:8092/whgstatic/img/2017/201709/20170921/a768d33e5359460e910de9c08ce4425d_750_500.jpg">
+                            </div>
+                            <div class="info">
+                                <div class="title">供需标题</div>
+                                <span class="label">传统音乐</span>
+                                <p>时间：<span>2017-10-27 11:46:02</span></p>
+                                <p>地址：<span>广东省文化馆</span></p>
+                                <p>人数：<span class="ticket">10</span>/50</p>
+                            </div>
+                            <div class="button clearfix">
+                                <a href="detail" class="just-go">立即预订</a>
+                                <div class="age-group">年龄段：7-12岁</div>
+                            </div>
+                            <a href="traindetail"></a>
+                        </li>
+                        <li>
+                            <div class="img">
+                                <img src="http://183.131.126.132:8092/whgstatic/img/2017/201709/20170921/a768d33e5359460e910de9c08ce4425d_750_500.jpg">
+                            </div>
+                            <div class="info">
+                                <div class="title">供需标题</div>
+                                <span class="label">传统音乐</span>
+                                <p>时间：<span>2017-10-27 11:46:02</span></p>
+                                <p>地址：<span>广东省文化馆</span></p>
+                                <p>余票：<span class="ticket">50</span></p>
+                            </div>
+                            <div class="button clearfix">
+                                <a href="detail" class="just-go">立即预订</a>
+                                <div class="likes on"><i class="iconfont icon-praise_fill"></i><span>150</span></div>
+                                <div class="collection on"><i class="iconfont icon-collection_fill"></i><span>55</span></div>
+                            </div>
+                            <a href="actdetail"></a>
+                        </li>
+                        <li>
+                            <div class="img">
+                                <img src="http://183.131.126.132:8092/whgstatic/img/2017/201709/20170921/a768d33e5359460e910de9c08ce4425d_750_500.jpg">
+                            </div>
+                            <div class="info">
+                                <div class="title">供需标题</div>
+                                <span class="label">传统音乐</span>
+                                <p>时间：<span>2017-10-27 11:46:02</span></p>
+                                <p>地址：<span>广东省文化馆</span></p>
+                                <p>人数：<span class="ticket">10</span>/50</p>
+                            </div>
+                            <div class="button clearfix">
+                                <a href="detail" class="just-go">立即预订</a>
+                                <div class="age-group">年龄段：7-12岁</div>
+                            </div>
+                            <a href="traindetail"></a>
+                        </li>
+                        <li>
+                            <div class="img">
+                                <img src="http://183.131.126.132:8092/whgstatic/img/2017/201709/20170921/a768d33e5359460e910de9c08ce4425d_750_500.jpg">
+                            </div>
+                            <div class="info">
+                                <div class="title">供需标题</div>
+                                <span class="label">传统音乐</span>
+                                <p>时间：<span>2017-10-27 11:46:02</span></p>
+                                <p>地址：<span>广东省文化馆</span></p>
+                                <p>余票：<span class="ticket">50</span></p>
+                            </div>
+                            <div class="button clearfix">
+                                <a href="detail" class="just-go">立即预订</a>
+                                <div class="likes on"><i class="iconfont icon-praise_fill"></i><span>150</span></div>
+                                <div class="collection on"><i class="iconfont icon-collection_fill"></i><span>55</span></div>
+                            </div>
+                            <a href="actdetail"></a>
+                        </li>
+                        <li>
+                            <div class="img">
+                                <img src="http://183.131.126.132:8092/whgstatic/img/2017/201709/20170921/a768d33e5359460e910de9c08ce4425d_750_500.jpg">
+                            </div>
+                            <div class="info">
+                                <div class="title">供需标题</div>
+                                <span class="label">传统音乐</span>
+                                <p>时间：<span>2017-10-27 11:46:02</span></p>
+                                <p>地址：<span>广东省文化馆</span></p>
+                                <p>人数：<span class="ticket">10</span>/50</p>
+                            </div>
+                            <div class="button clearfix">
+                                <a href="detail" class="just-go">立即预订</a>
+                                <div class="age-group">年龄段：7-12岁</div>
+                            </div>
+                            <a href="traindetail"></a>
+                        </li>
+                    </ul>
+                </div>
+                <!--分页开始 -->
+                <div class="green-black" id="artPagging" style="margin-bottom: 40px"></div>
+                <!--分页结束-->
+            </div>
+        </div>
+        <!--主体结束-->
+    </div>
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong/public/footer :: copy"></div>
+<!--底部结束-->
+<a class="to-top"></a>
+<!--<script type="text/javascript" th:inline="javascript">
+    $(document).ready(function () {
+        showAre($.cookie("cityid"));
+//        dataPage();
+    })
+
+    function dataPage(page, rows) {
+        var params_page = page || 1;
+        var params_rows = rows || 12;
+        var params = {
+            page: params_page,
+            pageSize: params_rows,
+            cultid: $.cookie('cultid'),
+            content: $("#searchId").val(),
+            area: $("#area").val(), //区域
+            city: $("#city").val(), //市
+            province: $("#province").val(), //省
+            etype: $("#type").val(),
+            district: $("#area").val(),
+            px: $("#px").val(),
+            jd: $("#jd").val()
+        }
+        dataInit.ajax({
+            api: [[${apiPath.zcProjectList}]],
+            params: params,
+            fn: function (data) {
+                showActivityList(data);
+                dataInit.pageInit('artPagging', params_page, params_rows, data.total, dataPage);
+            }
+        })
+    }
+
+    function showActivityList(data) {
+        $("#activityList").html("");
+        var __success = [[${basePath}]] + '/assets/img/zcproject/success.png';
+        var __fail = [[${basePath}]] + '/assets/img/zcproject/fail.png';
+        var __underway = [[${basePath}]] + '/assets/img/zcproject/underway.png';
+        var act = data.rows;
+        var dataNow = data.data.now;
+        var actList = $("#activityList");
+        if (data.code == 0) {
+            if (act.length > 0) {
+                for (var i in act) {
+                    //判断众筹状态
+                    var isOverdueSize = isOverdue(act[i].issuccess, act[i].timeend, dataNow);
+                    var _zcState = '';
+                    switch (isOverdueSize) {
+                        case 0:
+                            _zcState = '<img src="' + __fail + '">';
+                            break;
+                        case 1:
+                            _zcState = '<img src="' + __success + '">';
+                            break;
+                        case 2:
+                            _zcState = '<img src="' + __underway + '">';
+                            break;
+                        case 3:
+                            _zcState = '';
+                            break;
+                    }
+                    //获得众筹达成率
+                    var _DCl = parseInt((act[i].orderCount / act[i].nummin) * 100);
+                    _DCl = _DCl > 100 ? 100 : _DCl;
+                    //获得众筹剩余份数
+                    var _ZC_Max = act[i].numsum - act[i].orderCount;
+                    _ZC_Max = _ZC_Max < 0 ? 0 : _ZC_Max;
+                    //获取剩余天数
+                    var SY_Days = getDays(act[i].timeend, dataNow, act[i].timestart);
+                    //判断众筹分类：4活动，5培训，0其他
+                    var _href_detail = '';
+                    if (act[i].etype == 4) {
+                        _href_detail = 'actdetail?id=' + act[i].id;
+                    } else if (act[i].etype == 5) {
+                        _href_detail = 'traindetail?id=' + act[i].id;
+                    } else if (act[i].etype == 0) {
+                        _href_detail = 'otherdetail?id=' + act[i].id;
+                    } else {
+                        _href_detail = 'otherdetail?id=' + act[i].id;
+                    }
+                    var imgPath = [[${imgPath}]] + dataInit.getSmallImage(act[i].imgurl);
+                    actList.append(
+                        '<li>' +
+                        '    <div class="zc-state">' + _zcState + '</div>' +
+                        '    <div class="img">' +
+                        '        <a href="' + _href_detail + '">' +
+                        '           <img src="' + imgPath + '">' +
+                        '        </a>' +
+                        '    </div>' +
+                        '    <div class="info">' +
+                        '        <div class="title">' + act[i].title + '</div>' +
+                        '        <div class="progress-bar"><span data-progress-bar="' + _DCl + '"></span></div>' +
+                        '        <div class="progress-table clearfix">' +
+                        '            <div class="progress-table-list">' +
+                        '                <span>' + _DCl + '%</span>' +
+                        '                <span class="text">达成率</span>' +
+                        '            </div>' +
+                        '            <div class="progress-table-list">' +
+                        '                <span>' + _ZC_Max + '</span>' +
+                        '                <span class="text">剩余份数</span>' +
+                        '            </div>' +
+                        '            <div class="progress-table-list no-border">' +
+                        '                <span>' + SY_Days + '</span>' +
+                        '                <span class="text">剩余时间</span>' +
+                        '            </div>' +
+                        '        </div>' +
+                        '    </div>' +
+                        '    <a href="' + _href_detail + '"></a>' +
+                        '</li>'
+                    );
+                }
+            } else {
+                actList.html("<div class='public-no-message'></div>");
+            }
+            setTimeout(function () {
+                //进度条动画
+                $(".progress-bar span").each(function () {
+                    var bar_size = $(this).attr("data-progress-bar");
+                    $(this).css("width", bar_size + "%");
+                })
+            }, 200)
+        } else {
+            rongDialog.init({ico: 2, type: 1, desc: data.msg});
+        }
+    }
+
+    //判断众筹是否过期
+    function isOverdue(issuccess, timeend, dataNow) {
+        if (dataNow > timeend && issuccess != 1) {
+            return 0;//已结束
+        } else if (dataNow < timeend && issuccess != 1) {
+            return 2;//众筹中
+        } else if (issuccess == 1) {
+            return 1;//已成功
+        } else {
+            return 3;//其他状态
+        }
+    }
+
+    //获取剩余天数
+    function getDays(timeend, _dataNow, timestart) {
+        if (_dataNow > timeend) {
+            return '已结束';
+        } else if (_dataNow > timestart) {
+            return moment(timeend).fromNow(true);
+        } else {
+            return '未开始';
+        }
+    }
+    function setActive(dom) {
+        $(dom).parent('span').addClass("active").siblings().removeClass("active");
+    }
+
+    function setType(dom, id) {
+        $("#type").val(id);
+        dataPage();
+        setActive(dom);
+    }
+
+    function setJd(dom, id) {
+        $("#jd").val(id);
+        dataPage();
+        setActive(dom);
+    }
+
+    function setPx(dom, id) {
+        $("#px").val(id);
+        dataPage();
+        setActive(dom);
+    }
+    function searchList() {
+        if ($("#searchValue").val()) {
+            var searchValue = removeHTMLTag($("#searchValue").val());
+            $("#searchId").val(searchValue);
+            dataPage();
+        } else {
+            $("#searchId").val("");
+            dataPage();
+        }
+    }
+    //给消息过滤HTML标签
+    function removeHTMLTag(str) {
+        str = str.replace(/<\/?[^>]*>/g, ''); //去除HTML tag
+        str = str.replace(/[ | ]*\n/g, '\n'); //去除行尾空白
+        //str = str.replace(/\n[\s| | ]*\r/g,'\n'); //去除多余空行
+        str = str.replace(/&nbsp;/ig, '');//去掉&nbsp;
+        return str;
+    }
+
+</script>-->
+</body>
+</html>

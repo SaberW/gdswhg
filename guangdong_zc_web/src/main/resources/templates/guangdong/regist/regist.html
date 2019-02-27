@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link th:href="${basePath}+'/assets/style/regist/regist.css'" rel="stylesheet">
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/rong.validate.js'"></script>
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/rong.message.js'"></script>
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/jquery.md5.js'"></script>
+<div id="step-1">
+    <div class="regist-logo"><a href="index"></a></div>
+    <ul class="crumbs crumbs-1st clearfix">
+        <li class="step-1">1. 基本资料<em class="arrow"></em></li>
+        <li class="step-2">2. 完善资料<em class="arrow"></em></li>
+        <li class="step-3 last">3. 注册成功</li>
+    </ul>
+    <div class="main">
+        <form action="regist-2" method="post" id="regist">
+            <div class="main-cont">
+                <div class="reLoad none"><a href="javascript:void(0)" onClick="history.go(0);">重新注册</a></div>
+                <!--<div class="other-reg">或<a href="javascript:void(0)">邮箱注册</a></div>-->
+                <dl class="phoneType clearfix">
+                    <dt class="float-left">手机号</dt>
+                    <dd class="float-left">
+                        <input class="login-input in-txt" id="phoneNum" name="phoneNum" placeholder="输入11位手机号码"
+                               maxlength="11"
+                               required>
+                        <em id="phone_msg"></em>
+                    </dd>
+                </dl>
+                <dl class="phoneCode clearfix">
+                    <dt class="float-left">手机验证码</dt>
+                    <dd class="float-left">
+                        <input class="in-txt inputPcode" placeholder="输入手机验证码" minlength="6" maxlength="6" id="code"
+                               name="code" required>
+                        <em></em>
+                        <div class="numAdd phoneNum none"><span>120</span>秒后可重新发送</div>
+                        <div class="numAdd postCode sendCodeP" id="sendCode">发送验证码</div>
+                    </dd>
+                </dl>
+                <dl class="clearfix">
+                    <dt class="float-left">密码</dt>
+                    <dd class="float-left">
+                        <input class="in-txt" minlength="6" maxlength="18" placeholder="6-18位数字字母符号组合" type="password"
+                               id="password" name="password" required>
+                        <em></em>
+                    </dd>
+                </dl>
+                <dl class="clearfix">
+                    <dt class="float-left">确认密码</dt>
+                    <dd class="float-left">
+                        <input class="in-txt" maxlength="18" placeholder="确认密码" type="password" id="password_again"
+                               name="password_again">
+                        <em></em>
+                    </dd>
+                </dl>
+                <dl class="clearfix">
+                    <dt class="float-left">&nbsp;</dt>
+                    <dd class="float-left">
+                        <label><input type="checkbox" id="agree" name="agree" class="ck_agree"> 认真阅读并接受<a th:href="${basePath}+'/readme'" target="_blank" style="text-decoration: underline">《会员注册条款》</a></label><em></em>
+                        <!--<div class="abBtn">认真阅读并同意《会员注册条款》</div>
+                        <div class="float-left readClause">
+                            <div class="readCont none">
+                                <div class="closeRead"></div>
+                                <h4>《会员注册条款》</h4>
+                                <div th:include="regist/readme :: copy"></div>
+                                <div class="agree">
+                                    <label><input type="checkbox" id="agree" name="agree" class="ck_agree" checked>我已阅读并接受《会员注册条款》</label>
+                                </div>
+                            </div>
+                        </div>-->
+                    </dd>
+                </dl>
+                <dl class="clearfix">
+                    <dt class="float-left">&nbsp;</dt>
+                    <dd class="float-left">
+                        <input class="submit-1 none" type="submit" value="Submit">
+                        <div class="goNext goNext-1 float-left">下一步</div>
+                    </dd>
+                </dl>
+            </div>
+            <input type="hidden" id="temp_pid" name="temp_pid">
+            <input type="hidden" id="temp_id" name="temp_id">
+        </form>
+    </div>
+    <div class="mask none"></div>
+</div>
+
+
+<!-- core public JavaScript -->
+<script type="text/javascript" th:inline="javascript">
+    //会员注册条款展开
+    $('.abBtn').on(
+        'click',
+        function () {
+            $(this).fadeOut(300, function () {
+                $('.mask').fadeIn(300);
+                $(this).next('div').stop(1, 0).animate({
+                    left: "-100px",
+                    bottom: "0px",
+                    height: "451px",
+                    width: "800px"
+                }, function () {
+                    $(this).find('.readCont').fadeIn(500);
+                });
+            });
+        }
+    );
+    //会员注册条款关闭
+    $('.ck_agree,.closeRead').on(
+        'click',
+        function () {
+            $('.abBtn').hide(300, function () {
+                $('.readCont').hide(0, function () {
+                    $('.readClause').stop(1, 0).animate({left: "0px", bottom: "0px", height: "40px", width: "311px"});
+                    setTimeout(function () {
+                        $('.abBtn').fadeIn(300);
+                    }, 400);
+                });
+            });
+            $('.mask').fadeOut(300);
+        }
+    );
+    //手机号格式
+    $.validator.addMethod("phoneType", function (value) {
+        var reg = /^0?(13[0-9]|15[012356789]|17[013678]|18[0-9]|14[57])[0-9]{8}$/;
+        return reg.test(value);
+    }, '请输入正确的手机号码');
+    //密码格式
+    $.validator.addMethod("pwdType", function (value) {
+        var reg = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$/;
+        return reg.test(value);
+    }, '密码必须由6-18位的数字或字母组成');
+    //手机号格式
+    $(document).ready(function () {
+        var validator = $("#regist").validate({
+            errorElement: "em",
+            //debug:true,
+            rules: {
+                agree: "required",
+                phoneNum: "required",
+                phoneNum: "phoneType",
+                password: "required",
+                password: "pwdType",
+                password_again: {
+                    equalTo: "#password"
+                }
+            },
+            messages: {
+                agree: {
+                    required: "请认真阅读并同意《会员注册条款》"
+                },
+                phoneNum: {
+                    required: "请输入您的手机号码"
+                },
+                code: {
+                    required: "请输入手机验证码"
+                },
+                oldPassword: {
+                    required: "请输入您的登录密码",
+                    minlength: "密码长度不能小于6个字符"
+                },
+                password: {
+                    required: "请输入您的新登录密码",
+                    minlength: "密码长度不能小于6个字符"
+                },
+                password_again: {
+                    equalTo: "两次密码输入不一致"
+                }
+            },
+            submitHandler: function (form) {
+                //alert(2);
+                $('#password').val($.md5($('#password').val()));
+                $('#password_again').val($.md5($('#password_again').val()));
+                var pwd = $('#password').val();
+                var user = $('#phoneNum').val();
+                //验证验证码是否通过
+                dataInit.ajax({
+                    api: [[${apiPath.userRegister}]],
+                    params: {
+                        mobile: user,
+                        password: pwd,
+                        code : $("#code").val()
+                    },
+                    //
+                    fn: function (data) {
+                        //form.submit();
+                        //console.log(data);
+                        if(data.code == 0){
+                            $("#temp_id").val(data.data.id);
+                            form.submit();
+                        }else{
+                            rongDialog.init({
+                                ico: 2,
+                                type: 1,
+                                desc: data.msg || '注册失败',
+                                nextFn: function () {
+                                    $("#phoneNum").onfocus;
+                                }
+                            });
+                        }
+
+                    }
+                })
+            }
+        });
+    });
+
+    $(".goNext-1").on("click", function () {
+        $(".submit-1").click();
+    })
+
+
+    $("#sendCode").on("click", function () {
+        var phone = $("#phoneNum").val();
+        var reg = /^0?(13[0-9]|15[012356789]|17[013678]|18[0-9]|14[57])[0-9]{8}$/;
+        //前端验证手机号是否真实
+        if (reg.test(phone)) {
+            dataInit.ajax({
+                api: [[${apiPath.hasPhone}]],
+                params: {"phone": phone},
+                fn: function (data) {
+                    if (data.data != 0) {
+                        rongDialog.init({
+                            ico: 2,
+                            type: 1,
+                            desc: data.msg || '该手机号已注册',
+                            nextFn: function () {
+                                $("#phoneNum").onfocus;
+                            }
+                        });
+                    } else { //手机号验证能过发送短信息
+                        dataInit.ajax({
+                            api: [[${apiPath.sendSmsCode}]],
+                            params: {
+                                phone: phone
+                            },
+                            fn: function (data) {
+                                //$("#temp_pid").val(data.temp_pid);
+                                //alert($("#temp_pid").val());
+                                if (data.code != 0) {
+                                    rongDialog.init({
+                                        ico: 2,
+                                        type: 1,
+                                        desc: data.msg,
+                                        nextFn: function () {
+                                            $("#phoneNum").onfocus;
+                                        }
+                                    });
+                                } else {
+                                    $("#phoneNum").addClass("locking").attr("readonly", "readonly");
+                                    numAdd();
+                                }
+                            }
+                        })
+                    }
+                }
+            });
+        } else {
+            if ($("body").find("#phoneNum-error").length == 0) {
+                rongDialog.init({
+                    ico: 2,
+                    type: 1,
+                    desc: '请输入正确的手机号码',
+                    nextFn: function () {
+                        $("#phoneNum").focus();
+                    }
+                });
+            }
+        }
+    })
+    //时间重置
+    function numAdd() {
+        $('.postCode').hide();
+        $('.phoneNum').show();
+        function loadTime() {
+            var countdown = $('.phoneNum span').html();
+            if (countdown == 0) {
+                $('.phoneNum').hide();
+                $('.phoneNum span').html(120);
+                $('.postCode').show();
+                return;
+            }
+            countdown--;
+            $('.phoneNum span').html(countdown);
+            setTimeout(function () {
+                loadTime()
+            }, 1000)
+        }
+
+        loadTime();
+    }
+</script>
+</body>
+</html>

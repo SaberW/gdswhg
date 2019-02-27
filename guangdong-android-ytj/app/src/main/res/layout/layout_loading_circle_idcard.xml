@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_scan"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/tv_option_remark"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/black_33"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:text="@string/sign_option"/>
+
+    <FrameLayout
+        android:id="@+id/fl_time"
+        android:layout_below="@id/tv_option_remark"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/iv_circle_loading"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:src="@mipmap/circle_loading_icon"
+            android:layout_gravity="center"/>
+
+        <TextView
+            android:id="@+id/tv_time"
+            android:gravity="center"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="70dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="32sp"
+            android:text="30``"
+            android:textColor="@color/red_ac1"/>
+
+        <TextView
+            android:gravity="center"
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout_marginBottom="70dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:text="倒 计 时"
+            android:textColor="@color/black_33"/>
+    </FrameLayout>
+
+    <Button
+        android:id="@+id/btn_start_scan"
+        android:layout_width="150dp"
+        android:layout_height="60dp"
+        android:textColor="@color/red_ac1"
+        android:textSize="20sp"
+        android:text="@string/ticket_click_start"
+        android:gravity="center"
+        android:background="@drawable/selector_ticket_start_btn_bg"
+        android:layout_below="@id/tv_option_remark"
+        android:layout_marginTop="40dp"
+        android:layout_centerHorizontal="true"
+        />
+
+
+    <TextView
+        android:id="@+id/tv_result_remark"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:textColor="@color/gray_61"
+        android:gravity="center"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/btn_start_scan"
+        android:layout_marginTop="30dp"
+        android:text="@string/sign_result_remark"/>
+
+</RelativeLayout>

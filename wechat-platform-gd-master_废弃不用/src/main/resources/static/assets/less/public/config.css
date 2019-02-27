@@ -1,0 +1,49 @@
+@charset "UTF-8";
+/* ==CONFIG:=========================================================
+  $__version:       1.0.0
+  $__author:        JackyZeng
+  $__help:          zrongs@vip.qq.com
+  $__website:       http://hn.creatoo.cn
+  -------------------------------------------------------------------*/
+@import "../../fonts/iconfont.css";
+.li-flex {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+.clearfix:after {
+  content: ".";
+  display: block;
+  clear: both;
+  visibility: hidden;
+  line-height: 0;
+  height: 0;
+  font-size: 0;
+}
+.none {
+  display: none;
+}
+.no-padding-0 {
+  padding: 0!important;
+}
+.float-left {
+  float: left !important;
+}
+.float-right {
+  float: right !important;
+}
+ul,
+li {
+  list-style: none;
+  padding: 0px;
+  margin: 0px;
+}
+.a {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: block;
+  left: 0px;
+  top: 0px;
+  z-index: 10;
+}

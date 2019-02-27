@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong_gx/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/style/public/detail.css'">
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/rong.validate.js'"></script>
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/rong.message.js'"></script>
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/jquery.md5.js'"></script>
+<link rel="stylesheet" href="https://g.alicdn.com/de/prismplayer/2.1.0/skins/default/aliplayer-min.css" />
+<script type="text/javascript" src="https://g.alicdn.com/de/prismplayer/2.1.0/aliplayer-min.js"></script>
+<div class="wrapper clearfix">
+    <div class="content">
+        <!--公共主头部开始-->
+        <div id="header" th:include="guangdong_gx/public/header :: copy"></div>
+        <!--公共主头部结束-->
+        <!--主体开始-->
+        <div class="sys-crumbs">
+            <span><a th:href="${basePath}+'/'">首页</a></span>
+            <i class="icon iconfont icon-enter"></i>
+            <span><a th:href="${basePath}+'list'">在线课程</a></span>
+            <i class="icon iconfont icon-enter"></i>
+            <span><a id="title"><!--课程标题--></a></span>
+            <i class="icon iconfont icon-enter"></i>
+            <span class="active">在线播放</span>
+        </div>
+        <div class="res-main-info" style="margin-bottom:0px; height:650px;">
+            <div class="main-info">
+                <h1><span id="title-2"><!--长沙麻将大赛总决赛视频录播--></span><em id="liveState"><!--正在直播--></em></h1>
+                <div class="info">
+                    开播时间：<span id="livestarttime"><!--2017-09-28 18:00--></span>
+                    <div class="other-cont clearfix">
+                        <div class="sns-cont" title="分享">
+                            分享到
+                            <a class="jiathis_button_weixin fxweix" href="javascript:void(0);" target="_blank" title="分享到微信"><i class="icon iconfont icon-wechat"></i></a>
+                            <a class="fxweibo"href="http://service.weibo.com/share/share.php?title=江门市文化馆活动A&amp;url=http%3A//localhost%3A8888/hd/detail%3Fid%3D170919-835948534&amp;source=bookmark&amp;appkey=2992571369&amp;pic=http://192.168.0.144:8080/whgstatic/img/2017/201709/20170919/8ec7272e58764657a73abfa0134d5561_740_555.jpg&amp;ralateUid=" target="_blank"><i class="icon iconfont icon-xinlang"></i></a>
+                            <a class="fxqq" href="http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=http%3A%2F%2Flocalhost%3A8888%2Fhd%2Fdetail%3Fid%3D170919-835948534&amp;title=江门市文化馆活动A&amp;pics=http://192.168.0.144:8080/whgstatic/img/2017/201709/20170919/8ec7272e58764657a73abfa0134d5561_740_555.jpg&amp;summary=" target="_blank"><i class="icon iconfont icon-kongjian"></i></a>
+                        </div>
+                        <!--<div class="fav-vote-cont clearfix">
+                            <div class="sys-vote" title="点赞"><i class="icon iconfont icon-praise icon-praise_fill" id="good"></i><span>0</span></div>
+                            <div class="sys-fav" title="收藏"><i class="icon iconfont icon-collection icon-collection_fill" id="collection"></i><span>0</span></div>
+                            <div th:include="guangdong_gx/public/fav :: copy"></div>
+                            <div th:include="guangdong_gx/public/voteup :: copy"></div>
+                            &lt;!&ndash;temp_type 的 值需和 WJQ 对接&ndash;&gt;
+                            <input type="hidden" id="temp_type" value="16">
+                            <input type="hidden" id="commType">
+                        </div>-->
+                    </div>
+                </div>
+                <div class="res-cont" style="height:570px;">
+                    <div class="live-cont" id="liveContainer" style="width: 985px;">
+                    </div>
+                    <div class="live-catalog" style="width: 215px;">
+                        <ul id="courses">
+                            <!--<li class="active">
+                                <h2>长沙麻将大赛总决赛视频录播<em>正在直播</em></h2>
+                                <p>开播时间：<span>2017-09-28 18:00</span></p>
+                            </li>
+                            <li>
+                                <h2>长沙麻将大赛总决赛视频录播<em class="loading">直播未开始</em></h2>
+                                <p>开播时间：<span>2017-09-28 18:00</span></p>
+                            </li>
+                            <li>
+                                <h2>长沙麻将大赛总决赛视频录播<em class="loading">直播未开始</em></h2>
+                                <p>开播时间：<span>2017-09-28 18:00</span></p>
+                            </li>
+                            <li>
+                                <h2>长沙麻将大赛总决赛视频录播<em class="end">直播已结束</em></h2>
+                                <p>开播时间：<span>2017-09-28 18:00</span></p>
+                            </li>
+                            <li>
+                                <h2>长沙麻将大赛总决赛视频录播<em class="end">直播已结束</em></h2>
+                                <p>开播时间：<span>2017-09-28 18:00</span></p>
+                            </li>-->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--主体结束-->
+    </div>
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong_gx/public/footer :: copy"></div>
+<!--底部结束-->
+<a class="to-top"></a>
+<script type="text/javascript" th:inline="javascript">
+    var userId = $("#temp_userId").val();
+    var itemId = dataInit.getUrlParam('id');
+    var basePath = [[${basePath}]];
+
+    //loadDetail
+    function loadDetail() {
+        dataInit.ajax({
+            api: [[${apiPath.traliveInfo}]],
+            params: {id:itemId, userId:userId},
+            fn: function(data){
+                createModelHtml(data);
+            }
+        });
+    }
+
+    //createModelHtml
+    function createModelHtml(data) {
+        if(data.code == 0) {
+            var model = data.data;
+            var title = model.title;
+            $('#title, #title-2').text(title);
+            $('#title').attr('href', basePath+'/'+[[${cultsite}]]+'/zxkc/detail?id='+model.traid);
+
+            var canSee = model.canSee;
+            //不能观看, 跳转到在线课程详情
+            if(!canSee){
+                window.location.href = basePath +'/'+[[${cultsite}]]+ '/zxkc/detail?id='+model.traid;
+            }
+            //视频插放器处理
+            var liveUrl = model.liveUrl;
+            var backUrl = model.backUrl;
+
+            //listState 0-未开始, 1-正在直播, 2-已结束
+            var listState = model.listState;
+            if(listState == 0){
+                $('#liveState').text('未开始');
+            }else if(listState == 1){
+                $('#liveState').text('正在直播');
+            }else if(listState == 2){
+                if(typeof(backUrl) != 'undefined' && backUrl.length > 10){
+                    $('#liveState').text('精彩回顾');
+                }else{
+                    $('#liveState').text('已结束');
+                }
+            }
+            var starttime = moment(model.starttime).format('YYYY-MM-DD HH:mm');
+            var endtime = moment(model.endtime).format('YYYY-MM-DD HH:mm');
+            $('#livestarttime').text(starttime);
+            showLive(listState, liveUrl, backUrl, starttime, endtime);
+
+            //调分享接口
+            var trainimg = data.imgPath+model.trainimg;
+            dataInit.share(title, trainimg);
+
+            //课程列表
+            var courses = model.courses || [];
+            var courses_html = '';
+            for(var i=0; i<courses.length; i++){
+                var row = courses[i];
+                var title = row.title+"（第"+(i+1)+"课）";
+                var listState = row.listState;
+                var listStateTxt = '', listStateCls='', liCls='';
+                if(listState == 0){
+                    listStateTxt = '未开始';
+                    listStateCls = 'loading';
+                }else if(listState == 1){
+                    listStateTxt = '正在直播';
+                    //liCls = 'active';
+                }else if(listState == 2){
+                    listStateTxt = '已结束';
+                    listStateCls = 'end';
+                }
+                var starttime = moment(row.starttime).format('YYYY-MM-DD HH:mm');
+                if( row.id == model.id ){
+                    liCls = 'active';
+                }
+                courses_html += '<li data-id="'+row.id+'" class="'+liCls+'"><h2>'+title+'<em class="'+listStateCls+'">'+listStateTxt+'</em></h2><p>开播时间：<span>'+starttime+'</span></p></li>';
+            }
+            $('#courses').html(courses_html);
+        }
+    }
+
+    /**
+     * 根据状态显示视频
+     * @param listState 0-未开始, 1-正在直播, 2-已结束
+     * @param liveUrl 直播地址
+     * @param backUrl 回放地址
+     */
+    function showLive(listState, liveUrl, backUrl, starttime, endtime){
+        var liveContainer = $('#liveContainer');
+
+        //插放器地址
+        var sourceUrl = false;
+        if(listState == 0){//显示未开始图片
+            var html = ''+
+            '<div class="live-not-started">'+
+            '        <i class="icon iconfont icon-xinhaota1"></i>'+
+            '        <h2>直播尚未开始</h2>'+
+            '        <p>直播时间：<span>'+starttime+'</span></p>'+
+            '</div>';
+            liveContainer.append(html);
+        }else if(listState == 1 ){//视频直播
+            sourceUrl = liveUrl;
+        }else if(listState == 2){//视频回放
+            if(typeof(backUrl) != 'undefined' && backUrl.length > 10){
+                sourceUrl = backUrl;
+            }else{
+                var html = ''+
+                    '<div class="live-not-started">'+
+                    '        <i class="icon iconfont icon-xinhaota1"></i>'+
+                    '        <h2>直播已结束</h2>'+
+                    '        <p>结束时间：<span>'+endtime+'</span></p>'+
+                    '</div>';
+                liveContainer.append(html);
+            }
+        }
+
+        if(sourceUrl){
+            liveContainer.append('<div id="J_prismPlayer" class="prism-player"></div>');
+            var player = new Aliplayer({
+                id: "J_prismPlayer", // 容器id
+                source: sourceUrl,
+                autoplay: false,    //自动播放：否
+                width: "100%",       // 播放器宽度
+                height: "570px"      // 播放器高度
+            });
+        }
+    }
+
+    function testVideo(){
+        var liveContainer = $('#liveContainer');
+        liveContainer.append('<div id="J_prismPlayer" class="prism-player"></div>');
+        var player = new Aliplayer({
+            id: "J_prismPlayer", // 容器id
+            source: 'http://live.dgswhg.com/dgswhg/live1.flv',// 视频地址
+            autoplay: false,    //自动播放：否
+            width: "100%",       // 播放器宽度
+            height: "570px"      // 播放器高度
+        });
+    }
+
+    //程序初始化
+    $(function () {
+        loadDetail();
+
+        $('#courses').on('click','li',function () {
+            var id = $(this).attr('data-id');
+            location.href= [[${basePath}]]+'/'+[[${cultsite}]]+'/zxkc/live?id='+id;
+        })
+        //testVideo();
+    });
+</script>
+</body>
+</html>

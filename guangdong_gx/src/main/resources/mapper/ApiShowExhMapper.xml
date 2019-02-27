@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.creatoo.hn.dao.mapper.WhgShowExhMapper">
+
+    <select id="selInsShowExhList" resultType="hashmap">
+        SELECT
+        se.*,
+        cult.name as cultidname
+        FROM
+        whg_show_exh se,whg_sys_cult cult
+        WHERE
+        se.state = 6   AND cult.id= se.cultid
+        <if test="cultid != null">
+            AND se.cultid IN
+            <foreach item="item" index="index" collection="cultid" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+            <if test="type != null and type!=''.toString()">
+                AND se.etype LIKE "%"#{type}"%"
+            </if>
+        </if>
+        <if test="cultid == null ">
+
+            <if test="type != null and type!=''.toString()">
+                AND se.etype LIKE "%"#{type}"%"
+            </if>
+        </if>
+
+        <if test="deptid != null">
+            AND se.deptid IN
+            <foreach item="item" index="index" collection="deptid" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="title != null and title!=''.toString()">
+            AND se.title LIKE "%"#{title}"%"
+        </if>
+        <if test="province != null and province!=''.toString()">
+            AND se.province = #{province}
+        </if>
+        <if test="city != null and city!=''.toString()">
+            AND se.city = #{city}
+        </if>
+        <if test="area != null and area!=''.toString()">
+            AND se.area = #{area}
+        </if>
+        <if test="psprovince!=null and psprovince!=''.toString()">
+            and se.psprovince = #{psprovince}
+        </if>
+        <if test="pscity!=null and pscity!=''.toString()">
+            and se.pscity LIKE "%"#{pscity}"%"
+        </if>
+        ORDER BY
+        statemdfdate DESC
+    </select>
+
+
+    <select id="selectShowExhById" resultType="hashmap">
+        SELECT
+        se.*,
+        cult.name as cultname
+        FROM
+        whg_show_exh se,whg_sys_cult cult
+        WHERE
+        se.state = 6 AND cult.id = se.cultid
+        AND se.id = #{id}
+    </select>
+
+
+    <select id="selectExhRecommend" resultType="hashmap">
+        select se.*
+        from whg_show_exh se
+        where se.state = 6
+        <if test="cultid!=null ">
+            AND se.cultid IN
+            <foreach item="item" index="index" collection="cultid" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="id!=null and id!=''.toString">
+            and se.id != #{id}
+        </if>
+        order by se.statemdfdate DESC
+    </select>
+
+
+</mapper>

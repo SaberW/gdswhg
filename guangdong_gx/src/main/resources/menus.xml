@@ -1,0 +1,622 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configs>
+    <opts>
+        <opt id="view">查看</opt>
+        <opt id="add">添加</opt>
+        <opt id="edit">编辑</opt>
+        <opt id="del">删除</opt>
+        <opt id="undel">撤销回收</opt>
+        <opt id="order">订单管理</opt>
+        <opt id="on">启用</opt>
+        <opt id="off">停用</opt>
+        <opt id="reset">密码重置</opt>
+        <opt id="publish">发布</opt>
+        <opt id="bigbannered">推荐上大首页</opt>
+        <opt id="bigbanneroff">取消上大首页</opt>
+        <opt id="publishoff">撤销发布</opt>
+        <opt id="checkgo">提交审核</opt>
+        <opt id="checkon">审核通过</opt>
+        <opt id="checkoff">审核打回</opt>
+        <opt id="recovery">回收</opt>
+        <opt id="recommend">推荐</opt>
+        <opt id="recommendoff">撤销推荐</opt>
+        <opt id="retime">时段管理</opt>
+        <opt id="reserve">预定管理</opt>
+        <opt id="addorder">新增订单</opt>
+        <opt id="baoming">报名管理</opt>
+        <opt id="yaohao">摇号</opt>
+        <opt id="kecheng">课程管理</opt>
+        <opt id="ccmanager">场次管理</opt>
+        <opt id="info">资讯管理</opt>
+        <opt id="yjpz">硬件配置</opt>
+        <opt id="jmd">节目单</opt>
+        <opt id="pxry">主讲老师</opt>
+        <opt id="upindex">上首页</opt>
+        <opt id="upindexoff">取消上首页</opt>
+        <opt id="setPublish">设置发布信息</opt>
+        <opt id="shizi">师资管理</opt>
+        <opt id="ziyuan">资源管理</opt>
+        <opt id="zuoping">作品管理</opt>
+        <opt id="zlsc">上传资料</opt>
+        <opt id="leave">请假审核</opt>
+        <opt id="toprovince">推送全省站</opt>
+        <opt id="untoprovince">取消推送全省站</opt>
+        <opt id="tocity">推送全市站</opt>
+        <opt id="untocity">取消推送全市站</opt>
+        <opt id="isrealname">实名审核</opt>
+        <opt id="setuserphone">更改手机</opt>
+        <opt id="rce2province">省级推荐</opt>
+        <opt id="unrce2province">取消省级推荐</opt>
+        <opt id="rce2city">市级推荐</opt>
+        <opt id="unrce2city">取消市级推荐</opt>
+        <opt id="yescheck">审核通过</opt>
+        <opt id="unyescheck">审核拒绝</opt>
+        <opt id="pxzx">培训资讯</opt>
+        <opt id="syzd">适用站点</opt>
+        <opt id="setaliysmsgroup">设置短信组模板</opt>
+        <opt id="usealiysmsgroup">设置短信组</opt>
+        <opt id="sharelib">分享资源库</opt>
+        <opt id="permissionsallocation">权限分配</opt>
+        <opt id="supplymge">供需管理</opt>
+        <opt id="agree">同意</opt>
+        <opt id="refuse">拒绝</opt>
+    </opts>
+
+
+    <menus>
+        <!-- 系统管理 -->
+        <menu id="M_SYS" type="0" state="1" text="系统管理" iconcls="p-1">
+            <menu id="M_SYS_PMSS" type="1" state="1" text="总分馆权限组管理" sys="1" href="/admin/system/pms/view/list_area" opts="view,add,edit,on,off,del" />
+            <menu id="M_SYS_DEPT" type="1" state="1" text="文化馆部门管理" href="/admin/system/dept/view/list" opts="view,add,edit,on,off,del" />
+            <menu id="M_SYS_JOB1" type="1" state="1" text="文化馆岗位管理" href="/admin/system/job/view/list" opts="view,add,edit,on,off,del" />
+            <menu id="M_SYS_JOB2" type="1" state="1" text="总分馆岗位管理" sys="1" href="/admin/system/job/view/list" opts="view,add,edit,on,off,del" />
+            <menu id="M_SYS_USR1" type="1" state="1" text="总分馆账号管理" sys="1" href="/admin/system/user/view/list1" opts="view,add,edit,on,off,del" />
+            <menu id="M_SYS_USR2" type="1" state="1" text="文化馆账号管理" href="/admin/system/user/view/list" opts="view,add,edit,on,off,del" />
+        </menu>
+        <!-- 系统管理-END -->
+
+        <!-- 总分馆管理 业务管理系统菜单：没有sys属性菜单+sys属性包含2的菜单； 总分馆管理系统：sys属性包含1或者2的菜单 -->
+        <menu id="M_CLT" type="0" state="1" text="总分馆管理" iconcls="p-10">
+            <menu id="M_CLT_BSE" type="0" state="1" text="文化馆管理">
+                <menu id="M_CLT_BSE_E" type="1" state="1" text="编辑列表" sys="1" href="/admin/system/cult/view/list?pt=e" opts="view, add, edit, checkgo, del" />
+                <menu id="M_CLT_BSE_C" type="1" state="1" text="审核列表" sys="1" href="/admin/system/cult/view/list?pt=c" opts="view, edit, checkon, checkoff, recovery" />
+                <menu id="M_CLT_BSE_P" type="1" state="1" text="发布列表" sys="1" href="/admin/system/cult/view/list?pt=p" opts="view, edit, publish, publishoff, recovery" />
+                <menu id="M_CLT_BSE_R" type="1" state="1" text="回收站　" sys="1" href="/admin/system/cult/view/list?pt=r" opts="view, undel, del" />
+            </menu>
+            <menu id="M_CLT_PMS" type="1" state="1" text="文化馆权限组管理" sys="1" href="/admin/system/pms/view/list" opts="view,add,edit,on,off,syzd,del" />
+            <menu id="M_CLT_USR" type="1" state="1" text="文化馆账号管理" sys="1" href="/admin/system/user/view/list2" opts="view,add,edit,on,off,del" />
+            <menu id="M_CLT_NOTICE" type="1" state="1" text="文化馆通知方式" sys="1" href="/admin/yunwei/quota/noticetype" opts="view,edit" />
+        </menu>
+        <!-- 总分馆管理-END -->
+
+        <!-- 运维管理 -->
+        <menu id="M_YWI" type="0" state="1" text="运维管理" iconcls="p-1">
+            <menu id="M_YWI_TYPE" type="0" state="1" text="分类管理">
+                <menu type="1" state="1" href="/admin/yunwei/type/view/list/1" sys="2" id="M_YWI_TYPE_ART" text="艺术分类配置"
+                      opts="view, add, edit, del, on, off"/>
+                <menu type="1" state="1" href="/admin/yunwei/type/view/list/2" sys="2" id="M_YWI_TYPE_VENUE"
+                      text="场馆分类配置" opts="view, add, edit, del, on, off"/>
+                <menu type="1" state="1" href="/admin/yunwei/type/view/list/3" sys="2" id="M_YWI_TYPE_ROOM"
+                      text="活动室分类配置" opts="view, add, edit, del, on, off"/>
+                <menu type="1" state="1" href="/admin/yunwei/type/view/list/4" sys="2" id="M_YWI_TYPE_ACTIVITY"
+                      text="活动分类配置" opts="view, add, edit, del, on, off"/>
+                <menu type="1" state="1" href="/admin/yunwei/type/view/list/5" sys="2" id="M_YWI_TYPE_TRAIN"
+                      text="培训分类配置" opts="view, add, edit, del, on, off"/>
+                <menu type="1" state="1" href="/admin/yunwei/type/view/list/7" sys="2" id="M_YWI_TYPE_ROOMSB"
+                      text="活动室设备配置" opts="view, add, edit, del, on, off"/>
+                <menu type="1" state="1" href="/admin/yunwei/type/view/list/11" sys="2" id="M_YWI_TYPE_TEA"
+                      text="老师专长配置" opts="view, add, edit, del, on, off"/>
+                <menu type="1" state="1" href="/admin/yunwei/type/view/list/16" sys="2" id="M_YWI_TYPE_LIVE"
+                      text="在线课程分类配置" opts="view, add, edit, del, on, off"/>
+                <menu type="1" state="1" href="/admin/yunwei/type/view/list/20" sys="2" id="M_YWI_TYPE_GOODS"
+                      text="文艺辅材分类配置" opts="view, add, edit, del, on, off"/>
+                <menu type="1" state="1" href="/admin/yunwei/type/view/list/21" sys="2" id="M_YWI_TYPE_SHOWGOODS"
+                      text="文艺演出分类配置" opts="view, add, edit, del, on, off"/>
+                <menu type="1" state="1" href="/admin/yunwei/type/view/list/37" sys="2" id="M_YWI_TYPE_FW"
+                      text="文艺演出-服务类型配置" opts="view, add, edit, del, on, off"/>
+                <menu type="1" state="1" href="/admin/yunwei/type/view/list/211" sys="2" id="M_YWI_TYPE_YCFS"
+                      text="文艺演出-演出方式配置" opts="view, add, edit, del, on, off"/>
+                <menu type="1" state="1" href="/admin/yunwei/type/view/list/22" sys="2" id="M_YWI_TYPE_EXHGOODS"
+                      text="展品分类配置" opts="view, add, edit, del, on, off"/>
+                <menu type="1" state="1" href="/admin/yunwei/type/view/list/23" sys="2" id="M_YWI_TYPE_EXH"
+                      text="展览展示分类配置" opts="view, add, edit, del, on, off"/>
+                <menu type="1" state="1" href="/admin/yunwei/type/view/list/25" sys="2" id="M_YWI_TYPE_PER"
+                      text="文艺专家专长配置" opts="view, add, edit, del, on, off"/>
+                <menu type="1" state="1" href="/admin/yunwei/type/view/list/2001" sys="2" id="M_YWI_TYPE_VENUE_NG"
+                      text="内供-场馆分类配置" opts="view, add, edit, del, on, off"/>
+                <menu type="1" state="1" href="/admin/yunwei/type/view/list/1001" sys="2" id="M_YWI_TYPE_ART" text="内供-艺术分类配置"
+                      opts="view, add, edit, del, on, off"/>
+                <menu type="1" state="1" href="/admin/yunwei/type/view/list/5001" sys="2" id="M_YWI_TYPE_TRAIN"
+                      text="内供-培训分类配置" opts="view, add, edit, del, on, off"/>
+            </menu>
+            <menu id="M_YWI_KEY" type="0" state="1" text="关键字管理">
+                <menu type="1" state="1" href="/admin/yunwei/key/view/list/2" id="M_YWI_KEY_VENUE" text="场馆关键字配置" opts="view, add, edit, del"/>
+                <menu type="1" state="1" href="/admin/yunwei/key/view/list/3" id="M_YWI_KEY_ROOM" text="活动室关键字配置" opts="view, add, edit, del"/>
+                <menu type="1" state="1" href="/admin/yunwei/key/view/list/4" id="M_YWI_KEY_ACTIVITY" text="活动关键字配置" opts="view, add, edit, del"/>
+                <menu type="1" state="1" href="/admin/yunwei/key/view/list/5" id="M_YWI_KEY_TRAIN" text="培训关键字配置" opts="view, add, edit, del"/>
+                <menu type="1" state="1" href="/admin/yunwei/key/view/list/36" id="M_YWI_KEY_ZX" text="资讯关键字配置" opts="view, add, edit, del"/>
+                <menu type="1" state="1" href="/admin/yunwei/key/view/list/27" id="M_YWI_KEY_PXSZ" text="培训师资关键字配置" opts="view, add, edit, del"/>
+                <menu type="1" state="1" href="/admin/yunwei/key/view/list/16" id="M_YWI_KEY_LIVE" text="在线课程关键字配置" opts="view, add, edit, del"/>
+                <menu type="1" state="1" href="/admin/yunwei/key/view/list/20" id="M_YWI_KEY_GOODS" text="文艺辅材关键字配置" opts="view, add, edit, del"/>
+                <menu type="1" state="1" href="/admin/yunwei/key/view/list/23" id="M_YWI_KEY_EXH" text="展览展示关键字配置" opts="view, add, edit, del"/>
+                <menu type="1" state="1" href="/admin/yunwei/key/view/list/21" id="M_YWI_KEY_SHOWGOODS" text="文艺演出关键字配置" opts="view, add, edit, del"/>
+                <menu type="1" state="1" href="/admin/yunwei/key/view/list/38" id="M_YWI_KEY_GXPXRY" text="供需培训关键字配置" opts="view, add, edit, del"/>
+                <menu type="1" state="1" href="/admin/yunwei/key/view/list/25" id="M_YWI_KEY_GXWYZJ" text="文艺专家关键字配置" opts="view, add, edit, del"/>
+            </menu>
+            <menu id="M_YWI_TAG" type="0" state="1" text="标签管理">
+                <menu type="1" state="1" href="/admin/yunwei/tag/view/list/2" id="M_YWI_TAG_02" text="场馆标签配置" opts="view, add, edit, del"/>
+                <menu type="1" state="1" href="/admin/yunwei/tag/view/list/3" id="M_YWI_TAG_03" text="活动室标签配置" opts="view, add, edit, del"/>
+                <menu type="1" state="1" href="/admin/yunwei/tag/view/list/4" id="M_YWI_TAG_04" text="活动标签配置" opts="view, add, edit, del"/>
+                <menu type="1" state="1" href="/admin/yunwei/tag/view/list/5" id="M_YWI_TAG_05" text="培训标签配置" opts="view, add, edit, del"/>
+                <!--<menu type="1" state="1" href="/admin/yunwei/tag/view/list/25" id="M_YWI_TAG_25" text="资讯标签配置"  opts="view, add, edit, del"/>-->
+                <menu type="1" state="1" href="/admin/yunwei/tag/view/list/20" id="M_YWI_TAG_20" text="文艺辅材标签配置"  opts="view, add, edit, del"/>
+                <menu type="1" state="1" href="/admin/yunwei/tag/view/list/27" id="M_YWI_TAG_27" text="培训师资标签配置"  opts="view, add, edit, del"/>
+                <menu type="1" state="1" href="/admin/yunwei/tag/view/list/16" id="M_YWI_TAG_16" text="在线课程标签配置"  opts="view, add, edit, del"/>
+                <menu type="1" state="1" href="/admin/yunwei/tag/view/list/38" id="M_YWI_TAG_38" text="供需培训人员标签配置"  opts="view, add, edit, del"/>
+                <menu type="1" state="1" href="/admin/yunwei/tag/view/list/53" id="M_YWI_TAG_53" text="群文资源标签配置"  opts="view, add, edit, del"/>
+                <menu type="1" state="1" href="/admin/yunwei/tag/view/list/2002" id="M_YWI_TAG_02_NG" text="内供-场馆标签配置" opts="view, add, edit, del"/>
+            </menu>
+            <menu id="M_YWI_SMSTMP" type="1" state="1" text="短信模板管理" sys="1" href="/admin/yunwei/smstmp/view/list" opts="add,view,edit,del"></menu>
+            <menu id="M_YWI_ALIYSMS" type="0" state="0" text="阿里云短信模板" >
+                <menu id="M_YWI_ALIYSMSCONFIG" type="1" state="1" text="短信接口配置" sys="1" href="/admin/yunwei/aliysmscode/view/config"
+                      opts="view,edit"/>
+                <menu id="M_YWI_ALIYSMSCODE" type="1" state="1" text="短信模板" sys="1" href="/admin/yunwei/aliysmscode/view/list"
+                      opts="add,view,edit,del"/>
+                <menu id="M_YWI_ALIYSMSGROUP" type="1" state="1" text="短信模板组" sys="1" href="/admin/yunwei/aliysmsgroup/view/list"
+                      opts="add,view,edit,setaliysmsgroup,del"/>
+                <menu id="M_YWI_ALIYSMSERR" type="1" state="1" text="发送失败记录" sys="1" href="/admin/yunwei/aliysmserr/view/list"
+                      opts="view"/>
+            </menu>
+            <menu id="M_YWI_WHPP" type="1" state="1" text="文化品牌配置" href="/admin/yunwei/whpp/view/list"
+                  opts="view, add, edit,ziyuan, info, del, on, off"/>
+            <menu id="M_YWI_NOTE" type="1" state="1" text="操作日志管理" sys="1" href="/admin/yunwei/note/view/list" opts="view"/>
+            <menu id="M_YWI_LBT" type="0" state="1" text="轮播图配置">
+                <menu type="1" state="1" href="/admin/yunwei/lbt/view/list/1" id="M_YWI_LBT_PC" text="外部供需-首页轮播图配置" opts="view, add, edit, on, off,del,toprovince,untoprovince,tocity,untocity"/>
+                <menu type="1" state="1" href="/admin/yunwei/lbt/view/list/2" id="M_YWI_TRA_PC" text="网络培训-首页轮播图配置"
+                      opts="view, add, edit, on, off,del,toprovince,untoprovince,tocity,untocity"/>
+                <menu type="1" state="1" href="/admin/yunwei/lbt/view/list/3" id="M_YWI_TRA_WZY_PC" text="网络培训-微专业轮播图配置" opts="view, add, edit, on, off,del,toprovince,untoprovince,tocity,untocity"/>
+                <menu type="1" state="1" href="/admin/yunwei/lbt/view/list/4" id="M_YWI_LBT_ZC" text="众筹平台-首页轮播图配置" opts="view, add, edit, on, off,del,toprovince,untoprovince,tocity,untocity"/>
+                <menu type="1" state="1" href="/admin/yunwei/lbt/view/list/9" id="M_YWI_LBT_QW" text="群文-首页轮播图配置" opts="view, add, edit, on, off,del,toprovince,untoprovince,tocity,untocity"/>
+                <menu type="1" state="1" href="/admin/yunwei/lbt/view/list/5" id="M_YWI_LBT_WX" text="微信-首页轮播图配置" opts="view, add, edit, on, off,del,toprovince,untoprovince,tocity,untocity"/>
+                <menu type="1" state="1" href="/admin/yunwei/lbt/view/list/6" id="M_YWI_LBT_WXPX" text="微信-培训首页轮播图配置" opts="view, add, edit, on, off,del,toprovince,untoprovince,tocity,untocity"/>
+                <menu type="1" state="1" href="/admin/yunwei/lbt/view/list/7" id="M_YWI_LBT_WXWZY" text="微信-微专业首页轮播图配置" opts="view, add, edit, on, off,del,toprovince,untoprovince,tocity,untocity"/>
+                <menu type="1" state="1" href="/admin/yunwei/lbt/view/list/8" id="M_YWI_LBT_WXZC" text="微信-众筹首页轮播图配置" opts="view, add, edit, on, off,del,toprovince,untoprovince,tocity,untocity"/>
+                <menu type="1" state="1" href="/admin/yunwei/lbt/view/list/10" id="M_YWI_LBT_WXQW" text="微信-群文首页轮播图配置" opts="view, add, edit, on, off,del,toprovince,untoprovince,tocity,untocity"/>
+                <!-- 区域轮播图配置 -->
+                <menu type="1" state="1" href="/admin/yunwei/lbt/view/list_area/1" sys="1" id="M_YWI_LBT_PC2"
+                      text="外部供需-首页轮播图配置" opts="view, add, edit, on, off,del,toprovince,untoprovince,tocity,untocity"/>
+                <menu type="1" state="1" href="/admin/yunwei/lbt/view/list_area/11" sys="1" id="M_YWI_LBT_PC_HDBANNER2"
+                      text="外部供需-首页活动广告位"
+                      opts="view, add, edit, on, off,del,toprovince,untoprovince,tocity,untocity"/>
+                <menu type="1" state="1" href="/admin/yunwei/lbt/view/list_area/12" sys="1" id="M_YWI_LBT_PC_PXBANNER2"
+                      text="外部供需-首页培训广告位"
+                      opts="view, add, edit, on, off,del,toprovince,untoprovince,tocity,untocity"/>
+                <menu type="1" state="1" href="/admin/yunwei/lbt/view/list_area/2" sys="1" id="M_YWI_TRA_PC2" text="网络培训-首页轮播图配置" opts="view, add, edit, on, off,del,toprovince,untoprovince,tocity,untocity"/>
+                <menu type="1" state="1" href="/admin/yunwei/lbt/view/list_area/3" sys="1" id="M_YWI_TRA_WZY_PC2" text="网络培训-微专业轮播图配置" opts="view, add, edit, on, off,del,toprovince,untoprovince,tocity,untocity"/>
+                <menu type="1" state="1" href="/admin/yunwei/lbt/view/list_area/4" sys="1" id="M_YWI_LBT_ZC2" text="众筹平台-首页轮播图配置" opts="view, add, edit, on, off,del,toprovince,untoprovince,tocity,untocity"/>
+                <menu type="1" state="1" href="/admin/yunwei/lbt/view/list_area/9" sys="1" id="M_YWI_LBT_WQ2" text="群文-首页轮播图配置" opts="view, add, edit, on, off,del,toprovince,untoprovince,tocity,untocity"/>
+                <menu type="1" state="1" href="/admin/yunwei/lbt/view/list_area/5" sys="1" id="M_YWI_LBT_WX2" text="微信-首页轮播图配置" opts="view, add, edit, on, off,del,toprovince,untoprovince,tocity,untocity"/>
+                <menu type="1" state="1" href="/admin/yunwei/lbt/view/list_area/6" sys="1" id="M_YWI_LBT_WXPX2" text="微信-培训首页轮播图配置" opts="view, add, edit, on, off,del,toprovince,untoprovince,tocity,untocity"/>
+                <menu type="1" state="1" href="/admin/yunwei/lbt/view/list_area/7" sys="1" id="M_YWI_LBT_WXWZY2" text="微信-微专业首页轮播图配置" opts="view, add, edit, on, off,del,toprovince,untoprovince,tocity,untocity"/>
+                <menu type="1" state="1" href="/admin/yunwei/lbt/view/list_area/8" sys="1" id="M_YWI_LBT_WXZC2" text="微信-众筹首页轮播图配置" opts="view, add, edit, on, off,del,toprovince,untoprovince,tocity,untocity"/>
+                <menu type="1" state="1" href="/admin/yunwei/lbt/view/list_area/10" sys="1" id="M_YWI_LBT_WXQW2" text="微信-群文首页轮播图配置" opts="view, add, edit, on, off,del,toprovince,untoprovince,tocity,untocity"/>
+            </menu>
+            <!--<menu id="M_YWI_VIDEO" type="1" state="1" text="音视频管理"  href="/admin/video/index" opts="view, add, del"/>-->
+            <menu id="M_YWI_GRP" type="1" state="1" text="培训组管理" href="/admin/yunwei/group/view/list" opts="view,add,edit,on,off,del" />
+            <menu id="M_YWI_AREA" type="1" state="1" text="省市区管理" sys="1" href="/admin/yunwei/area/view/list" opts="view,add,edit,off,on,del"/>
+            <menu id="M_INF_COLUMN" type="1" state="1" text="资讯栏目管理" sys="1" href="/admin/information/muse" opts="view, add, edit, del, publish, publishoff"/>
+            <menu id="M_YWI_CONF" type="1" state="1" text="一体机配置" sys="1" href="/admin/yunwei/config/sysconfig" opts="view,edit"/>
+            <menu id="M_YWI_QUOTA" type="1" state="1" text="群文配额管理" sys="1" href="/admin/yunwei/quota/view/list" opts="view,edit"/>
+        </menu>
+        <!-- 运维管理 END -->
+
+        <menu id="M_USR" type="0" state="1" text="用户管理"  iconcls="p-7">
+            <menu id="M_USR_BLK" type="1" state="1" text="黑名单　" sys="1" href="/admin/user/black/view/list" opts="view, off" />
+            <menu id="M_USR_LST" type="1" state="1" text="用户管理" sys="1" href="/admin/user/info/view/list" opts="view, isrealname, setuserphone, del" />
+        </menu>
+
+        <!-- 总分馆业务管理 -->
+        <menu id="M_BIZ" type="0" state="1" text="业务管理"  iconcls="p-3">
+            <!--<menu id="M_BIZ_ZXGL" type="1" state="1" text="资讯　　" href="/admin/user/info/view/list" opts="view, edit, del" />-->
+            <!--<menu id="M_BIZ_WBGX" type="1" state="1" text="外部供需" href="/admin/user/black/view/list" opts="view, off" />-->
+            <menu id="M_BIZ_WBGX" type="0" state="1" text="外部供需">
+                <menu id="M_BIZ_WBGX_VEN_PUBLISH" type="1" state="1" sys="1" text="场馆"  href="/admin/venue/view/syslistpublish"
+                      opts="view, publishoff, rce2province,unrce2province,rce2city,unrce2city"/>
+                <menu id="M_BIZ_WBGX_VENROOM_PUBLISH" type="1" state="1" sys="1" text="活动室"  href="/admin/venue/room/view/syslistpublish"
+                      opts="view, publishoff"/>
+                <menu id="M_BIZ_WBGX_ACTIVITY_PUBLISH" type="1" state="1" sys="1" text="活动"
+                      href="/admin/activity/view/list2"
+                      opts="view,publishoff, rce2province,unrce2province,rce2city,unrce2city"/>
+            </menu>
+            <menu id="M_BIZ_PXGL" type="0" state="1" text="网络培训">
+                <menu id="M_BIZ_PXGL_XXPX" type="1" state="1" sys="1" text="线下培训" href="/admin/train/view/syspublish"
+                      opts="view, publishoff, rce2province,unrce2province,rce2city,unrce2city" />
+                <menu id="M_BIZ_PXGL_ZXKC" type="1" state="1" sys="1" text="在线课程" href="/admin/traLive/view/syspublish"
+                      opts="view, publishoff, rce2province,unrce2province,rce2city,unrce2city" />
+                <menu id="M_BIZ_PXGL_WZY" type="1" state="1" sys="1" text="微专业" href="/admin/tra/major/view/syspublish"
+                      opts="view, publishoff, rce2province,unrce2province,rce2city,unrce2city" />
+                <menu id="M_BIZ_PXGL_PXSZ" type="1" state="1" sys="1" text="培训师资" href="/admin/train/tea/view/syspublish"
+                      opts="view, publishoff, rce2province,unrce2province,rce2city,unrce2city" />
+                <menu id="M_BIZ_PXGL_PXZY" type="1" state="1" sys="1" text="培训资源" href="/admin/drsc/index/syspublish"
+                      opts="view, publishoff, rce2province,unrce2province,rce2city,unrce2city" />
+            </menu>
+            <menu id="M_BIZ_NBGX" type="0" state="1" text="内部供需">
+                <menu id="M_BIZ_NBGX_VEN_PUBLISH" type="1" state="1" sys="1" text="供需场馆"  href="/admin/supply/ven/view/syslistpublish"
+                      opts="view, publishoff"/>
+                <menu id="M_BIZ_NBGX_VENROOM_PUBLISH" type="1" state="1" sys="1" text="供需活动室"  href="/admin/supply/room/view/syslistpublish"
+                      opts="view, publishoff"/>
+                <menu id="M_BIZ_NBGX_TRA_PUBLISH" type="1" state="1" sys="1" text="供需培训"  href="/admin/supply/tra/view/syslistpublish"
+                      opts="view, publishoff"/>
+                <menu id="M_BIZ_NBGX_WYYC_PUBLISH" type="1" state="1" sys="1" text="文艺演出"
+                      href="/admin/showGoods/view/syslistpublish"
+                      opts="view, publishoff"/>
+                <menu id="M_BIZ_NBGX_ZLZS_PUBLISH" type="1" state="1" sys="1" text="展览展示"
+                      href="/admin/showExh/view/syslistpublish"
+                      opts="view, publishoff"/>
+                <menu id="M_BIZ_NBGX_WYZJ_PUBLISH" type="1" state="1" sys="1" text="文艺专家"
+                      href="/admin/personnel/view/syslistpublish"
+                      opts="view, publishoff"/>
+                <menu id="M_BIZ_NBGX_WYFC_PUBLISH" type="1" state="1" sys="1" text="文艺辅材"
+                      href="/admin/goods/view/syslistpublish"
+                      opts="view, publishoff"/>
+                <menu id="M_BIZ_NBGX_XQ_PUBLISH" type="1" state="1" sys="1" text="内供需求"
+                      href="/admin/supply/view/syslistpublish"
+                      opts="view, publishoff"/>
+            </menu>
+            <menu id="M_BIZ_ZCSYS" type="0" state="1" text="众筹管理">
+                <menu id="M_BIZ_ZCSYS_LISTP" type="1" state="1" sys="1" text="众筹项目列表" href="/admin/gather/view/syslistpublish"
+                      opts="view, publishoff"/>
+                <menu id="M_BIZ_ZCBDSYS_LISTP" type="1" state="1" sys="1" text="品牌众筹列表" href="/admin/brand/view/syslistpublish"
+                      opts="view, publishoff"/>
+            </menu>
+            <menu id="M_BIZ_QWSYS" type="0" state="1" text="群文管理">
+               <!-- <menu id="M_BIZ_QWZTSYS_LISTP" type="1" state="1" sys="1" text="文化专题列表" href="/admin/mass/brand/view/syslistpublish"
+                      opts="view, publishoff"/>
+                <menu id="M_BIZ_QWJCSYS_LISTP" type="1" state="1" sys="1" text="专题届次列表" href="/admin/mass/batch/view/syslistpublish"
+                      opts="view, publishoff"/>
+                <menu id="M_BIZ_QWRCSYS_LISTP" type="1" state="1" sys="1" text="艺术人才列表" href="/admin/mass/artist/view/syslistpublish"
+                      opts="view, publishoff"/>
+                <menu id="M_BIZ_QWTDSYS_LISTP" type="1" state="1" sys="1" text="艺术团队列表" href="/admin/mass/team/view/syslistpublish"
+                      opts="view, publishoff"/>
+-->
+                <menu id="M_MAS_RES_FROM2" type="1" state="1" sys="1" text="群文资源库管理"  href="/admin/mass/library/view/list_c" opts="view,add,edit,off,on,del" />
+
+                <menu id="M_MAS_RES_P2" type="1" state="1" sys="1" text="群文资源管理" href="/admin/mass/libres/view/list_c?ptype=p" opts="view,publishoff" />
+
+                <menu id="M_MAS_TJ_LIST" type="1" state="1" sys="1" text="统计"  href="/admin/mass/count/view/list" opts="view" />
+            </menu>
+        </menu>
+        <!-- 总分馆业务管理-END -->
+
+        <!-- 总分馆-业务统计-START -->
+        <menu id="M_TONGJI" type="0" state="1" text="业务统计"  iconcls="p-5">
+            <menu id="M_TONGJI_HDPH" type="1" state="1" sys="1" text="活动排行统计" href="/admin/tongji/bi/view/hdph" opts="view"/>
+            <menu id="M_TONGJI_PXPH" type="1" state="1" sys="1" text="培训排行统计" href="/admin/tongji/bi/view/pxph" opts="view"/>
+            <menu id="M_TONGJI_ZDHD" type="1" state="1" sys="1" text="站点活动统计" href="/admin/tongji/bi/view/zdhd" opts="view"/>
+            <menu id="M_TONGJI_ZDPX" type="1" state="1" sys="1" text="站点培训统计" href="/admin/tongji/bi/view/zdpx" opts="view"/>
+            <menu id="M_TONGJI_ZDCG" type="1" state="1" sys="1" text="站点场馆统计" href="/admin/tongji/bi/view/zdcg" opts="view"/>
+            <menu id="M_TONGJI_ZDZX" type="1" state="1" sys="1" text="站点资讯统计" href="/admin/tongji/bi/view/zdzx" opts="view"/>
+        </menu>
+        <!-- 总分馆-业务统计-END -->
+
+        <menu id="M_INF" type="0" state="1" text="资讯管理" iconcls="p-4">
+            <menu id="M_INF_COLINFO" type="0" state="1" text="资讯公告管理">
+                <menu id="M_INF_COLINFO_EDIT" type="1" state="1" text="编辑列表" href="/admin/information/view/edit"
+                      opts="view, add, edit, del,zlsc,checkgo"/>
+                <menu id="M_INF_COLINFO_CHECK" type="1" state="1" text="审核列表" href="/admin/information/view/check"
+                      opts="view,edit, del,zlsc, checkon, checkoff,recovery "/>
+                <menu id="M_INF_COLINFO_PUBLISH" type="1" state="1" text="发布列表" href="/admin/information/view/publish"
+                      opts="view,edit,del, publish,recovery,zlsc, publishoff"/>
+                <menu id="M_INF_COLINFO_DEL" type="1" state="1" text="回收站" href="/admin/information/view/del"
+                      opts="view, undel, del"/>
+            </menu>
+        </menu>
+
+        <menu id="WHG_GXPS" type="0" state="1" text="内部供需" iconcls="p-6">
+            <menu id="WHG_GXPS_DELIVERYCHECK" type="1" state="1" text="供给审核" href="/admin/delivery/view/list/0"
+                  opts="view, add, edit, del, checkgo, checkon, checkoff, publish, publishoff" />
+            <menu id="M_GXPS_MENUS_VEN" type="0" state="1" text="供需场馆管理">
+                <menu id="M_GXPS_VEN_LIST_E" type="1" state="1" text="供需场馆编辑列表" href="/admin/supply/ven/view/listedit"
+                      opts="view,add, edit,ziyuan, checkgo, del"/>
+                <menu id="M_GXPS_VEN_LIST_C" type="1" state="1" text="供需场馆审核列表" href="/admin/supply/ven/view/listcheck"
+                      opts="view,edit,ziyuan, checkon, checkoff, recovery"/>
+                <menu id="M_GXPS_VEN_LIST_P" type="1" state="1" text="供需场馆发布列表" href="/admin/supply/ven/view/listpublish"
+                      opts="view, edit,ziyuan,publish,publishoff,recommend,recommendoff, recovery"/>
+                <menu id="M_GXPS_VEN_LIST_D" type="1" state="1" text="回收站"  href="/admin/supply/ven/view/listdel"
+                      opts="view, undel, del"/>
+            </menu>
+            <menu id="M_GXPS_MENUS_ROOM" type="0" state="1" text="供需活动室管理">
+                <menu id="M_GXPS_ROOM_LIST_E" type="1" state="1" text="供需活动室编辑列表" href="/admin/supply/room/view/listedit"
+                      opts="view,add, edit,ziyuan,supplymge, checkgo, del"/>
+                <menu id="M_GXPS_ROOM_LIST_C" type="1" state="1" text="供需活动室审核列表" href="/admin/supply/room/view/listcheck"
+                      opts="view,edit,ziyuan,supplymge, checkon, checkoff, recovery"/>
+                <menu id="M_GXPS_ROOM_LIST_P" type="1" state="1" text="供需活动室发布列表" href="/admin/supply/room/view/listpublish"
+                      opts="view, edit,ziyuan,supplymge, publish,publishoff,recovery"/>
+                <menu id="M_GXPS_ROOM_LIST_D" type="1" state="1" text="回收站"  href="/admin/supply/room/view/listdel"
+                      opts="view, undel, del"/>
+            </menu>
+
+            <menu id="WHG_SUPPLY_TRA" type="0" state="1" text="供需培训管理">
+                <menu id="WHG_SUPPLY_TRA_E" type="1" state="1" text="供需培训编辑列表" href="/admin/supply/tra/view/edit"
+                      opts="view, add, edit, ziyuan,supplymge, yjpz, pxry, del, checkgo" />
+                <menu id="WHG_SUPPLY_TRA_C" type="1" state="1" text="供需培训审核列表" href="/admin/supply/tra/view/check"
+                      opts="view, add, edit, ziyuan,supplymge, yjpz, pxry, checkon, checkoff, recovery" />
+                <menu id="WHG_SUPPLY_TRA_P" type="1" state="1" text="供需培训发布列表" href="/admin/supply/tra/view/publish"
+                      opts="view, add, edit, ziyuan,supplymge, yjpz, pxry, publish, publishoff, recovery" />
+                <menu id="WHG_SUPPLY_TRA_D" type="1" state="1" text="回收站" href="/admin/supply/tra/view/del"
+                      opts="view,undel,del" />
+            </menu>
+
+            <menu id="WHG_SHOW_GOODS" type="0" state="1" text="文艺演出管理">
+                <menu id="WHG_SHOW_GOODS_E" type="1" state="1" text="文艺演出编辑列表" href="/admin/showGoods/view/edit"
+                      opts="view, add, edit, ziyuan,supplymge,yjpz,jmd, del, checkgo" />
+                <menu id="WHG_SHOW_GOODS_C" type="1" state="1" text="文艺演出审核列表" href="/admin/showGoods/view/check"
+                      opts="view, add, edit, ziyuan,supplymge,yjpz,jmd, checkon, checkoff, recovery" />
+                <menu id="WHG_SHOW_GOODS_P" type="1" state="1" text="文艺演出发布列表" href="/admin/showGoods/view/publish"
+                      opts="view, add, edit, ziyuan,supplymge,yjpz,jmd, publish, publishoff, recovery" />
+                <menu id="WHG_SHOW_GOODS_D" type="1" state="1" text="回收站" href="/admin/showGoods/view/del"
+                      opts="view,undel,del" />
+            </menu>
+            <menu id="M_GXPS_MENUS_ORGAN" type="0" state="1" text="特色团队管理">
+                <menu id="M_GXPS_ORGAN_LIST_E" type="1" state="1" text="特色团队编辑列表" href="/admin/showOrgan/view/listedit"
+                      opts="view,add, edit,ziyuan, checkgo, del"/>
+                <menu id="M_GXPS_ORGAN_LIST_C" type="1" state="1" text="特色团队审核列表" href="/admin/showOrgan/view/listcheck"
+                      opts="view,edit,ziyuan, checkon, checkoff, recovery"/>
+                <menu id="M_GXPS_ORGAN_LIST_P" type="1" state="1" text="特色团队发布列表" href="/admin/showOrgan/view/listpublish"
+                      opts="view, edit,ziyuan,publish,publishoff,recovery"/>
+                <menu id="M_GXPS_ORGAN_LIST_D" type="1" state="1" text="回收站"  href="/admin/showOrgan/view/listdel"
+                      opts="view, undel, del"/>
+            </menu>
+            <menu id="M_WHG_SHOW_EXH" type="0" state="1" text="展览展示管理">
+                <menu id="WHG_SHOW_EXH_E" type="1" state="1" text="展览展示编辑列表" href="/admin/showExh/view/edit"
+                      opts="view, add, edit, ziyuan,supplymge,  del, checkgo" />
+                <menu id="WHG_SHOW_EXH_C" type="1" state="1" text="展览展示审核列表" href="/admin/showExh/view/check"
+                      opts="view, add, edit, ziyuan,supplymge, checkon, checkoff, recovery" />
+                <menu id="WHG_SHOW_EXH_P" type="1" state="1" text="展览展示发布列表" href="/admin/showExh/view/publish"
+                      opts="view, add, edit, ziyuan,supplymge, publish, publishoff, recovery" />
+                <menu id="WHG_SHOW_EXH_D" type="1" state="1" text="回收站" href="/admin/showExh/view/del"
+                      opts="view,undel,del" />
+            </menu>
+
+            <menu id="M_GXPS_MENUS_EXHGOODS" type="0" state="1" text="展品管理">
+                <menu id="M_EXH_GOODS_LIST_E" type="1" state="1" text="展品编辑列表" href="/admin/exhGoods/view/listedit"
+                      opts="view,add, edit, checkgo, del"/>
+                <menu id="M_EXH_GOODS_LIST_C" type="1" state="1" text="展品审核列表" href="/admin/exhGoods/view/listcheck"
+                      opts="view,edit, checkon, checkoff, recovery"/>
+                <menu id="M_EXH_GOODS_LIST_P" type="1" state="1" text="展品发布列表" href="/admin/exhGoods/view/listpublish"
+                      opts="view, edit, publish,publishoff,recovery"/>
+                <menu id="M_EXH_GOODS_LIST_D" type="1" state="1" text="回收站"  href="/admin/exhGoods/view/listdel"
+                      opts="view, undel, del"/>
+            </menu>
+
+            <menu id="WHG_GXPS_PERSONNEL" type="0" state="1" text="文艺专家管理">
+                <menu id="WHG_GXPS_PERSONNEL001" type="1" state="1" text="文艺专家编辑列表" href="/admin/personnel/view/edit"
+                      opts="view,add,edit,supplymge,checkgo,del,zuoping"/>
+                <menu id="WHG_GXPS_PERSONNEL002" type="1" state="1" text="文艺专家审核列表" href="/admin/personnel/view/check"
+                      opts="view,edit,supplymge,checkon,checkoff,recovery,zuoping"/>
+                <menu id="WHG_GXPS_PERSONNEL003" type="1" state="1" text="文艺专家发布列表" href="/admin/personnel/view/publish"
+                      opts="view,edit,supplymge,publish,publishoff,recovery,zuoping"/>
+                <menu id="WHG_GXPS_PERSONNEL004" type="1" state="1" text="回收站" href="/admin/personnel/view/recycle"
+                      opts="view,del,undel"/>
+            </menu>
+
+            <menu id="M_GXPS_MENUS_GOODS" type="0" state="1" text="文艺辅材管理">
+                <menu id="M_GXPS_GOODS_LIST_E" type="1" state="1" text="文艺辅材编辑列表" href="/admin/goods/view/listedit"
+                      opts="view,add, edit,ziyuan,supplymge, checkgo, del"/>
+                <menu id="M_GXPS_GOODS_LIST_C" type="1" state="1" text="文艺辅材审核列表" href="/admin/goods/view/listcheck"
+                      opts="view,edit,ziyuan,supplymge, checkon, checkoff, recovery"/>
+                <menu id="M_GXPS_GOODS_LIST_P" type="1" state="1" text="文艺辅材发布列表" href="/admin/goods/view/listpublish"
+                      opts="view, edit,ziyuan,supplymge, publish,publishoff,recovery"/>
+                <menu id="M_GXPS_GOODS_LIST_D" type="1" state="1" text="回收站"  href="/admin/goods/view/listdel"
+                      opts="view, undel, del"/>
+            </menu>
+
+
+            <menu id="WHG_GXPS_NEED" type="0" state="1" text="需求管理">
+                <menu id="WHG_GXPS_NEED1" type="1" state="1" text="需求编辑列表" href="/admin/supply/view/editlist"
+                      opts="view,add,edit,checkgo,del"/>
+                <menu id="WHG_GXPS_NEED2" type="1" state="1" text="需求审核列表" href="/admin/supply/view/check"
+                      opts="view,edit,checkon,checkoff,recovery"/>
+                <menu id="WHG_GXPS_NEED3" type="1" state="1" text="需求发布列表" href="/admin/supply/view/publish"
+                      opts="view,edit,publish,publishoff,recovery"/>
+                <menu id="WHG_GXPS_NEED4" type="1" state="1" text="回收站" href="/admin/supply/view/recycle"
+                      opts="view,del,undel"/>
+                <menu id="WHG_GXPS_NEED5" type="1" state="1" text="提供配送审核" href="/admin/delivery/view/list/1"
+                      opts="view, add, edit, del, checkgo, checkon, checkoff, publish, publishoff" />
+            </menu>
+        </menu>
+
+        <menu id="M_WBGXGL" type="0" state="1" text="外部供需" iconcls="p-2">
+
+            <menu id="M_VEN" type="0" state="1" text="场馆管理">
+                <menu id="M_VEN_LIST_EDIT" type="1" state="1" text="编辑列表"  href="/admin/venue/view/listedit"
+                      opts="view,add,edit,ziyuan,checkgo,del"/>
+                <menu id="M_VEN_LIST_CHECK" type="1" state="1" text="审核列表"  href="/admin/venue/view/listcheck"
+                      opts="view,edit,ziyuan,checkon,checkoff,recovery"/>
+                <menu id="M_VEN_LIST_PUBLISH" type="1" state="1" text="发布列表"  href="/admin/venue/view/listpublish"
+                      opts="view,edit,ziyuan,publish,publishoff,recommend,recommendoff,recovery"/>
+                <menu id="M_VEN_LIST_DEL" type="1" state="1" text="回收站"  href="/admin/venue/view/listdel"
+                      opts="view,undel,del"/>
+            </menu>
+
+            <menu id="M_VEN_ROOM" type="0" state="1" text="活动室管理">
+                <menu id="M_VEN_ROOM_LIST_EDIT" type="1" state="1" text="编辑列表"  href="/admin/venue/room/view/listedit"
+                      opts="view,add,edit,ziyuan,retime,checkgo,del"/>
+                <menu id="M_VEN_ROOM_LIST_CHECK" type="1" state="1" text="审核列表"  href="/admin/venue/room/view/listcheck"
+                      opts="view,edit,ziyuan,retime,checkon,checkoff,recovery"/>
+                <menu id="M_VEN_ROOM_LIST_PUBLISH" type="1" state="1" text="发布列表"  href="/admin/venue/room/view/listpublish"
+                      opts="view,edit,ziyuan,retime,publish,publishoff, recovery"/>
+                <menu id="M_VEN_ROOM_LIST_DEL" type="1" state="1" text="回收站"  href="/admin/venue/room/view/listdel"
+                      opts="view,undel,del"/>
+
+                <menu id="M_VEN_ROOM_LIST_ORDER" type="1" state="1" text="订单管理"  href="/admin/venue/roomorder/view/list"
+                      opts="view, yescheck, unyescheck"/>
+            </menu>
+
+            <menu id="M_ACT" type="0" state="1" text="活动管理">
+                <menu id="M_ACT_EDIT" type="1" state="1" text="编辑列表" href="/admin/activity/view/editList"
+                      opts="view,add,edit,ccmanager,ziyuan,checkgo,del,info" />
+                <menu id="M_ACT_CHECK" type="1" state="1" text="审核列表" href="/admin/activity/view/check"
+                      opts="view,edit, ccmanager, ziyuan,checkon,checkoff,recovery,info" />
+                <menu id="M_ACT_PUBLISH" type="1" state="1" text="发布列表" href="/admin/activity/view/publish"
+                      opts="view,edit,ccmanager,order,ziyuan,info,publish,recovery, publishoff,bigbannered,bigbanneroff,recommend,recommendoff"/>
+                <menu id="M_ACT_RECOVERY" type="1" state="1" text="回收站"  href="/admin/activity/view/del" opts="view,undel,del" />
+            </menu>
+            <menu id="M_DIGITAL_EXH" type="0" state="1" text="数字展厅管理">
+                <menu id="M_DIGITAL_EXH_E" type="1" state="1" text="数字展厅编辑列表" href="/admin/digitalexhibition/view/edit"
+                      opts="view, add, edit, ziyuan,  del, checkgo"/>
+                <menu id="M_DIGITAL_EXH_C" type="1" state="1" text="数字展厅审核列表" href="/admin/digitalexhibition/view/check"
+                      opts="view, add, edit, ziyuan, checkon, checkoff, recovery"/>
+                <menu id="M_DIGITAL_EXH_P" type="1" state="1" text="数字展厅发布列表"
+                      href="/admin/digitalexhibition/view/publish"
+                      opts="view, add, edit, ziyuan, publish, publishoff, recovery"/>
+                <menu id="M_DIGITAL_EXH_D" type="1" state="1" text="回收站" href="/admin/digitalexhibition/view/del"
+                      opts="view,undel,del"/>
+            </menu>
+
+        </menu>
+        <menu id="M_PXGL" type="0" state="1" text="培训管理" iconcls="p-4">
+            <menu id="whg_outer_px" type="0" state="1" text="线下培训管理">
+                <menu id="whg_outer_px_2" type="1" state="1" text="编辑列表" href="/admin/train/view/edit"
+                      opts="view,add,edit,zlsc,pxzx,ziyuan,kecheng,checkgo,del" />
+                <menu id="whg_outer_px_3" type="1" state="1" text="审核列表" href="/admin/train/view/check"
+                      opts="view,edit,zlsc,pxzx,ziyuan,kecheng,checkon,checkoff,recovery" />
+                <menu id="whg_outer_px_4" type="1" state="1" text="发布列表" href="/admin/train/view/publish"
+                      opts="view,edit,zlsc,pxzx,ziyuan,kecheng,baoming,publish,publishoff,recommend,recommendoff,recovery" />
+                <menu id="whg_outer_px_5" type="1" state="1" text="回收站"  href="/admin/train/view/del" opts="view,del,undel" />
+                <menu id="whg_outer_px_6" type="1" state="1" text="请假管理"  href="/admin/train/enrol/leaveView" opts="view,leave" />
+
+                <menu id="whg_outer_px_order" type="1" state="1" text="订单管理" href="/admin/train/enrol/order/list"
+                      opts="view,addorder,baoming"/>
+                <menu id="whg_outer_px_yaohao_order" type="1" state="1" text="订单摇号"
+                      href="/admin/train/enrol/order/yaohaolist" opts="view,yaohao"/>
+
+                <menu id="whg_outer_px_kaoqin" type="1" state="1" text="考勤管理" href="/admin/train/kaoqin/view/list"
+                      opts="view"/>
+            </menu>
+            <menu id="whg_live_px" type="0" state="1" text="在线课程管理">
+                <menu id="whg_live_px_2" type="1" state="1" text="编辑列表"  href="/admin/traLive/view/edit" opts="add,view,edit,checkgo,kecheng,del,ziyuan,pxzx" />
+                <menu id="whg_live_px_3" type="1" state="1" text="审核列表" href="/admin/traLive/view/check" opts="view,edit,checkon,checkoff,kecheng,recovery,ziyuan,pxzx" />
+                <menu id="whg_live_px_4" type="1" state="1" text="发布列表"  href="/admin/traLive/view/publish" opts="view,edit,publish,publishoff,baoming,kecheng,recommend,recommendoff,recovery,ziyuan,pxzx" />
+                <menu id="whg_live_px_5" type="1" state="1" text="回收站"  href="/admin/traLive/view/del" opts="view,del,undel" />
+            </menu>
+            <menu id="M_TRA_MAJOR" type="0" state="1" text="微专业管理">
+                <menu id="M_TRA_MAJOR_E" type="1" state="1" text="编辑列表"  href="/admin/tra/major/view/list_e" opts="view,add,edit,checkgo,kecheng,shizi,ziyuan,del"/>
+                <menu id="M_TRA_MAJOR_C" type="1" state="1" text="审核列表"  href="/admin/tra/major/view/list_c" opts="view,edit,kecheng,shizi,ziyuan,checkon,checkoff,recovery"/>
+                <menu id="M_TRA_MAJOR_P" type="1" state="1" text="发布列表"  href="/admin/tra/major/view/list_p" opts="view,edit,kecheng,shizi,ziyuan,publish,publishoff,recommend,recommendoff,recovery"/>
+                <menu id="M_TRA_MAJOR_R" type="1" state="1" text="回收站　"  href="/admin/tra/major/view/list_r" opts="view,undel,del"/>
+            </menu>
+            <menu id="M_TRA_TEA" type="0" state="1" text="培训师资管理">
+                <menu id="M_TRA_TEA_E" type="1" state="1" text="编辑列表"  href="/admin/train/tea/view/list_e" opts="view,add,edit,ziyuan,checkgo,del"/>
+                <menu id="M_TRA_TEA_C" type="1" state="1" text="审核列表"  href="/admin/train/tea/view/list_c" opts="view,edit,ziyuan,checkon,checkoff,recovery"/>
+                <menu id="M_TRA_TEA_P" type="1" state="1" text="发布列表"  href="/admin/train/tea/view/list_p" opts="view,edit,ziyuan,publish,publishoff,recovery"/>
+                <menu id="M_TRA_TEA_R" type="1" state="1" text="回收站　"  href="/admin/train/tea/view/list_r" opts="view,undel,del"/>
+            </menu>
+            <menu id="M_TRA_DRSC" type="0" state="1" text="培训资源管理">
+              <menu id="M_TRA_DRSC_E" type="1" state="1" text="编辑列表"  href="/admin/drsc/index/list_e" opts="view,add,edit,checkgo,del"/>
+              <menu id="M_TRA_DRSC_C" type="1" state="1" text="审核列表"  href="/admin/drsc/index/list_c" opts="view,edit,checkon,checkoff,recovery"/>
+              <menu id="M_TRA_DRSC_P" type="1" state="1" text="发布列表"  href="/admin/drsc/index/list_p" opts="view,edit,publish,publishoff,recommend,recommendoff,recovery"/>
+              <menu id="M_TRA_DRSC_R" type="1" state="1" text="回收站　"  href="/admin/drsc/index/list_r" opts="view,undel,del"/>
+           </menu>
+            <menu id="M_TRA_INDEX" type="0" state="1" text="培训指数" iconcls="p-9">
+                <menu id="M_TRA_INDEX_XX" type="1" state="1" text="线下培训"  href="/admin/traindex/view/xx" opts="view"/>
+                <menu id="M_TRA_INDEX_ZB" type="1" state="1" text="在线课程"  href="/admin/traindex/view/zb" opts="view"/>
+                <menu id="M_TRA_INDEX_WZ" type="1" state="1" text="微专业"  href="/admin/traindex/view/wz" opts="view"/>
+                <menu id="M_TRA_INDEX_SZ" type="1" state="1" text="培训师资"  href="/admin/traindex/view/sz" opts="view"/>
+                <menu id="M_TRA_INDEX_ZY" type="1" state="1" text="培训资源"  href="/admin/traindex/view/zy" opts="view"/>
+            </menu>
+
+        </menu>
+
+
+        <menu id="M_GAT" type="0" state="1" text="众筹管理" iconcls="p-2">
+            <menu id="M_GAT_GATHER" type="0" state="1" text="项目众筹管理">
+                <menu id="M_GAT_GATHER_LIST_EDIT" type="1" state="1" text="众筹编辑列表"  href="/admin/gather/view/listedit"
+                      opts="view,add, edit,ziyuan,info, checkgo, del"/>
+                <menu id="M_GAT_GATHER_LIST_CHECK" type="1" state="1" text="众筹审核列表" href="/admin/gather/view/listcheck"
+                      opts="view,edit,ziyuan,info, checkon, checkoff, recovery"/>
+                <menu id="M_GAT_GATHER_LIST_PUBLISH" type="1" state="1" text="众筹发布列表" href="/admin/gather/view/listpublish"
+                      opts="view, edit,ziyuan,info,publish,publishoff,reserve,kecheng,recommend,recommendoff, recovery"/>
+                <menu id="M_GAT_GATHER_LIST_DEL" type="1" state="1" text="回收站"  href="/admin/gather/view/listdel"
+                      opts="view, undel, del"/>
+            </menu>
+
+            <menu id="M_GAT_BRAND" type="0" state="1" text="品牌众筹管理">
+                <!--<menu id="M_GAT_BRAND_ADD" type="1" state="1" text="添加众筹品牌"  href="/admin/brand/view/add" opts="view"></menu>-->
+                <menu id="M_GAT_BRAND_LIST_EDIT" type="1" state="1" text="品牌编辑列表"  href="/admin/brand/view/listedit"
+                      opts="view,add, edit,info,checkgo, del"/>
+                <menu id="M_GAT_BRAND_LIST_CHECK" type="1" state="1" text="品牌审核列表" href="/admin/brand/view/listcheck"
+                      opts="view,edit,info, checkon, checkoff, recovery"/>
+                <menu id="M_GAT_BRAND_LIST_PUBLISH" type="1" state="1" text="品牌发布列表" href="/admin/brand/view/listpublish"
+                      opts="view,edit,info, publish,publishoff,recommend,recommendoff, recovery"/>
+                <menu id="M_GAT_BRAND_LIST_DEL" type="1" state="1" text="回收站"  href="/admin/brand/view/listdel"
+                      opts="view, undel, del"/>
+            </menu>
+        </menu>
+
+        <!-- 群文管理 -->
+        <menu id="M_MAS_MENUS" type="0" state="1" text="群文管理" iconcls="p-4">
+            <!--<menu id="M_MAS_MENUS_ZT" type="0" state="1" text="文化专题管理">
+                <menu id="M_MAS_ZT_LIST_E" type="1" state="1" text="文化专题编辑列表"  href="/admin/mass/brand/view/listedit"
+                      opts="view,add, edit, checkgo, del"/>
+                <menu id="M_MAS_ZT_LIST_C" type="1" state="1" text="文化专题审核列表" href="/admin/mass/brand/view/listcheck"
+                      opts="view, checkon, checkoff, recovery"/>
+                <menu id="M_MAS_ZT_LIST_P" type="1" state="1" text="文化专题发布列表" href="/admin/mass/brand/view/listpublish"
+                      opts="view, edit, publish,publishoff,recommend,recommendoff, recovery"/>
+                <menu id="M_MAS_ZT_LIST_D" type="1" state="1" text="回收站"  href="/admin/mass/brand/view/listdel"
+                      opts="view, undel, del"/>
+            </menu>
+            <menu id="M_MAS_MENUS_JC" type="0" state="1" text="专题届次管理">
+                <menu id="M_MAS_JC_LIST_E" type="1" state="1" text="专题届次编辑列表"  href="/admin/mass/batch/view/listedit"
+                      opts="view,add, edit, checkgo, del"/>
+                <menu id="M_MAS_JC_LIST_C" type="1" state="1" text="专题届次审核列表" href="/admin/mass/batch/view/listcheck"
+                      opts="view,edit, checkon, checkoff, recovery"/>
+                <menu id="M_MAS_JC_LIST_P" type="1" state="1" text="专题届次发布列表" href="/admin/mass/batch/view/listpublish"
+                      opts="view,edit, publish,publishoff,recovery"/>
+                <menu id="M_MAS_JC_LIST_D" type="1" state="1" text="回收站"  href="/admin/mass/batch/view/listdel"
+                      opts="view, undel, del"/>
+            </menu>
+            <menu id="M_MAS_MENUS_RC" type="0" state="1" text="艺术人才管理">
+                <menu id="M_MAS_RC_LIST_E" type="1" state="1" text="艺术人才编辑列表"  href="/admin/mass/artist/view/listedit"
+                      opts="view,add, edit, checkgo, del"/>
+                <menu id="M_MAS_RC_LIST_C" type="1" state="1" text="艺术人才审核列表" href="/admin/mass/artist/view/listcheck"
+                      opts="view,edit, checkon, checkoff, recovery"/>
+                <menu id="M_MAS_RC_LIST_P" type="1" state="1" text="艺术人才发布列表" href="/admin/mass/artist/view/listpublish"
+                      opts="view, edit, publish,publishoff,recommend,recommendoff, recovery"/>
+                <menu id="M_MAS_RC_LIST_D" type="1" state="1" text="回收站"  href="/admin/mass/artist/view/listdel"
+                      opts="view, undel, del"/>
+            </menu>
+            <menu id="M_MAS_MENUS_TD" type="0" state="1" text="艺术团队管理">
+                <menu id="M_MAS_TD_LIST_E" type="1" state="1" text="艺术团队编辑列表"  href="/admin/mass/team/view/listedit"
+                      opts="view,add, edit, checkgo, del"/>
+                <menu id="M_MAS_TD_LIST_C" type="1" state="1" text="艺术团队审核列表" href="/admin/mass/team/view/listcheck"
+                      opts="view,edit, checkon, checkoff, recovery"/>
+                <menu id="M_MAS_TD_LIST_P" type="1" state="1" text="艺术团队发布列表" href="/admin/mass/team/view/listpublish"
+                      opts="view,edit,publish,publishoff,recommend,recommendoff, recovery"/>
+                <menu id="M_MAS_TD_LIST_D" type="1" state="1" text="回收站"  href="/admin/mass/team/view/listdel"
+                      opts="view, undel, del"/>
+            </menu>
+            <menu id="M_MAS_RES_FORM" type="1" state="1" text="群文资源库"  href="/admin/mass/library/view/list" opts="view,add,edit,off,on,del" />-->
+
+            <menu id="M_MAS_RES" type="0" state="1" text="群文资源管理">
+                <menu id="M_MAS_RES_E" type="1" state="1" text="群文资源编辑" href="/admin/mass/libres/view/list?ptype=e" opts="view,add,edit,checkgo,del" />
+                <menu id="M_MAS_RES_C" type="1" state="1" text="群文资源审核" href="/admin/mass/libres/view/list?ptype=c" opts="view,edit,checkon,checkoff,recovery" />
+                <menu id="M_MAS_RES_P" type="1" state="1" text="群文资源发布" href="/admin/mass/libres/view/list?ptype=p" opts="view,edit,publish,publishoff,recommend,recommendoff,recovery,sharelib" />
+                <menu id="M_MAS_RES_P" type="1" state="1" text="群文资源库（分享）" href="/admin/mass/libres/view/list_share?ptype=p" opts="view" />
+                <menu id="M_MAS_RES_D" type="1" state="1" text="回收站" href="/admin/mass/libres/view/list?ptype=r" opts="view,undel,del" />
+            </menu>
+            <menu id="M_MAS_USER_LIST" type="1" state="1" text="群文用户管理" href="/admin/system/user/view/massuser_list" opts="view,add,edit,on,off,del,permissionsallocation" />
+            <menu id="M_MAS_USER_LIST" type="1" state="1" text="权限申请管理" href="/admin/system/user/view/apply_permission" opts="agree,refuse" />
+        </menu>
+
+        <!-- 直播管理 -->
+        <menu id="M_LIVE" type="0" state="1" text="直播管理" iconcls="p-4">
+            <menu id="M_LIVE_ACT" type="1" state="1" text="活动直播" href="/admin/mylive/view/list?reftype=1" opts="view,add,edit,off,on,del" />
+            <menu id="M_LIVE_TRA" type="1" state="1" text="培训直播" href="/admin/mylive/view/list?reftype=2" opts="view,add,edit,off,on,del" />
+            <menu id="M_LIVE_ZXK" type="1" state="1" text="在线课程" href="/admin/mylive/view/list?reftype=3" opts="view,add,edit,off,on,del" />
+        </menu>
+
+    </menus>
+
+
+</configs>

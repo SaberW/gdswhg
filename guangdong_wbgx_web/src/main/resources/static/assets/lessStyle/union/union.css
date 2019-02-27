@@ -1,0 +1,135 @@
+@charset "UTF-8";
+/* ==CONFIG:=========================================================
+  $__version:       1.0.0
+  $__author:        JackyZeng
+  $__help:          zrongs@vip.qq.com
+  $__website:       http://hn.creatoo.cn
+  -------------------------------------------------------------------*/
+.li-flex {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+div.union-content {
+  background: url(../../../assets/img/union/union-bg.jpg);
+  min-height: 699px;
+}
+div.union-content div.union-title {
+  width: 1200px;
+  margin: 0 auto;
+  font-size: 35px;
+  text-align: center;
+  line-height: 230px;
+  color: #fff;
+  position: relative;
+}
+div.union-content div.union-title a {
+  display: inline-block;
+  zoom: 1;
+  vertical-align: baseline;
+  outline: none;
+  overflow: visible;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  font-family: Microsoft YaHei, Arial, Helvetica, sans-serif;
+  line-height: 100%;
+  padding: 0.5em 2em 0.55em;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  border: 1px solid #cd0a1b;
+  color: #fff;
+  background-color: #cd0a1b;
+  background-image: -webkit-linear-gradient(top, #cd0a1b, #d70a15);
+  background-image: -moz-linear-gradient(top, #cd0a1b, #d70a15);
+  background-image: -o-linear-gradient(top, #cd0a1b, #d70a15);
+  background-image: -ms-linear-gradient(top, #cd0a1b, #d70a15);
+  background-image: linear-gradient(top, #cd0a1b, #d70a15);
+  position: absolute;
+  left: 0px;
+  bottom: 30px;
+  font-size: 15px;
+}
+div.union-content div.union-title a:hover {
+  background-color: #d70a15;
+  background-image: -webkit-linear-gradient(top, #d70a15, #cd0a1b);
+  background-image: -moz-linear-gradient(top, #d70a15, #cd0a1b);
+  background-image: -o-linear-gradient(top, #d70a15, #cd0a1b);
+  background-image: -ms-linear-gradient(top, #d70a15, #cd0a1b);
+  background-image: linear-gradient(top, #d70a15, #cd0a1b);
+}
+div.union-content div.union-list {
+  width: 1200px;
+  margin: 0 auto;
+  padding-bottom: 80px;
+  overflow: hidden;
+}
+div.union-content div.union-list ul {
+  margin-right: -30px;
+}
+div.union-content div.union-list ul li {
+  width: 380px;
+  margin: 0 30px 30px 0;
+  float: left;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  overflow: hidden;
+}
+div.union-content div.union-list ul li div.img {
+  width: 380px;
+  height: 253px;
+  overflow: hidden;
+}
+div.union-content div.union-list ul li div.img img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+div.union-content div.union-list ul li div.info {
+  background: #fff;
+  padding: 0 30px 15px 30px;
+  height: 235px;
+}
+div.union-content div.union-list ul li div.info h2 {
+  font-size: 18px;
+  color: #333333;
+  padding: 30px 0;
+  text-align: center;
+}
+div.union-content div.union-list ul li div.info p {
+  font-size: 16px;
+  color: #999999;
+  margin-bottom: 15px;
+}
+div.union-content div.union-list ul li div.info p span.title {
+  float: left;
+}
+div.union-content div.union-list ul li div.info p span.number {
+  float: right;
+}
+div.union-content div.union-list ul li div.look-more {
+  height: 87px;
+  background: url(../../../assets/img/union/union-title-bg.png);
+}
+div.union-content div.union-list ul li div.look-more a {
+  color: #fff;
+  display: block;
+  line-height: 87px;
+  text-align: center;
+  -webkit-transition: all 0.3s linear;
+  -moz-transition: all 0.3s linear;
+  -o-transition: all 0.3s linear;
+  -ms-transition: all 0.3s linear;
+  transition: all 0.3s linear;
+}
+div.union-content div.union-list ul li div.look-more a:hover {
+  background: #bd0a1b;
+}

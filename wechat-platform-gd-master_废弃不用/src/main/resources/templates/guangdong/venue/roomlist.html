@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/public/list.css'">
+<div th:include="guangdong/public/leftBar :: copy"></div>
+<div id="page">
+    <div class="mui-content">
+        <!--下拉刷新容器-->
+        <div id="model-list-panel" class="mui-content mui-scroll-wrapper">
+            <div class="mui-scroll">
+                <!--数据列表-->
+                <div class="public-list-y">
+                    <ul id="model-list" class="item-list-y">
+                        <!--<li class="clearfix">
+                            <div class="img">
+                                <a href="#">
+                                    <img th:src="${basePath}+'/assets/img/img_demo/q1.jpg'" alt="demo">
+                                </a>
+                            </div>
+                            <div class="info">
+                                <h2>戏剧排练厅</h2>
+                                <p>广州市天河区广州大道中1229号综合楼八楼</p>
+                                <div class="state-cont mui-clearfix">
+                                    <div class="state s-1">
+                                        可预订
+                                    </div>
+                                    <div class="other">
+                                        <span>120 平米</span>
+                                        <span>容纳 80 人</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </li>
+                        <li class="clearfix">
+                            <div class="img">
+                                <a href="#">
+                                    <img th:src="${basePath}+'/assets/img/img_demo/q1.jpg'" alt="demo">
+                                </a>
+                            </div>
+                            <div class="info">
+                                <h2>戏剧排练厅</h2>
+                                <p>广州市天河区广州大道中1229号综合楼八楼</p>
+                                <div class="state-cont mui-clearfix">
+                                    <div class="state s-2">
+                                        可预订
+                                    </div>
+                                    <div class="other">
+                                        <span>120 平米</span>
+                                        <span>容纳 80 人</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>-->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" th:inline="javascript">
+    var itemId = dataInit.getUrlParam('id');
+    var userid = $("#temp_userId").val();
+    $().ready(function(){
+        dataInit.ajax({
+            api: [[${apiPath.venueDetail}]],
+            fn: showRoomList,
+            params: {itemId: itemId}
+        });
+    })
+    function showRoomList(data) {
+        if(data && data.code == 0){
+            var roomlist = data.data.roomList;
+            var roomHtml = "";
+            if(roomlist && roomlist.length){
+                for (var i in roomlist) {
+                    var roomModel = roomlist[i];
+                    var txt = Number(roomModel.openTimeNum) > 0 ? '立即预订' : '查看详情';
+                    var cls = Number(roomModel.openTimeNum) > 0 ? 's-1' : 's-2';
+                    var imgPath_room = data.imgPath + dataInit.getSmallImage(roomModel.image);
+                    roomHtml += '<li class="clearfix">\
+                                    <a href="roomDetail?id='+roomModel.itemId+'"></a>\
+                                    <div class="img">\
+                                          <img src="'+imgPath_room+'" alt="demo">\
+                                    </div>\
+                                    <div class="info">\
+                                            <h2>'+roomModel.title+'</h2>\
+                                            <p>'+data.data.address+'</p>\
+                                            <div class="state-cont mui-clearfix">\
+                                                <div class="state '+cls+'">\
+                                                    '+txt+'\
+                                                </div>\
+                                                <div class="other">\
+                                                    <span>'+roomModel.area+' 平米</span>\
+                                                    <span>容纳 '+roomModel.sizepeople+' 人</span>\
+                                                </div>\
+                                            </div>\
+                                    </div>\
+                                </li>';
+                }
+                $('#goNext').find('a').attr('href','roomList?id='+itemId);
+                mui('#goNext').on('tap','a',function(){document.location.href=this.href});
+                mui('.mui-scroll-wrapper').scroll();
+            }else {
+                $('#roomlistcont').remove();
+            }
+            $("#model-list").html(roomHtml);
+        }else {
+            mui.toast(data.msg);
+        }
+    }
+</script>
+</body>
+</html>

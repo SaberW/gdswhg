@@ -1,0 +1,38 @@
+@charset "UTF-8";
+@import "../public/config";
+.message-box-bg{
+  position:fixed;
+  left:0px;
+  top:0px;
+  width:100%;
+  height:100%;
+  z-index:999;
+  background:url(../../img/public/b1.png) repeat;
+  .message-cont{
+    height:280px;
+    width:710px;
+    margin:240px auto 0px auto;
+    background-color:#fff;
+    padding:20px;
+    textarea{
+      width:680px;
+      height:200px;
+      border:1px @-border-color solid;
+      padding:15px;
+    }
+    .message-btn{
+      margin-top:10px;
+      text-align: right;
+      .btn{
+        .button();
+      }
+    }
+  }
+  .msg-close{
+    background:url(../../img/public/msg-close.png) no-repeat;
+    width:32px;
+    height:60px;
+    margin:0px auto;
+    cursor: pointer;
+  }
+}

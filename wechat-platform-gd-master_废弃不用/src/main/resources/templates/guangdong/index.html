@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<script type="text/javascript" src="http://int.dpool.sina.com.cn/iplookup/iplookup.php?format=js"></script>
+<!--<script type="text/javascript" th:inline="javascript">
+    //根据用户所有省市，定位到全省站或者全市站
+    try{
+        var myprovince = remote_ip_info['province'];
+        if(myprovince == '广东'){
+            var mycity = remote_ip_info['city']+'市';
+            var cultid = $.cookie('cultid');
+            var city = $.cookie('city');
+            //是否需要根据用户所在省市定位到全省站或者全市站
+            var initCult = typeof cultid == 'undefined' || (cultid=='' && city == '');
+            //如果全市站下面有文化馆，定位到全市站，否则定位到全省站
+            alert(initCult);
+          if(initCult){
+                dataInit.ajax({
+                    api: [[${apiPath.switch}]],
+                    fn: function(data){
+                        //console.log(data);
+                        var __cultids = '';var spt = '';
+                        if (data.code == 0 && data.data) {
+                            if (data.rows.length) {
+                                for (var i = 0; i < data.rows.length; i++) {
+                                    var model = data.rows[i];
+                                    __cultids += spt+model.id;
+                                    spt = ',';
+                                }
+                            }
+                        }
+                        $.cookie('cultid', __cultids, {path: "/", expires: 7});
+                        $.cookie('city', (__cultids == '' ? '' : mycity), {path: "/", expires: 7});
+                        $.cookie('cultType', (__cultids == '' ? 1 : 3), {path: "/", expires: 7});
+                        $.cookie('siteName', (__cultids == '' ? '全省站' : mycity+'站'), {path: "/", expires: 7});
+                        window.location.href= 'index?wechat=1123';
+                    },
+                    params: {city: mycity, level: '2,3' }
+                });
+            }else{
+                  if(cultid==''){
+                      $.cookie('cultid', '', {path: "/", expires: 7});
+                      $.cookie('cultType',1, {path: "/", expires: 7});
+                      $.cookie('siteName',  '全省站', {path: "/", expires: 7});
+                  }
+           }
+        }
+    }catch(err){}
+</script>-->
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/index/index.css'" >
+<div th:include="guangdong/public/leftBar :: copy"></div>
+<div id="page">
+    <div class="mui-content">
+        <div class="index-header">
+            <div class="search-area-user mui-clearfix">
+                <a href="changecity"><div class="area" id="index_area"><i class="iconfont icon-jiantou"></i></div></a>
+                <div class="search"><i class="iconfont icon-search"></i><a href="search">搜点什么...</a></div>
+                <a href="usercenter/index">
+                    <div class="user" th:if="${session.sessUserKey == null}">
+                        <img th:src="${basePath}+'/assets/img/public/face2.png'" alt="个人头像">
+                    </div>
+                    <div class="user"  th:if="${session.sessUserKey != null}">
+                        <img th:src="${session.sessUserKey.headimgurl} ? ${session.sessUserKey.headimgurl} : ${basePath}+'/assets/img/public/face2.png'" alt="个人头像">
+                        <em class="message-wx-2"></em>
+                    </div>
+                </a>
+            </div>
+            <div class="banner">
+                <div class="swiper-container" id="banner-swiper">
+                    <div class="swiper-wrapper" id="banner-list">
+                        <!--<div class="swiper-slide">
+                            <a href="#"><img class="lazy" th:src="${basePath}+'/assets/img/img_demo/q1.jpg'" alt=""></a>
+                        </div>-->
+                    </div>
+                    <!-- Add Pagination -->
+                </div>
+            </div>
+            <div class="news" id="news">
+                <!--<div class="news-con">
+                    <div class="news-logo">
+                        <img th:src="${basePath}+'/assets/img/index/toutiao@2x.png'">
+                    </div>
+                    <div class="news-detail">
+                        <h2>这是一条资讯标题这是一条资讯标题</h2>
+                        <p>区域</p>
+                    </div>
+                    <div class="enter">
+                        <i class="iconfont icon-jiantou1"></i>
+                    </div>
+                    <a href="#"></a>
+                </div>-->
+            </div>
+            <div class="mask">
+                <img src="">
+                <div class="mask-bg"></div>
+            </div>
+        </div>
+        <div class="index-wrapper">
+            <div class="project">
+                <div class="theme mui-clearfix">
+                    <ul class="mui-clearfix">
+                        <li>
+                            <h2>资讯动态</h2>
+                            <img th:src="${basePath}+'/assets/img/index/news@2x.png'">
+                            <a th:href="${basePath}+'/news/list'"></a>
+                        </li>
+                        <li class="cl">
+                            <div class="top mui-clearfix">
+                                <h2>文化活动</h2>
+                                <img th:src="${basePath}+'/assets/img/index/act@2x.png'">
+                                <a th:href="${basePath}+'/act/list'"></a>
+                            </div>
+                            <div class="bottom mui-clearfix">
+                                <h2>场馆服务</h2>
+                                <img th:src="${basePath}+'/assets/img/index/venue@2x.png'">
+                                <a th:href="${basePath}+'/venue/list'"></a>
+                            </div>
+                        </li>
+                    </ul>
+                    <div class="nav-theme">
+                        <ul class="mui-clearfix">
+                            <li class="cl">
+                                <h3>培训驿站</h3>
+                                <img th:src="${basePath}+'/assets/img/index/train@2x.png'">
+                                <a th:href="${basePath}+'/train/index'"></a>
+                            </li>
+                            <li>
+                                <h3>群文资源</h3>
+                                <img th:src="${basePath}+'/assets/img/index/resource@2x.png'">
+                                <a th:href="${basePath}+'/resource/index'"></a>
+                            </li>
+                            <li>
+                                <h3>品牌活动</h3>
+                                <img th:src="${basePath}+'/assets/img/index/brand@2x.png'">
+                                <a th:href="${basePath}+'/brand/list'"></a>
+                            </li>
+                            <li>
+                                <h3>文化联盟</h3>
+                                <img th:src="${basePath}+'/assets/img/index/union@2x.png'">
+                                <a th:href="${basePath}+'/union/index'"></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="index-wrapper" id="activeActivity">
+            <div class="index-wrapper-list">
+                <div class="index-wrapper-header">
+                    <img th:src="${basePath}+'/assets/img/index/tuijianhuodong@2x.png'"><span>推荐活动</span><a href="javascript:showActList()">换一换</a>
+                </div>
+                <div class="activity-list">
+                    <ul id="activity-list">
+                        <!--<li>
+                            <div class="img">
+                                <img class="lazy" th:src="${basePath}+'/assets/img/img_demo/q3.jpg'" alt="">                            </div>
+                            <div class="info">
+                                <h3>“春雨工程”广东文化志愿者小队走进海南</h3>
+                                <p>地址：佛山市顺德文化中心</p>
+                                <p>人数：10/50人</p>
+                                <div class="state">进行中</div>
+                                <div class="share">
+                                    <span class="collection"><i class="iconfont icon-like"></i>20</span>
+                                    <span class="likes"><i class="iconfont icon-praise"></i>20</span>
+                                </div>
+                            </div>
+                            <a href="#"></a>
+                        </li>-->
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="index-wrapper" id="activeTrain">
+            <div class="index-train">
+                <div class="index-wrapper-header">
+                    <img th:src="${basePath}+'/assets/img/index/remenpeixun@2x.png'"><span>热门培训</span><a th:href="${basePath}+'/train/list'">更多<i class="iconfont icon-enter"></i></a>
+                </div>
+                <div class="trainBox cl swiper-container">
+                    <div class="train-box swiper-wrapper" id="train-list">
+                        <!--<a class="mui-control-item train-content">
+                            <div class="train-content-m">
+                                <div class="img">
+                                    <img src="http://mpic.tiankong.com/501/479/501479db66213fe9a3590c18bf3cd4ac/640.jpg">
+                                </div>
+                                <div class="info">
+                                    <h2>广东举办2017年全国文化志愿活动</h2>
+                                    <p><span>地 址：</span>广州市天河区广州大道1229号</p>
+                                    <p><span>年龄段：</span>7-12岁</p>
+                                    <p><span>人  数：</span>50 / 50</p>
+                                </div>
+                                <div class="other">
+                                    <span class="enlist">报名已结束</span>
+                                    <span class="like"><i class="icon iconfont icon-praise"></i> 20</span>
+                                    <span class="like"><i class="icon iconfont icon-like"></i> 26</span>
+                                </div>
+                            </div>
+                        </a>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="index-wrapper">
+            <div class="index-wrapper-list">
+                <div class="index-wrapper-header">
+                    <img th:src="${basePath}+'/assets/img/index/paihang@2x.png'"><span>排行指数</span><a th:href="${basePath}+'/act/list'">更多<i class="iconfont icon-enter"></i></a>
+                </div>
+                <div class="ranking-list">
+                    <div class="rangking-list-nav">
+                        <span class="nav-list active" onclick="showPHB(1)">最新发布</span>
+                        <span class="nav-list" onclick="showPHB(4)">热门点赞</span>
+                        <span class="nav-list" onclick="showPHB(3)">热门收藏</span>
+                        <span class="nav-list" onclick="showPHB(2)">最多参与</span>
+                    </div>
+                </div>
+                <div class="activity-list">
+                    <ul id="phb-list">
+                        <!--<li>
+                            <div class="img">
+                                <img class="lazy" th:src="${basePath}+'/assets/img/img_demo/q3.jpg'" alt="">                            </div>
+                            <div class="info">
+                                <h3>“春雨工程”广东文化志愿者小队走进海南</h3>
+                                <p>地址：佛山市顺德文化中心</p>
+                                <p>人数：10/50人</p>
+                                <div class="state">进行中</div>
+                                <div class="share">
+                                    <span class="collection"><i class="iconfont icon-like"></i>20</span>
+                                    <span class="likes"><i class="iconfont icon-praise"></i>20</span>
+                                </div>
+                            </div>
+                            <a href="#"></a>
+                        </li>-->
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="index-wrapper" id="activeVenue">
+            <div class="index-train">
+                <div class="index-wrapper-header">
+                    <img th:src="${basePath}+'/assets/img/index/remen@2x.png'"><span>热门场馆</span><a th:href="${basePath}+'/venue/list'">更多<i class="iconfont icon-enter"></i></a>
+                </div>
+                <div class="venueBox cl swiper-container">
+                    <div class="train-box swiper-wrapper" id="activeVenueList">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="index-wrapper" id="activeFG" style="display: none">
+            <div class="index-wrapper-list">
+                <div class="index-wrapper-header">
+                    <img th:src="${basePath}+'/assets/img/index/fenguan@2x.png'"><span>活跃分馆</span><a th:href="${basePath}+'/union/index'">更多<i class="iconfont icon-enter"></i></a>
+                </div>
+                <div class="fenguan-list swiper-container" id="fenguan-list">
+                    <ul class="swiper-wrapper" id="activeFG-list">
+                        <!--<li class="swiper-slide" data-img="http://localhost:8877/assets/img/img_demo/q1.jpg">
+                            <div class="img">
+                                <img th:src="${basePath}+'/assets/img/img_demo/q1.jpg'">
+                            </div>
+                            <div class="info">
+                                <h2>广东省文化馆</h2>
+                                <p>广州市中心</p>
+                                <a href="javascript:void(0)">详情<i class="iconfont icon-enter"></i></a>
+                            </div>
+                        </li>-->
+                    </ul>
+                    <div class="mask">
+                        <img th:src="${basePath}+'/assets/img/public/no-img.png'">
+                        <div class="mask-bg"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" th:inline="javascript">
+    var cultid = $.cookie('cultid') || '', coocity = $.cookie('city') || '';
+    if (cultid == ''&&coocity=='') $("#activeFG").show();
+    var indexActPage = 0,total = 0;
+    $().ready(function () {
+        dataInit.ajax({
+            api: [[${apiPath.pxList}]],//indexTraList
+            fn: indexTraList, //推荐培训
+            params: {
+                page:1,
+                pageSize:6,
+                cultid: $.cookie('cultid')
+            }
+        });
+        dataInit.ajax({
+            api: [[${apiPath.indexList}]],//indexList
+            fn: indexList, //热门场馆
+            params: {
+                page:1,
+                pageSize:6,
+                cultid: $.cookie('cultid')
+            }
+        });
+        dataInit.ajax({
+            api: [[${apiPath.activeFG}]],//activeFG
+            fn: activeFG, //热门分馆
+            params: {
+                page:1,
+                pageSize:6,
+                cultid: $.cookie('cultid')
+            }
+        });
+        //推荐活动
+        showActList();
+        //轮播图
+        showSlider();
+        //显示城市
+        showCity();
+        //排行榜NAV切换
+        $(".rangking-list-nav span").on("click",function () {
+            $(this).addClass("active").siblings().removeClass('active');
+        })
+        showPHB(1);
+        randomNews();
+    })
+    function showActList() {
+        if(total/3>indexActPage || indexActPage===0){
+            indexActPage++;
+            dataInit.ajax({
+                api: [[${apiPath.bannerActList}]],
+                fn: bannerActList, //推荐活动
+                params: {
+                    index: indexActPage,
+                    size: 3,
+                    iswechat:'true',
+                    cultid: $.cookie('cultid')
+                }
+            });
+        }else {
+            indexActPage = 1;
+            dataInit.ajax({
+                api: [[${apiPath.bannerActList}]],
+                fn: bannerActList, //推荐活动
+                params: {
+                    index: indexActPage,
+                    size: 3,
+                    cultid: $.cookie('cultid')
+                }
+            });
+        }
+    }
+    function showSlider() {
+        dataInit.ajax({
+            api: [[${apiPath.showAdver}]],
+            params: {
+                type: 5,
+                city: $.cookie('city'),
+                cultid: $.cookie('cultid')
+            },
+            fn: function (data) {
+                if (data.code == 0 && data.rows.length > 0) {
+                    $('#banner-list').html('');
+                    var html = '';
+                    for (var i in data.rows) {
+                        var model = data.rows[i];
+                        var ModelUrl = model.url?model.url:'javascript:void(0)';
+                        var img = data.imgPath + dataInit.getBigImage(model.picture);
+                        html += '    <div class="swiper-slide" data-img ="'+img+'">' +
+                            ' <a href="'+ModelUrl+'"><img class="lazy" src="' +img+ '" alt=""></a>' +
+                            '    </div>';
+                    }
+                    $("#banner-list").html(html);
+                }else {
+//                    mui.toast(data.msg || '数据加载失败');
+                    var imgPath = [[${basePath}]] + '/assets/img/public/dance.jpg';
+                    $("#banner-list").html('    <div class="swiper-slide">' +
+                        ' <a href="javascript:void(0)"><img class="lazy" src="' +imgPath+ '" alt=""></a>' +
+                        '    </div>');
+                }
+                var swiper = new Swiper('#banner-swiper', {
+                    effect: 'coverflow',
+                    loop : true,
+                    grabCursor: true,
+                    centeredSlides: true,
+                    slidesPerView: 'auto',
+                    coverflowEffect: {
+                        rotate: 50,
+                        stretch: 0,
+                        depth: 100,
+                        modifier: 1,
+                        slideShadows : true
+                    },
+                    autoplay: {
+                        delay: 3000,
+                        stopOnLastSlide: true,
+                        disableOnInteraction: false,
+                    },
+                    on:{
+                        slidePrevTransitionEnd: function(){
+                            var imgPath = $("#banner-swiper").find('.swiper-slide-active').attr('data-img');
+                            $(".index-header").find('.mask img').attr('src',imgPath);
+
+                        },
+                        slideNextTransitionEnd: function(){
+                            var imgPath = $("#banner-swiper").find('.swiper-slide-active').attr('data-img');
+                            $(".index-header").find('.mask img').attr('src',imgPath);
+                        }
+                    }
+                });
+            }
+        });
+    }
+    function toutiao(data) {
+        if(data && data.code ==0){
+            $("#news").html('');
+            var html = '';
+            if(data.rows.length>0){
+                    var model = data.rows[0];
+                    var basePath = [[${basePath}]];
+                    var title = model.clnftltle;
+                    if(title.length > 30){
+                        title=title.substring(0,30)+"...";
+                    }
+                    html ='<div class="news-con">'+
+                        '    <div class="news-logo">'+
+                        '        <img src="'+basePath+'/assets/img/index/toutiao@2x.png">'+
+                        '    </div>'+
+                        '    <div class="news-detail">'+
+                        '        <h2>'+title+'<em>'+model.area+'</em></h2>'+
+                        '    </div>'+
+                        '    <div class="enter2">'+
+                        '        <i class="iconfont icon-enter"></i>'+
+                        '    </div>'+
+                        '    <a href="news/detail?id='+model.clnfid+'"></a>'+
+                        '</div>';
+                $("#news").html(html);
+                $("#news").fadeIn();
+            }else {
+                $("#news").hide();
+            }
+        }
+        setInterval(function() {
+            if(data && data.code ==0){
+                $("#news").html('');
+                var html = '';
+                if(data.rows.length>0){
+                    var randomNewsId = Math.ceil(Math.random()*data.rows.length-1);
+                    var model = data.rows[randomNewsId];
+                    var basePath = [[${basePath}]];
+                    var title = model.clnftltle;
+                    if(title.length > 30){
+                        title=title.substring(0,30)+"...";
+                    }
+                    html ='<div class="news-con">'+
+                        '    <div class="news-logo">'+
+                        '        <img src="'+basePath+'/assets/img/index/toutiao@2x.png">'+
+                        '    </div>'+
+                        '    <div class="news-detail">'+
+                        '        <h2>'+title+'<em>'+model.area+'</em></h2>'+
+                        '    </div>'+
+                        '    <div class="enter2">'+
+                        '        <i class="iconfont icon-enter"></i>'+
+                        '    </div>'+
+                        '    <a href="news/detail?id='+model.clnfid+'"></a>'+
+                        '</div>';
+                    $("#news").html(html);
+                    $("#news").fadeIn();
+                }else {
+                    $("#news").hide();
+                }
+            }
+        },5000)
+    }
+    function bannerActList(data) {
+        if(data && data.code ==0){
+            total = data.total;
+            $("#activity-list").html('');
+            var html = '';
+            var arrayList = data.rows.sort(randomsort);
+            if(arrayList.length>0){
+                for(var i in data.rows){
+                    var model = data.rows[i];
+                    var img = data.imgPath + dataInit.getSmallImage(model.imgurl);
+                    var time = moment(model.starttime).format("YYYY-MM-DD") + ' 至 ' + moment(model.endtime).format("YYYY-MM-DD");
+                    var ticketnum = model.ticketnum, a_label, liststate = model.liststate;
+                    if (liststate == 1) {
+                        a_label = '<div class="state s-1">立即预订</div>';
+                    } else if (liststate == 2) {
+                        a_label = '<div class="state">已订完</div>';
+                    } else if (liststate == 3) {
+                        a_label = '<div class="state">直接前往</div>';
+                    } else if (liststate == 4) {
+                        a_label = '<div class="state">活动已结束</div>';
+                    } else {
+                        a_label = '<div class="state">即将开始</div>';
+                    }
+                    html += '<li>'+
+                        '    <div class="img">'+
+                        '        <img class="lazy" src="'+img+'" alt="'+model.name+'">'+
+                        '    </div>'+
+                        '    <div class="info">'+
+                        '        <h3>'+model.name+'</h3>'+
+                        '        <p>地址：'+model.address+'</p>'+
+                        '        <p>余票：'+ticketnum+'张</p>'+a_label+
+                        '        <div class="share">'+
+                        '            <span class="collection"><i class="iconfont icon-like"></i>'+model.shoucang+'</span>'+
+                        '            <span class="likes"><i class="iconfont icon-praise"></i>'+model.dianzan+'</span>'+
+                        '        </div>'+
+                        '    </div>'+
+                        '    <a href="act/detail?id='+model.id+'"></a>'+
+                        '</li>';
+                }
+                $("#activity-list").html(html);
+            }else {
+                $("#activeActivity").hide();
+            }
+        }else {
+            mui.toast(data.msg || '数据加载失败');
+            $("#activeActivity").hide();
+        }
+    }
+    function showPHB(sort) {
+        dataInit.ajax({
+            api: [[${apiPath.phbzs}]],
+            fn: phbzs, //排行榜
+            params: {
+                index: 1,
+                size: 3,
+                iswechat:'true',
+                cultid: $.cookie('cultid'),
+                sort: sort
+            }
+        });
+    }
+    function phbzs(data) {
+        if(data && data.code ==0){
+            var html = '';
+            if(data.rows.length>0){
+                for(var i in data.rows){
+                    var model = data.rows[i];
+                    var img = data.imgPath + dataInit.getSmallImage(model.imgurl);
+                    var time = moment(model.starttime).format("YYYY-MM-DD") + ' 至 ' + moment(model.endtime).format("YYYY-MM-DD");
+                    var ticketnum = model.ticketnum, a_label, liststate = model.liststate;
+                    if (liststate == 1) {
+                        a_label = '<div class="state s-1">立即预订</div>';
+                    } else if (liststate == 2) {
+                        a_label = '<div class="state">已订完</div>';
+                    } else if (liststate == 3) {
+                        a_label = '<div class="state">直接前往</div>';
+                    } else if (liststate == 4) {
+                        a_label = '<div class="state">活动已结束</div>';
+                    } else {
+                        a_label = '<div class="state">即将开始</div>';
+                    }
+                    html += '<li>'+
+                        '    <div class="img">'+
+                        '        <img class="lazy" src="'+img+'" alt="'+model.name+'">'+
+                        '    </div>'+
+                        '    <div class="info">'+
+                        '        <h3>'+model.name+'</h3>'+
+                        '        <p>地址：'+model.address+'</p>'+
+                        '        <p>余票：'+ticketnum+'张</p>'+a_label+
+                        '        <div class="share">'+
+                        '            <span class="collection"><i class="iconfont icon-like"></i>'+model.shoucang+'</span>'+
+                        '            <span class="likes"><i class="iconfont icon-praise"></i>'+model.dianzan+'</span>'+
+                        '        </div>'+
+                        '    </div>'+
+                        '    <a href="act/detail?id='+model.id+'"></a>'+
+                        '</li>';
+                }
+                $("#phb-list").html(html);
+            }else {
+                $("#phb-list").html("<div class='newbility-no-msg2'></div>");
+            }
+        }else {
+            mui.toast(data.msg || '数据加载失败');
+            $("#phb-list").html("<div class='newbility-no-msg2'></div>");
+        }
+    }
+    function indexTraList(data) {
+        var html = "";
+        if (data.code == 0 && data.rows.length > 0) {
+            for (var i in data.rows) {
+                var model = data.rows[i];
+                var img = data.imgPath + dataInit.getBigImage(model.trainimg);
+                var startTime = moment(model.starttime).format('YYYY-MM-DD');
+                var endTime = moment(model.endtime).format('YYYY-MM-DD');
+                var time = startTime + ' 至 ' + endTime;
+                var age  = model.age;
+                var cutNum = model.maxnumber - model.enrolcount;
+                var people= model.enrolcount + '/' + model.maxnumber + '人';
+                if(cutNum <= 0){
+                    people = '已满';
+                }
+                if(age){
+                    age = age.split(',');
+                    age = age[0]+'-'+age[1]+'岁';
+                }else{
+                    age = '不限';
+                }
+                var state= '',state_cls;
+                if(data.data > model.enrollendtime ) {
+                    state = '报名结束';
+                    state_cls = 's-4';
+                } else if (cutNum <= 0){
+                    state = '名额已满';
+                    state_cls = 's-4';
+                }else{ //未报名
+                    if(model.enrollstarttime > data.data){
+                        state = '即将开始';
+                        state_cls = 's-3';
+                    }else if(model.enrollstarttime < data.data && data.data < model.enrollendtime){
+                        state = model.enrolstate ? '已报名' : '立即报名';'';
+                        state_cls = model.enrolstate ? 's-4' : 's-1';
+                    }
+                }
+                html +='<a class="swiper-slide train-content" href="train/detail?id='+model.id+'">'+
+                    '    <div class="train-content-m">'+
+                    '        <div class="img">'+
+                    '            <img class="lazy" src="'+img+'">'+
+                    '        </div>'+
+                    '        <div class="info">'+
+                    '            <h2>'+model.title+'</h2>'+
+                    '            <p><span>地址：</span>'+model.address+'</p>'+
+                    '            <p><span>年龄段：</span>'+age+'</p>'+
+                    '            <p><span>人数：</span>'+people+'</p>'+
+                    '        </div>'+
+                    '        <div class="other">'+
+                    '            <span class="enlist '+state_cls+'">'+state+'</span>'+
+                    '            <span class="like"><i class="icon iconfont icon-praise"></i> '+model.shoucang+'</span>'+
+                    '            <span class="like"><i class="icon iconfont icon-like"></i> '+model.dianzan+'</span>'+
+                    '        </div>'+
+                    '    </div>'+
+                    '</a>';
+            }
+        } else {
+            html = "<div class='newbility-no-msg2'></div>";
+            $("#activeTrain").hide();
+        }
+        $("#train-list").html(html);
+        var swiper = new Swiper('.trainBox', {
+            slidesPerView: 'auto'
+        });
+    }
+    function indexList(data) {
+        var html = "";
+        if (data.code == 0 && data.rows.length > 0) {
+            for (var i in data.rows) {
+                var model = data.rows[i];
+                var img = data.imgPath + dataInit.getBigImage(model.imgurl);
+                var tag = "";
+                var tag_html = '';
+                if(model.tag){
+                    tag = model.tag.split(',');
+                    tag_html += "<div class='tag'>";
+                    for(var j in tag){
+                        tag_html += '<span>'+tag[j]+'</span>'
+                    }
+                    tag_html += "</div>";
+                }
+                var state_cls ,state;
+                if (model.openTimeNum > 0) {
+                    state_cls = '';
+                    state = '不可预订';
+                } else {
+                    state_cls = 's-1';
+                    state = '立即预定';
+                }
+
+                html +='<a class="swiper-slide train-content" href="venue/detail?id='+model.id+'">'+
+                    '    <div class="train-content-m">'+
+                    '        <div class="img">'+
+                    '            <img class="lazy" src="'+img+'">'+
+                    '        </div>'+
+                    '        <div class="info">'+
+                    '            <h2>'+model.title+'</h2>'+
+                    '            <p><span>地址：</span>'+model.address+'</p>'+
+//                    '            <p><span>类型：</span>'+age+'</p>'+
+                    '        </div>'+
+                    '        <div class="other">'+
+                    '            <span class="enlist '+state_cls+'">'+state+'</span>'+
+                    '            <span class="like"><i class="icon iconfont icon-praise"></i> '+model.shoucang+'</span>'+
+                    '            <span class="like"><i class="icon iconfont icon-like"></i> '+model.dianzan+'</span>'+
+                    '        </div>'+
+                    '    </div>'+
+                    '</a>';
+            }
+        } else {
+            html = "<div class='newbility-no-msg2'></div>";
+            $("#activeVenue").hide();
+        }
+        $("#activeVenueList").html(html);
+        var swiper = new Swiper('.venueBox', {
+            slidesPerView: 'auto'
+        });
+    }
+    function activeFG(data) {
+        if(data.rows && data.code == 0){
+            $("#activeFG-list").html('');
+            var _html = '';
+            for(var i in data.rows){
+                var model = data.rows[i]
+                var img = data.imgPath + dataInit.getSmallImage(model.picture);
+
+                _html+='<li class="swiper-slide" data-img="'+img+'">'+
+                    '    <div class="img">'+
+                    '        <img src="'+img+'">'+
+                    '    </div>'+
+                    '    <div class="info">'+
+                    '        <h2>'+model.name+'</h2>'+
+                    '        <p>'+model.address+'</p>';
+                if(model.level==1){
+                    _html+= '        <a href="javascript:city(\''+model.id+'\',\''+model.city+'\',\'2\',\''+model.province+'\')">详情<i class="iconfont icon-enter"></i></a>';
+                }else if(model.level==2){
+                    _html+= '        <a href="javascript:city(\''+model.id+'\',\''+model.city+'\',\'4\',\''+model.city+'\')">详情<i class="iconfont icon-enter"></i></a>';
+                }else if(model.level==3){
+                    _html+= '        <a href="javascript:city(\''+model.id+'\',\''+model.city+'\',\'5\',\''+model.area+'\')">详情<i class="iconfont icon-enter"></i></a>';
+                }
+                _html+=    '    </div></li>';
+            }
+
+
+            if(data.rows.length>0){
+                $("#activeFG-list").html(_html);
+
+                var swiper = new Swiper('#fenguan-list', {
+                    slidesPerView: "auto",
+                    centeredSlides: true,
+                    loop : true,
+                    paginationClickable: true,
+                    spaceBetween: 30,
+                    on:{
+                        slidePrevTransitionEnd: function(){
+                            var imgPath = $("#fenguan-list").find('.swiper-slide-active').attr('data-img');
+                            $("#fenguan-list").find('.mask img').attr('src',imgPath);
+
+                        },
+                        slideNextTransitionEnd: function(){
+                            var imgPath = $("#fenguan-list").find('.swiper-slide-active').attr('data-img');
+                            $("#fenguan-list").find('.mask img').attr('src',imgPath);
+                        }
+                    }
+                });
+            }else {
+                $("#activeFG").hide();
+            }
+        }
+    }
+/*    function city(id,city) {
+        $.cookie('cultid', id, {path: "/", expires: 7});
+        $.cookie('city', city, {path: "/", expires: 7});
+        window.location.href = window.location.href;
+    }*/
+
+    function city(id,city,type,siteName) {
+        //type: 1-全省站,2-省级馆,3-全市站,4-市级馆,5-区级馆
+        //siteName: type=1-全省站,type=2-广东省,type=3-xx市站, type=4-XX市,type=5-xx区
+        $.cookie('cultid', id, {path: "/", expires: 7});
+        $.cookie('city', city, {path: "/", expires: 7});
+        $.cookie('cultType', type, {path: "/", expires: 7});
+        $.cookie('siteName', siteName, {path: "/", expires: 7});
+        $(".site_bottom").hide();
+        $(".city_bottom").show();
+        window.location.replace('index?wechat=1123');// 附加参数 是为了能成功在 微信中多次跳转
+//        history.back(-1);
+    }
+
+    function showCity() {
+        var coocity = '';
+        var cultType = $.cookie('cultType');
+        if(typeof cultType != "undefined"){
+            var siteName = $.cookie('siteName');
+            coocity = siteName;
+        }else{
+            coocity = '全省站';
+        }
+        $("#index_area").html(coocity+'<i class="iconfont icon-jiantou">');
+    }
+    function randomNews() {
+        dataInit.ajax({
+            api: [[${apiPath.infomationList}]],
+            fn: toutiao, //资讯
+            params: {
+                index: 1,
+                size: 10,
+                cultid: $.cookie('cultid'),
+                type: "2017092830756428" //头条
+            }
+        });
+    }
+    function randomsort() {
+        return Math.random()>.5 ? -1 : 1;
+        //用Math.random()函数生成0~1之间的随机数与0.5比较，返回-1或1
+    }
+</script>
+</body>
+</html>

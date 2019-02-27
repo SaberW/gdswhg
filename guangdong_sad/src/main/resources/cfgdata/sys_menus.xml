@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configs>
+    <opts>
+        <opt id="view">浏览</opt>
+        <opt id="add">添加</opt>
+        <opt id="edit">编辑</opt>
+        <opt id="del">删除</opt>
+        <opt id="undel">还原删除</opt>
+        <opt id="order">排序</opt>
+        <opt id="on">启用</opt>
+        <opt id="off">停用</opt>
+        <opt id="reset">密码重置</opt>
+        <opt id="publish">发布</opt>
+        <opt id="publishoff">取消发布</opt>
+        <opt id="checkgo">送审</opt>
+        <opt id="checkon">审核通过</opt>
+        <opt id="checkoff">审核打回</opt>
+        <opt id="back">打回编辑</opt>
+        <opt id="recommend">推荐</opt>
+        <opt id="recommendoff">取消推荐</opt>
+        <opt id="retime">设置预定时段</opt>
+        <opt id="reserve">预定管理</opt>
+        <opt id="baoming">报名管理</opt>
+        <opt id="kecheng">课程管理</opt>
+        <opt id="ccmanager">场次管理</opt>
+        <opt id="info">场次管理</opt>
+        <opt id="upindex">上首页</opt>
+        <opt id="upindexoff">取消上首页</opt>
+    </opts>
+    
+
+
+    <menus>
+        <menu id="whg_system" type="0" state="1" text="系统管理" iconcls="p-1">
+            <menu id="whg_system_1" type="1" state="1" text="分馆管理"  href="" opts="view"></menu>
+            <menu id="whg_system_2" type="1" state="1" text="管理员管理" href="" opts="view"></menu>
+            <menu id="whg_system_3" type="1" state="1" text="角色管理" href="" opts="view"></menu>
+            <menu id="whg_system_4" type="1" state="1" text="权限管理" href="" opts="view"></menu>
+
+            <menu id="whg_system_zd" type="0" state="1" text="字典管理">
+                <menu id="whg_system_zd_1" type="1" state="1" text="区域字典" href="" opts="view"></menu>
+                <menu id="whg_system_zd_2" type="1" state="1" text="设备字典" href="" opts="view"></menu>
+            </menu>
+
+            <menu id="whg_system_6" type="1" state="1" text="日志" href="" opts="view"></menu>
+        </menu>
+
+
+        <menu id="whg_inner" type="0" state="1" text="内部供需管理" iconcls="p-1">
+            <menu id="whg_inner_1" type="1" state="1" text="用户管理"  href="" opts="view"></menu>
+            <menu id="whg_inner_2" type="1" state="1" text="权限管理" href="" opts="view"></menu>
+            <menu id="whg_inner_3" type="1" state="1" text="帐号申请管理" href="" opts="view"></menu>
+            <menu id="whg_inner_4" type="1" state="1" text="资讯发布" href="" opts="view"></menu>
+            <menu id="whg_inner_5" type="1" state="1" text="精彩回顾" href="" opts="view"></menu>
+
+            <menu id="whg_inner_10" type="1" state="1" text="统计" href="" opts="view"></menu>
+            <menu id="whg_inner_11" type="1" state="1" text="日志" href="" opts="view"></menu>
+        </menu>
+
+        <menu id="whg_outer" type="0" state="1" text="外部供需管理" iconcls="p-1">
+            <menu id="whg_outer_1" type="1" state="1" text="会员管理"  href="" opts="view"></menu>
+
+            <menu id="whg_outer_cg" type="0" state="1" text="场馆管理" href="" opts="view">
+                <menu id="whg_outer_cg_1" type="1" state="1" text="添加场馆"  href="" opts="view"></menu>
+                <menu id="whg_outer_cg_2" type="1" state="1" text="场馆编辑列表"  href="" opts="view"></menu>
+                <menu id="whg_outer_cg_3" type="1" state="1" text="场馆审核列表"  href="" opts="view"></menu>
+                <menu id="whg_outer_cg_4" type="1" state="1" text="场馆发布列表"  href="" opts="view"></menu>
+                <menu id="whg_outer_cg_5" type="1" state="1" text="场馆回收站"  href="" opts="view"></menu>
+            </menu>
+
+            <menu id="whg_outer_hds" type="0" state="1" text="活动室管理" href="" opts="view">
+                <menu id="whg_outer_hds_1" type="1" state="1" text="添加活动室"  href="" opts="view"></menu>
+                <menu id="whg_outer_hds_2" type="1" state="1" text="活动室编辑列表"  href="" opts="view"></menu>
+                <menu id="whg_outer_hds_3" type="1" state="1" text="活动室审核列表"  href="" opts="view"></menu>
+                <menu id="whg_outer_hds_4" type="1" state="1" text="活动室发布列表"  href="" opts="view"></menu>
+                <menu id="whg_outer_hds_5" type="1" state="1" text="活动室回收站"  href="" opts="view"></menu>
+            </menu>
+
+            <menu id="whg_outer_hd" type="0" state="1" text="活动管理" href="" opts="view">
+                <menu id="whg_outer_hd_1" type="1" state="1" text="添加活动"  href="" opts="view"></menu>
+                <menu id="whg_outer_hd_2" type="1" state="1" text="活动编辑列表"  href="" opts="view"></menu>
+                <menu id="whg_outer_hd_3" type="1" state="1" text="活动审核列表"  href="" opts="view"></menu>
+                <menu id="whg_outer_hd_4" type="1" state="1" text="活动发布列表"  href="" opts="view"></menu>
+                <menu id="whg_outer_hd_5" type="1" state="1" text="活动回收站"  href="" opts="view"></menu>
+            </menu>
+
+            <menu id="whg_outer_px" type="0" state="1" text="培训管理" href="" opts="view">
+                <menu id="whg_outer_px_1" type="1" state="1" text="添加培训"  href="" opts="view"></menu>
+                <menu id="whg_outer_px_2" type="1" state="1" text="培训编辑列表"  href="" opts="view"></menu>
+                <menu id="whg_outer_px_3" type="1" state="1" text="培训审核列表"  href="" opts="view"></menu>
+                <menu id="whg_outer_px_4" type="1" state="1" text="培训发布列表"  href="" opts="view"></menu>
+                <menu id="whg_outer_px_5" type="1" state="1" text="培训回收站"  href="" opts="view"></menu>
+            </menu>
+
+            <menu id="whg_outer_6" type="1" state="1" text="资讯管理" href="" opts="view"></menu>
+
+
+            <menu id="whg_outer_10" type="1" state="1" text="统计" href="" opts="view"></menu>
+        </menu>
+
+    </menus>
+
+
+</configs>

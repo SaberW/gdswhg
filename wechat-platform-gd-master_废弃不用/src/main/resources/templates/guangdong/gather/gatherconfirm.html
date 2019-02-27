@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/act/actconfirm.css'" >
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/public/detail.css'" >
+<div th:include="guangdong/public/leftBar :: copy"></div>
+<div id="page">
+    <div class="mui-content" id="modelHtml">
+        <!-- Menu Body Begin -->
+        <!--<div class="mui-card no-corner">
+            <div class="mui-card-header wrapper-par">
+                <div class="left-wrapper">
+                    <img class="lazy" id="pageImg" width="120" height="80" src="../../assets/img/temp/act1.jpg">
+                </div>
+                <div class="right-wrapper">
+                    <div class="page-title">长沙三角洲音乐节</div>
+                    &lt;!&ndash;<div class="time"><i class="iconfont icon-time"></i><span id="time">2015-10-11</span></div>
+                    <div class="time address"><i class="iconfont icon-coordinates"></i><span id="district">湖南长沙市橘子洲头</span></div>&ndash;&gt;
+                </div>
+            </div>
+        </div>
+        <div class="mui-card no-corner label-list">
+            <ul class="mui-table-view mui-table-view-chevron">
+                <li class="mui-table-view-cell mui-media">
+                    <a href="javascript:void(0)">
+                        <div class="mui-media-body label">活动地址</div>
+                        <div id="title" class="detail">湖南长沙市橘子洲头</div>
+                    </a>
+                </li>
+                <li class="mui-table-view-cell mui-media">
+                    <a href="javascript:void(0)">
+                        <div class="mui-media-body label">活动时间</div>
+                        <div class="detail">2017-11-5 17:42:16</div>
+                    </a>
+                </li>
+                <li class="mui-table-view-cell mui-media">
+                    <a href="javascript:void(0)">
+                        <div class="mui-media-body label">活动场次</div>
+                        <div class="detail">17:42:16 - 18:00:00</div>
+                    </a>
+                </li>
+                <li class="mui-table-view-cell mui-media">
+                    <a href="javascript:void(0)">
+                        <div class="mui-media-body label">预定票数</div>
+                        <div class="detail">3张</div>
+                    </a>
+                </li>
+                <li class="mui-table-view-cell mui-media">
+                    <a href="javascript:void(0)">
+                        <div class="mui-media-body label">预订座位</div>
+                        <div id="seat" class="detail">
+                            <span class="seat-list">1排2座</span>
+                            <span class="seat-list">2排1座</span>
+                            <span class="seat-list">2排2座</span>
+                        </div>
+                    </a>
+                </li>
+                <li class="mui-table-view-cell mui-media">
+                    <a href="javascript:void(0)">
+                        <div class="mui-media-body label">预订电话</div>
+                        <div id="mobile" class="detail">138****1818</div>
+                    </a>
+                </li>
+            </ul>
+        </div>-->
+        <!-- Menu Body End -->
+    </div>
+    <nav class="mui-bar mui-bar-tab">
+        <div class="mui-tab-item"><a class="goNext" href="javascript:void(0)">确认订单</a></div>
+    </nav>
+</div>
+<script type="text/javascript" th:inline="javascript">
+    var userid = $("#temp_userId").val();
+    var hint = dataInit.getCache('hint');
+    var modelDetail = dataInit.getCache('modelDetail');
+    var basePath = [[${basePath}]];
+
+    var flag = true;
+    //众筹订单提交，检查接口
+    var zcSaveUrl = '',zcCheckUrl = '',titleMsg = '';
+    if(hint.etype == 0){
+        zcSaveUrl = [[${apiPath.gatherApply}]];
+        zcCheckUrl = [[${apiPath.gatherApplyChecking}]];
+        titleMsg = '其他众筹预定成功';
+    }else if(hint.etype == 5){
+        zcSaveUrl = [[${apiPath.trainZcApply}]];
+        zcCheckUrl = [[${apiPath.trainZcApplyChecking}]];
+        titleMsg = '众筹培训预定成功';
+    }else {
+        zcSaveUrl = [[${apiPath.Actbookingsave}]];
+        zcCheckUrl = [[${apiPath.checkActPublish}]];
+        titleMsg = '众筹活动预定成功';
+    }
+    $().ready(function(){
+        showModelHtml();
+        mui('body').on('tap', '.goNext', function () {
+            checkOrder();
+        })
+    })
+    function showModelHtml() {
+        $("#modelHtml").html('');
+        var img = modelDetail.imgPath + dataInit.getSmallImage(modelDetail.imgurl);
+        var seatlisthtml = '';
+        if(modelDetail.refinfo){
+            if(modelDetail.refinfo.address){
+                seatlisthtml += '<li class="mui-table-view-cell mui-media">'+
+                    '<a href="javascript:void(0)">'+
+                    '<div class="mui-media-body label">地址</div>'+
+                    '<div class="detail">'+modelDetail.refinfo.address+'</div></a></li>';
+            }
+        }
+        if(modelDetail.eventData){
+            seatlisthtml +='<li class="mui-table-view-cell mui-media">'+
+                '<a href="javascript:void(0)">'+
+                '<div class="mui-media-body label">时间</div>'+
+                '<div class="detail">'+modelDetail.eventData+" "+modelDetail.eventTime+'</div></a></li>';
+        }
+        /*if(modelDetail.eventTime){
+            seatlisthtml +='<li class="mui-table-view-cell mui-media">'+
+                '<a href="javascript:void(0)">'+
+                '<div class="mui-media-body label">活动场次</div>'+
+                '<div class="detail">'+modelDetail.eventTime+'</div></a></li>';
+        }*/
+        var seatStr = '';
+        if(hint.seatStr){
+            seatStr = hint.seatStr.split(',');
+        }
+        if(seatStr.length>0){
+            var seatlistspan = '';
+            for(var i in seatStr){
+                seatlistspan+='<span class="seat-list">'+seatStr[i]+'</span>';
+            }
+            seatlisthtml +=
+                '<li class="mui-table-view-cell mui-media">'+
+                '<a href="javascript:void(0)">'+
+                '<div class="mui-media-body label">预订座位</div>'+
+                '<div class="detail">'+seatlistspan+
+                '</div></a></li>';
+        }
+        if(hint.seats){
+            seatlisthtml +='<li class="mui-table-view-cell mui-media">'+
+                '<a href="javascript:void(0)">'+
+                '<div class="mui-media-body label">订票数</div>'+
+                '<div class="detail">'+hint.seats+'张</div></a></li>';
+        }
+        if(hint.caednumber){
+            seatlisthtml +='<li class="mui-table-view-cell mui-media">'+
+                '<a href="javascript:void(0)">'+
+                '<div class="mui-media-body label">证件号码</div>'+
+                '<div class="detail">'+hint.caednumber+'</div></a></li>';
+        }
+        if(hint.birthday){
+            seatlisthtml +='<li class="mui-table-view-cell mui-media">'+
+                '<a href="javascript:void(0)">'+
+                '<div class="mui-media-body label">出生年月</div>'+
+                '<div class="detail">'+hint.birthday+'</div></a></li>';
+        }
+        var phone = hint.orderPhoneNo?hint.orderPhoneNo:hint.phone;
+        var html = '<div class="mui-card no-corner">'+
+            '<div class="mui-card-header wrapper-par">'+
+            '<div class="left-wrapper">'+
+            '<img class="lazy" width="120" height="80" src="'+img+'">'+
+            '</div>'+
+            '<div class="right-wrapper">'+
+            '<div class="page-title">'+modelDetail.title+'</div>'+
+            '</div></div></div>'+
+            '<div class="mui-card no-corner label-list">'+
+            '<ul class="mui-table-view mui-table-view-chevron">'+seatlisthtml+
+            '<li class="mui-table-view-cell mui-media">'+
+            '<a href="javascript:void(0)">'+
+            '<div class="mui-media-body label">联系方式</div>'+
+            '<div class="detail">'+phone+'</div></a></li></ul></div>';
+        $("#modelHtml").html(html);
+    }
+    function checkOrder() {
+        if(flag){
+            flag = false;
+            dataInit.ajax({
+                api: zcCheckUrl,
+                fn:function (data) {
+                    if(data.code == 0){
+                        dataInit.ajax({
+                            api: zcSaveUrl,
+                            fn:function (data) {
+                                if(data.code == 0){
+                                    var completeMsg = {
+                                        'modelName':'返回众筹列表',
+                                        'url' : 'gather/list',
+                                        'title': '恭喜您，'+modelDetail.title+'，报名申请已提交，请关注订单状态！',
+                                        'modelOrderName':'查看订单',
+                                        'orderUrl': basePath+'/usercenter/myGather'
+                                    }
+                                    dataInit.setCache('completeMsg', completeMsg);
+                                    window.location.href = '../complete';
+                                }else {
+                                    mui.toast(data.msg || '数据加载失败');
+                                    flag = true;
+                                }
+                            },
+                            params: hint
+                        });
+                    }else {
+                        mui.toast(data.msg || '数据加载失败');
+                        flag = true;
+                    }
+                },
+                params: hint
+            });
+        }
+    }
+</script>
+</body>
+</html>

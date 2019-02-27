@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<script th:src="${basePath}+'/assets/js/plugins/roll/jquery.sly.min.js'" type="text/javascript"></script>
+<script th:src="${basePath}+'/assets/js/index/idangerous.swiper.min.js'" type="text/javascript"></script>
+<link th:href="${basePath}+'/assets/style/index/idangerous.swiper.css'" rel="stylesheet">
+<link th:href="${basePath}+'/assets/style/index/index.css'" rel="stylesheet">
+<link th:href="${basePath}+'/assets/style/index/index_x.css'" rel="stylesheet">
+<div class="wrapper clearfix">
+    <div class="content">
+        <!--公共主头部开始-->
+        <div id="header" th:include="guangdong/public/header :: copy"></div>
+        <!--公共主头部结束-->
+        <!--主站首页开始-->
+        <!--<div id="GxMainIndex" th:include="guangdong/indexmain :: copy" style="display: none"></div>-->
+        <div id="GxMainIndex" th:include="guangdong/indexNew :: copy" style="display: none;"></div>
+        <!--主站首页结束-->
+        <!--子站首页开始-->
+        <div id="GxMinorIndex" th:include="guangdong/indexminor :: copy" style="display: none"></div>
+        <!--子站首页结束-->
+    </div>
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong/public/footer :: copy"></div>
+<!--底部结束-->
+<!--<a class="to-top"></a>-->
+<div class="fixed_btn">
+    <a href="javascript:void(0)" class="toWeiXin" target="_blank">
+        <img th:src="${basePath}+'/assets/img/index/news/weixinQrCode.jpg'">
+        <span></span>
+    </a>
+    <a href="javascript:void(0)" class="toTouTiao" target="_blank">
+        <img th:src="${basePath}+'/assets/img/index/news/ttQrCrde.png'">
+        <span></span>
+    </a>
+    <a href="javascript:void(0)" class="toTop"></a>
+</div>
+<script type="text/javascript" th:inline="javascript">
+    $(document).ready(function () {
+        dataInit.ajax({
+            api: [[${apiPath.query}]],
+            fn: query, //查询现属场馆
+            params: {
+                id: cultid
+            }
+        });
+    });
+
+    function query(data) {
+        /*if (data.code == 0 && data.data) {
+            if (cultid == '') {
+                showMainIndex();
+            } else {
+                showMinorIndex();
+            }
+        }else {
+            showMainIndex();
+        }*/
+        if (cultid == '') {
+            showMainIndex();
+        } else {
+            showMinorIndex();
+        }
+    }
+</script>
+</body>
+</html>

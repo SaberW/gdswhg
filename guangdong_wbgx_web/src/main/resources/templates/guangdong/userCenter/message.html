@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link th:href="${basePath}+'/assets/style/userCenter/userCenter.css'" rel="stylesheet">
+<div class="wrapper clearfix">
+    <div class="content">
+        <!--公共主头部开始-->
+        <div id="header" th:include="guangdong/public/header :: copy"></div>
+        <!--公共主头部结束-->
+        <div class="main main-boder clearfix">
+            <div class="leftPanel" th:include="guangdong/userCenter/left :: copy"></div>
+            <div class="rightPanel">
+                <ul class="commBtn clearfix">
+                    <li class="active"><a href="javascript:void(0)">站内信</a></li>
+                    <!--<li><a href="javascript:void(0)">课程</a></li>-->
+                    <!--<li><a href="javascript:void(0)" data-type="2">场馆</a></li>-->
+                    <!--<li><a href="javascript:void(0)" data-type="3">活动室</a></li>-->
+                    <!--<li><a href="javascript:void(0)" data-type="5">培训</a></li>-->
+                </ul>
+                <input type="hidden" id="type" value="0">
+                <div class="sysmsg">
+                    <div class="ad"></div>
+                    <p>暂无消息</p>
+                </div>
+                <ul class="group clearfix">
+
+                </ul>
+                <!--分页开始 -->
+                <div class="green-black" id="artPagging" style="margin-bottom: 40px"></div>
+                <!--分页结束-->
+            </div>
+        </div>
+    </div>
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong/public/footer :: copy"></div>
+<!--底部结束-->
+<!-- core public JavaScript -->
+<script type="text/javascript" th:inline="javascript">
+    $(document).ready(function () {
+        dataPage();
+    })
+    function dataPage(page,rows) {
+        var params_page = page || 1;
+        var params_rows = rows || 5;
+        var params = {
+            userid: [[${session.wbgx_sessUserKey.userId}]],
+            page:params_page,
+            pageSize:params_rows,
+            type:$("#type").val() || "4"
+        }
+        rongDialog.init({ico: 3, type: 1, desc: '', overTime: 8000});
+        dataInit.ajax({
+            api: [[${apiPath.myMessage}]],
+            params: params,
+            fn: function(data){
+                rongDialog.closeMaskPanel();
+                if(data.code == 0){
+                    showMessageList(data);
+                    dataInit.pageInit('artPagging', params_page, params_rows, data.total, dataPage);
+                }else {
+                    rongDialog.init({
+                        ico: 2, //1 勾  2 叉
+                        type: 1,
+                        desc: data.msg || "获取数据失败"
+                    });
+                }
+            }
+        })
+    }
+
+    function showMessageList(data) {
+        var group = $('.group');
+        var model = data.rows;
+        $.cookie('messageSizeGX', data.total, {path: "/", expires: 7});
+        group.html("");
+        if (model.length == 0) {
+            $('.sysmsg').show();
+        } else {
+            $('.sysmsg').hide();
+            var html = '';
+            for (var i in model) {
+                var favoriteTitle= model[i].message;
+                var favoriteTime = moment(model[i].sendtime).format("YYYY-MM-DD HH:mm:ss");
+                html +=
+                    '<li class="item">'+
+                    '<a class="trash" href="javascript:deleteFavorite('+model[i].id+')"></a>'+
+                    '<div class="orderCont clearfix">'
+                    +
+                    '<div class="orderTime float-left">发送时间：<span>'+favoriteTime+'</span>     <span class="orderTime float-right">消息来源：<span>系统</span></span></div>'+
+                    '</div>'+
+                    '<div class="msgInfoCont">'+
+                    '<h2><a href="javascript:void(0)">'+favoriteTitle+'</a></h2>'+
+                    '</div>'+
+                    '</li>';
+            }
+            group.html(html);
+        }
+    }
+    function deleteFavorite(id) {
+        var orderId = id;
+        rongDialog.init({
+            ico: 2,  //1 感叹号  2 问号  3 叉叉
+            type: 2,
+            desc: '您确定删除该消息吗？',
+            nextFn: function () {
+                dataInit.ajax({
+                    api: [[${apiPath.deleteMessage}]],
+                    params: {
+                        userId: [[${session.wbgx_sessUserKey.userId}]],
+                        id: orderId
+                    },
+                    fn: function (data) {
+                        //console.log(data);
+                        if (data.code == "0") {
+                            rongDialog.init({
+                                ico: 1, //1 勾  2 叉
+                                type: 1,
+                                desc: "删除消息成功",
+                                nextFn: function () {
+                                    dataPage();
+                                }
+                            });
+                        } else {
+                            rongDialog.init({
+                                ico: 2, //1 勾  2 叉
+                                type: 1,
+                                desc: data.msg || "删除消息失败"
+                            });
+                        }
+                    }
+
+                })
+            }
+        })
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<link th:href="${basePath}+'/assets/style/index/index.css'" rel="stylesheet">
+<!--<link th:href="${basePath}+'/assets/style/index/index_x.css'" rel="stylesheet">-->
+<style>
+    .bg_img{
+        width: 100%;
+        display: block;
+    }
+    .main{
+        width: 1200px;
+        margin: 0 auto;
+        margin-bottom: 50px;
+    }
+    .bgs{
+        background: #0d0804;
+    }
+    .main .title{
+        font-size: 24px;
+        position: relative;
+        padding: 10px 0;
+        margin-bottom: 20px;
+        color: #333;
+    }
+    .main .title span{
+        position: absolute;
+        width: 48px;
+        height: 2px;
+        background: #9c0707;
+        bottom: 0;
+        left: 24px;
+    }
+    .main p{
+        margin: 0;
+        font-size: 16px;
+        line-height: 30px;
+        color: #999;
+    }
+    p.msg{
+        text-indent: 32px;
+    }
+</style>
+<body>
+<div class="wrapper clearfix">
+    <div class="content">
+        <!--公共主头部开始-->
+        <div id="header" th:include="guangdong/public/header :: copy"></div>
+        <!--公共主头部结束-->
+        <div class="bgs">
+            <div class="main">
+                <img class="bg_img" th:src="${basePath}+'/assets/img/about_bg.png'">
+            </div>
+        </div>
+        <div class="main">
+            <div class="title">
+                关于我们<span></span>
+            </div>
+            <p class="msg">
+                “文化在线”——广东省公共数字文化联盟平台是在广东省文化厅的领导下，依托广东省文化联盟，由广东省文化馆打造的全省“1+21”文化馆公共数字文化服务总平台。“文化在线”——广东省公共数字文化联盟向上对接国家公共文化云，向下对接全省文化馆公共数字文化服务，是公共数字文化服务中转站。旨在面向全省用户提供活动预订、培训报名、场馆服务、数字展馆等线上线下相结合的菜单式、预约式、一站式公共文化服务，打通公共数字文化服务最后一公里，实现公共文化服务的均等化，标准化，实现全省公共文化服务资源共建共享，提升公共文化服务效能。
+            </p>
+        </div>
+    </div>
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong/public/footer :: copy"></div>
+<!--底部结束-->
+<a class="to-top"></a>
+</body>
+</html>

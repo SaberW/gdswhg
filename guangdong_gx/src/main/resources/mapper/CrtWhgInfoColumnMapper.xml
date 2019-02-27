@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.creatoo.hn.dao.mapper.CrtWhgInfColumnMapper">
+
+    <!-- 活动后台管理列表 查询 -->
+    <select id="srchColumnTree" resultType="com.creatoo.hn.dao.model.WhgInfColumn">
+        SELECT *
+        FROM whg_inf_column t
+        WHERE 1=1
+        <if test="colstate != null">
+            AND t.colstate = #{colstate}
+        </if>
+        <if test="frontmenus != null">
+            AND t.frontmenu IN
+            <foreach collection="frontmenus" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        UNION
+        SELECT * from whg_inf_column WHERE colpid in (
+        SELECT colid
+        FROM whg_inf_column tt
+        WHERE 1=1
+        <if test="colstate != null">
+            AND tt.colstate = #{colstate}
+        </if>
+        <if test="frontmenus != null">
+            AND tt.frontmenu IN
+            <foreach collection="frontmenus" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        )
+        ORDER BY colidx,colpid
+    </select>
+
+</mapper>

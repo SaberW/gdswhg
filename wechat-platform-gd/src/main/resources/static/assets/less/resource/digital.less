@@ -1,0 +1,47 @@
+@charset "UTF-8";
+@import "../public/config";
+@import "resource";
+
+// 数字资源列表
+@-dtl-l-h: 230px;
+.digital-list{
+  padding: 10px;
+  li{
+    height: @-dtl-l-h;
+    margin-bottom: 10px;
+    position: relative;
+    a{
+      height: 100%;
+      display: block;
+      img{
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
+  .dg_title{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    color: #fff;
+    padding: 5px 20px;
+    background: rgba(2,2,2,.3);
+  }
+  .dg_video{
+    height: 100%; width: 100%;
+  }
+  .mask_audio,.mask_video{
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    top: 50%;
+    left: 50%;
+    margin-top: -25px;
+    margin-left: -25px;
+    background: url('../../img/gather/macphone.png') no-repeat center;
+  }
+  .mask_video{
+    background: url('../../img/gather/play.png') no-repeat center;
+  }
+}

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.creatoo.hn.dao.mapper.api.ApiWhgCultMapper">
+
+<!-- 活动后台管理列表 查询 -->
+    <select id="srchListActivity" resultType="hashmap">
+        SELECT t.*
+        FROM whg_act t
+        WHERE 1=1
+
+        <if test="name != null and name != ''">
+            AND t.name like "%"#{name}"%"
+        </if>
+
+        <if test="state != null">
+            AND t.state = #{state}
+        </if>
+
+        <if test="cultid != null">
+            AND t.cultid = #{cultid}
+        </if>
+
+        <if test="states != null">
+            AND t.state IN
+            <foreach item="item" index="index" collection="states" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="relList != null">
+           AND t.id IN 
+            <foreach item="item" index="index" collection="relList" open="(" separator="," close=")">
+                #{item.relid}
+            </foreach>
+        </if>
+        <if test="delstate != null">
+        	AND t.delstate = #{delstate}
+        </if>
+        <if test="delstate == null">
+        	AND t.delstate = 0 
+        </if>
+       <choose>
+            <when test="sort != null">
+                ORDER BY t.${sort}
+                <if test="order!=null"> ${order} </if>
+            </when>
+            <otherwise>
+                ORDER BY t.crtdate DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="getActOrderForBackManager" resultType="hashmap">
+        SELECT
+          wao.id AS id,
+          wao.ordernumber AS ordernumber,
+          waa.name AS actname,
+          wao.activityid as activityid,
+          wao.ordername AS ordername,
+          wao.orderphoneno AS orderphoneno,
+          wao.ordersmsstate AS ordersmsstate,
+          wao.ordercreatetime AS ordercreatetime,
+          wao.orderisvalid AS orderisvalid,
+          waa.endtime as endtime,
+          waa.starttime as starttime,
+          wao.ticketstatus AS ticketstatus,
+        CONCAT(date_format(wat.playstarttime,'%Y-%m-%d %H:%m'),'-',playetime) AS tickettime,
+          wat.playdate AS playdate,
+          wat.playstime AS playstime,
+          wat.playetime AS playetime,
+          wat.playstarttime AS playstarttime,
+          curdate() as nowDate
+        FROM whg_act_order wao,whg_act waa,whg_act_time wat
+        <where>
+            wao.activityid = waa.id and wao.eventid=wat.id
+            <if test="activityId!= null and activityId != ''">
+                AND wao.activityid = #{activityId}
+            </if>
+            <if test="name != null and name != ''">
+                AND waa.name like "%"#{name}"%"
+            </if>
+            <if test="orderphoneno != null and orderphoneno != ''">
+                AND wao.orderphoneno like "%"#{orderphoneno}"%"
+            </if>
+            <if test="ticketstatus != null and ticketstatus != ''">
+                AND wao.ticketstatus = #{ticketstatus}
+            </if>
+        </where>
+        ORDER BY wao.ordercreatetime DESC
+    </select>
+
+    <select id="getWhglm" resultType="hashmap">
+        SELECT
+        cult.*,
+        (SELECT COUNT(wa.id) FROM whg_act wa WHERE wa.cultid = cult.id  AND  wa.state = 6 AND
+        wa.delstate = 0 and wa.biz is null  ) as activityCount,
+        (SELECT COUNT(wv.id) FROM whg_ven wv WHERE wv.cultid = cult.id  AND  wv.state = 6 AND
+        wv.delstate = 0 ) as venueCount,
+        (SELECT COUNT(wt.id) FROM whg_tra wt WHERE wt.cultid = cult.id AND wt.state = 6 AND
+        wt.delstate = 0 AND wt.islive=0 AND wt.biz='PT') as traCount,
+        (SELECT COUNT(wv.clnfid) FROM whg_inf_colinfo wv WHERE wv.clnvenueid = cult.id AND wv.clnfstata = 6 ) as zxCount
+        FROM whg_sys_cult cult
+
+        <where>
+             cult.state=6 and cult.delstate=0
+            <if test="param.cultids != null">
+                AND ( cult.id IN
+                <foreach item="item" index="index" collection="param.cultids" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+                OR cult.pid IN
+                <foreach item="item" index="index" collection="param.cultids" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+                )
+            </if>
+            <if test="param.cultids == null and param.cultid == null">
+                AND cult.level in(1,2)
+            </if>
+            <if test="param.province != null">
+                AND cult.province = #{param.province}
+            </if>
+            <if test="param.city != null">
+                AND cult.city = #{param.city}
+            </if>
+            <if test="param.area != null">
+                AND cult.area = #{param.area}
+            </if>
+        </where>
+
+        <choose>
+            <when test="param.cultid != null">
+                order by (case when cult.id=#{param.cultid} then 1 ELSE 4 END),cult.level ASC,cult.statemdfdate desc
+            </when>
+            <otherwise>
+                ORDER BY cult.level ASC,cult.statemdfdate DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="getActiveFG" resultType="hashmap">
+        SELECT
+        cult.*,
+        (SELECT COUNT(wa.id) FROM whg_act wa WHERE wa.cultid = cult.id  AND  wa.state = 6 AND wa.delstate = 0  ) as activityCount,
+        (select count(0) from whg_inf_colinfo info where info.clnfstata = 6 and info.delstate =0 and info.clnvenueid = cult.id) as ainfoCount,
+        (select count(0) from whg_ven_room room, whg_ven ven where room.venid = ven.id
+        and ven.state=6 and ven.delstate=0 and room.state=6 and room.delstate=0 and ven.cultid = cult.id ) as aroomCount,
+        (SELECT COUNT(wt.id) FROM whg_tra wt WHERE wt.cultid = cult.id AND wt.state = 6 AND
+        wt.delstate = 0 AND wt.islive=0 AND wt.biz='PT') as atraCount,
+        (select count(0) from whg_ven ven where ven.state=6 and ven.delstate=0 and ven.cultid = cult.id ) as avenCount
+        FROM whg_sys_cult cult where cult.state=6 and cult.delstate=0
+        order by activityCount desc
+    </select>
+
+
+</mapper>

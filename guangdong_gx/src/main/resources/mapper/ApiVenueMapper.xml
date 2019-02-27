@@ -1,0 +1,460 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.creatoo.hn.dao.mapper.api.ApiVenueMapper">
+
+    <sql id="whgVenFields">
+        ${alias}.id as itemId,
+        ${alias}.title as title,
+        ${alias}.summary as intro,
+        ${alias}.imgurl as image,
+        ${alias}.phone as phone,
+        ${alias}.telephone as telephone,
+        ${alias}.address as address,
+        ${alias}.latitude as latitude,
+        ${alias}.longitude as longitude,
+        ${alias}.etag as tag,
+        ${alias}.etype as type,
+        ${alias}.state as state,
+        ${alias}.delstate as delstate
+    </sql>
+
+    <!--首页查场馆列表-->
+    <select id="selectVenue4IndexPage" resultType="hashmap">
+        select ven.*
+        ,(SELECT COUNT(wc.cmid) FROM whg_collection wc WHERE wc.cmrefid = ven.id  AND wc.cmopttyp = 2) as dianzan,
+        (SELECT COUNT(wc.cmid) FROM whg_collection wc WHERE wc.cmrefid = ven.id  AND wc.cmopttyp = 0) as shoucang
+        from whg_ven ven
+        where ven.state = 6 and ven.delstate=0
+        <if test="cultid!=null">
+            and ven.cultid in
+            <foreach collection="cultid" item="item" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="deptid!=null">
+            and ven.deptid in
+            <foreach collection="deptid" item="item" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
+        order by ven.recommend desc, ven.statemdfdate desc
+    </select>
+
+    <!--查场馆列表-->
+    <select id="selectVenue4page" resultType="hashmap">
+        SELECT
+        <include refid="whgVenFields"><property name="alias" value="ven"/></include>
+
+        <if test="now!=null">
+            ,(select COUNT(vrt.id)
+            from  whg_ven_room vr, whg_ven_room_time vrt
+            where vr.id = vrt.roomid and vr.state=6 and vr.delstate=0
+            and vrt.state=1 and concat(vrt.timeday,' ', vrt.timestart) > #{now} and vr.venid=ven.id
+            ) as openTimeNum
+        </if>
+        ,(SELECT COUNT(wc.cmid) FROM whg_collection wc WHERE wc.cmrefid = ven.id  AND wc.cmopttyp = 2) as dianzan,
+        (SELECT COUNT(wc.cmid) FROM whg_collection wc WHERE wc.cmrefid = ven.id  AND wc.cmopttyp = 0) as shoucang
+
+        FROM whg_ven ven
+        WHERE ven.state = 6 and ven.delstate=0
+        <if test="cultid!=null">
+         AND ven.cultid IN
+            <foreach collection="cultid" item="item" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="deptid!=null">
+         AND ven.deptid IN
+            <foreach collection="deptid" item="item" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="type!=null and type!=''.toString()">
+            <choose>
+                <when test="cultid!=null">
+                    AND ven.etype = #{type}
+                </when>
+                <otherwise>
+                    AND ven.etype LIKE "%"#{type}"%"
+                </otherwise>
+            </choose>
+        </if>
+        <if test="province!=null and province!=''.toString()"> AND ven.province = #{province} </if>
+        <if test="city!=null and city!=''.toString()"> AND ven.city = #{city} </if>
+        <if test="area!=null and area!=''.toString()"> AND ven.area = #{area} </if>
+        <if test="tag!=null and tag!=''.toString()"> AND ven.etag LIKE "%"#{tag}"%" </if>
+        <if test="key!=null and key!=''.toString()"> AND ven.ekey LIKE "%"#{key}"%" </if>
+        <if test="now!=null and isUse!=null and isUse=='1'.toString()">
+            AND ven.id in (
+            select distinct vr.venid
+            from  whg_ven_room vr, whg_ven_room_time vrt
+            where vr.id = vrt.roomid
+            and vrt.state=1 and concat(vrt.timeday,' ', vrt.timestart) > #{now}
+            )
+        </if>
+        <if test="content!=null and content!=''.toString()">
+            AND (ven.title like "%"#{content}"%" or ven.summary like "%"#{content}"%")
+        </if>
+
+        <choose>
+            <when test="allprovince!=null">
+                ORDER BY ven.toprovince DESC, ven.statemdfdate DESC
+            </when>
+            <when test="allcity!=null">
+                ORDER BY ven.tocity DESC, ven.statemdfdate DESC
+            </when>
+            <otherwise>
+                ORDER BY ven.statemdfdate DESC
+            </otherwise>
+        </choose>
+
+    </select>
+
+    <!-- 场馆分页查询（表字段名） -->
+    <select id="selectVenList4page" resultType="hashmap">
+        select xxx.*,cult.name as cultidname
+        from whg_supply_ven xxx INNER JOIN  whg_supply_room yyy on xxx.id = yyy.venid
+        LEFT JOIN whg_sys_cult cult on xxx.cultid=cult.id
+        where xxx.state=6 and xxx.delstate=0
+        and yyy.state=6 and yyy.delstate=0
+        <if test="cultid!=null">
+            and xxx.cultid in
+            <foreach collection="cultid" item="item" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="deptid!=null">
+            and xxx.deptid in
+            <foreach collection="deptid" item="item" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="etype!=null and etype!=''.toString()">
+            AND xxx.etype LIKE "%"#{etype}"%"
+        </if>
+        <if test="province!=null and province!=''.toString()"> AND xxx.province = #{province} </if>
+        <if test="city!=null and city!=''.toString()"> AND xxx.city = #{city} </if>
+        <if test="area!=null and area!=''.toString()"> AND xxx.area = #{area} </if>
+        <if test="etag!=null and etag!=''.toString()"> AND xxx.etag LIKE "%"#{etag}"%" </if>
+        <if test="ekey!=null and ekey!=''.toString()"> AND xxx.ekey LIKE "%"#{ekey}"%" </if>
+        <if test="content!=null and content!=''.toString()">
+            AND (xxx.title like "%"#{content}"%" or xxx.summary like "%"#{content}"%")
+        </if>
+
+        <if test="psprovince!=null and psprovince!=''.toString()">
+            and yyy.psprovince = #{psprovince}
+        </if>
+        <if test="pscity!=null and pscity!=''.toString()">
+            and yyy.pscity LIKE "%"#{pscity}"%"
+        </if>
+
+        group by xxx.id
+        ORDER BY xxx.recommend desc, xxx.statemdfdate DESC
+
+
+        <!--select ven.*,
+        cult.name as cultidname,
+        fk.psprovince,
+        fk.pscity
+        from whg_sys_cult cult, whg_ven ven, whg_fk_project fk
+        where ven.state = 6 and ven.delstate = 0
+        and cult.id= ven.cultid and ven.id = fk.fkid
+        and fk.protype=#{protype}
+        <if test="cultid!=null and cultid!=''.toString()"> AND ven.cultid = #{cultid} </if>
+        <if test="etype!=null and etype!=''.toString()">
+            <choose>
+                <when test="cultid!=null and cultid!=''.toString()">
+                    AND ven.etype = #{etype}
+                </when>
+                <otherwise>
+                    AND ven.etype LIKE "%"#{etype}"%"
+                </otherwise>
+            </choose>
+        </if>
+        <if test="province!=null and province!=''.toString()"> AND ven.province = #{province} </if>
+        <if test="city!=null and city!=''.toString()"> AND ven.city = #{city} </if>
+        <if test="area!=null and area!=''.toString()"> AND ven.area = #{area} </if>
+        <if test="etag!=null and etag!=''.toString()"> AND ven.etag LIKE "%"#{etag}"%" </if>
+        <if test="ekey!=null and ekey!=''.toString()"> AND ven.ekey LIKE "%"#{ekey}"%" </if>
+        <if test="content!=null and content!=''.toString()">
+            AND (ven.title like "%"#{content}"%" or ven.summary like "%"#{content}"%")
+        </if>
+        <if test="psprovince!=null and psprovince!=''.toString()">
+            and fk.psprovince = #{psprovince}
+        </if>
+        <if test="pscity!=null and pscity!=''.toString()">
+            and fk.pscity LIKE "%"#{pscity}"%"
+        </if>
+        ORDER BY ven.statemdfdate DESC-->
+    </select>
+
+    <!-- 热门场馆分页查询（表字段名） -->
+    <select id="selectHotVenList4page" resultType="hashmap">
+        select ven.*,
+        cult.name as cultidname,
+        (SELECT COUNT(waa.id) FROM whg_act waa WHERE waa.venueid = ven.id  AND  waa.state = 6 AND waa.delstate = 0 ) as countAct
+
+        from whg_sys_cult cult, whg_ven ven
+        where ven.state = 6 and ven.delstate = 0
+        and cult.id= ven.cultid
+        <if test="cultids!=null">
+            AND ven.cultid in
+            <foreach collection="cultids" item="item" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="deptids!=null">
+            and ven.deptid in
+            <foreach collection="deptids" item="item" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="etype!=null and etype!=''.toString()">
+            <choose>
+                <when test="cultid!=null">
+                    AND ven.etype = #{etype}
+                </when>
+                <otherwise>
+                    AND ven.etype LIKE "%"#{etype}"%"
+                </otherwise>
+            </choose>
+        </if>
+        <if test="province!=null and province!=''.toString()"> AND ven.province = #{province} </if>
+        <if test="city!=null and city!=''.toString()"> AND ven.city = #{city} </if>
+        <if test="area!=null and area!=''.toString()"> AND ven.area = #{area} </if>
+        <if test="etag!=null and etag!=''.toString()"> AND ven.etag LIKE "%"#{etag}"%" </if>
+        <if test="ekey!=null and ekey!=''.toString()"> AND ven.ekey LIKE "%"#{ekey}"%" </if>
+        <if test="content!=null and content!=''.toString()">
+            AND (ven.title like "%"#{content}"%" or ven.summary like "%"#{content}"%")
+        </if>
+
+        ORDER BY countAct DESC
+    </select>
+
+    <!--查id参数的场馆-->
+    <select id="findVenue4id" resultType="hashmap">
+        SELECT
+        <include refid="whgVenFields"><property name="alias" value="ven"/></include>
+        ,description, facilitydesc, area, etype, province, city
+        FROM whg_ven ven
+        WHERE ven.state = 6 and ven.delstate=0
+        AND ven.id = #{id}
+    </select>
+
+    <!--查id参数的场馆(表字段名)-->
+    <select id="findVenInfo4id" resultType="hashmap">
+        select
+        xxx.*, cult.name as cultidname
+        FROM whg_sys_cult cult, whg_supply_ven xxx
+        where cult.id = xxx.cultid
+        and xxx.state = 6 and xxx.delstate = 0
+        and xxx.id = #{id}
+
+        <!--
+        select
+        xxx.*, cult.name as cultidname
+        FROM whg_sys_cult cult, whg_ven xxx, whg_fk_project fk
+        where cult.id = xxx.cultid and xxx.id = fk.fkid
+        and xxx.state = 6 and xxx.delstate = 0
+        and fk.protype = #{protype}
+        and xxx.id = #{id}
+        -->
+    </select>
+
+    <!--推荐场馆查询-->
+    <select id="selectVenue4Recommend" resultType="hashmap">
+        select ven.*
+        from whg_ven ven
+        where ven.state = 6 and ven.delstate=0
+        <!--and ven.recommend = 1-->
+        <if test="cultid!=null">
+            and ven.cultid in
+            <foreach collection="cultid" item="item" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="deptid!=null">
+            and ven.deptid in
+            <foreach collection="deptid" item="item" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="exVenid!=null and exVenid!=''.toString">
+            and ven.id != #{exVenid}
+        </if>
+
+        order by ven.recommend DESC, ven.statemdfdate DESC
+    </select>
+
+    <!--推荐内部供需场馆查询-->
+    <select id="selectVenue4Recommend4supply" resultType="hashmap">
+        select ven.*
+        from whg_supply_ven ven INNER JOIN  whg_supply_room yyy on ven.id = yyy.venid
+        where ven.state = 6 and ven.delstate=0
+        <!--and ven.recommend = 1-->
+        <if test="cultid!=null">
+            and ven.cultid in
+            <foreach collection="cultid" item="item" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="deptid!=null">
+            and ven.deptid in
+            <foreach collection="deptid" item="item" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="exVenid!=null and exVenid!=''.toString">
+            and ven.id != #{exVenid}
+        </if>
+
+        GROUP BY ven.id
+        order by ven.recommend DESC, ven.statemdfdate DESC
+    </select>
+
+    <!--查场馆相关的活动室列表-->
+    <select id="selectVenRoom4venid" resultType="hashmap">
+        select
+        vr.id as itemId,
+        vr.title as title,
+        vr.imgurl as image,
+        vr.sizearea as area,
+        vr.sizepeople as sizepeople,
+        vr.facility as arts,
+        vr.summary as summary,
+        (select COUNT(vrt.id)
+          from whg_ven_room rm, whg_ven_room_time vrt where rm.id = vrt.roomid
+          and vrt.state=1 and concat(vrt.timeday,' ', vrt.timestart) > #{now} and rm.id=vr.id) as openTimeNum
+        FROM whg_ven_room vr
+        WHERE vr.state=6 and vr.delstate=0
+        AND vr.venid=#{venid}
+        order by vr.statemdfdate DESC
+    </select>
+
+    <!--查场馆的活动室列表(表字段名)-->
+    <select id="selectRooms4ven" resultType="hashmap">
+        select xxx.*
+        FROM whg_ven_room xxx
+        where xxx.state=6 and xxx.delstate=0
+        and xxx.venid = #{venid}
+        <if test="notroomid!=null and notroomid!=''.toString()">
+            and xxx.id != #{notroomid}
+        </if>
+        order by xxx.statemdfdate DESC
+    </select>
+
+    <select id="selectRooms4venSupply" resultType="hashmap">
+        select xxx.*
+        FROM whg_supply_room xxx
+        where xxx.state=6 and xxx.delstate=0
+        and xxx.venid = #{venid}
+        <if test="notroomid!=null and notroomid!=''.toString()">
+            and xxx.id != #{notroomid}
+        </if>
+        order by xxx.statemdfdate DESC
+    </select>
+
+    <!--查指定ID的活动室-->
+    <select id="findVenByRoomid" resultType="hashmap">
+        select
+        ven.*
+        FROM whg_supply_ven ven ,whg_supply_room room
+        WHERE ven.id=room.venid
+        and room.id = #{roomid}
+    </select>
+
+
+    <select id="findVenRoom4id" resultType="hashmap">
+        select
+        vr.id,
+        vr.venid,
+        vr.crtdate,
+        vr.crtuser,
+        vr.etype,
+        vr.etag,
+        vr.ekey,
+        vr.state,
+        vr.delstate,
+        vr.statemdfdate,
+        vr.statemdfuser,
+        vr.recommend,
+        vr.title,
+        vr.summary,
+        vr.imgurl,
+        vr.facility,
+        vr.description,
+        vr.location,
+        vr.sizearea,
+        vr.sizepeople,
+        vr.hasfees,
+        vr.contacts,
+        vr.phone,
+        vr.telephone
+        FROM whg_ven_room vr
+        WHERE vr.state=6 and vr.delstate=0
+        and vr.id = #{id}
+    </select>
+
+
+    <select id="selectOrder4User" resultType="hashmap">
+        SELECT vro.*, vr.title, vr.location,vr.imgurl, vr.telephone, vr.phone,
+        v.address, v.phone as venPhone, v.telephone as venTelephone
+        FROM whg_ven_room_order vro
+        LEFT JOIN whg_ven_room vr ON vro.roomid = vr.id
+        INNER JOIN whg_ven v on vr.venid = v.id
+        WHERE (vro.delstate is null or vro.delstate = 0)
+        <if test="userid!=null">
+            AND vro.userid = #{userid}
+        </if>
+        <choose>
+            <when test="nowtype!=null and nowtype=='old'.toString()">
+                <if test="nowday!=null and nowtime!=null">
+                    AND ( vro.timeday &lt; #{nowday}
+                    OR (vro.timeday = #{nowday} AND vro.timestart &lt; #{nowtime} ) )
+                </if>
+            </when>
+            <otherwise>
+                <if test="nowday!=null and nowtime!=null">
+                    AND ( vro.timeday &gt; #{nowday}
+                    OR (vro.timeday = #{nowday} AND vro.timestart &gt;= #{nowtime} ) )
+                </if>
+            </otherwise>
+        </choose>
+
+        GROUP BY vro.id
+        ORDER BY vro.crtdate DESC
+    </select>
+
+
+    <!--记入黑名单查找活动室订单: 1.指定次没有验票 2.黑名单更改时间之后 3.当前时间之前-->
+    <select id="selectOrder4BlackListCheck" resultType="hashmap">
+        SELECT * from
+        (
+            SELECT
+            vro.id as orderid,
+            vro.state as orderstate,
+            vro.timeday as timeday,
+            u.id as userid,
+            u.phone as phone,
+            ubl.id as blid,
+            ubl.jointime as jointime,
+            ubl.updatetime as updatetime,
+            ubl.state as blstate
+            FROM whg_ven_room_order vro INNER JOIN whg_user u on vro.userid = u.id
+            LEFT JOIN whg_usr_blacklist ubl on u.id = ubl.userid
+            where vro.state = 3
+            and vro.ticketcheckstate &lt;&gt; 2
+            and (ubl.updatetime is null or concat(vro.timeday,' ',vro.timeend) &gt; ubl.updatetime)
+		    and (ubl.jointime is null or concat(vro.timeday,' ',vro.timeend) &gt; ubl.jointime)
+            and vro.timeday &lt; #{now}
+            group by vro.id
+        ) as tempview
+        WHERE 1 = 1
+        GROUP BY tempview.userid
+        HAVING count(tempview.orderid) &gt;= #{checkNumber}
+        and tempview.userid not in (
+          select userid from whg_usr_blacklist where userid = tempview.userid
+          and (state = 1 or (state=0 and updatetime is not NULL) )
+        )
+    </select>
+</mapper>

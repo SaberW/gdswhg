@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/style/supply_sys/center.css'">
+<div class="wrapper clearfix">
+    <div class="content">
+        <!--公共主头部开始-->
+        <div id="header" th:include="guangdong/public/header :: copy"></div>
+        <!--公共主头部结束-->
+        <!--主体开始-->
+        <div class="container res-center-bg">
+            <div class="sys-crumbs">
+                <span><a href="../index">首页</a></span>
+                <i class="icon iconfont icon-enter"></i>
+                <span><a href="index">用户中心</a></span>
+                <i class="icon iconfont icon-enter"></i>
+                <span class="active" id="title">我的众筹</span>
+            </div>
+            <div class="page-list">
+                <div class="center-nav">
+                    <ul class="clearfix">
+                        <li class="active" data-type="0">全部</li>
+                        <li data-type="1">众筹中</li>
+                        <li data-type="2">众筹成功</li>
+                        <li data-type="3">众筹失败</li>
+                    </ul>
+                </div>
+                <div class="center-list">
+                    <ul id="modelList">
+                        <!--<li>
+                            <div class="title clearfix">
+                                <div class="title-list title-list-1">
+                                    订单号:<span>154584585485645</span>
+                                </div>
+                                <div class="title-list title-list-2">
+                                    支持份数:<span>20份</span>
+                                </div>
+                                <div class="title-list title-list-3">
+                                    <span class="blue">众筹中</span>
+                                </div>
+                            </div>
+                            <div class="detail clearfix">
+                                <div class="img">
+                                    <img src="http://183.131.126.132:8092/whgstatic/img/2017/201709/20170921/e7f2cf27ba3b41b680c1f10651db8800_750_500.jpg">
+                                </div>
+                                <div class="text">
+                                    <div class="text-title">众筹标题</div>
+                                    <div class="text-list">活动地址：<span>这是活动地址</span></div>
+                                    <div class="text-list">联系电话：<span>15694548564</span></div>
+                                    <div class="text-list">取票码：<span>342342342342423</span></div>
+                                    <div class="text-list">座位号：<span>3排3座（未检票）</span></div>
+                                    <div class="text-list">活动时间：<span>2017-9-27 16:14:43</span></div>
+                                </div>
+                                <div class="msg">众筹结果信息众筹结果信息众筹结果信息众筹结果信息众筹结果信息众筹结果信息</div>
+                                <div class="cancelOrder">取消订单</div>
+                                <div class="progress-table clearfix">
+                                    <div class="progress-table-list">
+                                        <span>60%</span>
+                                        <span class="text">达成率</span>
+                                    </div>
+                                    <div class="progress-table-list">
+                                        <span>100</span>
+                                        <span class="text">剩余份数</span>
+                                    </div>
+                                    <div class="progress-table-list no-border">
+                                        <span>20天</span>
+                                        <span class="text">剩余时间</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="title clearfix">
+                                <div class="title-list title-list-1">
+                                    订单号:<span>154584585485645</span>
+                                </div>
+                                <div class="title-list title-list-2">
+                                    支持份数:<span>20份</span>
+                                </div>
+                                <div class="title-list title-list-3">
+                                    <span class="red">众筹成功</span>
+                                </div>
+                            </div>
+                            <div class="detail clearfix">
+                                <div class="img">
+                                    <img src="http://183.131.126.132:8092/whgstatic/img/2017/201709/20170921/e7f2cf27ba3b41b680c1f10651db8800_750_500.jpg">
+                                </div>
+                                <div class="text">
+                                    <div class="text-title">众筹标题</div>
+                                    <div class="text-list">活动地址：<span>这是活动地址</span></div>
+                                    <div class="text-list">联系电话：<span>15694548564</span></div>
+                                    <div class="text-list">取票码：<span>342342342342423</span></div>
+                                    <div class="text-list">座位号：<span>3排3座（未检票）</span></div>
+                                    <div class="text-list">活动时间：<span>2017-9-27 16:14:43</span></div>
+                                </div>
+                                <div class="msg">众筹结果信息众筹结果信息众筹结果信息众筹结果信息众筹结果信息众筹结果信息</div>
+                                <div class="cancelOrder">取消订单</div>
+                                <div class="progress-table clearfix">
+                                    <div class="progress-table-list">
+                                        <span>60%</span>
+                                        <span class="text">达成率</span>
+                                    </div>
+                                    <div class="progress-table-list">
+                                        <span>100</span>
+                                        <span class="text">剩余份数</span>
+                                    </div>
+                                    <div class="progress-table-list no-border">
+                                        <span>20天</span>
+                                        <span class="text">剩余时间</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="title clearfix">
+                                <div class="title-list title-list-1">
+                                    订单号:<span>154584585485645</span>
+                                </div>
+                                <div class="title-list title-list-2">
+                                    支持份数:<span>20份</span>
+                                </div>
+                                <div class="title-list title-list-3">
+                                    <span class="gray">众筹失败</span>
+                                </div>
+                            </div>
+                            <div class="detail clearfix">
+                                <div class="img">
+                                    <img src="http://183.131.126.132:8092/whgstatic/img/2017/201709/20170921/e7f2cf27ba3b41b680c1f10651db8800_750_500.jpg">
+                                </div>
+                                <div class="text">
+                                    <div class="text-title">众筹标题</div>
+                                    <div class="text-list">活动地址：<span>这是活动地址</span></div>
+                                    <div class="text-list">联系电话：<span>15694548564</span></div>
+                                    <div class="text-list">取票码：<span>342342342342423</span></div>
+                                    <div class="text-list">座位号：<span>3排3座（未检票）</span></div>
+                                    <div class="text-list">活动时间：<span>2017-9-27 16:14:43</span></div>
+                                </div>
+                                <div class="msg">众筹结果信息众筹结果信息众筹结果信息众筹结果信息众筹结果信息众筹结果信息</div>
+                                <div class="cancelOrder">取消订单</div>
+                                <div class="progress-table clearfix">
+                                    <div class="progress-table-list">
+                                        <span>60%</span>
+                                        <span class="text">达成率</span>
+                                    </div>
+                                    <div class="progress-table-list">
+                                        <span>100</span>
+                                        <span class="text">剩余份数</span>
+                                    </div>
+                                    <div class="progress-table-list no-border">
+                                        <span>20天</span>
+                                        <span class="text">剩余时间</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>-->
+                    </ul>
+                </div>
+                <!--分页开始 -->
+                <div class="green-black" id="artPagging"></div>
+                <!--分页结束-->
+            </div>
+        </div>
+        <!--主体结束-->
+    </div>
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong/public/footer :: copy"></div>
+<!--底部结束-->
+<a class="to-top"></a>
+<!--<script th:src="${basePath}+'/assets/js/zcproject/activitylist.js'" type="text/javascript"></script>-->
+<script type="text/javascript" th:inline="javascript">
+    var userId = $("#temp_userId").val();
+
+    $().ready(function () {
+
+        $(".center-nav ul li").on("click", function () {
+            $(this).addClass("active").siblings().removeClass("active");
+            dataPage();
+        });
+
+        $(".center-nav ul li:eq(0)").click();
+    });
+
+    function dataPage(page, rows) {
+        var params = {
+            page: page || 1,
+            pageSize: rows || 12,
+            userid: userId
+        };
+
+        params.filter = $(".center-nav ul li.active").attr("data-type");
+
+        dataInit.ajax({
+            api: [[${apiPath.userGatherList}]],
+            params: params,
+            fn: function (data) {
+                showModelList(data);
+                dataInit.pageInit("artPagging", params.page, params.pageSize, data.total, dataPage);
+            }
+        })
+    }
+
+    var li_temp = '<li>\
+                <div class="title clearfix">\
+                    <div class="title-list title-list-1">\
+                        订单号:<span>154584585485645</span>\
+                    </div>\
+                    <div class="title-list title-list-2">\
+                            支持份数:<span>20份</span>\
+                    </div>\
+                    <div class="title-list title-list-3">\
+                            <span >众筹中</span>\
+                    </div>\
+                </div>\
+                <div class="detail clearfix">\
+                    <div class="img">\
+                        <a><img ></a>\
+                    </div>\
+                    <div class="text">\
+                        <div class="text-title">众筹标题</div>\
+                        <div class="text-list">活动地址：<span>这是活动地址</span></div>\
+                        <div class="text-list">联系电话：<span>15694548564</span></div>\
+                        <div class="text-list">取票码：<span>342342342342423</span></div>\
+                        <div class="text-list">座位号：<span>3排3座（未检票）</span></div>\
+                        <div class="text-list">活动时间：<span>2017-9-27 16:14:43</span></div>\
+                    </div>\
+                    <div class="msg">众筹结果信息众筹结果信息众筹结果信息众筹结果信息众筹结果信息众筹结果信息</div>\
+                    <div class="cancelOrder">取消订单</div>\
+                    <div class="progress-table clearfix">\
+                        <div class="progress-table-list">\
+                            <span>60%</span>\
+                            <span class="text">达成率</span>\
+                        </div>\
+                        <div class="progress-table-list">\
+                            <span>100</span>\
+                            <span class="text">剩余份数</span>\
+                        </div>\
+                        <div class="progress-table-list no-border">\
+                            <span>20天</span>\
+                            <span class="text">剩余时间</span>\
+                        </div>\
+                    </div>\
+                </div>\
+            </li>';
+
+    function showModelList(data) {
+        $("#modelList").html("");
+        var modelList = $("#modelList");
+        if (data.code == 0) {
+            if (data.rows.length > 0) {
+                for (var i in data.rows) {
+                    var model = data.rows[i];
+
+                    var timestart = model.timestart;
+                    var timeend = model.timeend;
+                    var gatherState = "";
+                    var gatherShowString = "";
+                    var gatherStateCode = 0;
+
+                    if (timestart > data.data.now){
+                        gatherState = "未开始";
+                    } else if (timestart<=data.data.now && timeend>=data.data.now){
+                        gatherState = "众筹中";
+                    }else{
+                        if (model.issuccess && model.issuccess !=0){
+                            if (model.issuccess == 1){
+                                gatherState = "众筹成功";
+                                gatherShowString = "众筹成功，恭喜您已自动获得参与资格，请您依据众筹相关内容享受文化之旅！";
+                                gatherStateCode = 1;
+                            }else {
+                                gatherState = "众筹失败";
+                                gatherShowString = "因众筹人数未达到要求，本次众筹失败。更多的众筹正在或将要进行，也许就有您咸兴趣的，敬请关注！";
+                                gatherStateCode = 2;
+                            }
+                        } else{
+                            gatherState = "已结束";
+                            gatherStateCode = 2;
+                        }
+                    }
+
+                    /*if (model.issuccess && model.issuccess !=0){
+                        if (model.issuccess == 1){
+                            gatherState = "众筹成功";
+                            gatherShowString = "众筹成功，恭喜您已自动获得参与资格，请您依据众筹相关内容享受文化之旅！";
+                            gatherStateCode = 1;
+                        }else {
+                            gatherState = "众筹失败";
+                            gatherShowString = "因众筹人数未达到要求，本次众筹失败。更多的众筹正在或将要进行，也许就有您咸兴趣的，敬请关注！";
+                            gatherStateCode = 2;
+                        }
+                    }else{
+                        if (timestart<=data.data.now && timeend>=data.data.now) {
+                            gatherState = "众筹中";
+                        }
+                    }*/
+
+                    var li = $(li_temp);
+                    li.find(".title .title-list-1 span").text(model.orderid);
+                    li.find(".title .title-list-2 span").text(model.orderCount);
+                    li.find(".title .title-list-3 span").text(gatherState);
+                    if (gatherStateCode == 1){
+                        li.find(".title .title-list-3 span").addClass("red");
+                    }else if (gatherStateCode == 2){
+                        li.find(".title .title-list-3 span").addClass("gray");
+                    }else{
+                        li.find(".title .title-list-3 span").addClass("blue");
+                    }
+
+                    li.find(".detail .img img").attr("src", data.imgPath+ dataInit.getSmallImage(model.imgurl));
+
+                    var detail_text = li.find(".detail>.text");
+                    detail_text.find(".text-title").text(model.title);
+                    detail_text.find(".text-list").remove();
+                    //众筹类型
+                    var _href_detail = [[${basePath}]];
+                    switch (model.etype){
+                        case "4":   //活动
+                            _href_detail += '/project/actdetail?id='+model.id;
+                            if (gatherStateCode == 2){
+                                detail_text.append('<div class="text-list">日期：<span>'+moment(model.timeend).format("YYYY-MM-DD HH:mm:ss")+'</span></div>');
+                                detail_text.append('<div class="text-list">下单时间：<span>'+moment(model.otime).format("YYYY-MM-DD HH:mm:ss")+'</span></div>');
+                            }else{
+                                if (model.refInfo && model.refInfo.address)
+                                    detail_text.append('<div class="text-list">活动地址：<span>'+model.refInfo.address+'</span></div>');
+                                detail_text.append('<div class="text-list">下单时间：<span>'+moment(model.otime).format("YYYY-MM-DD HH:mm:ss")+'</span></div>');
+                                if (model.refInfo && model.refInfo.telphone)
+                                    detail_text.append('<div class="text-list">联系电话：<span>'+model.refInfo.telphone+'</span></div>');
+                                if (gatherStateCode == 1){
+                                    detail_text.append('<div class="text-list">取票码：<span>'+model.orderid+'</span></div>');
+                                    if (model.seatCode)
+                                        detail_text.append('<div class="text-list">座位号：<span>'+model.seatCode+'</span></div>');
+                                }
+                                if (model.refInfo && model.refInfo.starttime){
+                                    var playStartTime = model.playStartTime || "";
+                                    detail_text.append('<div class="text-list">活动时间：<span>'+moment(model.refInfo.starttime).format("YYYY-MM-DD")+' '+playStartTime+'</span></div>');
+                                }
+                            }
+                            break;
+                        case "5":   //培训
+                            _href_detail += '/project/traindetail?id='+model.id;
+                            if (gatherStateCode == 2){
+                                detail_text.append('<div class="text-list">日期：<span>'+moment(model.timeend).format("YYYY-MM-DD HH:mm:ss")+'</span></div>');
+                                detail_text.append('<div class="text-list">下单时间：<span>'+moment(model.otime).format("YYYY-MM-DD HH:mm:ss")+'</span></div>');
+                            }else{
+                                if (model.refInfo && model.refInfo.address){
+                                    detail_text.append('<div class="text-list">培训地址：<span>'+model.refInfo.address+'</span></div>');
+                                }
+                                if (model.refInfo && model.refInfo.phone)
+                                    detail_text.append('<div class="text-list">联系电话：<span>'+model.refInfo.phone+'</span></div>');
+                                detail_text.append('<div class="text-list">下单时间：<span>'+moment(model.otime).format("YYYY-MM-DD HH:mm:ss")+'</span></div>');
+                                if (gatherStateCode == 1){
+                                    if (model.refInfo && model.refInfo.starttime) {
+                                        detail_text.append('<div class="text-list">开课日期：<span>' + moment(model.refInfo.starttime).format("YYYY-MM-DD HH:mm:ss") + '</span></div>');
+                                    }
+                                }
+                            }
+                            break;
+                        default:
+                            _href_detail += '/project/otherdetail?id='+model.id;
+                            if (gatherStateCode == 2){
+                                detail_text.append('<div class="text-list">日期：<span>'+moment(model.timeend).format("YYYY-MM-DD HH:mm:ss")+'</span></div>');
+                                detail_text.append('<div class="text-list">下单时间：<span>'+moment(model.otime).format("YYYY-MM-DD HH:mm:ss")+'</span></div>');
+                            }else{
+                                detail_text.append('<div class="text-list">日期：<span>'+moment(model.timeend).format("YYYY-MM-DD HH:mm:ss")+'</span></div>');
+                                detail_text.append('<div class="text-list">下单时间：<span>'+moment(model.otime).format("YYYY-MM-DD HH:mm:ss")+'</span></div>');
+
+                                detail_text.append('<div class="text-list">联系电话：<span>'+model.phone+'</span></div>');
+                            }
+                    }
+                    li.find(".detail .img a").attr("href",_href_detail);
+                    li.find(".detail .msg").text(gatherShowString);
+
+                    var dcr = Math.floor(Number(model.orderCount) / Number(model.nummin) * 100);
+                    dcr = dcr > 100? 100 : dcr;
+                    var srfs = Number(model.numsum) - Number(model.orderCount);
+                    li.find(".detail .progress-table .progress-table-list:eq(0) span:eq(0)").text(dcr+"%");
+                    li.find(".detail .progress-table .progress-table-list:eq(1) span:eq(0)").text(srfs);
+                    li.find(".detail .progress-table .progress-table-list:eq(2) span:eq(0)").text(getDays(model.timeend, data.data.now, model.timestart));
+
+                    if (gatherStateCode != 1 && gatherStateCode != 3){
+                        li.find(".detail .cancelOrder").show();
+                        li.find(".detail .cancelOrder").off().on("click", {id:model.oid, type:model.etype, userid:model.ouserid}, unOrder);
+                        if (gatherStateCode == 2) {
+                            li.find(".detail .cancelOrder").text("删除订单");
+                        }
+                    }else{
+                        li.find(".detail .cancelOrder").hide();
+                    }
+                    modelList.append(li);
+                }
+            } else {
+                modelList.append("<div class='public-no-message'></div>");
+            }
+        } else {
+            rongDialog.init({ico: 2, type: 1, desc: data.msg});
+        }
+
+
+    }
+
+    function unOrder(event){
+        var etype = event.data.type;
+        var oid = event.data.id;
+        var userid = event.data.userid;
+        var url = "";
+        var params = {};
+
+        switch (etype){
+            case "4":
+                url = [[${apiPath.userUngatherApplyAct}]];
+                params.itemId = oid;
+                params.userId = userid;
+                params.type = "1";
+                break;
+            case "5":
+                url = [[${apiPath.userUngatherApplyTra}]];
+                params.orderId = oid;
+                params.userId = userid;
+                break;
+            default:
+                url = [[${apiPath.userUngatherApply}]];
+                params.id = oid;
+                params.userid = userid;
+        }
+
+        dataInit.ajax({
+            api: url,
+            params: params,
+            fn: function (data) {
+                if (data.code != 0){
+                    rongDialog.init({ico: 2, type: 1, desc: data.msg});
+                    return;
+                }
+                dataPage();
+            }
+        })
+    }
+
+    //判断众筹是否过期
+    function isOverdue(issuccess,timestart,timeend,dataNow) {
+        if(dataNow>timeend && issuccess != 1 ){
+            if(issuccess == 0){
+                return 3;//其他状态
+            }else {
+                return 0;//已结束
+            }
+        }else if(dataNow<timeend && dataNow>timestart && issuccess !=1){
+            return 2;//众筹中
+        }else if(issuccess == 1) {
+            return 1;//已成功
+        }else {
+            return 3;//其他状态
+        }
+    }
+
+    //获取剩余天数
+    function getDays(timeend,_dataNow,timestart) {
+        if(_dataNow>timeend){
+            return '已结束';
+        }else if(_dataNow>timestart){
+            return moment(timeend).fromNow(true);
+        }else {
+            return '未开始';
+        }
+    }
+
+</script>
+</body>
+</html>

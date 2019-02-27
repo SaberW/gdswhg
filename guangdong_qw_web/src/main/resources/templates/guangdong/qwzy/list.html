@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<link th:href="${basePath}+'/assets/style/normalize.css'" rel="stylesheet">
+<link th:href="${basePath}+'/assets/style/gdqw.css'" rel="stylesheet">
+
+<script th:src="${basePath}+'/assets/js/layer/layer.js'" type="text/javascript"></script>
+<style>
+    .blockBtn{
+        background-color: rgba(153, 153, 153, 1)!important;
+    }
+</style>
+<body>
+<div class="qwMain">
+    <!--公共主头部开始-->
+    <div id="header" th:include="guangdong/public/header :: copy"></div>
+    <!--公共主头部结束-->
+    <div class="qwHeadSou">
+        <!-- <div class="filterWrap clearfix" id="lib_type" style="width: 960px">
+           <ul class="filterListYi clearfix">
+                <li class="item cur" data-value="">全部</li>
+            </ul>
+        </div>-->
+        <div class="filterSearWrap clearfix" style="margin-top: 0;">
+            <div class="selBox">
+                <div class="selOne">
+                    <span>资源库</span>
+                </div>
+                <div class="selTwo" style="display: none">
+                    <a class="sItem cur" data-value="1" href="javascript:;">资源库</a>
+                    <a class="sItem" id="zy" data-value="2" href="javascript:;">资源</a>
+                </div>
+            </div>
+            <input class="txtInp" type="text" id="searchKey" placeholder="请输入关键字">
+            <div class="fsBtn"><img th:src="${basePath}+'/assets/image/search1.png'">搜索</div>
+        </div>
+    </div>
+    <img style="margin:100px auto 400px;display: none;" class="nolib" th:src="${basePath}+'/assets/image/no_lib.png'">
+    <div class="qwContent">
+        <div class="breadCrumbs jz1200">
+            <a th:href="${basePath}+'/index'">首页</a>&nbsp;&nbsp;&gt;&nbsp;&nbsp;
+            <a href="javascript:;" id="now_b">资源库搜索列表</a>
+        </div>
+        <div class="filterGray">
+            <div class="filterWrap clearfix">
+                <div class="lab">艺术类型：</div>
+                <div class="filterRight artType" id="art_type">
+                    <ul class="filterListEr clearfix">
+                        <li class="item all cur" data-value="">全部</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="filterWrap clearfix" id="art_type2">
+                <div class="lab">资源类型：</div>
+                <div class="filterRight resType">
+                    <ul class="filterListEr clearfix">
+                        <li class="item all cur">全部</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div>
+            <ul class="qwPicCharList">
+            </ul>
+        </div>
+        <div id="mass_list" style="display: none">
+            <div class="qwTabTou clearfix">
+                <div class="wen searchCount">
+
+                </div>
+                <div class="selPage">
+                    <div class="wzOne">每页显示<span>20</span>条</div>
+                    <div class="wzTwo" style="display: none;">
+                        <div class="item"><span>20</span></div>
+                        <div class="item"><span>50</span></div>
+                        <div class="item"><span>100</span></div>
+                    </div>
+                </div>
+                <script type="text/javascript">
+                    function setStopPropagation(evt) {
+                        var e = evt || window.event;
+                        if(typeof e.stopPropagation == 'function') {
+                            e.stopPropagation();
+                        } else {
+                            e.cancelBubble = true;
+                        }
+                    }
+                    $('.selPage').on('click', '.wzOne', function () {
+                        $(this).siblings('.wzTwo').toggle();
+                    });
+                    $('.selPage .wzTwo').on('click', '.item', function () {
+                        $(this).parent().siblings('.wzOne').find('span').html($(this).find('span').html());
+                        $(this).parent().hide();
+                        loadData()
+                    });
+                    $('.selPage').on('click', function (evt) {
+                        setStopPropagation(evt);
+                    });
+                    $('html, body').on('click', function () {
+                        $('.selPage .wzTwo').hide();
+                    });
+                </script>
+            </div>
+            <div class="qwTabListWc">
+                <table class="qwTabList">
+                    <colgroup width="110"></colgroup>
+                    <colgroup width="180"></colgroup>
+                    <colgroup width="110"></colgroup>
+                    <colgroup width="180"></colgroup>
+                    <colgroup width="110"></colgroup>
+                    <colgroup width="110"></colgroup>
+                    <colgroup width="180"></colgroup>
+                    <colgroup width="110"></colgroup>
+                    <colgroup width="110"></colgroup>
+                    <thead><tr>
+                        <th>序号</th>
+                        <th>资源名称</th>
+                        <th>作者</th>
+                        <th>所属文化馆</th>
+                        <th>类型</th>
+                        <th>访问权限</th>
+                        <th>发布时间</th>
+                        <th>浏览量</th>
+                        <th>下载量</th>
+                    </tr>
+                    </thead>
+                    <tbody id="mass_list_body">
+
+                    </tbody>
+                   </table>
+            </div>
+        </div>
+
+        <!--分页开始 -->
+        <div class="green-black" id="artPagging" style="margin-bottom: 40px;margin-top:60px;"></div>
+        <!--分页结束-->
+    </div>
+    <!--底部开始-->
+    <div th:include="guangdong/public/footer :: copy"></div>
+    <!--底部结束-->
+    <form action="" id="downloadFileForm" method="post">
+        <input type="hidden" name="token" id="token">
+        <input type="hidden" name="timestamp" id="timestamp">
+    </form>
+</div>
+
+
+
+<script type="text/javascript" th:inline="javascript">
+    $("#token").val(token);
+    $("#timestamp").val(timestamp);
+    var basePath = [[${basePath}]];
+    //1：资源库  2：资源
+    var masstype = dataInit.getUrlParam('masstype') || "";
+
+    var arttype = dataInit.getUrlParam('arttype') || "";
+
+    /** 加载数据 */
+    function loadData(page,rows) {
+        var params_page = page || 1;
+
+        //if(resclazz) params['libid'] = resclazz;
+
+        if(masstype==2){
+            $("#zy").parent().siblings('.selOne').find('span').html('资源');
+            $("#zy").addClass('cur').siblings().removeClass('cur');
+        }
+
+        if(masstype==1){
+            var params_rows = rows || dataInit.getUrlParam('pageSize') || 12;
+            $("#now_b").html("资源库搜索列表");
+            var srchkey = $('#searchKey').val();
+            //var restype = $('.filterListYi .cur').attr('data-value');
+
+            var arttype = $('.artType .cur').attr('data-value');
+            var params = {};
+
+            var resclazz = $('#condition_2 span.active').attr('resclazz');
+
+            var restype = $('.resType .cur').attr('data-value');
+
+            if(srchkey) params['name'] = srchkey;
+            if(restype) params['resourcetype'] = restype;
+
+
+            if(arttype) params['arttype'] = arttype;
+            params['page'] = params_page;
+            params['pageSize'] = params_rows;
+            params['cultid'] = $.cookie('cultid');
+            //判断权限
+            var userid = [[${session.qw_sessUserKey.userId}]];// 当前用户ID
+            params['userid'] = userid;
+            params['token'] = token;
+            params['timestamp'] = timestamp;
+            //加载资源库数据
+            console.log("加载资源库数据")
+            dataInit.ajax({
+                api: [[${apiPath.massLibraryPage}]],
+                params: params,
+                fn: function(data){
+                    afterLoadDataShowData(data);
+                    dataInit.pageInit('artPagging', params_page, params_rows, data.total, loadData);
+                }
+            })
+        }else{
+            $("#now_b").html("资源搜索列表");
+
+
+            var rows = $(".wzOne span").html();
+
+            var params_rows = rows || dataInit.getUrlParam('pageSize') || rows;
+            var srchkey = $('#searchKey').val();
+            //var restype = $('.filterListYi .cur').attr('data-value');
+            var arttype = $('.filterListEr .cur').attr('data-value');
+            //var resclazz = $('#condition_2 span.active').attr('resclazz');
+
+
+            var restype = $('.resType .cur').attr('data-value');
+
+            var params = {};
+            if(srchkey) params['srchkey'] = srchkey;
+            if(restype) params['restype'] = restype;
+            //if(resclazz) params['libid'] = resclazz;
+            params['page'] = params_page;
+            params['pageSize'] = params_rows;
+            params['cultid'] = $.cookie('cultid');
+            params['userid'] = [[${session.qw_sessUserKey.userId}]]; // 当前用户ID
+            params['token'] = token;
+            params['timestamp'] = timestamp;
+
+            if(arttype) params['arttype'] = arttype;
+
+            //加载资源数据
+            console.log("加载资源数据")
+            //加载数据
+            dataInit.ajax({
+                api: [[${apiPath.massResList}]],
+                params: params,
+                fn: function(data){
+                    afterLoadDataShowData(data);
+                    dataInit.pageInit('artPagging', params_page, params_rows, data.total, loadData);
+                }
+            })
+        }
+    }
+    /** 加载数据之后显示数据 */
+    function afterLoadDataShowData(data){
+        var UL = $(".qwPicCharList");
+        UL.empty();
+        var UL1 = $("#mass_list_body");
+        UL1.empty();
+        if(masstype==1){
+            $(".qwContent").show();
+            $("#mass_list").hide();
+            $(".nolib").hide();
+            if(data){
+                var li_html = '';
+                if($.isArray(data.rows) && data.rows.length > 0){
+                    for(var i=0; i<data.rows.length; i++){
+                        var row = data.rows[i];
+                        var respicture = dataInit.getMidImage(row.imgurl);//图片地址
+                        var name = row.name;//资源名称
+                        var imgUrl = data.imgPath + respicture;
+                        var memo = row.memo;
+                        var tagids = row.tags;
+                        li_html+='<li id="'+row.id+'" class="clearfix" onclick="doDetail(\''+row.id+'\',\''+name+'\')">\n' +
+                            '                <div class="pic"><img src="'+imgUrl+'"></div>\n' +
+                            '                <div class="char" style="position: relative;width:700px;">\n' +
+                            '                    <div class="titBox">\n' +
+                            '                        <div class="tit">'+name+'</div>\n';
+                            li_html+='<span class="purview" style="display: none">无权访问</span>\n';
+                            li_html+='                    </div>\n' +
+                            '                    <div class="tag" tag-value="'+tagids+'">\n' +
+                            '                    </div>\n' +
+                            '                    <div class="liu">\n' +
+                            '                        <span class="cultname">来源：           </span>\n' +
+                            '                        <span class="resourcecount">资源数量：0</span>\n' +
+                            '                        <span class="liulanliang">浏览量：0</span>\n' +
+                            '                    </div>\n' +
+                            '                    <div class="wen">简介：'+memo+'</div>\n' +
+                                                '<div class="btn getapi" style="display: none">获取API</div>';
+
+                            li_html+='<div class="btn applyview" style="display:none;position: absolute;right: -140px;top: 10px;"  libid="'+row.id+'">申请访问</div><div class="btn applydownload"  libid="'+row.id+'" style="display:none;position: absolute;right: -140px;top: 50px;" >申请下载</div>';
+
+                            li_html+='                </div>\n' +
+                            '            </li>';
+
+
+            /*        li_html +='<li id="'+row.id+'" class="clearfix" onclick="doDetail(\''+row.id+'\',\''+name+'\')">\n' +
+                        '                        <div class="pic"><img src="'+imgUrl+'"></div>\n' +
+                        '                        <div class="char">\n' +
+                        '                        <div class="tit">'+name+'</div>\n' +
+                        '                        <div class="wen">简介：'+memo+'</div>\n' +
+                        '                    <div class="tag" tag-value="'+tagids+'"></div>\n' +
+                        '                        <div class="liu">浏览量：</div>\n' +
+                        '                    </div>\n' +
+                        '                    </li>';*/
+
+                    }
+                    UL.append(li_html);
+                }else{
+                    UL.append("<div class='public-no-message'></div>");
+                }
+                $('.qwPicCharList .getapi').click(function (evt) {
+                    var e = evt || window.event;
+                    e.preventDefault();
+                    e.stopPropagation();
+                    $("#downloadFileForm").attr("action", [[${apiPath.apiFileDownload}]]);
+                    $("#downloadFileForm").submit();
+                });
+
+                $('.qwPicCharList .applyview').click(function (evt) {
+                    var e = evt || window.event;
+                    e.preventDefault();
+                    e.stopPropagation();
+                    var libid = $(this).attr("libid");
+                    apply(libid,'view');
+                    $(this).addClass("blockBtn");
+                });
+
+                $('.qwPicCharList .applydownload').click(function (evt) {
+                    var e = evt || window.event;
+                    e.preventDefault();
+                    e.stopPropagation();
+                    var libid =$(this).attr("libid");
+                    apply(libid,'download');
+                    $(this).addClass("blockBtn");
+                });
+
+                //获取资源库标签
+                getTags();
+                //获取资源库浏览量
+                getVisitCount();
+            }
+        }else{
+            $("#mass_list").show();
+            if(data){
+                if(data.code == 300){
+                    console.log(data.msg);
+                    $(".qwContent").hide();
+                    $(".nolib").show();
+                    return;
+                }
+                $(".qwContent").show();
+                var li_html = '';
+                if($.isArray(data.rows) && data.rows.length > 0){
+                    for(var i=0; i<data.rows.length; i++){
+                        var row = data.rows[i];
+                        var restype = row.resourcetype;
+                        var libid = row.libid;
+                        var resid = row.resid;
+                        var respicture = dataInit.getMidImage(row.respicture);//图片地址
+                        var resname = row.resname;//资源名称
+                        var libname = row.name;//资源名称
+                        var icon = '';//显示音频还是视频的图片
+                        var download = '';//下载图标
+                        var publishtime = timeStamp2String(row.publishtime);
+
+                        var resauthor = row.resauthor?row.resauthor:'';
+                        var auth = "无";
+                        if(row.authority){
+                            auth = "有";
+                        }
+
+                        if(restype == 'audio'){
+                            restype = '音频';
+                            icon = '<i class="icon iconfont icon-yinpin"></i>';
+                            respicture = [[${basePath}]]+'/assets/img/public/audio.png';//音频图片
+                        }else if(restype == 'video'){
+                            icon = '<i class="icon iconfont icon-CombinedShape"></i>';
+                            restype = '视频';
+                        }else if(restype == 'img'){
+                            restype = '图片';
+                        }else{
+                            download = '<div class="download">下载<i class="icon iconfont icon-download-copy"></i></div>';
+                            //respicture = [[${basePath}]]+'/assets/img/public/file.png';//文档图片
+                            respicture = [[${basePath}]] + dataInit.getFileTypeIcon(row.resurl, '/assets/img/brand/xiazai.jpg');
+                            restype = '文档';
+                        }
+
+                        li_html +='<tr style="cursor: pointer" resid="'+resid+'" libid="'+libid+'" onclick="doResDetail(\''+libid+'\',\''+resid+'\');" target="">\n' +
+                            '                        <td>'+parseInt(i+1)+'</td>\n' +
+                            '                        <td>'+resname+'</td>\n' +
+                            '                        <td>'+resauthor+'</td>\n' +
+                            '                        <td>'+libname+'</td>\n' +
+                            '                        <td>'+restype+'</td>\n' +
+                            '                        <td class="purview">'+auth+'</td>\n' +
+                            '                        <td>'+publishtime+'</td>\n' +
+                            '                        <td class="liu">0</td>\n' +
+                            '                        <td class="xia">0</td>\n' +
+                            '                    </tr>';
+
+
+
+
+                    /*    li_html +=' <li> <a onclick="doResDetail(\''+libid+'\',\''+resid+'\');" target="">\n' +
+                            '            <div class="pic">\n' +
+                            '                <img src="'+respicture+'" alt="\'+resname+\'">\n' +
+                            '                <div class="tag">\n' +
+                            '                <span>'+libname+'</span>\n' +
+                            '                </div>\n' +
+                            '                </div>\n' +
+                            '                <div class="char">\n' +
+                            '                <div class="tit">'+resname+'</div>\n' +
+                            '            </div></a>\n' +
+                            '            </li>\n';*/
+                    }
+                    UL1.append(li_html);
+
+                    var search_div = '找到<span id="mass_count">'+data.total+'</span>条结果 ，其中';
+
+                    if(data.data.imgCount>0){
+                        search_div+='图片资源<span>'+data.data.imgCount+'</span>条&nbsp;&nbsp;&nbsp;';
+                    }
+                    if(data.data.videoCount>0){
+                        search_div+='视频资源<span>'+data.data.videoCount+'</span>条&nbsp;&nbsp;&nbsp;';
+                    }
+                    if(data.data.audioCount>0){
+                        search_div+='音频资源<span>'+data.data.audioCount+'</span>条&nbsp;&nbsp;&nbsp;';
+                    }
+                    if(data.data.fileCount>0){
+                        search_div+='文档资源<span>'+data.data.fileCount+'</span>条';
+                    }
+                    $(".searchCount").html(search_div);
+                    getResInfo();
+                }else{
+
+                    var search_div = '找到<span>0</span>条结果';
+                    $(".searchCount").html(search_div);
+                    UL1.append("<tr><td colspan='9'><div class='public-no-message'></div></td></tr>");
+                }
+            }
+        }
+        $(document).scrollTop(0);
+    }
+
+    function getTags(){
+        $(".tag").each(function () {
+            var tagids = $(this).attr('tag-value');
+            if(!tagids) return "";
+            var UL = $(this);
+            $.ajax({
+                url : [[${apiPath.tags}]],
+                method : "POST",
+                data : {type: 56, cultid: $.cookie('cultid'),tags:tagids,token:token,timestamp:timestamp},
+                cache: false,
+                dataType:'json',
+            }).success(function(data) {
+                var li_html = "";
+                if($.isArray(data.rows)){
+                    for(var i=0; i<data.rows.length; i++){
+                        var _tag = data.rows[i];
+                        var _tag_name = _tag.name;
+                        li_html+='<span>'+_tag_name+'</span>';
+                    }
+                }
+                UL.html(li_html);
+            });
+
+        })
+
+    }
+
+    function getVisitCount(){
+        var userid = [[${session.qw_sessUserKey.userId}]];// 当前用户ID
+        $(".qwPicCharList li").each(function () {
+            var libid = $(this).attr('id');
+            var UL = $(this);
+            $.ajax({
+                url : [[${apiPath.getInfoByResId}]],
+                method : "POST",
+                data : {libid:libid,userid:userid,massType:1,token:token,timestamp:timestamp},
+                cache: false,
+                dataType:'json',
+            }).success(function(data) {
+                var info = data.data;
+                $(UL).find(".liulanliang").html("浏览量："+info.viewCount);
+                if(info.auth<0){
+                    $(UL).find(".purview").show();
+                    if(info.view!=null && info.view.applystate == 0){
+                        $(UL).find(".applyview").removeClass("applyview").addClass("blockBtn").show()
+                    }else{
+                        $(UL).find(".applyview").show();
+                    }
+                    if(info.download!=null && info.download.applystate == 0){
+                        $(UL).find(".applydownload").removeClass("applydownload").addClass("blockBtn").show()
+                    }else{
+                        $(UL).find(".applydownload").show();
+                    }
+                }
+                if(info.api>=0){
+                    $(UL).find(".getapi").show();
+                }
+                $(UL).find(".resourcecount").html("资源数量："+info.resourcecount);
+                $(UL).find(".cultname").html("来源："+info.cultname);
+            });
+        })
+    }
+
+    function getResInfo(){
+        var userid = [[${session.qw_sessUserKey.userId}]];// 当前用户ID
+        $("#mass_list_body tr").each(function () {
+            var libid = $(this).attr('libid');
+            var resid = $(this).attr('resid');
+            var UL = $(this);
+            $.ajax({
+                url : [[${apiPath.getInfoByResId}]],
+                method : "POST",
+                data : {libid:libid,resid:resid,userid:userid,massType:2,token:token,timestamp:timestamp},
+                cache: false,
+                dataType:'json',
+            }).success(function(data) {
+                var info = data.data;
+                $(UL).find(".liu").html(info.viewCount);
+                $(UL).find(".xia").html(info.downcount);
+            });
+        })
+    }
+
+
+    function doResDetail(libid,resid) {
+        //判断权限
+        var userid = [[${session.qw_sessUserKey.userId}]];// 当前用户ID
+        dataInit.ajax({
+            api: [[${apiPath.getMassUserAuth}]],
+            params:{libid: libid, userid: userid,token:token,timestamp:timestamp},
+            fn:function(data){
+                var auth = data.data.authority;
+                if(auth != null && auth != "" && auth.indexOf("view") >= 0){
+                    var href = basePath+'/qwzy/detail?libid='+libid+'&resid='+resid;
+                    var srchkey = $('#searchKey').val();
+                    //var restype = $('.filterListYi .cur').attr('data-value');
+                    var restype = $('.resType .cur').attr('data-value');
+                    var arttype = $('.filterListEr .cur').attr('data-value');
+
+                    if(restype) href += '&resourcetype='+restype;
+                    if(srchkey) href += '&srchkey='+srchkey;
+                    if(arttype) href += '&arttype='+arttype;
+
+                    window.location.href= href;
+                }else{
+                    noAuth();
+                }
+            }
+        });
+    }
+
+    function doDetail(libid,libname) {
+        //没有权限查看
+        var userid = [[${session.qw_sessUserKey.userId}]];// 当前用户ID
+        dataInit.ajax({
+            api: [[${apiPath.getMassUserAuth}]],
+            params:{libid: libid, userid: userid,token:token,timestamp:timestamp},
+            fn:function(data){
+                var auth = data.data.authority;
+                if(auth != null && auth != "" && auth.indexOf("view") >= 0){
+                    var href = basePath+'/qwzy/liblist?libid='+libid;
+                    var srchkey = $('#searchKey').val();
+                    var restype = $('.filterListYi .cur').attr('data-value');
+                    var arttype = $('.filterListEr .cur').attr('data-value');
+
+                    if(restype) href += '&resourcetype='+restype;
+                    if(srchkey) href += '&srchkey='+srchkey;
+                    if(arttype) href += '&arttype='+arttype;
+                    href += '&libname='+encodeURIComponent(libname);
+                    window.location.href= href;
+                }else{
+                    noAuth();
+                }
+            }
+        });
+    }
+
+    /** 切换资源分类 */
+    function conditionChange(ele) {
+        var spanEle = $(ele).parent('span');
+        var parentid = spanEle.parent('div').attr('id');
+        if(parentid == 'condition_1'){//切换资源分类
+            var _restype = spanEle.attr('restype');
+            $('#condition_1 span[restype="'+_restype+'"]').addClass("active").siblings().removeClass("active");
+            if(_restype != ''){
+                $('#condition_2 span[restype!="'+_restype+'"]').hide();
+                $('#condition_2 span[restype="'+_restype+'"]').show();
+            }else{
+                $('#condition_2 span').show();
+            }
+
+            $('#condition_2 span:first').show();
+            $('#condition_2 span:first').addClass("active").siblings().removeClass("active");
+            //加载数据
+            loadData();
+        }else{//切换子分类
+            spanEle.addClass("active").siblings().removeClass("active");
+            //加载数据
+            loadData();
+        }
+    }
+
+
+
+    /** 切换资源分类 */
+    function apply(masslibraryid,applytype) {
+        var userid = [[${session.qw_sessUserKey.userId}]];// 当前用户ID
+        //加载分类
+        dataInit.ajax({
+            api: [[${apiPath.massLibraryApply}]],
+            params:{userid: userid,applytype:applytype,masslibraryid:masslibraryid,token:token,timestamp:timestamp},
+            fn:function(data){
+
+            }
+        });
+    }
+
+
+    $(function () {
+
+        //关键字
+        var srchkey = [[${srchkey}]];
+
+        if(srchkey){
+            $('#searchKey').val(srchkey);
+        }
+
+        //加载分类
+        dataInit.ajax({
+            api: [[${apiPath.massResType}]],
+            params:{"cultid": cultid,token:token,timestamp:timestamp},
+            fn:function(data){
+                if($.isArray(data)){
+                    var li_html = '';
+                    for(var i=0; i<data.length; i++){
+                        var _type = data[i];
+                        var _type_name = _type.name;
+                        var _type_value = _type.value;
+
+                        li_html+='<li class="item" id="'+_type_value+'" data-value="'+_type_value+'">'+_type_name+'</li>';
+
+                    }
+                    $('#lib_type ul').append(li_html);
+                    $('#art_type2 ul').append(li_html);
+                }
+                //类型
+                var resourcetype = dataInit.getUrlParam('resourcetype') || "";
+                if(resourcetype){
+                    $("#"+resourcetype).addClass('cur').siblings().removeClass('cur');
+                }
+
+                //if(arttype){
+                    loadArtType();
+                //}else{
+                    loadData();
+                //}
+            }
+        });
+
+
+        //搜索
+        $('.fsBtn').on('click',function(){
+            var srchkey = $('#searchKey').val();
+            $(".all").addClass("cur").siblings().removeClass("cur");
+            loadData();
+        });
+
+        //回车事件
+        $("body").keydown(function(e) {
+            var isFocus = $('#searchKey').is(":focus");
+            var srchkey = $('#searchKey').val();
+
+            click(e)
+
+            var curKey = e.which;
+            if(curKey == "13" && isFocus){
+                loadData();
+            }
+
+            /*if (event.keyCode == "13" && isFocus) {
+                loadData();
+            }*/
+        });
+
+    });
+
+
+
+    function click(e) {
+        if (document.all) {
+            if (event.button==2||event.button==3) { console.log("谢谢您的合作！");
+                oncontextmenu='return false';
+            }
+        }
+        if (document.layers) {
+            if (e.which == 3) {
+                oncontextmenu='return false';
+            }
+        }
+    }
+    if (document.layers) {
+        document.captureEvents(Event.MOUSEDOWN);
+    }
+    document.onmousedown=click;
+    document.oncontextmenu = new Function("return false;")
+    document.onkeydown =document.onkeyup = document.onkeypress=function(){
+        if(window.event.keyCode == 123) {
+            window.event.returnValue=false;
+            return(false);
+        }
+    }
+
+
+
+    function loadArtType(){
+        //加载艺术分类
+        dataInit.ajax({
+            api: [[${apiPath.getTypes}]],
+            params:{"cultid": cultid,type:1,token:token,timestamp:timestamp},
+            fn:function(data){
+                if($.isArray(data.rows)){
+                    var li_html = '';
+                    for(var i=0; i<data.rows.length; i++){
+                        var _type = data.rows[i];
+                        var _type_name = _type.name;
+                        var _type_id = _type.id;
+                        li_html+='<li id="'+_type_id+'" class="item" data-value="'+_type_id+'">'+_type_name+'</li>';
+                    }
+                    $('#art_type ul').append(li_html);
+                    if(arttype){
+                        $("#"+arttype).addClass('cur').siblings().removeClass('cur');
+                    }
+                }
+            }
+
+        });
+    }
+
+
+
+    function noAuth() {
+        var quanxian = '<div style="padding-top: 45px">' +
+            '<img style="display: block;margin: 0 auto;margin-bottom: 30px;" src="'+basePath+'/assets/image/quanxian.png">' +
+            '<p style="font-size: 24px;color: #333;text-align: center">无查看权限！</p>' +
+            '</div>'
+        layer.open({
+            type: 1,
+            title: '',
+            shadeClose: true,
+            shade: 0.6,
+            area: ['360px', '320px'],
+            resize: false,
+            skin: 'layui-layer-purview',
+            content: quanxian
+        });
+    }
+    function setStopPropagation(evt) {
+        var e = evt || window.event;
+        if(typeof e.stopPropagation == 'function') {
+            e.stopPropagation();
+        } else {
+            e.cancelBubble = true;
+        }
+    }
+    $(function () {
+        $('.filterListYi').on('click', '.item', function () {
+            $(this).addClass('cur').siblings().removeClass('cur');
+        });
+
+        $('.artType').on('click', '.item', function () {
+            $(this).addClass('cur').siblings().removeClass('cur');
+            loadData();
+        });
+
+        $('.resType').on('click', '.item', function () {
+            $(this).addClass('cur').siblings().removeClass('cur');
+            loadData();
+        });
+
+
+        $('.selBox .selOne').on('click', function () {
+            $(this).siblings('.selTwo').toggle();
+        });
+        $('html,body').click(function () {
+            $('.selBox .selTwo').hide();
+        });
+        $('.selBox').click(function (evt) {
+            setStopPropagation(evt)
+        });
+        $('.selBox .selTwo').on('click', '.sItem', function () {
+            $(this).parent().hide();
+            $(this).parent().siblings('.selOne').find('span').html($(this).html());
+            $(this).addClass('cur').siblings().removeClass('cur');
+            masstype = $(this).attr("data-value");
+        });
+        /*$(".qwPicCharList li").click(function (evt) {
+            setStopPropagation(evt)
+        });*/
+
+    });
+
+
+
+    //在Jquery里格式化Date日期时间数据
+    function timeStamp2String(time){
+        var datetime = new Date();
+        datetime.setTime(time);
+        var year = datetime.getFullYear();
+        var month = datetime.getMonth() + 1 < 10 ? "0" + (datetime.getMonth() + 1) : datetime.getMonth() + 1;
+        var date = datetime.getDate() < 10 ? "0" + datetime.getDate() : datetime.getDate();
+        var hour = datetime.getHours()< 10 ? "0" + datetime.getHours() : datetime.getHours();
+        var minute = datetime.getMinutes()< 10 ? "0" + datetime.getMinutes() : datetime.getMinutes();
+        var second = datetime.getSeconds()< 10 ? "0" + datetime.getSeconds() : datetime.getSeconds();
+        return year + "-" + month + "-" + date+" "+hour+":"+minute+":"+second;
+    }
+
+</script>
+</body>
+</html>

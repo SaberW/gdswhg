@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="public/resource :: copy"></head>
+<link th:href="${basePath}+'/assets/style/regist/regist.css'" rel="stylesheet">
+<body>
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/rong.validate.js'"></script>
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/rong.message.js'"></script>
+<div class="regist-logo"><a th:href="${basePath}+'/index'"></a></div>
+<ul class="crumbs crumbs-1st clearfix">
+    <li class="step-1">1. 选择模式<em class="arrow"></em></li>
+    <li class="step-2">2. 验证信息<em class="arrow"></em></li>
+    <li class="step-3 last">3. 修改密码</li>
+</ul>
+<div class="main">
+    <div class="main-cont">
+        <!--<div class="reLoad none"><a href="javascript:void(0)" onClick="history.go(0);">其它方式找回密码</a></div>-->
+        <div class="typeChange">
+            <div class="change mobileFind">
+                <h2>通过手机找回密码</h2>
+                <p>Retrieve password with mobile</p>
+            </div>
+            <!--<div class="change emailFind">
+                <h2>通过邮箱找回密码</h2>
+                <p>Retrieve password with E-mail</p>
+                <a href="javascript:void(0)"></a>
+            </div>-->
+        </div>
+        <form action="findpwd2" method="post" id="findPwd">
+        <div class="typeMain">
+            <!--<div class="help">请选择您需要的密码找回方式</div>-->
+            <dl class="phoneType clearfix phone">
+                <dt class="float-left">手机号</dt>
+                <dd class="float-left">
+                    <input class="in-txt inputPhone" id="phoneNum" name="phoneNum" placeholder="输入11位手机号码"
+                           maxlength="11" required>
+                    <em></em>
+                </dd>
+            </dl>
+            <dl class="clearfix next">
+                <dt class="float-left">&nbsp;</dt>
+                <dd class="float-left">
+                    <input class="submit none" type="submit" value="Submit">
+                    <div class="goNext float-left">下一步</div>
+                </dd>
+            </dl>
+            <!--<dl class="mailType clearfix  mail none">
+              <dt class="float-left">E-mail</dt>
+              <dd class="float-left">
+                <input class="in-txt inputEmail" placeholder="输入邮箱地址">
+                <em></em>
+              </dd>
+            </dl>
+            <dl class="clearfix next none">
+              <dt class="float-left">&nbsp;</dt>
+              <dd class="float-left">
+                <div class="goNext float-left"><a href="findpwd2nd.html">下一步</a></div>
+              </dd>
+            </dl>-->
+        </div>
+        </form>
+    </div>
+</div>
+<!-- core public JavaScript -->
+<script type="text/javascript" th:inline="javascript">
+    //手机号格式
+    $.validator.addMethod("phoneType", function (value) {
+        var reg = /^0?(13[0-9]|15[012356789]|17[013678]|18[0-9]|14[57])[0-9]{8}$/;
+        return reg.test(value);
+    }, '请输入正确的手机号码');
+    $(document).ready(function () {
+        $("#findPwd").validate({
+            errorElement: "em",
+            rules: {
+                phoneNum: "required",
+                phoneNum: "phoneType"
+            },
+            messages: {
+                phoneNum: {
+                    required: "请输入您的手机号码"
+                }
+            },
+            submitHandler: function (form) {
+                dataInit.ajax({
+                    api:[[${apiPath.hasPhone}]],
+                    params:{
+                       "phone": $("#phoneNum").val()
+                    },
+                    fn:function(data){
+                        if(data.data == 1){
+                            form.submit();
+                        }else{
+                            rongDialog.init({
+                                ico : 2,
+                                type : 1,
+                                desc : "手机号不存在"
+                            });
+                        }
+                    }
+                })
+            }
+        });
+    });
+    $(".goNext").on("click", function () {
+        $(".submit").click();
+    })
+</script>
+</body>
+</html>

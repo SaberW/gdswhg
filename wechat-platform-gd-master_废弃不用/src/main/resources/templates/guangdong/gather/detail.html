@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/public/detail.css'" >
+<div th:include="guangdong/public/leftBar :: copy"></div>
+<div id="page">
+    <div class="mui-content">
+        <div class="wrapper-detail" id="act-detail">
+            <div class="wrapper-detail-box">
+                <div class="img">
+                    <img id="image" class="lazy" src="http://183.131.126.132:8092/whgstatic/img/2017/201709/20170921/e7f2cf27ba3b41b680c1f10651db8800.jpg"/>
+                    <div class="gather-title">
+                        <h2><span class="label">活动众筹</span>亲子陶艺大作战</h2>
+                    </div>
+                </div>
+                <div class="gather-info">
+                    <div class="gather-state">
+                        <div class="zc-state">众筹中</div>
+                        <span>200份</span>
+                    </div>
+                    <div class="gather-progress-bar">
+                        <span data-progress-bar="66" style="width: 66%;"></span>
+                    </div>
+                    <div class="progress-table mui-clearfix">
+                        <div class="progress-table-list">
+                            <span>剩余20天</span>
+                        </div>
+                        <div class="progress-table-list">
+                            <span>剩余80份</span>
+                        </div>
+                        <div class="progress-table-list">
+                            <span>完成80%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="wrapper-detail-box">
+                <div class="address">众筹时间：<span>2017-11-6 19:11:08</span></div>
+                <div class="address">培训讲师：<span>娃娃</span></div>
+                <a href="tel:15012345645"><div class="phone">培训电话：<span id="phone">130****1545</span></div></a>
+                <div class="address">众筹地址：<span>长沙市橘子洲头</span></div>
+            </div>
+            <div class="wrapper-detail-box">
+                <div class="gather-nav">
+                    <span class="gather-nav-list active">众筹详情</span>
+                    <span class="gather-nav-list">活动介绍</span>
+                    <span class="gather-nav-list">培训风采</span>
+                </div>
+                <div class="gather-nav-content">
+                    <div class="gather-content-list">
+                        <div class="title">众筹说明</div>
+                        <div class="info">众筹成功可以参加活动</div>
+                    </div>
+                    <div class="gather-content-list">
+                        <div class="title">众筹介绍</div>
+                        <div class="info">众筹成功可以介绍活动</div>
+                    </div>
+                    <div class="gather-content-list">
+                        <div class="title">众筹发起人</div>
+                        <div class="info">
+                            <div class="people-pic">
+                                <img src="http://iconfont.alicdn.com/t/1503992387686.jpg">
+                            </div>
+                            <div class="people-info">
+                                <div class="people-name">ワカバ</div>
+                                <div class="people-msg">あこがれだけじゃ埋めきれない</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="gather-content-list">
+                        <div class="title">众筹须知</div>
+                        <div class="info">众筹成功可以介绍活动</div>
+                    </div>
+                </div>
+                <div class="gather-nav-content">
+                    <div class="gather-content-list">
+                        <div class="title">活动介绍</div>
+                        <div class="info">众筹成功可以参加活动众筹成功可以参加活动众筹成功可以参加活动众筹成功可以参加活动众筹成功可以参加活动众筹成功可以参加活动</div>
+                    </div>
+                </div>
+                <div class="gather-nav-content">
+                    <h2>图片</h2>
+                    <div class="scroll-box mui-scroll-wrapper mui-slider-indicatorcode mui-segmented-control mui-segmented-control-inverted">
+                            <div class="mui-scroll">
+                                <a>
+                                    <div class="mask">休息室</div>
+                                    <img th:src="${basePath}+'/assets/img/img_demo/q1.jpg'" alt="demo">
+                                </a>
+                                <a>
+                                    <div class="mask">录音室</div>
+                                    <img th:src="${basePath}+'/assets/img/img_demo/q2.jpg'" alt="demo">
+                                </a>
+                                <a>
+                                    <div class="mask">活动室</div>
+                                    <img th:src="${basePath}+'/assets/img/img_demo/q3.jpg'" alt="demo">
+                                </a>
+                                <a>
+                                    <div class="mask">休息室</div>
+                                    <img th:src="${basePath}+'/assets/img/img_demo/q4.jpg'" alt="demo">
+                                </a>
+                                <a>
+                                    <div class="mask">会议室</div>
+                                    <img th:src="${basePath}+'/assets/img/img_demo/q5.jpg'" alt="demo">
+                                </a>
+                                <a>
+                                    <div class="mask">休息室</div>
+                                    <img th:src="${basePath}+'/assets/img/img_demo/q6.jpg'" alt="demo">
+                                </a>
+                            </div>
+                        </div>
+                </div>
+                <div class="gather-nav-content">
+                    <h2>视频</h2>
+                    <div class="scroll-box mui-scroll-wrapper mui-slider-indicatorcode mui-segmented-control mui-segmented-control-inverted">
+                        <div class="mui-scroll">
+                            <a>
+                                <div class="mask">休息室</div>
+                                <img th:src="${basePath}+'/assets/img/img_demo/q1.jpg'" alt="demo">
+                                <div class="video-mask">
+                                    <img th:src="${basePath}+'/assets/img/gather/play.png'">
+                                </div>
+                            </a>
+                            <a>
+                                <div class="mask">录音室</div>
+                                <img th:src="${basePath}+'/assets/img/img_demo/q2.jpg'" alt="demo">
+                                <div class="video-mask">
+                                    <img th:src="${basePath}+'/assets/img/gather/play.png'">
+                                </div>
+                            </a>
+                            <a>
+                                <div class="mask">活动室</div>
+                                <img th:src="${basePath}+'/assets/img/img_demo/q3.jpg'" alt="demo">
+                                <div class="video-mask">
+                                    <img th:src="${basePath}+'/assets/img/gather/play.png'">
+                                </div>
+                            </a>
+                            <a>
+                                <div class="mask">休息室</div>
+                                <img th:src="${basePath}+'/assets/img/img_demo/q4.jpg'" alt="demo">
+                                <div class="video-mask">
+                                    <img th:src="${basePath}+'/assets/img/gather/play.png'">
+                                </div>
+                            </a>
+                            <a>
+                                <div class="mask">会议室</div>
+                                <img th:src="${basePath}+'/assets/img/img_demo/q5.jpg'" alt="demo">
+                                <div class="video-mask">
+                                    <img th:src="${basePath}+'/assets/img/gather/play.png'">
+                                </div>
+                            </a>
+                            <a>
+                                <div class="mask">休息室</div>
+                                <img th:src="${basePath}+'/assets/img/img_demo/q6.jpg'" alt="demo">
+                                <div class="video-mask">
+                                    <img th:src="${basePath}+'/assets/img/gather/play.png'">
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="gather-nav-content">
+                    <h2>音频</h2>
+                    <div class="scroll-box mui-scroll-wrapper mui-slider-indicatorcode mui-segmented-control mui-segmented-control-inverted">
+                        <div class="mui-scroll">
+                            <a>
+                                <div class="mask">休息室</div>
+                                <img th:src="${basePath}+'/assets/img/gather/mp3.jpg'" alt="demo">
+                                <div class="audio-mask">
+                                    <img th:src="${basePath}+'/assets/img/gather/macphone.png'">
+                                </div>
+                            </a>
+                            <a>
+                                <div class="mask">录音室</div>
+                                <img th:src="${basePath}+'/assets/img/gather/mp3.jpg'" alt="demo">
+                                <div class="audio-mask">
+                                    <img th:src="${basePath}+'/assets/img/gather/macphone.png'">
+                                </div>
+                            </a>
+                            <a>
+                                <div class="mask">活动室</div>
+                                <img th:src="${basePath}+'/assets/img/gather/mp3.jpg'" alt="demo">
+                                <div class="audio-mask">
+                                    <img th:src="${basePath}+'/assets/img/gather/macphone.png'">
+                                </div>
+                            </a>
+                            <a>
+                                <div class="mask">休息室</div>
+                                <img th:src="${basePath}+'/assets/img/gather/mp3.jpg'" alt="demo">
+                                <div class="audio-mask">
+                                    <img th:src="${basePath}+'/assets/img/gather/macphone.png'">
+                                </div>
+                            </a>
+                            <a>
+                                <div class="mask">会议室</div>
+                                <img th:src="${basePath}+'/assets/img/gather/mp3.jpg'" alt="demo">
+                                <div class="audio-mask">
+                                    <img th:src="${basePath}+'/assets/img/gather/macphone.png'">
+                                </div>
+                            </a>
+                            <a>
+                                <div class="mask">休息室</div>
+                                <img th:src="${basePath}+'/assets/img/gather/mp3.jpg'" alt="demo">
+                                <div class="audio-mask">
+                                    <img th:src="${basePath}+'/assets/img/gather/macphone.png'">
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <nav class="mui-bar mui-bar-tab">
+        <div th:include="guangdong/public/collectionAndVoteup :: copy" class="zan-collection mui-tab-item"></div>
+        <div class="mui-tab-item"><a class="goNext" href="javascript:void(0)">我要支持</a></div>
+    </nav>
+    <input type="hidden" id="temp_type" value="4">
+    <input type="hidden" id="commType">
+</div>
+<script type="text/javascript" th:inline="javascript">
+    var itemId = dataInit.getUrlParam('id');
+    var userid = $("#temp_userId").val();
+    $().ready(function(){
+        /*dataInit.ajax({
+            api: [[${apiPath.actdetail}]],
+            fn: showDetail,
+            params: {actId: itemId,cultid:cultid}
+        });*/
+    })
+    function showDetail(data) {
+        if(data && data.code == 0){
+
+        }else {
+            mui.toast(data.msg || '数据加载失败');
+        }
+
+    }
+</script>
+</body>
+</html>

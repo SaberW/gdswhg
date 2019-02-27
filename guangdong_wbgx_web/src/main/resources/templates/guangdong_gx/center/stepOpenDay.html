@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong_gx/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/style/supply_sys/center.css'">
+<link rel="stylesheet" th:href="${basePath}+'/assets/js/plugs/rong-datepicker/style.css'">
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/jquery-form.js'"></script>
+<div class="wrapper clearfix">
+    <div class="content">
+        <!--公共主头部开始-->
+        <div id="header" th:include="guangdong_gx/public/header :: copy"></div>
+        <!--公共主头部结束-->
+        <!--主体开始-->
+        <div class="container res-center-bg">
+            <div class="sys-crumbs">
+                <span><a href="../res-gx/index">首页</a></span>
+                <i class="icon iconfont icon-enter"></i>
+                <span><a href="javascript:history.back(-1)">供需详情</a></span>
+                <i class="icon iconfont icon-enter"></i>
+                <span class="active">申请供需</span>
+            </div>
+
+            <form method="post" id="supplyForm" enctype="multipart/form-data">
+
+                <div class="page-list" id="step-1">
+                    <h1>选择时间段与区域</h1>
+                    <div class="form-cont">
+                        <h3>
+                            <em>1</em>时间
+                        </h3>
+                        <div class="row">
+                            <div id="rong-date-init" class="rong-date-init">
+
+                            </div>
+                            <div id="rong-date-selected" class="rong-date-selected clearfix">
+                                已选择：<br><br>
+                            </div>
+                        </div>
+                        <h3>
+                            <em>2</em>配送范围
+                        </h3>
+                        <div class="row checkboxList clearfix" id="checkboxList">
+
+                        </div>
+                        <div class="row">
+                            <a href="javascript:void(0)" class="next-btn">下一步</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="page-list none" id="step-2">
+                    <h1>上传供需项目文件</h1>
+                    <div class="none">
+                        <input type="file" name="attach" id="attach">
+                    </div>
+                    <div class="upload-cont row">
+                        <div class="upload-btn">
+                            <i class="icon iconfont icon-wenjianjia"></i>
+                            <p>点击上传文件</p>
+                        </div>
+                    </div>
+                    <div class="upload-help">
+                        文件上传类型：“ doc/docx、xls/xlsx、ppt/pptx、pdf、zip、rar ”
+                    </div>
+                    <div class="upload-cont" id="rangeMemo">
+                        <div class="title" style="color:#666 ">相关说明</div>
+                        <div class="html-panel" style="font-size: 14px;color:#666" id="memo"></div>
+                    </div>
+                    <div class="upload-file-info none">
+                        <div class="p">
+                            <div class="next-btn" id="re-upload">重新选择</div>
+                            <i class="icon iconfont icon-huixingzhen"></i>
+                            <span></span>
+                        </div>
+                    </div>
+
+                    <div class="upload-ok">
+                        <a href="javascript:void(0)" class="next-btn">下一步</a>
+                    </div>
+                </div>
+                <input type="hidden" name="fkid">
+                <input type="hidden" name="region">
+                <input type="hidden" name="crtuser">
+                <input type="hidden" name="name">
+                <input type="hidden" name="dates">
+                <input type="hidden" name="touser">
+                <input type="hidden" name="type" value="0"><!-- 默认都是供给 0，只有 供需中 有需求 1-->
+                <input type="hidden" name="fktype">
+
+            </form>
+        </div>
+        <!--主体结束-->
+    </div>
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong_gx/public/footer :: copy"></div>
+<!--底部结束-->
+<a class="to-top"></a>
+
+<script type="text/javascript" th:inline="javascript">
+    var id = dataInit.getUrlParam("id");
+    var timeid = dataInit.getUrlParam("timeid");
+    var userId = $("#temp_userId").val();
+    var st = dataInit.getUrlParam('st');
+    var citys = "",filepath="";
+    var crtuser = dataInit.getUrlParam('crtuser');
+    var gxtype = dataInit.getUrlParam('gxtype');
+    var title = dataInit.getUrlParam('title');
+    var fktype= dataInit.getUrlParam('fktype');
+    title = decodeURI(decodeURI(title));
+
+
+    function isIElt10(){
+        var userAgent = navigator.userAgent;
+        var isIE = userAgent.indexOf("compatible") > -1 && userAgent.indexOf("MSIE") > -1;
+        if (isIE){
+            var reIE = new RegExp("MSIE (\\d+\\.\\d+);");
+            reIE.test(userAgent);
+            var fIEVersion = parseFloat(RegExp["$1"]);
+            return fIEVersion < 10;
+        }
+        return false;
+    }
+
+    $().ready(function () {
+
+        if (isIElt10()){
+            rongDialog.init({
+                ico: 2,
+                type: 1,
+                desc: "您的浏览器版本过低，请升级浏览器！"
+            });
+        }
+
+        //获取配送基本信息
+       // getSupplyInfo(id);
+
+        //加载日历组件
+        rongDatepicker.init({
+            fstMonthApi: [[${apiPath.firstOpenYMD}]],
+            openDaysApi: [[${apiPath.openDays}]],
+            id: id,
+            timeid: timeid,
+        });
+        dataInit.ajax({
+            api: [[${apiPath.showMemo}]],
+            fn: function (data) {
+                if(data.data&&data.data!=""){
+                    $('#memo').html(data.data);
+                }else{
+                    $('#rangeMemo').hide();
+                }
+            },
+            params: {id: id,fktype:fktype}
+        });
+        //加载多选框
+        checkBoxInit(timeid);
+
+        $('.next-btn').on('click', function () {
+            isDataChange();
+        })
+
+        $('.upload-cont,#re-upload').on('click',function(){
+            $("#attach").click();
+        })
+        doSubForm();
+
+    })
+
+    //获取多选框数据
+    function checkBoxInit(id) {
+        var api = st != 1 ? [[${apiPath.getCitys4resource}]] : [[${apiPath.getgxcity}]]
+        dataInit.ajax({
+            api: api,
+            params: {id: id},
+            fn: function (data) {
+                var province = data.data.province;
+                var citys = data.data.city.split(',');
+                checkBoxHtml(citys);
+            }
+        })
+    }
+
+    function doSubForm(){
+        $('.upload-ok .next-btn').on('click',function(){
+            $('.upload-ok .next-btn').off('click');
+            formAction();
+        })
+    }
+
+    //生成多选框
+    function checkBoxHtml(data) {
+        var html = "";
+        if (data.length > 0 && data) {
+            for (var i in data) {
+                var model = data[i];
+                html += '<span><label><input type="checkbox" value="' + model + '">' + model + '</label></span>';
+            }
+        }
+        $("#checkboxList").html(html);
+    }
+
+    //判断时间和区域是否已选
+    function isDataChange() {
+        var cut = $("#rong-date-selected").find("span").size();
+        citys = "";
+        $("#checkboxList span label input").each(function (i) {
+            if ($(this).get(0).checked) {
+                citys += $(this).val() + ',';
+            }
+        })
+        citys = citys.substring(0, citys.length - 1);
+        if (cut <= 0) {
+            rongDialog.init({
+                ico: 2,
+                type: 1,
+                desc: "请选择时间段"
+            });
+            return false;
+        } else if (citys.length <= 0) {
+            rongDialog.init({
+                ico: 2,
+                type: 1,
+                desc: "请选择配送范围"
+            });
+            return false;
+        } else {
+            $("#step-1").hide();
+            $("#step-2").show();
+        }
+    }
+
+   //获取当前配送信
+    function getSupplyInfo(id){
+        dataInit.ajax({
+            api:[[${apiPath.getSupplyInfo}]],
+            params:{id:id},
+            fn:function(data){
+                if(data.data.title&&data.data.title!=""){
+                    title = data.data.title;
+                }
+            }
+        })
+    }
+
+    //文件上传过滤
+    $("#attach").change(function(){
+        var m = $(this);
+        filepath  = m.val();
+        var extStr = filepath.lastIndexOf(".");
+        var ext = filepath.substring(extStr, filepath.length).toLocaleLowerCase();
+        var type = $("input[name='type']:checked").val();
+        var msg = "";
+        var flag = false;
+        if (!m || !m[0] || !m[0].files){
+            if (ext != ".doc" && ext != ".docx" && ext != ".xls" && ext != ".xlsx" && ext != ".ppt" && ext != ".pptx" && ext != ".pdf" && ext != ".zip" && ext != '.rar') {
+                msg = "文件格式错误";
+            }else {
+                flag= true;
+            }
+            if (flag == false) {
+                rongDialog.init({
+                    ico: 2,
+                    type: 1,
+                    desc: msg,
+                    nextFn: function () {
+                        filepath = "";
+                        m.val("");
+                    }
+                })
+            } else {
+                $(".upload-file-info .p span").html(filepath);
+                $(".upload-file-info").fadeIn();
+            }
+            return;
+        }
+
+        if(m[0].files[0]) {
+            var fileSize = m[0].files[0].size;
+            if (ext != ".doc" && ext != ".docx" && ext != ".xls" && ext != ".xlsx" && ext != ".ppt" && ext != ".pptx" && ext != ".pdf" && ext != ".zip" && ext != '.rar') {
+                msg = "文件格式错误";
+            } else if (fileSize / 1024 / 1024 > 3) {
+                msg = "文件不能大于3MB";
+                m.val("");
+            } else {
+                flag = true;
+            }
+            if (flag == false) {
+                rongDialog.init({
+                    ico: 2,
+                    type: 1,
+                    desc: msg,
+                    nextFn: function () {
+                        filepath = "";
+                        m.val("");
+                    }
+                })
+            } else {
+                $(".upload-file-info .p span").html(filepath);
+                $(".upload-file-info").fadeIn();
+            }
+        }else{
+            $(".upload-file-info .p span").html("");
+            $(".upload-file-info").fadeOut();
+        }
+    });
+
+    //数据提交
+    function formAction(){
+        var dates = "";
+        $("#rong-date-selected span").each(function(i){
+            dates += $(this).text()+",";
+        })
+        dates = dates.substring(0,dates.length-1);
+        $("input[name='dates']").val(dates);
+        $("input[name='name']").val(title);
+        $("input[name='fkid']").val(id);
+        $("input[name='crtuser']").val(userId);
+        $("input[name='region']").val(citys);
+        $("input[name='touser']").val(crtuser);
+        if(gxtype){
+            $("input[name='type']").val(gxtype);
+        }
+        $("input[name='fktype']").val(fktype);
+
+        if(filepath.length > 0){
+
+            $("#supplyForm").ajaxSubmit({
+                url: [[${apiPath.addDelivery}]],
+                type: "post",
+                dataType: "json",
+                success: function (data) {
+                    if(data.code == 0){
+                        rongDialog.init({
+                            ico: 1,
+                            type: 1,
+                            desc: '提交成功',
+                            nextFn:function(){
+                                if($("input[name='type']").val()==0){
+                                    window.location.href='myApplyList';
+                                }else{
+                                    window.location.href='mySupplyList';
+                                }
+                            }
+                        })
+                    }else{
+                        rongDialog.init({
+                            ico: 2,
+                            type: 1,
+                            desc: data.msg || '提交失败'
+                        })
+                        doSubForm();
+                    }
+
+                },
+                error: function () {
+                    rongDialog.init({
+                        ico: 2,
+                        type: 1,
+                        desc: '发送请求失败'
+                    })
+                    doSubForm();
+                }
+            });
+        }else{
+            rongDialog.init({
+                ico: 2,
+                type: 1,
+                desc: '请上传文件'
+            })
+            doSubForm();
+        }
+    }
+
+</script>
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/rong-datepicker/jquery-ui.js'"></script>
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/rong-datepicker/rong-datepicker-min.js'"></script>
+</body>
+</html>

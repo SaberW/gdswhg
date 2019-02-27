@@ -1,0 +1,401 @@
+<header th:fragment="copy" xmlns:th="http://www.w3.org/1999/xhtml">
+    <!--轮播广告开始-->
+    <div class="swiper-box">
+        <div class="swiper-container swiper-list clearfix">
+            <ul class="swiper-wrapper clearfix">
+            </ul>
+            <div class="page">
+                <ul class="pages">
+                </ul>
+            </div>
+            <!-- Add Pagination
+            <div class="swiper-pagination swiper-pagination-white"></div>-->
+            <div class="arrow">
+                <div class="arrows left"><img th:src="${basePath}+'/assets/img/index/left.png'"></div>
+                <div class="arrows right"><img th:src="${basePath}+'/assets/img/index/right.png'"></div>
+            </div>
+        </div>
+    </div>
+    <!--轮播广告结束-->
+    <!--资讯列表开始-->
+    <div class="news-list-bg" id="wrapper-news">
+        <div class="news-list clearfix">
+            <div class="news-left">
+                <div class="title">
+                    <span>文化资讯</span>
+                    <span class="text">NEWS</span>
+                    <a th:href="${basePath}+'/'+${cultsite}+'/zx/list'">查看更多></a>
+                </div>
+            </div>
+            <div class="news-right">
+                <div class="news">
+                    <ul id="infomationList">
+
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <img th:src="${basePath}+'/assets/img/index/tt_bg.png'" class="tt_bg">
+    </div>
+    <!--资讯列表结束-->
+    <!--文化活动开始-->
+    <div class="public-index-bg" id="wrapper-act">
+        <div class="public-index-cont border-bottom">
+            <h2>文化活动</h2>
+        </div>
+        <div class="public-index-cont">
+            <div class="activity-list">
+                <ul class="clearfix" id="ActList">
+
+                </ul>
+            </div>
+        </div>
+        <a th:href="${basePath}+'/'+${cultsite}+'/hd/list'" class="look-more">查看更多 ></a>
+    </div>
+    <!--文化活动结束-->
+    <!--品牌精选开始-->
+    <div class="brand-list-bg" id="wrapper-brand">
+        <div class="brand-list clearfix">
+            <div class="brand-left">
+                <div class="title">
+                    <span>品牌精选</span>
+                    <span class="text">BRANDS</span>
+                    <a th:href="${basePath}+'/'+${cultsite}+'/pp/list'">查看更多></a>
+                </div>
+            </div>
+            <div class="brand-right">
+                <div class="brand">
+                    <ul class="clearfix" id="brandList">
+
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--品牌精选结束-->
+    <!--文化场馆开始-->
+    <div class="public-index-bg bg" id="wrapper-venue">
+        <div class="public-index-cont border-bottom">
+            <h2>场馆预定</h2>
+            <a th:href="${basePath}+'/'+${cultsite}+'/cg/list'">查看更多 <i class="iconfont icon-enter"></i></a>
+        </div>
+        <div class="venue-content">
+            <div class="venue-top clearfix">
+                <div class="vennue-left">
+                    <img src="http://119.23.73.71:9090/whgstatic/img/2017/201708/20170810/4e17ea375d004ce094186c017ac23ffb_740_555.jpg">
+                </div>
+                <div class="vennue-right">
+                    <h5 class="margin-left">场馆标题</h5>
+                    <p class="dd margin-left _addrs">地点：<em></em></p>
+                    <p class="dd margin-left _time">时间：<em></em></p>
+                    <p class="dd margin-left inro">简介：<em></em></p>
+                    <span class="yd"><a class="margin-left">立即预定</a></span>
+                </div>
+            </div>
+            <div class="venue-list">
+                <div class="lists clearfix">
+                    <ul class="clearfix venue-List">
+
+                    </ul>
+                </div>
+            </div>
+            <div class="arrow arrs">
+                <div class="arrows left-arrow">
+                    <img th:src="${basePath}+'/assets/img/index/left.png'">
+                </div>
+                <div class="arrows right-arrow">
+                    <img th:src="${basePath}+'/assets/img/index/right.png'">
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--文化场馆结束-->
+    <!--培训驿站开始-->
+    <!--<div class="public-index-bg" id="wrapper-train">
+        <div class="public-index-cont border-bottom">
+            <h2>培训驿站</h2>
+            <a th:href="${basePath}+'/px/list'">查看更多 <i class="iconfont icon-enter"></i></a>
+        </div>
+        <div class="train-index">
+            <ul class="clearfix">
+                <li>
+                    <div class="img">
+                        <a href=""><img src="http://120.77.37.113:8001/whgstatic/img/2017/201709/20170928/b5e455a5dd4c43129dec5770a6ad1826.jpg"></a>
+                    </div>
+                    <div class="detail">
+                        <div class="title">这是标题</div>
+                        <div class="time">2017-10-16</div>
+                    </div>
+                </li>
+                <li>
+                    <div class="img">
+                        <a href=""><img src="http://120.77.37.113:8001/whgstatic/img/2017/201709/20170928/b5e455a5dd4c43129dec5770a6ad1826.jpg"></a>
+                    </div>
+                    <div class="detail">
+                        <div class="title">这是标题</div>
+                        <div class="time">2017-10-16</div>
+                    </div>
+                </li>
+                <li>
+                    <div class="img">
+                        <a href=""><img src="http://120.77.37.113:8001/whgstatic/img/2017/201709/20170928/b5e455a5dd4c43129dec5770a6ad1826.jpg"></a>
+                    </div>
+                    <div class="detail">
+                        <div class="title">这是标题</div>
+                        <div class="time">2017-10-16</div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>-->
+    <!--培训驿站结束-->
+    <script type="text/javascript" th:inline="javascript">
+
+        function showMinorIndex() {
+            $('body>.wrapper').css({
+                background: '#edf2f2'
+            });
+            $("#GxMinorIndex").show();
+            dataInit.ajax({
+                api: [[${apiPath.showAdver}]],
+                fn: banner, //首页轮播图数据
+                params: {
+                    type: 1,
+                    city: $.cookie('city'),
+                    cultid: $.cookie('cultid')
+                }
+            });
+            dataInit.ajax({
+                api: [[${apiPath.activityList}]],
+                fn: culture, //文化活动
+                params: {
+                    index: 1,
+                    size: 6,
+                    cultid: $.cookie('cultid')
+                }
+            });
+            dataInit.ajax({
+                api: [[${apiPath.infomationList}]],
+                fn: infomation, //资讯
+                params: {
+                    index: 1,
+                    size: 5,
+                    cultid: $.cookie('cultid')
+                }
+            });
+            dataInit.ajax({
+                api: [[${apiPath.ppList}]],
+                fn: ppList, //品牌
+                params: {
+                    index: 1,
+                    pageSize: 2,
+                    cultid: $.cookie('cultid')
+                }
+            });
+            dataInit.ajax({
+                api: [[${apiPath.venueList}]],
+                fn: venue, //场馆列表
+                params: {
+                    pageSize: 4,
+                    cultid: $.cookie('cultid')
+                }
+            });
+        }
+        function banner(data) {
+            for (var i = 0; i < data.rows.length; i++) {
+                if(data.rows[i].url&&data.rows[i].url!=""){
+                    $(".swiper-wrapper").append(
+                    '<li class="swiper-slide"><a href="' + data.rows[i].url + '"><img src="' + data.imgPath + data.rows[i].picture + '"></a></li>');
+                }else{
+                    $(".swiper-wrapper").append(
+                        '<li class="swiper-slide"><a href="javascript:void(0)"><img src="' + data.imgPath + data.rows[i].picture + '"></a></li>');
+                }
+            }
+            if (data.rows.length && data.code == 0) {
+                if(data.rows.length>0){
+                    var mySwiperswiper = new Swiper('.swiper-list',{
+                        autoplay : 5000,//可选选项，自动滑动
+                        pagination: '.rectangle-page',
+                        paginationClickable: true,
+                        autoplayDisableOnInteraction: false,
+                        loop : true//可选选项，开启循环
+                    });
+                    $('.left').click(function(){
+                        mySwiperswiper.swipePrev();
+                    })
+                    $('.right').click(function(){
+                        mySwiperswiper.swipeNext();
+                    })
+                    // $('.swiper-list').sly({
+                    //     itemNav: "forceCentered",
+                    //     easing: "easeOutExpo",
+                    //     cycleBy: 'items',
+                    //     pagesBar: ".pages",
+                    //     prevPage: ".left",
+                    //     nextPage: ".right",
+                    //     cycleInterval: 3000,
+                    //     horizontal: 1
+                    // });
+                }
+            } else {
+                var Banner_basePath = [[${basePath}]] + '/assets/img/index/main_banner.jpg';
+                $(".swiper-wrapper").append(
+                    '<li class="swiper-slide"><a href="javascript:void(0)"><img src="' + Banner_basePath + '"></a></li>'
+                )
+            }
+        }
+        function culture(data) {
+            //console.log(data);
+            if (data.rows) {
+                var html = '';
+                for (var i = 0; i < data.rows.length; i++) {
+                    var model = data.rows[i];
+                    var startTime = moment(model.starttime).format('YYYY-MM-DD');
+                    var endTime = moment(model.endtime).format('YYYY-MM-DD');
+                    var time=startTime + ' ~ ' + endTime;
+                    if(startTime==endTime){
+                        time=startTime;
+                    }
+                    var line = '<li class="">' +
+                        '<div class="img">' +
+                        ' <a href="' + [[${basePath}]] +'/'+[[${cultsite}]]+ '/hd/detail?id=' + model.id + '" target="_blank">' +
+                        ' <img src="' + data.imgPath + model.imgurl + '">' +
+                        ' </a>' +
+                        ' </div>' +
+                        ' <div class="detail">' +
+                        ' <h4>' +
+                        ' <a href="' + [[${basePath}]] +'/'+[[${cultsite}]]+'/hd/detail?id=' + model.id + '" target="_blank">' + model.name + '</a>' +
+                        ' </h4>' +
+                        ' <p>时间：<span>' + time + '</span></p>' +
+                        ' <p>地点：<span>' + model.address + '</span></p>' +
+                        ' </div>' +
+                        '</li>';
+                    html = html + line;
+                }
+                if(data.rows.length>0){
+                    $("#ActList").html(html);
+                }else {
+                    $("#wrapper-act").hide();
+                }
+
+            }
+        }
+
+        function infomation(data) {
+            if (data.rows) {
+                var html = '';
+                for (var i = 0; i < data.rows.length; i++) {
+                    var model = data.rows[i];
+                    var line = '<li class="">' +
+                        '<div class="news-title clearfix">' +
+                        '<span>new</span><div class="title"><span class="time">'+moment(model.clnfcrttime).format('YYYY-MM-DD')+'</span><h3>' +
+                        '<a href="' + [[${basePath}]]+'/'+[[${cultsite}]]+ '/zx/detail?id=' + model.clnfid + '" target="_blank">'+model.clnftltle+'</a>' +
+                        '</h3>'+
+                        ' </div>' +
+                        ' </div>' +
+                        '</li>';
+
+                    html = html + line;
+                }
+                if(data.rows.length>0){
+                    $("#infomationList").html(html);
+                }else {
+                    $("#wrapper-news").hide();
+                }
+            }
+        }
+
+        function ppList(data) {
+            if (data.rows) {
+                var html = '';
+                for (var i = 0; i < data.rows.length; i++) {
+                    var model = data.rows[i];
+                    var brand_imgPath = data.imgPath + dataInit.getBigImage(model.picture);
+                    var line = '<li>' +
+                        '<div class="img">' +
+                        '<a href="' + [[${basePath}]] +'/'+[[${cultsite}]]+ '/pp/detail?id=' + model.id + '" target="_blank"><img src="' + brand_imgPath + '"></a>' +
+                        ' </div>';
+                    if(model.name&&model.name.length>10) {
+                        line+=' <div class="title"><a href="' + [[${basePath}]] +'/'+[[${cultsite}]]+ '/pp/detail?id=' + model.id + '" target="_blank">' + model.name.substring(0,10)+'...</a></div>' +
+                        '</li>';
+                    }else{
+                        line+=' <div class="title"><a href="' + [[${basePath}]] +'/'+[[${cultsite}]]+ '/pp/detail?id=' + model.id + '" target="_blank">' + model.name + '</a></div>' +
+                            '</li>';
+                    }
+                    html = html + line;
+
+                }
+                if (data.rows.length > 0) {
+                    $("#brandList").html(html);
+                } else {
+                    $("#wrapper-brand").hide();
+                }
+
+            }
+        }
+        function venue(data) {
+            //console.log(data);
+            if (data.rows.length && data.code == 0) {
+                var j = '';
+                var html = '';
+                $("#ActList>li:last-child").css("margin-right", "0");
+                for (var i = 0; i < data.rows.length; i++) {
+                    var model = data.rows[i];
+                    var line = '<li class="" data-type="' + model.id + '">' +
+                        '<a>' +
+                        '<div class="img">' +
+                        '<img src="' + data.imgPath + model.imgurl + '">' +
+                        '</div>' +
+                        '</a>' +
+                        '</li>';
+                    html = html + line;
+                }
+                $(".venue-List").html(html);
+                $('.lists').sly({
+                    itemNav: "basic",
+                    easing: "easeOutExpo",
+                    prevPage: ".left-arrow",
+                    nextPage: ".right-arrow",
+                    horizontal: 2
+                });
+                j = 0;
+                var time = moment(data.rows[j].statemdfdate).format('YYYY-MM-DD HH:mm:ss');
+                var img = data.imgPath + data.rows[j].imgurl;
+                var herf = [[${basePath}]] +'/'+[[${cultsite}]]+ '/cg/detail?id=' + data.rows[j].id;
+                $(".vennue-left img").attr("src", img)
+                $(".vennue-right h5").text(data.rows[j].title);
+                $("._addrs em").text(data.rows[j].title);
+                if(data.rows[j].time){
+                    $("._time em").text(data.rows[j].time);
+                    $("._time").show();
+                }else {
+                    $("._time").hide();
+                }
+                $(".inro em").text(data.rows[j].summary);
+                $(".yd a").attr("href", herf);
+                $(".venue-List li").click(function () {
+                    j = $(this).index();
+                    var time = moment(data.rows[j].statemdfdate).format('YYYY-MM-DD HH:mm:ss');
+                    var img = data.imgPath + data.rows[j].imgurl;
+                    var herf = [[${basePath}]] +'/'+[[${cultsite}]]+ '/cg/detail?id=' + data.rows[j].id;
+                    $(".vennue-left img").attr("src", img)
+                    $(".vennue-right h5").text(data.rows[j].title);
+                    $("._addrs em").text(data.rows[j].title);
+                    if(data.rows[j].time){
+                        $("._time em").text(data.rows[j].time);
+                        $("._time").show();
+                    }else {
+                        $("._time").hide();
+                    }
+                    $(".inro em").text(data.rows[j].summary);
+                    $(".yd a").attr("href", herf);
+                })
+            } else {
+                $(".bg").hide();
+            }
+
+        }
+    </script>
+</header>

@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong_gx/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/style/public/majorlist.css'">
+<div class="wrapper clearfix">
+    <div class="content">
+        <!--公共主头部开始-->
+        <div id="header" th:include="guangdong_gx/public/header :: copy"></div>
+        <!--公共主头部结束-->
+        <!--主体开始-->
+        <div class="sys-crumbs">
+            <span><a href="../index">首页</a></span>
+            <i class="icon iconfont icon-enter"></i>
+            <span><a th:href="'list?etype='+${etype}">微专业</a></span>
+            <i class="icon iconfont icon-enter"></i>
+            <span class="active" id="title"></span>
+        </div>
+        <div class="major-bg">
+            <div class="major-detail">
+                <div class="major-detail-info clearfix">
+                    <div class="img">
+                        <img id="_imgPath" src="">
+                    </div>
+                    <div class="detail">
+                        <div class="title" id="_title"></div>
+                        <div class="text">
+                            <div class="text-info" id="_detail">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="major-detail-list">
+                    <div class="title">培训资源<!--<a href="../pxzy/list">查看更多<i class="iconfont icon-enter"></i></a>--></div>
+                    <div class="filter">
+                        <span class="active" data-type="1">图片</span>
+                        <span data-type="2">视频</span>
+                        <span data-type="3">音频</span>
+                        <span data-type="4">文档</span>
+                    </div>
+
+                    <div class="tra-res-list">
+                        <ul class="clearfix" id="_drsc">
+
+                        </ul>
+                        <!--资源分页开始 -->
+                        <div class="green-black" id="zyPagging" style="margin-bottom: 40px;margin-top:60px;"></div>
+                        <!--资源分页结束-->
+                    </div>
+                </div>
+            </div>
+            <div class="major-detail-white">
+                <div class="major-detail-list">
+                    <div class="title">培训课程<!--<a href="../xxpx/list">查看更多<i class="iconfont icon-enter"></i></a>--></div>
+                    <div class="list">
+                        <ul id="_majortra">
+
+                        </ul>
+                        <!--课程分页开始 -->
+                        <div class="green-black" id="kcPagging" style="margin-bottom: 40px;margin-top:60px;"></div>
+                        <!--课程分页结束-->
+                    </div>
+                </div>
+            </div>
+            <div class="major-detail">
+                <div class="major-detail-list">
+                    <div class="title">培训师资<!--<a href="../pxsz/list">查看更多<i class="iconfont icon-enter"></i></a>--></div>
+                    <div class="list">
+                        <ul class="clearfix" id="_tratea">
+
+                        </ul>
+                        <!--师资分页开始 -->
+                        <div class="green-black" id="szPagging" style="margin-bottom: 40px;margin-top:60px;"></div>
+                        <!--师资分页结束-->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--主体结束-->
+    </div>
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong_gx/public/footer :: copy"></div>
+<!--底部结束-->
+<a class="to-top"></a>
+<script th:src="${basePath}+'/assets/js/FilteDatail.js'"></script>
+<script type="text/javascript" th:inline="javascript">
+    var etype = "1";
+    var itemId = dataInit.getUrlParam('id');
+    $(function () {
+
+        $('.filter span').on('click', function (e) {
+            $(this).addClass('active').siblings().removeClass('active');
+            pageType = $(this).attr('data-type');
+            if (pageType == 1) {
+                etype = '1';
+            } else if (pageType == 2) {
+                etype = '2';
+            } else if (pageType == 3) {
+                etype = '3';
+            }else if (pageType == 4) {
+                etype = '4';
+            }
+            dataPage();
+            szdataPage();
+            pxdataPage();
+        });
+        dataPage();
+        szdataPage();
+        pxdataPage();
+        var params = {
+            id:itemId
+        };
+        //调用接口
+        dataInit.ajax({
+            api: [[${apiPath.majorDetail}]],
+            params: params,
+            fn: showMajorDetail
+        });
+
+
+
+
+
+
+    });
+    //加载老师数据
+    function szdataPage(page,rows) {
+        var params_page = page || 1;
+        var params_rows = rows || 4;
+        //培训师资列表
+        dataInit.ajax({
+            api: [[${apiPath.majortea}]],
+
+            fn: function(data){
+                teaList(data);
+                dataInit.pageInit('szPagging', params_page, params_rows, data.total, szdataPage);
+            },
+            params: {id: itemId,page:params_page,pageSize:params_rows}
+        });
+    }
+    //加载培训数据
+    function pxdataPage(page,rows) {
+        var params_page = page || 1;
+        var params_rows = rows || 3;
+        //培训列表
+        dataInit.ajax({
+            api: [[${apiPath.majortra}]],
+            fn: function(data){
+                traList(data);
+                dataInit.pageInit('kcPagging', params_page, params_rows, data.total, pxdataPage);
+            },
+            params: {id: itemId,page:params_page,pageSize:params_rows}
+        });
+    }
+    //加载资源数据
+    function dataPage(page,rows) {
+        var params_page = page || 1;
+        var params_rows = rows || 8;
+        //资源列表
+        dataInit.ajax({
+            api: [[${apiPath.majordrsc}]],
+            fn: function(data){
+                drscList(data,etype);
+                dataInit.pageInit('zyPagging', params_page, params_rows, data.total, dataPage);
+            },
+            params: {id: itemId, size:3,etype:etype,page:params_page,pageSize:params_rows}
+        });
+    }
+
+    function showMajorDetail(data) {
+        var model = data.data;
+
+        FilteDatail.options({
+            toUrl: [[${basePath}]]+'/'+[[${cultsite}]]+'/index',
+            info: data.data
+        }).filte();
+
+        var _jieshao = dataInit.removeHTMLTag(model.detail);
+        var imgPath = data.imgPath + dataInit.getBigImage(model.image);
+        $('#_title').html(model.name);
+        $('#_imgPath').attr('src',imgPath);
+        $('#_detail').html(_jieshao);
+        $('#title').text(model.name);
+    }
+
+    function teaList(data) {
+        //师资列表
+        var tjvenlist = data.rows;
+        $("#_tratea").empty();
+        if(tjvenlist && tjvenlist.length){
+            var i_length = tjvenlist.length>8 ? 8 : tjvenlist.length;
+            for (var i=0;i<i_length;i++) {
+                var imgPathT = data.imgPath + dataInit.getSmallImage(tjvenlist[i].teacherpic);
+                var no_before = '', no_after = '';
+                if(i<4){
+                    no_before = 'no-before';
+                }
+                if(i == 3 || i == 7){
+                    no_after = 'no-after';
+                }
+                if(tjvenlist[i].id != itemId){
+                    $("#_tratea").append(
+                            '<li class="'+no_before+' '+no_after+'">'+
+                            '<i class="iconfont icon-jiantou1"></i>'+
+                            '<div class="img">'+
+                            '<div class="img-box">'+
+                            '<img src="'+imgPathT+'" style="margin-left: -25px; height: 110px; width: auto">'+
+                            '</div>'+
+                            '</div>'+
+                            '<div class="name">'+tjvenlist[i].name+'</div>'+
+                            '<div class="info">'+tjvenlist[i].teacherdesc+'</div>'+
+                            '<a href="../pxsz/detail?id='+tjvenlist[i].id+'"></a>'+
+                            '</li>'
+                    );
+                }
+            }
+        }else {
+            $("#_tratea").append('<div class="public-no-message-detail"></div>');
+        }
+    }
+
+    function traList(data) {
+        //培训列表
+        var tjvenlist = data.rows;
+        $("#_majortra").html('');
+        if(tjvenlist && tjvenlist.length){
+            var i_length = tjvenlist.length>8 ? 8 : tjvenlist.length;
+            var _html = '';
+            for (var i=0;i<i_length;i++) {
+                var imgPathT = data.imgPath + dataInit.getBigImage(tjvenlist[i].trainimg);
+                var applyBegin = moment(tjvenlist[i].enrollstarttime).format('YYYY-MM-DD');
+                var applyEnd = moment(tjvenlist[i].enrollendtime).format('YYYY-MM-DD');
+                var trainingBegin = moment(tjvenlist[i].starttime).format('YYYY-MM-DD');
+                var trainingEnd = moment(tjvenlist[i].endtime).format('YYYY-MM-DD');
+                var age = tjvenlist[i].age ? tjvenlist[i].age.split(',') : "不限制年龄";
+                var islive = parseInt(tjvenlist[i].islive);
+                var enroltime = "";
+                var address = "";
+                if(parseInt(tjvenlist[i].mustsignup) != 0){
+                    enroltime = "报名时间："+applyBegin+" 至 "+applyEnd;
+                }
+                var url = "";
+                if(islive == 0){
+                    address = "培训地址："+tjvenlist[i].address;
+                    url = "../xxpx/detail?id="+tjvenlist[i].id;
+                }else{
+                    url = "../zxkc/detail?id="+tjvenlist[i].id;
+                }
+                age = age == "不限制年龄" ? age : ''+age[0] + '-' + age[1] + ' 岁';
+                if(tjvenlist[i].id != itemId){
+                    _html += '<li class="clearfix">'+
+                            '<div class="list-content">'+
+                            '<div class="img"><img src="'+imgPathT+'"></div>'+
+                            '<div class="info">'+
+                            '<div class="list-title">'+tjvenlist[i].title+'</div>'+
+                            '<span class="line"></span>'+
+                            '<p><span>'+enroltime+'</span><span>'+address+'</span></p>'+
+                            '<p><span>培训时间：'+trainingBegin+' 至 '+trainingEnd+'</span><span>培训年龄：'+age+'</span></p>'+
+                            '</div>'+
+                            '<div class="jiantou">'+
+                            '<i class="iconfont icon-jiantou1"></i>'+
+                            '</div>'+
+                            '</div>'+
+                            '</div>'+
+                            '<a href='+url+'></a>'+
+                            '</li>';
+                }
+            }
+            $("#_majortra").html(_html);
+        }else {
+            $("#_majortra").html('<div class="public-no-message"></div>');
+        }
+    }
+
+
+
+
+    function drscList(data,type) {
+        var type = type+"";
+
+        //资源列表
+        var _data = data.rows;
+        var modelUL = $("#_drsc");
+        modelUL.empty();
+        if(_data && _data.length > 0){
+            //var i_length = tjvenlist.length>3 ? 3 : tjvenlist.length;
+            for (var i in _data) {
+                var module = _data[i];
+
+                var html = $('<li><a href="javascript:void(0)">\
+                                    <div class="img">\
+                                        <img >\
+                                    </div>\
+                                    <div class="info">\
+                                        <div class="title">'+module.name+'</div>\
+                                    </div>\
+                                    </a>\
+                                    </li>'
+                );
+
+                //视频图片音频播放
+                if(module.enturl){
+                    var _enturl = module.enturl.indexOf('http') >= 0 ? module.enturl : data.imgPath + module.enturl;
+                }
+                var resBasePath = [[${basePath}]];
+                switch (type){
+                    case "1" : //图片
+                        html.find(".img img").attr("src", dataInit.getRemoteURL(data.imgPath,dataInit.getMidImage(module.enturl)));
+                        html.find("a:last").attr("onClick", "rongDialog.init({\
+                                            ico : 1,\
+                                            type : 6,\
+                                            imgUrl : '"+_enturl+"',\
+                                            title : '"+ module.name +"'\
+                                        });"
+                        );
+                        break;
+                    case "2" :  //视频
+                        html.find(".img img").attr("src", dataInit.getRemoteURL(data.imgPath,dataInit.getMidImage(module.deourl)));
+                        html.find("a:last").attr("onClick", "rongDialog.init({\
+                                            type : 5,\
+                                            vedioUrl : '"+_enturl+"',\
+                                            vedioImg : '',\
+                                            vedioTitle : '"+module.name+"',\
+                                            basePath : '"+resBasePath+"'\
+                                        })"
+                        );
+                        break;
+                    case "3" :  //音频
+                        //alert(resBasePath+"/assets/img/brand/brand-music.jpg");
+                        html.find(".img img").attr("src", [[${basePath}]] + '/assets/img/brand/brand-music.jpg');
+                        html.find("a:last").attr("onClick", "rongDialog.init({\
+                                            type : 5,\
+                                            vedioUrl : '"+_enturl+"',\
+                                            vedioType: 'mp3',\
+                                            vedioImg : '"+resBasePath+"/assets/img/brand/brand-music.jpg',\
+                                            vedioTitle : '"+module.name+"',\
+                                            basePath : '"+resBasePath+"'\
+                                        });setWidth();"
+                        );
+                        break;
+                    case "4" : //文档
+                        var iconImg = dataInit.getFileTypeIcon(module.enturl, '/assets/img/brand/xiazai.jpg');
+                        html.find(".img img").attr("src", [[${basePath}]] + iconImg);
+                        //html.find(".img img").attr("src", [[${basePath}]] + '/assets/img/brand/xiazai.jpg');
+                        html.find(".mask").empty();
+                        html.find("a:last").attr({
+                            target:"_blank",
+                            href: dataInit.getRemoteURL(data.imgPath,module.enturl)
+                        });
+                        break;
+                    default:
+                        html.find(".mask").empty();
+                }
+                modelUL.append(html);
+
+                //视频图片音频播放
+
+            }
+        }else {
+            modelUL.append('<div class="public-no-message"></div>');
+        }
+    }
+
+
+
+</script>
+</body>
+</html>

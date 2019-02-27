@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link th:href="${basePath}+'/assets/style/activity/baoming.css'" rel="stylesheet">
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/rong.validate.js'"></script>
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/rong.message.js'"></script>
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/jquery-form.js'"></script>
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugins/laydate/laydate.js'"></script>
+<style>
+    .crumbs li{
+        width: 306px;
+    }
+</style>
+<div class="wrapper clearfix">
+    <div class="content">
+        <!--公共主头部开始-->
+        <div id="header" th:include="guangdong/public/header :: copy"></div>
+        <!--公共主头部结束-->
+        <div id="act_baoming_step1" class="main-info-bg bg-color">
+            <ul class="crumbs crumbs-1 clearfix">
+                <li class="step-1">1. 填写众筹订单资料<em class="arrow"></em></li>
+                <li class="step-2">2. 等待众筹结束<em class="arrow"></em></li>
+                <li class="step-3 last">3. 参加活动（如众筹成功）<em class="arrow"></em></li>
+            </ul>
+            <div class="container-wrapper">
+                <div class="order-content clearfix">
+                    <form method="post" id="inputForm" enctype="multipart/form-data">
+                        <div class="form-cont">
+                            <h3>
+                                <em>1</em>众筹名称
+                            </h3>
+                            <div class="row">
+                                <div class="input-bg">
+                                    <input class="input-panel" name="zc_name" placeholder="请输入众筹名称" readonly required>
+                                </div>
+                            </div>
+                            <h3>
+                                <em>2</em>姓名
+                            </h3>
+                            <div class="row">
+                                <div class="input-bg">
+                                    <input class="input-panel" name="name" placeholder="请输入您的姓名" maxlength="11" required>
+                                </div>
+                            </div>
+                            <h3>
+                                <em>3</em>证件号
+                            </h3>
+                            <div class="row">
+                                <div class="input-bg">
+                                    <input class="input-panel" name="caednumber" placeholder="请输入您的身份证号码" maxlength="18" required>
+                                </div>
+                            </div>
+                            <h3>
+                                <em>4</em>出生年月
+                            </h3>
+                            <div class="row">
+                                <div class="input-bg">
+                                    <input class="input-panel" id="age" name="birthday" placeholder="请输入您的出生年月" required readonly>
+                                </div>
+                                <!--<script type="text/javascript">
+                                    laydate.render({
+                                        elem: '#age',
+                                        range: false,
+                                        done: function(value, date, endDate){
+                                            if (date && date.year && date.month && date.date
+                                                && endDate && endDate.year && endDate.month && endDate.date){
+                                                $("#beginDay").val(date.year+'-'+date.month+'-'+date.date);
+                                                $("#endDay").val(endDate.year+'-'+endDate.month+'-'+endDate.date);
+                                            }else{
+                                                $("#beginDay").val('');
+                                                $("#endDay").val('');
+                                            }
+//                                            dataPage();
+                                        }
+                                    });
+                                </script>-->
+                            </div>
+
+                            <h3>
+                                <em>5</em>手机号码
+                            </h3>
+                            <div class="row">
+                                <div class="input-bg">
+                                    <input class="input-panel" name="phone" placeholder="请输入您的手机号码" maxlength="11" required>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <input class="none" id="next-btn" type="submit">
+                                <a class="next-btn" href="javascript:void(0)">确定</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div id="act_baoming_step2" class="main-info-bg bg-color" style="display: none">
+            <ul class="crumbs crumbs-2 clearfix">
+                <li class="step-1">1. 填写众筹订单资料<em class="arrow"></em></li>
+                <li class="step-2">2. 等待众筹结束<em class="arrow"></em></li>
+                <li class="step-3 last">3. 参加活动（如众筹成功）<em class="arrow"></em></li>
+            </ul>
+            <div class="container-wrapper">
+                <div class="order-msg">
+                    <span class="msg-title">确认订单信息</span>
+                    <a href="#" class="return" onclick="returnBack()">返回上一级修改信息</a>
+                </div>
+                <div class="order-content clearfix">
+                    <div class="order-img">
+                        <img class="actImgPath" th:src="${basePath}+'/assets/img/public/loading.png'" width="249" height="170">
+                    </div>
+                    <div class="order-detail">
+                        <h1 class="title"></h1>
+                        <p><i class="iconfont icon-time"></i>时间：<span id="orderTime"></span></p>
+                        <!--<p><i class="iconfont icon-location"></i>地址：<span class="actAddress"></span></p>-->
+                        <p><i class="iconfont icon-dianhua"></i>联系方式：<span id="telPhone"></span></p>
+                    </div>
+                </div>
+            </div>
+            <a href="javascript:void(0)" onclick="submitOrder()" class="submit" id="submitOrder">确认订单</a>
+        </div>
+        <div id="act_baoming_step3" class="main-info-bg bg-color" style="display: none">
+            <ul class="crumbs crumbs-3 clearfix">
+                <li class="step-1">1. 填写众筹订单资料<em class="arrow"></em></li>
+                <li class="step-2">2. 等待众筹结束<em class="arrow"></em></li>
+                <li class="step-3 last">3. 参加活动（如众筹成功）<em class="arrow"></em></li>
+            </ul>
+            <div class="container-wrapper">
+                <div class="order-msg">
+                    <span class="msg-title">完成报名</span>
+                    <a th:href="${basePath}+'/center/myApplyList'" class="return">查看订单</a>
+                </div>
+                <div class="order-content clearfix">
+                    <div class="complete-order">
+                        <img th:src="${basePath}+'/assets/img/zcproject/complete-order.png'" width="61" height="61">
+                    </div>
+                    <div class="compltet-order-msg">
+                        <p>恭喜您，<em class="title"></em></p>
+                        <span>报名申请已提交，请关注订单状态！</span>
+                    </div>
+                </div>
+            </div>
+            <a href="javascript:void(0)" class="submit" id="returnDetail">返回活动详情</a>
+        </div>
+    </div>
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong/public/footer :: copy"></div>
+<!--底部结束-->
+<a class="to-top"></a>
+<script type="text/javascript" th:inline="javascript">
+    var itemId = dataInit.getUrlParam('id');
+    var gatherid = dataInit.getUrlParam('gatherid');
+    var etype = dataInit.getUrlParam('etype');
+    var zcTitle = dataInit.getUrlParam('zcTitle');
+    zcTitle = decodeURI(decodeURI(zcTitle));
+    $("input[name = zc_name]").val(zcTitle);
+    var userid = $("#temp_userId").val();
+    var nickName = $("#temp_nickName").val();
+    var ___userPhone = $("#temp_mobile").val();
+    //用户年龄段
+    var ageSize = '';
+    //手机号码规则
+    var Phones = /^1[34578][0-9]\d{8}$/;
+    var flag = true;
+    //判断报名接口，etype==5为培训，etype==0为其他
+    var zcApiUrl = '',zcId= '';
+    if(etype == 0){
+        zcApiUrl = [[${apiPath.gatherApply}]];
+        zcId = itemId;
+    }else {
+        zcApiUrl = [[${apiPath.trainZcApply}]];
+        zcId = gatherid;
+    }
+    //手机号格式
+    $.validator.addMethod("phone", function (value) {
+        var reg = /^0?(13[0-9]|15[012356789]|17[013678]|18[0-9]|14[57])[0-9]{8}$/;
+        return reg.test(value);
+    }, '请输入正确的手机号码');
+
+    //身份证格式
+    $.validator.addMethod("caednumber", function (value) {
+        var reg = /^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X|x)$/;
+        return reg.test(value);
+    }, '请输入正确的身份证号码');
+
+    $(document).ready(function () {
+        dataInit.ajax({
+            api: [[${apiPath.zcProjectDetail}]],
+            fn: showOrderDetail,
+            params: {id: zcId}
+        });
+
+        $('.next-btn').on('click', function () {
+            $("#next-btn").click();
+        });
+    })
+
+    function showOrderDetail(data) {
+        var seatModel = data.data;
+        var phone = seatModel.phone;
+        var title = seatModel.title;
+        var imgPath = [[${imgPath}]] + dataInit.getBigImage(seatModel.imgurl);
+        //用户时间
+        var time = moment(seatModel.timestart).format("YYYY-MM-DD HH:mm:ss") + ' ~ ' + moment(seatModel.timeend).format("YYYY-MM-DD HH:mm:ss");
+        //图片地址
+        $(".actImgPath").attr('src',imgPath);
+        var _href_detail = '';
+        if(data.data.etype == 4){
+            _href_detail = '/project/actdetail?id='+data.data.id;
+        }else if(data.data.etype == 5) {
+            _href_detail = '/project/traindetail?id='+data.data.id;
+        }else if(data.data.etype == 0){
+            _href_detail = '/project/otherdetail?id='+data.data.id;
+        }else {
+            _href_detail = '/project/otherdetail?id='+data.data.id;
+        }
+        $("#returnDetail").attr("href",[[${basePath}]]+_href_detail);
+        $('#orderTime').text(time);
+        $('.title').text(title);
+        if(seatModel.refinfo && seatModel.refinfo.age){
+            ageSize = seatModel.refinfo.age;
+        }
+        dataInit.ajax({
+            api: [[${apiPath.userInfo}]],
+            fn: showUserDetail,
+            params: {userId: userid}
+        });
+
+        function showUserDetail(data) {
+            if(data.code == 0) {
+                if(data.data.userName == ___userPhone){
+                    if(Phones.test(nickName)){
+                        nickName = nickName.substr(0,3)+"****"+nickName.substr(7);
+                        $("input[name='name']").val(nickName);
+                    }else {
+                        $("input[name='name']").val(nickName);
+                    }
+                    if(data.data.idCard){
+                        $("input[name='caednumber']").val(data.data.idCard);
+                        var age = birthdayInit(data.data.idCard);
+                        $("input[name='birthday']").val(age);
+                    }
+                    if(___userPhone || data.data.mobile){
+                        $("input[name='phone']").val(___userPhone || data.data.mobile);
+                    }
+                }else {
+                    var userName = data.data.userName ? data.data.userName : nickName;
+                    $("input[name='name']").val(userName);
+                }
+
+            }else {
+                $("#ordername").val(nickName);
+                rongDialog.init({ico : 2, type : 1, desc : data.msg || '获取数据失败！'});
+            }
+        }
+    }
+    $("input[name='caednumber']").change(function () {
+        if($("input[name='caednumber']").val()){
+            var age = birthdayInit($("input[name='caednumber']").val());
+            $("input[name='birthday']").val(age);
+        }
+    })
+    $("#inputForm").validate({
+        errorElement: "em",
+        debug: true,
+        rules: {
+            phone: "phone",
+            caednumber:"caednumber"
+        },
+        messages: {
+            phone: {
+                required: "请输入您的手机号码"
+            },
+            zc_name: {
+                required: "请输入众筹名称"
+            },
+            name: {
+                required: "请输入您的姓名"
+            },
+            caednumber: {
+                required: "请输入您的身份证号码"
+            },
+            birthday: {
+                required: "请输入您的出生年月"
+            }
+        },
+        submitHandler: function () {
+            $('#telPhone').text($("input[name='phone']").val());
+            if(etype == 5){
+                if(ageSize){
+                    var ageArray = ageSize.split(',');
+                    var age = jsGetAge($("input[name='birthday']").val());
+                    if(Number(ageArray[0])<Number(age) && Number(age)<Number(ageArray[1])){
+                        $("#act_baoming_step1").hide();
+                        $("#act_baoming_step2").show();
+                        $("#act_baoming_step3").hide();
+                    }else {
+                        rongDialog.init({ico : 2, type : 1, desc : '年龄不合适，请重新输入'});
+                    }
+                }else {
+                    $("#act_baoming_step1").hide();
+                    $("#act_baoming_step2").show();
+                    $("#act_baoming_step3").hide();
+                }
+            }else if(etype == 0) {
+                dataInit.ajax({
+                    api: [[${apiPath.gatherApplyChecking}]],
+                    fn: goNext,
+                    params: {id: itemId,userid:userid,etype:etype}
+                });
+                function goNext(data) {
+                    if(data.code == 0){
+                        $("#act_baoming_step1").hide();
+                        $("#act_baoming_step2").show();
+                        $("#act_baoming_step3").hide();
+                    }else {
+                        rongDialog.init({ico : 2, type : 1, desc : data.msg});
+                    }
+                }
+            }
+        }
+    })
+    
+    function returnBack() {
+        $("#act_baoming_step3").hide();
+        $("#act_baoming_step2").hide();
+        $("#act_baoming_step1").show();
+    }
+    
+    function submitOrder () {
+        if(flag){
+            flag = false;
+            var params = {};
+            var temp_list = $("#inputForm [name]").serializeArray();
+            for (var i in temp_list) {
+                params[temp_list[i].name] = temp_list[i].value;
+            }
+            params.gatherid = itemId;
+            params.itemId = itemId;
+            params.userId = userid;
+            params.userid = userid;
+            dataInit.ajax({
+                api: zcApiUrl,
+                fn: function (data) {
+                    if(data.code == 0){
+                        rongDialog.init({ico : 1, type : 1, desc : '报名成功！'});
+                        $("#act_baoming_step1").hide();
+                        $("#act_baoming_step2").hide();
+                        $("#act_baoming_step3").show();
+                    }else {
+                        rongDialog.init({ico : 2, type : 1, desc : data.msg});
+                        flag = true;
+                    }
+                },
+                params: params
+            });
+        }
+    }
+    //生日自动生成
+    function birthdayInit(idCard){
+        var birthday = idCard;
+        birthday = birthday.substring(6,14);
+        birthday = birthday.substring(0,4)+"-"+birthday.substring(4,6)+"-"+birthday.substring(6);
+        return birthday;
+    }
+    //生日生成年龄
+    /*根据出生日期算出年龄*/
+    function jsGetAge(strBirthday){
+        var returnAge;
+        var strBirthdayArr=strBirthday.split("-");
+        var birthYear = strBirthdayArr[0];
+        var birthMonth = strBirthdayArr[1];
+        var birthDay = strBirthdayArr[2];
+
+        d = new Date();
+        var nowYear = d.getFullYear();
+        var nowMonth = d.getMonth() + 1;
+        var nowDay = d.getDate();
+
+        if(nowYear == birthYear){
+            returnAge = 0;//同年 则为0岁
+        }
+        else{
+            var ageDiff = nowYear - birthYear ; //年之差
+            if(ageDiff > 0){
+                if(nowMonth == birthMonth) {
+                    var dayDiff = nowDay - birthDay;//日之差
+                    if(dayDiff < 0)
+                    {
+                        returnAge = ageDiff - 1;
+                    }
+                    else
+                    {
+                        returnAge = ageDiff ;
+                    }
+                }
+                else
+                {
+                    var monthDiff = nowMonth - birthMonth;//月之差
+                    if(monthDiff < 0)
+                    {
+                        returnAge = ageDiff - 1;
+                    }
+                    else
+                    {
+                        returnAge = ageDiff ;
+                    }
+                }
+            }
+            else
+            {
+                returnAge = -1;//返回-1 表示出生日期输入错误 晚于今天
+            }
+        }
+
+        return returnAge;//返回周岁年龄
+
+    }
+</script>
+</body>
+</html>

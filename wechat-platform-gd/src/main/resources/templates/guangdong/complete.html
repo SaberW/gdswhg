@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/changecity/changecity.css'" >
+<div th:include="guangdong/public/leftBar :: copy"></div>
+<div id="page">
+    <div class="mui-content" id="complete">
+        <!--<div class="state">
+            <i class="iconfont icon-success"></i>
+            <p class="title">活动预定成功</p>
+            <p>温馨提示</p>
+            <p class="msg">如需退订，请至“个人中心-我的活动”进行退订</p>
+            <a id="goOrderPage" href="javascript:void(0)">返回活动首页<i class="iconfont icon-enter"></i></a>
+        </div>-->
+    </div>
+</div>
+<script type="text/javascript" th:inline="javascript">
+    var hint = dataInit.getCache('completeMsg');
+//    console.log(hint);
+    $().ready(function(){
+        showModelHtml();
+    })
+    function showModelHtml() {
+        $("#complete").html('');
+
+        var orderLink = '';
+        if (hint.modelOrderName && hint.modelOrderName !='' && hint.orderUrl && hint.orderUrl !=''){
+            orderLink = '<a href="'+hint.orderUrl+'">'+hint.modelOrderName+'<i class="iconfont icon-enter"></i></a>';
+        }
+
+        var html = '<div class="state">'+
+            //'<i class="iconfont icon-success"></i>'+
+            '<div class="yeah-msg"></div>'+
+            '<p class="title">'+hint.title+'</p>'+
+//            '<p>温馨提示</p>'+
+//            '<p class="msg">'+hint.msg+'</p>'+
+                        orderLink +
+            '<a id="goOrderPage" href="'+hint.url+'">'+hint.modelName+'<i class="iconfont icon-enter"></i></a>'+
+            '</div>';
+        $("#complete").html(html);
+    }
+</script>
+</body>
+</html>

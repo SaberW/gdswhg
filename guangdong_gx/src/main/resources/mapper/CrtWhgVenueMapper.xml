@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.creatoo.hn.dao.mapper.admin.CrtWhgVenueMapper">
+
+<!-- 活动室 后台管理列表 查询 -->
+    <select id="srchListVenroom" resultType="hashmap">
+        SELECT VR.*, V.title as 'ventitle', V.cultid as 'vencultid'
+        FROM whg_ven_room VR, whg_ven V
+        WHERE VR.venid = V.id
+
+        <if test="cultid!=null and cultid!=''">
+            and VR.venid in (select id from whg_ven where cultid = #{cultid})
+        </if>
+        <if test="cultids!=null">
+            and VR.venid in
+            (select id from whg_ven where cultid in
+              <foreach collection="cultids" item="iten" open="(" close=")" separator=",">
+                  #{iten}
+              </foreach>
+            )
+        </if>
+
+        <if test="deptid!=null and deptid!=''.toString()">
+            and VR.deptid = #{deptid}
+        </if>
+        <if test="deptids!=null">
+            and VR.deptid in
+            <foreach collection="deptids" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+
+        <if test="title != null and title != ''">
+            AND VR.title like "%"#{title}"%"
+        </if>
+
+        <if test="state != null">
+            AND VR.state = #{state}
+        </if>
+
+        <if test="states != null">
+            AND VR.state IN
+            <foreach item="item" index="index" collection="states" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+
+        <if test="delstate != null">
+            AND VR.delstate = #{delstate}
+        </if>
+
+        <if test="venid != null">
+            AND VR.venid = #{venid}
+        </if>
+
+        <if test="recommend != null">
+            AND VR.recommend = #{recommend}
+        </if>
+
+        <if test="crtuser != null">
+            AND VR.crtuser = #{crtuser}
+        </if>
+
+        <choose>
+            <when test="sort != null">
+                ORDER BY VR.${sort}
+                <if test="order!=null"> ${order} </if>
+            </when>
+            <otherwise>
+                ORDER BY VR.crtdate DESC
+            </otherwise>
+        </choose>
+
+
+    </select>
+
+
+    <select id="srchListVenroomOrders" resultType="hashmap">
+        SELECT  xxx.*
+            ,room.title as roomTitle
+            ,ven.title as venTitle
+        FROM whg_ven_room_order xxx, whg_ven_room room, whg_ven ven
+        WHERE xxx.roomid = room.id and room.venid = ven.id
+
+        <if test="cultid!=null and cultid!=''">
+            and room.venid in (select id from whg_ven where cultid = #{cultid})
+        </if>
+        <if test="cultids!=null">
+            and room.venid in
+            (select id from whg_ven where cultid in
+            <foreach collection="cultids" item="iten" open="(" close=")" separator=",">
+                #{iten}
+            </foreach>
+            )
+        </if>
+
+        <if test="deptid!=null and deptid!=''.toString()">
+            and room.deptid = #{deptid}
+        </if>
+        <if test="deptids!=null">
+            and room.deptid in
+            <foreach collection="deptids" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+
+        <if test="venid != null and venid != ''">
+            AND room.venid = #{venid}
+        </if>
+
+        <if test="roomid != null and roomid != ''">
+            AND room.id = #{roomid}
+        </if>
+
+        <if test="ordercontactphone!=null and ordercontactphone!=''">
+            AND xxx.ordercontactphone like "%"#{ordercontactphone}"%"
+        </if>
+
+        <if test="state != null">
+            AND xxx.state = #{state}
+        </if>
+
+        <if test="startday != null">
+            AND xxx.timeday &gt;= #{startday}
+        </if>
+        <if test="endday != null">
+            AND xxx.timeday &lt;= #{endday}
+        </if>
+
+        <choose>
+            <when test="sort != null">
+                ORDER BY xxx.${sort}
+                <if test="order!=null"> ${order} </if>
+            </when>
+            <otherwise>
+                ORDER BY xxx.crtdate DESC
+            </otherwise>
+        </choose>
+    </select>
+
+</mapper>

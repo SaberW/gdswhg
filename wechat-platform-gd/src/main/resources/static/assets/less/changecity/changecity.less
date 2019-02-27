@@ -1,0 +1,161 @@
+@charset "UTF-8";
+@import "../public/config";
+body,.mui-content{
+  background: #fff;
+  padding-bottom: 50px;
+}
+.city_box{
+  .city{
+    .address{
+      &>span.cityname{
+        display: block;
+        height: 44px;
+        line-height: 42px;
+        background: #f2f2f2;
+        position: relative;
+        color: @-font-color-1;
+        font-size: 15px;
+        padding: 0 10px;
+        i{
+          color: @-main-color;
+          font-size: 20px;
+        }
+        a{
+          color: @-font-color-1;
+        }
+        &:after{
+          .after();
+        }
+      }
+      div.shengguang{
+        &>span{
+          display: block;
+          height: 44px;
+          line-height: 42px;
+          background: @-bg-color;
+          position: relative;
+          color: @-font-color-1;
+          font-size: 15px;
+          padding: 0 10px;
+          &:after{
+            .after();
+          }
+          &.active{
+            color: @-main-color;
+          }
+        }
+      }
+    }
+    .city_bottom_box{
+      padding: 0 10px;
+      .city_bottom{
+        ul{
+          position: relative;
+          div.color{
+            font-size: 16px;
+            color: @-font-color-3;
+            margin: 10px 0;
+          }
+          li{
+            font-size: 15px;
+            color: @-font-color-1;
+            display: inline-block;
+            padding: 5px 15px 3px;
+            margin: 0 25px 15px 0;
+            background: @-bg-color;
+            .border-radius();
+            &.active{
+              background: @-main-color;
+              color: #fff;
+            }
+          }
+          &:after{
+            .after();
+          }
+        }
+      }
+    }
+    .site_bottom{
+      padding: 0 10px;
+      ul{
+        position: relative;
+        margin-top: 15px;
+        div.color{
+          font-size: 15px;
+          color: @-font-color-3;
+        }
+        li{
+          font-size: 15px;
+          color: @-font-color-1;
+          display: inline-block;
+          padding: 5px 15px 3px;
+          margin: 0 25px 15px 0;
+          background: @-bg-color;
+          .border-radius();
+          &.active{
+            background: @-main-color;
+            color: #fff;
+          }
+        }
+      }
+    }
+  }
+}
+
+//complete
+div.mui-content{
+  div.state{
+    padding: 0;
+    text-align: center;
+    &>i{
+      font-size: 120px;
+      color: #8abf43;
+    }
+    &>p.title{
+      margin: 15px 0 20px 0;
+      font-size: 19px;
+      font-weight: bold;
+      color: @-font-color-1;
+      padding: 0 30px;
+      line-height: 29px;
+    }
+    &>p{
+      margin: 10px 0;
+      font-size: 15px;
+      color: @-font-color-3;
+    }
+    &>p.msg{
+      margin: 10px 0;
+      font-size: 12px;
+      color: @-font-color-3;
+    }
+    &>a{
+      display: block;
+      margin: 30px 0;
+    }
+  }
+}
+
+.yeah-msg{
+  width: 100%;
+  height:300px;
+  background: url(../../img/public/yeah-msg-best.gif) no-repeat 50% 50%;
+  background-size: contain;
+  margin: 0 auto;
+}
+.mui-bar {
+  overflow: hidden;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  border-top: solid 1px @-border-color;
+  z-index: 999;
+  a.goNext{
+    height: 50px;
+    line-height: 50px;
+    font-size: 14px;
+    color: #fff;
+    text-align: center;
+    background: @-main-color;
+    display: block;
+  }
+}

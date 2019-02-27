@@ -1,0 +1,23 @@
+.errImg {
+    display: block;
+    margin: 0 auto;
+    margin-top: 30px;
+    width: 80%;
+}
+.errMsg{
+    text-align: center;
+    margin: 30px auto;
+    font-size: 18px;
+    color: #666;
+}
+.back{
+    color: #999;
+    display: block;
+    margin: 0 auto;
+    width: 100px;
+    text-align: center;
+    text-decoration: none;
+}
+.back:hover{
+    color: #666;
+}

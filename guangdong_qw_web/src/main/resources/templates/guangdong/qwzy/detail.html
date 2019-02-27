@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<link th:href="${basePath}+'/assets/style/normalize.css'" rel="stylesheet">
+<link th:href="${basePath}+'/assets/style/gdqw.css'" rel="stylesheet">
+
+<script th:src="${basePath}+'/assets/js/layer/layer.js'" type="text/javascript"></script>
+
+    <style type="text/css">
+        html, body {
+            background-color: #f5f5f5;
+        }
+    </style>
+</head>
+<body>
+<div class="qwMain">
+    <!--公共主头部开始-->
+    <div id="header" th:include="guangdong/public/header :: copy"></div>
+    <!--公共主头部结束-->
+
+    <!--中间内容开始-->
+    <div class="qwContent" style="padding-top: 40px">
+        <div class="breadCrumbs jz1200">
+            <a th:href="${basePath}+'/index'">首页</a>&nbsp;&nbsp;&gt;&nbsp;&nbsp;
+            <a th:href="${basePath}+'/qwzy/index'">群文资源&nbsp;&nbsp;&gt;&nbsp;&nbsp;</a>
+            <a href="javascript:history.go(-1)">群文资源列表&nbsp;&nbsp;&gt;&nbsp;&nbsp;</a>
+            <a href="javascript:;" id="qwTitle"></a>
+        </div>
+	    <div class="detailTit jz1200" id="title"></div>
+        <div class="detailTwoWrap clearfix jz1200">
+            <div class="picBox fl" id="imgdiv">
+                <div class="pic" >
+
+                </div>
+            </div>
+            <div class="infoBox fr">
+                <div class="char">作者：<span id="resauthor"></span></div>
+                <div class="char">所属单位：<span id="resorigin"></span></div>
+                <div class="char">浏览量：<span id="browsingVolume"></span></div>
+                <div class="char">下载量：<span id="downloads"></span></div>
+                <a class="downBtn" style="display: none;" href="javascript:;"><img th:src="${basePath}+'/assets/image/download.png'">立即下载</a>
+            </div>
+        </div>
+        <div class="detailWrap">
+            <div class="dTit">资源简介</div>
+            <div class="cont">
+                <p id="resintroduce"></p>
+            </div>
+            <div id="extDiv" style="display: none;">
+                <!--<div class="dTit" id="extTitle">扩展字段</div>
+                <div class="cont">
+                    <p id="ext-property"></p>
+                </div>-->
+            </div>
+        </div>
+    </div>
+    <!--中间内容结束-->
+
+    <!--底部开始-->
+    <div th:include="guangdong/public/footer :: copy"></div>
+    <!--底部结束-->
+
+    <form action="" id="downloadFileForm" method="post">
+        <input type="hidden" name="libid" id="libid">
+        <input type="hidden" name="resid" id="resid">
+        <input type="hidden" name="token" id="token">
+        <input type="hidden" name="timestamp" id="timestamp">
+    </form>
+</div>
+
+<script type="text/javascript" th:inline="javascript">
+    $("#token").val(token);
+    $("#timestamp").val(timestamp);
+    var basePath = [[${basePath}]];
+    function loadDeail(){
+        var libid = [[${libid}]];//资源库标识
+        var resid = [[${resid}]];//资源标识
+        dataInit.ajax({
+            api: [[${apiPath.massResDetail}]],
+            params: {"libid": libid, "resid": resid,token:token,timestamp:timestamp},
+            fn: function (data) {
+                var resData = data.data;
+
+                if(resData.state!=6){
+                    noAuth("资源已下架");
+                    setTimeout(function(){
+                        window.location.href = basePath + '/qwzy/index';
+                    }, 2000);
+                    return;
+                }
+
+                //标题
+                $('#title').text(resData.resname);
+                $('#qwTitle').html(resData.resname);
+                $('#resauthor').text(resData.resauthor);
+                $('#resorigin').text(resData.resorigin);
+
+                //分享
+//                var respicture = resData.respicture || [[${basePath}]]+'/assets/img/public/file.png';
+//                dataInit.share(resData.resname, respicture);
+
+                // 立即下载按钮点击事件
+                $('.downBtn').click(function () {
+                    $('#libid').val(libid);
+                    $('#resid').val(resid);
+                    $("#downloadFileForm").attr("action", [[${apiPath.massResDownloadFile}]]);
+                    $("#downloadFileForm").submit();
+                });
+
+                //资源图片/视频/音频/文件
+                if(resData.restype == 'img'){
+                    $('#imgdiv').html('<div class="pic"><img src="'+resData.respicture+'" /></div>');
+                }else if(resData.restype == 'video'){
+                    var respicture = resData.respicture;
+                    if(!respicture){
+                        respicture = resData.resurl+"?x-oss-process=video/snapshot,t_15000,m_fast"
+                    }
+                    var video_html = '<div class="pic"><video width="100%" height="100%" controls="controls" controlsList="nodownload" src="'+resData.resurl+'" poster="'+respicture+'"></video></div>';
+                    $('#imgdiv').html(video_html);
+                }else if(resData.restype == 'audio'){
+                    var video_html = '<div class="pic" style="background-image:url('+[[${basePath}]]+'/assets/img/public/audio.png); background-repeat:no-repeat;background-size:100% 100%;-moz-background-size:100% 100%;"><audio style="display:block; margin:230px auto;" controls="controls" src="'+resData.resurl+'"></audio></div>';
+                    $('#imgdiv').html(video_html);
+                }else{
+                    var video_html = '<div class="pic" style="background-image:url('+[[${basePath}]]+'/assets/img/brand/brand-file.jpg); background-repeat:no-repeat;background-size:100% 100%;-moz-background-size:100% 100%;"></div>';
+                    $('#imgdiv').html(video_html);
+                }
+                //简介
+                $('#resintroduce').html(resData.resintroduce||'');
+
+                //需要显示的扩展属性
+                var ext_prarms = data.rows;
+                if($.isArray(ext_prarms) && ext_prarms.length > 0){
+                    var _html = '';
+                    for(var i=0; i<ext_prarms.length; i++){
+                        _html += '<div class="dTit" id="extTitle">'+ext_prarms[i].fieldname+'</div>';
+                        _html += '<div class="cont"><p id="ext-property">'+ext_prarms[i].fielddefaultval+'</p></div>';
+                    }
+                    //显示扩展属性
+                    $('#extDiv').html(_html);
+                    $('#extDiv').show();
+                }
+
+                // 浏览量
+                getBrowseCount();
+
+                //增加浏览量
+                addVisit();
+            }
+        });
+    }
+
+    // 初始化权限
+    function initAuth() {
+        var libid = [[${libid}]];//资源库标识
+        var userid = [[${session.qw_sessUserKey.userId}]];// 当前用户ID
+        dataInit.ajax({
+            api: [[${apiPath.getMassUserAuth}]],
+            params:{libid: libid, userid: userid,token:token,timestamp:timestamp},
+            fn:function(data){
+                var auth = data.data.authority;
+                if(auth != null && auth != "" && auth.indexOf("view") >= 0){
+                    //详情
+                    loadDeail();
+
+                    // 下载量
+                    getDownloadCount();
+
+                    // 有下载权限
+                    if(auth.indexOf("download") >= 0){
+                        $('.downBtn').show();
+                    }
+
+                }else{
+                    noAuth();
+                    setTimeout(function(){
+                        window.location.href = basePath + '/qwzy/index';
+                    }, 2000);
+                }
+            }
+        });
+    }
+
+    //增加浏览量
+    function addVisit() {
+        var resid = [[${resid}]];//资源标识
+        dataInit.ajax({
+            api: [[${apiPath.addVisit}]],
+            params:{resid: resid,token:token,timestamp:timestamp},
+            fn:function(data){
+            }
+        });
+    }
+
+    //获取当前浏览量
+    function getBrowseCount() {
+        var resid = [[${resid}]];//资源标识
+        dataInit.ajax({
+            api: [[${apiPath.getPageViewCount}]],
+            params:{resid: resid,token:token,timestamp:timestamp},
+            fn:function(data){
+                console.log(data.data);
+                $("#browsingVolume").html(data.data+1);
+            }
+        });
+    }
+
+    //获取当前下载量
+    function getDownloadCount() {
+        var resid = [[${resid}]];//资源标识
+        dataInit.ajax({
+            api: [[${apiPath.getDownloadCount}]],
+            params:{resid: resid,token:token,timestamp:timestamp},
+            fn:function(data){
+                console.log(data.data);
+                $("#downloads").html(data.data);
+            }
+        });
+    }
+
+    // 暂无权限
+    function noAuth(content) {
+        if(!content) content = '无查看权限！';
+        var quanxian = '<div style="padding-top: 45px">' +
+            '<img style="display: block;margin: 0 auto;margin-bottom: 30px;" src="'+basePath+'/assets/image/quanxian.png">' +
+            '<p style="font-size: 24px;color: #333;text-align: center">'+content+'</p>' +
+            '</div>';
+        layer.open({
+            type: 1,
+            title: '',
+            shadeClose: true,
+            shade: 0.6,
+            area: ['360px', '320px'],
+            resize: false,
+            skin: 'layui-layer-purview',
+            content: quanxian
+        });
+    }
+
+    $(function () {
+        // 加载查看，下载权限
+        initAuth();
+
+        //回车事件
+        $("body").keydown(function(e) {
+            click(e)
+        });
+
+    });
+
+
+    function click(e) {
+        if (document.all) {
+            if (event.button==2||event.button==3) { console.log("谢谢您的合作！");
+                oncontextmenu='return false';
+            }
+        }
+        if (document.layers) {
+            if (e.which == 3) {
+                oncontextmenu='return false';
+            }
+        }
+    }
+    if (document.layers) {
+        document.captureEvents(Event.MOUSEDOWN);
+    }
+    document.onmousedown=click;
+    document.oncontextmenu = new Function("return false;")
+    document.onkeydown =document.onkeyup = document.onkeypress=function(){
+        if(window.event.keyCode == 123) {
+            window.event.returnValue=false;
+            return(false);
+        }
+    }
+
+</script>
+</body>
+</html>

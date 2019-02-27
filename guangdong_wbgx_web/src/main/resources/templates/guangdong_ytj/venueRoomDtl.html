@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong_ytj/public/header :: copy"></head>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/digitDtl.css'">
+<script th:src="${apiPath.myvisitnote}" id="whgtongji"></script>
+<body class="mui-content">
+
+<header>
+    <div class="black"><i class="mui-icon mui-icon-arrowleft"></i> 返回</div>
+</header>
+
+<main class="mui-content">
+    <div class="title" id="dtl_title"></div>
+    <div class="content">
+        <div>
+            <div class="title_">
+                <span></span>
+                活动室简介
+            </div>
+            <div class="msg clearfix" id="dtl_room_intro"></div>
+        </div>
+        <div>
+            <div class="title_">
+                <span></span>
+                活动室描述
+            </div>
+            <div class="msg clearfix" id="dtl_room_desc"></div>
+        </div>
+        <!--<div>
+            <div class="title_">
+                <span></span>
+                相关资讯
+            </div>
+            <div class="msg clearfix" id="dtl_rel_info"></div>
+        </div>-->
+    </div>
+    <div class="img_box" id="resource_box">
+        <ul id="resourceNav"></ul>
+        <div class="img_ clearfix" id="images_box"></div>
+        <div class="img_ clearfix" id="videos_box"></div>
+        <div class="img_ clearfix" id="audios_box"></div>
+        <!--<div class="img_ clearfix" id="files_box"></div>-->
+    </div>
+</main>
+
+<div class="qrCode">
+    <div>
+        <div>
+            <div id="qrCode_"></div>
+        </div>
+        <div>
+            请扫描二维码，
+            微信登陆后预定。
+        </div>
+    </div>
+</div>
+
+<div class="videoView">
+    <div class="box">
+        <span class="close iconfont icon-close"></span>
+        <div id="video___"></div>
+    </div>
+</div>
+<div class="audioView">
+    <div class="box">
+        <span class="close iconfont icon-close"></span>
+        <audio id="audio___" autoplay controls="controls" controlsList="nodownload"></audio>
+    </div>
+</div>
+
+<script th:inline="javascript">
+
+    function init() {
+        var id = getUrlParam('id');
+        $('#qrCode_').qrcode({
+            width:  240,
+            height: 240,
+            text: [[${yuMing}]]+"wechat/venue/roomDetail/detail?id="+id
+        });
+        getDZSC();
+        bindEvent();
+    }
+
+    init();
+
+    function getDetail(sc,dz) {
+        var param = {};
+        param.itemId = getUrlParam('id');
+        param.cultid = $.cookie('cultid');
+        for(var k in param){
+            if (!param[k] || param[k]=='' || param[k]=='undefined')
+                delete param[k];
+        }
+        $.post( [[${rootUrl}]] + 'api/venue/roomDetail' ,{
+            id: param.itemId
+        },function (r) {
+            var data = JSON.parse(r);
+            if(data.code == '0'){
+                var dtl = data.data;
+                var imgUrl = data.imgPath + dtl.imgurl;
+                //预定状态
+                var open = getUrlParam('open');
+                var state = '';
+                if(open){
+                    state = '<div class="btn" id="order">立即预定</div>' ;
+                }else{
+                    state = '<div class="btn disabled" id="order">不可预定</div>' ;
+                }
+
+                //活动时间
+                var begin = new Date(dtl.starttime).format('yyyy-MM-dd');
+                var end = new Date(dtl.endtime).format('yyyy-MM-dd');
+                //报名时间
+                var regBegin = new Date(dtl.enterstrtime).format('yyyy-MM-dd');
+                var regEnd = new Date(dtl.enterendtime).format('yyyy-MM-dd');
+
+                var html = '<img src="'+imgUrl+'">' +
+                    '            <span class="label">'+dtl.etype+'</span>' +
+                    '        <div class="btn_group clearfix">' +
+                    '            <div class="zan"><i class="iconfont icon-praise"></i>点赞（'+dz+'）</div>' +
+                    '            <div class="like"><i class="iconfont icon-like"></i>收藏（'+sc+'）</div>'
+                    + state +
+                    '        </div>' +
+                    '        <div class="title_">'+dtl.title+'<span id="visitCount"></span></div>' +
+                    '        <div class="footer">' +
+                    '            <div class="items">' +
+                    '                容纳人数：'+ dtl.sizepeople +
+                    '            </div>' +
+                    '            <div class="items">' +
+                    '                面积：'+ dtl.sizearea +
+                    '            </div>' +
+                    '            <div class="items">' +
+                    '                设施：'+ dtl.facility +
+                    '            </div>' +
+                    '            <div class="items">' +
+                    '                场地地址：'+ dtl.address +' '+ dtl.location +
+                    '            </div>' +
+                    '            <div class="items">' +
+                    '                联系电话：'+ dtl.telephone +
+                    '            </div>' +
+                    '        </div>';
+                $('#dtl_title').html(html);
+                /*活动室简介*/
+                if(dtl.summary){
+                    $('#dtl_room_intro').html(dtl.summary);
+                } else{
+                    $('#dtl_room_intro').parent().hide();
+                }
+                /*活动室描述*/
+                if(dtl.description){
+                    $('#dtl_room_desc').html(dtl.description);
+                } else{
+                    $('#dtl_room_desc').parent().hide();
+                }
+
+                // 浏览量
+                getVisitSumCount4url(param.itemId, function(count){
+                    $('#visitCount').text('浏览量：'+count)
+                });
+            }else{
+                mui.alert(data.msg);
+            }
+        });
+
+
+        /*$.post( [[${rootUrl}]] + 'api/comm/glzx' ,{
+            entityid: param.actId,
+            clnftype: '2016111900000018'
+        },function (r) {
+            var data = JSON.parse(r);
+            if(data.code == '0'){
+                if(data.data.length){
+                    var html = '';
+                    $.each(data.data,function (i, v) {
+                        var date = new Date(v.clnfopttime).format('yyyy-MM-dd');
+                        html+='<div class="text" data-id="'+ v.clnfid +'">' + v.clnftltle +
+                            '<span class="left_">来源：'+ v.clnfsource +'</span>' +
+                            '<span class="right_">时间：'+ date +'</span>' +
+                            '</div>';
+                    });
+                    $('#dtl_rel_info').html(html);
+                }else{
+                    $('#dtl_rel_info').parent().hide();
+                }
+            }else{
+                mui.alert(data.msg);
+            }
+        });*/
+
+
+        $.post( [[${rootUrl}]] + 'api/comm/resource' ,{
+            refid: param.itemId,
+            reftype: 3
+        },function (r) {
+            var data = JSON.parse(r);
+            var imgPath = data.imgPath;
+            if(data.code == '0'){
+                if(data.data.length){
+                    var image = '';
+                    var video = '';
+                    var audio = '';
+                    var files = '';
+                    $.each(data.data,function (i, v) {
+                        if(v.enttype == '1'){
+                            image += '<div data-id="'+ v.id +'">' +
+                                '<img src="'+ imgPath + v.enturl +'" data-preview-src data-preview-group="1">' +
+                                '<h5>'+v.name+'</h5>' +
+                                '</div>';
+                        }
+                        if(v.enttype == '2'){
+                            video += '<div data-id="'+ v.id +'" data-src="'+ v.enturl +'">' +
+                                '<img src="'+ imgPath + v.deourl +'">' +
+                                '<h5>'+v.name+'</h5>' +
+                                '</div>';
+                        }
+                        if(v.enttype == '3'){
+                            audio += '<div data-id="'+ v.id +'" data-src="'+ v.enturl +'">' +
+                                '<img src="'+[[${basePath}]]+'/assets/imac/img/mp3.jpg">' +
+                                '<h5>'+v.name+'</h5>' +
+                                '</div>';
+                        }
+                        if(v.enttype == '4'){
+                            files += '<div data-id="'+ v.id +'" data-src="'+ v.enturl +'">' +
+                                '<img src="'+[[${basePath}]]+'/assets/imac/img/mp3.jpg">' +
+                                '<h5>'+v.name+'</h5>' +
+                                '</div>';
+                        }
+                    });
+                    var resourceNav = '';
+                    if(image){
+                        resourceNav += '<li data-fn="images">活动室图片</li>';
+                    }
+                    if(audio){
+                        resourceNav += '<li data-fn="audios">活动室音频</li>';
+                    }
+                    if(video){
+                        resourceNav += '<li data-fn="videos">活动室视频</li>';
+                    }
+                    /*if(files){
+                        resourceNav += '<li data-fn="files">活动文件</li>';
+                    }*/
+                    $('#resourceNav').html(resourceNav).find('li:first-child').addClass('active').trigger('tap');
+                    $('#images_box').html(image);
+                    $('#videos_box').html(video);
+                    $('#audios_box').html(audio);
+                    // $('#files_box').html(files);
+                    mui.previewImage();
+                }else{
+                    $('#resource_box').hide();
+                }
+            }else{
+                $('#resource_box').hide();
+                // mui.alert(data.msg);
+            }
+        });
+
+    }
+
+    // 获取收藏数,点赞数
+    function getDZSC() {
+        var id = getUrlParam('id');
+        $.post( [[${rootUrl}]] + 'api/comm/isLightenColle',{cmrefid:id,cmreftyp:3},function (r) {
+            var data = JSON.parse(r);
+            if(data.code=='0'){
+                var sc = data.data.scNum;
+                $.post( [[${rootUrl}]] + 'api/comm/isLightenGood',{cmrefid:id,cmreftyp:3},function (r) {
+                    var data = JSON.parse(r);
+                    if(data.code=='0'){
+                        var dz = data.data.num;
+                        getDetail(sc,dz);
+                    }
+                });
+            }
+        });
+
+    }
+
+    function bindEvent() {
+
+        $('#dtl_title').on('tap','#order',function () {
+            if($(this).hasClass('disabled')) return false;
+            $('.qrCode').show().addClass('active');
+        });
+
+        $('.qrCode').on('tap',function (e) {
+            var tar = e.target.className;
+            if(tar.indexOf('qrCode')>=0) $(this).removeClass('active').hide();
+
+        });
+
+        $('.black').on('tap',function () {
+            var from = getUrlParam('from');
+            if(window.sessionStorage.back){
+                var href_ = window.sessionStorage.back;
+                window.sessionStorage.back = '';
+                return location.href = href_;
+            }
+            if(from)return location.href = 'index';
+            location.href = 'venueDtl?id='+getUrlParam('dtlId');
+        });
+
+        $('#resourceNav').on('tap','li',function () {
+            $(this).addClass('active').siblings().removeClass('active');
+            var id = $(this).attr('data-fn');
+            $('#'+id+'_box').show().siblings('.img_').hide();
+        });
+
+        /*$('#dtl_rel_info').on('tap','.text',function () {
+            var id = $(this).attr('data-id');
+            window.sessionStorage.back = 'activityDtl?id=' + getUrlParam('id');
+            location.href = 'infoDtl?id=' + id;
+        });*/
+
+        var player_ ;
+        $('#videos_box').on('tap','div',function () {
+            $('.videoView').show();
+            var src = $(this).attr('data-src');
+            var videoObject = {
+                container: '#video___',//“#”代表容器的ID，“.”或“”代表容器的class
+                variable: 'player_',//该属性必需设置，值等于下面的new chplayer()的对象
+                flashplayer:false,//如果强制使用flashplayer则设置成true
+                loop:true,//	播放结束后是否循环播放
+                autoplay:true,//	是否自动播放
+                front:'frontVideo',
+                next:'nextVideo',
+                mobileCkControls: true,
+                video:'/assets/imac/video/v1.mp4'//视频地址
+            };
+            player_=new ckplayer(videoObject);
+            player_.videoPlay();
+        });
+        $('.videoView').on('tap',function (e) {
+            if(e.target.className == 'videoView' || e.target.nodeName == 'SPAN'){
+                player_.videoPause();
+                player_.videoClear();
+                player_ = null;
+                $('.videoView').hide();
+            }
+        });
+
+        var audio = $('#audio___')[0];
+        $('#audios_box').on('tap','div',function () {
+            $('.audioView').show();
+            var src = $(this).attr('data-src');
+            $(audio).attr('src',src);
+        });
+        $('.audioView').on('tap',function (e) {
+            if(e.target.className == 'audioView' || e.target.nodeName == 'SPAN'){
+                audio.pause();
+                $('.audioView').hide();
+            }
+        });
+
+    }
+
+</script>
+
+</body>
+</html>

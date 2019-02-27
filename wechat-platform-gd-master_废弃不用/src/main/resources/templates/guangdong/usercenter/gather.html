@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/usercenter/usercenter.css'" >
+<script th:src="${basePath}+'/assets/js/jquery.qrcode.min.js'" type="text/javascript"></script>
+<div th:include="guangdong/public/leftBar :: copy"></div>
+<div id="page">
+    <div class="mui-content">
+        <div class="current">
+            <!-- 顶栏-->
+            <div class="top mui-row">
+                <div class="mui-col-sm-6 mui-col-xs-6 active">
+                    <a href="javascript:void(0)" data-type="0">当前众筹</a>
+                </div>
+                <div class="cl"></div>
+                <div class="mui-col-sm-6 mui-col-xs-6">
+                    <a href="javascript:void(0)" data-type="4">历史众筹</a>
+                </div>
+            </div>
+            <input type="hidden" id="type" value="0">
+            <!-- 顶栏-->
+            <div class="blank"></div>
+            <!--订单详情-->
+            <div id="model-list-panel" class="mui-scroll-wrapper order" style="top:62px;">
+                <div class="mui-scroll">
+                    <div id="model-list">
+                        <!--<div class="main">
+                            <div class="main-top">
+                                <p><span>活动众筹</span>&nbsp;订单号：12546593344526</p>
+                                <span class="time">2017-01-30 17:21</span>
+                            </div>
+                            <div class="main-m">
+                                <div class="img">
+                                    <img class="lazy" src="http://mpic.tiankong.com/4bc/655/4bc655de60870b8ad13b5166105e36f1/640.jpg"/>
+                                    <span>进行中</span>
+                                </div>
+                                <div class="detail">
+                                    <h3>服装设计培训</h3>
+                                    <p>
+                                        <i class="icon iconfont icon-location"></i>
+                                        <span>广东省文化服务中心</span>
+                                    </p>
+                                    <p>
+                                        <i class="icon iconfont icon-time"></i>
+                                        <span>2017-03-12 &nbsp;17:30-18:00</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="main-bot">
+                                <div class="seat" style="padding-right: 80px">
+                                    <span>2排3座</span>
+                                    <span>2排3座</span>
+                                    <p>支持份数: <span class="num">2</span> 份</p>
+                                </div>
+                                <div class="ticket">
+                                    <p>未取票</p>
+                                    <button>退订</button>
+                                    <button class="frame ">取票码</button>
+                                </div>
+                            </div>
+                        </div>-->
+                    </div>
+                </div>
+            </div>
+            <!--订单详情-->
+        </div>
+    </div>
+    <div class="qr-wrapper">
+        <div>
+            <div class="qr-code">
+                <div style="background-color:#fff;">
+                    <div style="line-height:40px; text-align: center; overflow: auto; margin-top:20px; padding-top:15px;">取票码 </div>
+                    <div class="qr-number" style="line-height:20px;margin-top:-5px;margin-bottom:20px; padding-bottom:20px; text-align: center; overflow: auto; font-weight:700; border-bottom:1px #ddd solid;"></div>
+                    <div class="qr-img" style="text-align:center"></div>
+                    <div style="text-align:center;margin-top:10px;padding-bottom:20px;">出示二维码进行验票</div>
+                </div>
+                <div class="close-qr" style="text-align: center" onclick="colseQr()">
+                    <img th:src="${basePath}+'/assets/img/public/msg-close.png'">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" th:inline="javascript">
+    var userid = $("#temp_userId").val();
+    var type = $("#type").val();
+    $(document).ready(function () {
+        modelData();
+        mui(".top").on('tap','.mui-col-sm-6',function () {
+            $(this).addClass('active').siblings().removeClass('active');
+            $("#type").val($(this).find('a').attr('data-type'));
+            type = $("#type").val();
+            $("#model-list").html('');
+            modelData();
+            mui('#model-list-panel').pullRefresh().scrollTo(0,0,0);
+            mui('#model-list-panel').pullRefresh().refresh(true);
+        })
+    })
+    function refreshPage() {
+        $("#model-list").html('');
+        modelData();
+
+    }
+    function modelData(page, size) {
+        var page = page || 1;
+        var size = size || 10;
+        dataInit.ajax({
+            api: [[${apiPath.userGatherList}]],
+            params: {
+                page: page,
+                pageSize: size,
+                userid: userid,
+                filter:type
+            },
+            forceUpdate: false,
+            fn: function (data) {
+                var params = {
+                    page: page,
+                    size: size,
+                    total: data.total
+                }
+                dataInit.htmlAdd(page, showModelHtml(data));
+                dataInit.pullUp(params, modelData);
+            }
+        })
+    }
+    function showModelHtml(data) {
+        if(data && data.code == 0){
+            var html = '';
+            if(data.rows.length>0){
+                for(var i in data.rows){
+                    var model = data.rows[i];
+                    var timestart = model.timestart;
+                    var timeend = model.timeend;
+                    var gatherState = "";
+                    var gatherStateCode = 0;
+                    var imgPath = data.imgPath+ dataInit.getSmallImage(model.imgurl);
+                    if (timestart > data.data.now){
+                        gatherState = "未开始";
+                    } else if (timestart<=data.data.now && timeend>=data.data.now){
+                        gatherState = "众筹中";
+                    }else{
+                        if (model.issuccess && model.issuccess !=0){
+                            if (model.issuccess == 1){
+                                gatherState = "众筹成功";
+                                gatherStateCode = 1;
+                            }else {
+                                gatherState = "众筹失败";
+                                gatherStateCode = 2;
+                            }
+                        } else{
+                            gatherState = "已结束";
+                            gatherStateCode = 2;
+                        }
+                    }
+                    var delOrder = '';
+                    if (gatherStateCode != 1 && gatherStateCode != 3){
+                        delOrder = '<button class="frame" onclick="unOrder(\''+model.oid+'\',\''+model.etype+'\',\''+model.ouserid+'\')">取消预订</button>';
+//                        delOrder.off().on("click", {id:model.oid, type:model.etype, userid:model.ouserid}, unOrder);
+                        if (gatherStateCode == 2) {
+                            ticketState = 'none';
+                            delOrder = '<button class="frame" onclick="unOrder(\''+model.oid+'\',\''+model.etype+'\',\''+model.ouserid+'\')">删除订单</button>';
+                        }
+                    }else{
+                        ticketState = 'none';
+                        delOrder = '';
+                    }
+                    //众筹类型
+                    var _href_detail = [[${basePath}]],gather_type = '',gather_time = '',seat_list = '';
+                    if(model.seatCode){
+                        var seatCode = model.seatCode.split(',');
+                        for(var j in seatCode){
+                            seat_list+= '<span>'+seatCode[j]+'</span>';
+                        }
+                    }
+                    var delBtn = "",ticketState = '';
+                    var status,ticketstatus = model.ostate;
+
+                    switch(ticketstatus)
+                    {
+                        case 1:
+                            status = "未取票";
+                            break;
+                        case 2:
+                            status = "已出票";
+                            break;
+                        case 3:
+                            status = "已取消";
+                            break;
+                        case 4:
+                            status = "已验票";
+                            break;
+                        default:
+                            status = "已失效"
+                    }
+                    switch (model.etype){
+                        case "4":   //活动
+                            _href_detail += '/gather/actdetail?id='+model.id;
+                            gather_type = '活动众筹';
+                            if(model.refInfo && model.refInfo.starttime){
+                                var playStartTime = model.playStartTime || "";
+                                gather_time = '<p>'+
+                                    '<i class="icon iconfont icon-time"></i>'+
+                                    '<span> '+moment(model.refInfo.starttime).format("YYYY-MM-DD")+' '+playStartTime+'</span>'+
+                                    '</p>';
+                            }
+                            break;
+                        case "5":   //培训
+                            _href_detail += '/gather/traindetail?id='+model.id;
+                            gather_type = '培训众筹';
+                            if(model.refInfo && model.refInfo.starttime){
+                                gather_time = '<p>'+
+                                    '<i class="icon iconfont icon-time"></i>'+
+                                    '<span> '+moment(model.refInfo.starttime).format("YYYY-MM-DD")+' ~ '+moment(model.refInfo.endtime).format("YYYY-MM-DD")+'</span>'+
+                                    '</p>';
+                            }
+                            break;
+                        default:
+                            _href_detail += '/gather/otherdetail?id='+model.id;
+                            gather_type = '其他众筹';
+                                gather_time = '<p>'+
+                                    '<i class="icon iconfont icon-time"></i>'+
+                                    '<span> '+moment(timestart).format("YYYY-MM-DD")+' ~ '+moment(timeend).format("YYYY-MM-DD")+'</span>'+
+                                    '</p>';
+                    }
+                    //获取众筹地址
+                    var address = '';
+                    if(model.refInfo && model.refInfo.address){
+                        address = '<p>'+
+                            '<i class="icon iconfont icon-location"></i>'+
+                            '<span> '+model.refInfo.address+'</span>'+
+                            '</p>';
+                    }else{
+                        address = '<p>'+
+                            '<i class="icon iconfont icon-location"></i>'+
+                            '<span> '+model.company+'</span>'+
+                            '</p>';
+                    }
+                    var dcr = Math.floor(Number(model.orderCount) / Number(model.nummin) * 100);
+                    dcr = dcr > 100? 100 : dcr;
+                    var srfs = Number(model.numsum) - Number(model.orderCount);
+                    var ordernumber = model.orderid; //取票码
+
+                    html+='<div class="main">'+
+                        '    <div class="main-top">'+
+                        '        <p><span>'+gather_type+'</span>&nbsp;订单号：'+model.orderid+'</p>'+
+                        '        <span class="time">'+moment(model.otime).format("YYYY-MM-DD HH:mm")+'</span>'+
+                        '    </div>'+
+                        '    <a href="'+_href_detail+'">'+
+                        '    <div class="main-m">'+
+                        '        <div class="img">'+
+                        '            <img class="lazy" src="'+imgPath+'"/>'+
+                        '            <span>'+gatherState+'</span>'+
+                        '        </div>'+
+                        '        <div class="detail">'+
+                        '            <h3>'+model.title+'</h3>'+address+gather_time+
+                        '        </div>'+
+                        '    </div>'+
+                        '    </a>'+
+                        '    <div class="main-bot">'+
+                        '        <div class="seat" style="padding-right: 80px">'+seat_list+
+                        '            <p>支持份数: <span class="num">'+model.orderCount+'</span> 份</p>'+
+                        '        </div>    <div class="ticket">';
+                        if(model.issuccess&&model.issuccess == 1&&model.etype=="4") {
+                            html+= '<p>' + status + '</p><button class="frame ' + ticketState + '" onclick="showCode(\'' + ordernumber + '\')">取票码</button>';
+                        }
+                    html+= delOrder +'</div></div></div>';
+                }
+            }else {
+                html = "<div class='newbility-no-msg'></div>";
+            }
+            return html;
+        }else {
+            mui.toast(data.msg || '获取订单信息失败')
+        }
+    }
+
+    function menuQr(txt) {
+        $('.qr-wrapper').fadeIn(250,function(){
+            mui('body').on('tap','.qr-wrapper', function(){
+                $(this).fadeOut(250,function() {
+                    $('.qr-wrapper').off('click');
+                });
+            });
+        });
+        $(".qr-code").remove();
+        $('.qr-wrapper > div').append('<div class="qr-code"></div>');
+        $(".qr-code").qrcode({render: "canvas", width: 200, height:200, text: txt});
+    }
+
+
+    //获取剩余天数
+    function getDays(timeend,_dataNow,timestart) {
+        if(_dataNow>timeend){
+            return '已结束';
+        }else if(_dataNow>timestart){
+            return moment(timeend).fromNow(true);
+        }else {
+            return '未开始';
+        }
+    }
+    //取消订单
+    function unOrder(id,type,userid){
+        var etype = type;
+        var oid = id;
+        userid = userid;
+        var url = "";
+        var params = {};
+
+        switch (etype){
+            case "4":
+                url = [[${apiPath.userOffgatherApplyAct}]];
+                params.itemId = oid;
+                params.userId = userid;
+                params.type = "1";
+                break;
+            case "5":
+                url = [[${apiPath.userUngatherApplyTra}]];
+                params.orderId = oid;
+                params.userId = userid;
+                break;
+            default:
+                url = [[${apiPath.userUngatherApply}]];
+                params.id = oid;
+                params.userid = userid;
+        }
+        var btnArray = ['否', '是'];
+        mui.confirm('您确定取消并删除订单吗？', '', btnArray, function (e) {
+            if (e.index == 1) {
+                dataInit.ajax({
+                    api: url,
+                    params: params,
+                    fn: function (data) {
+                        if (data.code != 0){
+                            mui.toast(data.msg);
+                            return;
+                        }
+                        refreshPage();
+                    }
+                })
+            }
+        });
+    }
+
+    function showCode(number){
+        $(".qr-img").html('');
+        $(".qr-number").html('');
+        $(".qr-number").html(number);
+        $(".qr-img").qrcode({width: 160, height: 160, text:String(number)});
+        $(".qr-wrapper").show();
+    }
+    function colseQr(){
+        $(".qr-wrapper").hide();
+
+    }
+
+    function menuQr(txt, ticketStatus, ready) {
+        if (!ready)
+            return;
+        $('.qr-wrapper').fadeIn(250, function () {
+            $('.qr-wrapper').on('click', function () {
+                $(this).fadeOut(250, function () {
+                    $('.qr-wrapper').off('click');
+                });
+            });
+        });
+        $(".qr-code").remove();
+        $('.qr-wrapper > div').append('<div class="qr-code"></div>');
+        $(".qr-code").qrcode({render: "canvas", width: 200, height: 200, text: txt});
+    }
+</script>
+</body>
+</html>

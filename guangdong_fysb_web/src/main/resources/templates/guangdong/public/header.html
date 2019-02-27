@@ -1,0 +1,372 @@
+<header th:fragment="copy" xmlns:th="http://www.w3.org/1999/xhtml">
+    <input type="hidden" id="temp_url" th:value="${basePath}">
+    <!--<script type="text/javascript" th:inline="javascript">
+        dataInit.getDict([[${apiPath.dictionaries}]]);
+        dataInit.getTag([[${apiPath.tagdict}]]);
+    </script>-->
+    <div class="main-header clearfix">
+        <div class="login-state">
+            <div class="welcome-cont">欢迎访问广东省文化馆联盟非遗申请平台！</div>
+            <div class="login"><!--登录前-->
+                <div class="login-in">
+                    <a th:href="${basePath}+'/login'">登录</a>
+                </div>
+                <!--<div class="logon-on">
+                    <a href="javascript:void(0)">网站导航</a>
+                </div>
+                <div class="logon-on">
+                    <a href="javascript:void(0)">帮助中心</a>
+                </div>-->
+                <div class="logon-on">
+                    <a th:href="${basePath}+'/regist'">免费注册</a>
+                </div>
+                <!--<div class="search">
+                    <a th:href="${basePath}+'/search'"><i class="iconfont icon-search"></i></a>
+                </div>-->
+            </div>
+            <div class="logon"><!--登录后-->
+                <div class="exit">
+                    <a th:href="${basePath}+'/doLogout'">退出</a>
+                </div>
+                <div class="logon-on">
+                    <a th:href="${basePath}+'/center/index'">个人中心</a>
+                </div>
+                <!--<div class="logon-on">
+                    <a href="javascript:void(0)">网站导航</a>
+                </div>
+                <div class="logon-on">
+                    <a href="javascript:void(0)">帮助中心</a>
+                </div>-->
+                <!--<div class="search">
+                    <a th:href="${basePath}+'/search'"><i class="iconfont icon-search"></i></a>
+                </div>-->
+            </div>
+        </div>
+        <div class="header-content clearfix">
+            <div class="header-nav-content clearfix">
+                <div class="logo" id="logo-image">
+                    <a th:href="${basePath}+'/index'"></a>
+                </div>
+                <div class="select-city">
+                    <div class="city-name">全省站</div>
+                    <div class="select-city-list"><a href="javascript:void(0)">[切换城市]</a></div>
+                </div>
+                <div class="header-nav clearfix">
+                    <div class="header-nav-list">
+                        <ul class="clearfix" id="menulan">
+                            <li data-title="index"><a th:href="${basePath}+'/index'">首页</a></li>
+                            <li data-title="news" data-biz="FYZX"><a th:href="${basePath}+'/news/list'">非遗资讯</a></li>
+                            <li data-title="act" data-biz="FYHD"><a th:href="${basePath}+'/act/list'">非遗活动</a></li>
+                            <li data-title="fydjt" data-biz="FYDJT"><a th:href="${basePath}+'/fydjt/list'">非遗大讲坛</a></li>
+                            <li data-title="fyzt" data-biz="FYZT"><a th:href="${basePath}+'/fyzt/list'">非遗专题</a></li>
+                            <li data-title="fybk" data-biz="FYBK"><a th:href="${basePath}+'/fybk/list'">非遗百科</a></li>
+                            <li data-title="szzg" data-biz="SZZG"><a th:href="${basePath}+'/szzg/list'">数字展馆</a></li>
+                            <li data-title="cykj" data-biz="CYKJ"><a th:href="${basePath}+'/cykj/list'">创意空间</a></li>
+                            <!--<li data-title="project" data-biz="ZCXM"><a th:href="${basePath}+'/project/list'">众筹项目</a></li>
+                            <li data-title="brand" data-biz="ZCPP"><a th:href="${basePath}+'/brand/list'">众筹品牌</a></li>
+                            <li data-title="news" data-biz="ZCZX"><a th:href="${basePath}+'/news/list'">众筹资讯</a></li>
+                            <li data-title="fagui" data-biz="FLFG"><a th:href="${basePath}+'/fagui/list'">法律法规</a></li>-->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div th:if="${session.zc_sessUserKey != null}">
+            <input type="hidden" id="temp_userId" th:value="${session.zc_sessUserKey.userId}">
+            <input type="hidden" id="temp_nickName" th:value="${session.zc_sessUserKey.nickName}">
+            <input type="hidden" id="temp_mobile" th:value="${session.zc_sessUserKey.mobile}">
+        </div>
+        <script type="text/javascript" th:inline="javascript">
+            if ([[${session.zc_sessUserKey}]] != null) {
+                $('.login').hide();
+                $('.logon').show();
+            } else {
+                $('.logon').hide();
+                $('.login').show();
+            }
+        </script>
+    </div>
+    <div class="city_box none">
+        <div class="city">
+            <div class="city_top">
+                <h4>切换城市</h4>
+                <span><img th:src="${basePath}+'/assets/img/public/delete.png'"></span>
+            </div>
+            <div class="addrs">
+                <span>当前位置:<a class="color">全省站</a></span>
+                <div class="shengguang"><span id="span_qsz" onclick="city('')">全省站</span><span id="span_gdsg" onclick="city('0000000000000000')">广东省文化馆</span></div>
+            </div>
+            <div class="city_bottom_box">
+                <div class="city_bottom">
+                    <ul>
+                        <div class="color">c</div>
+                        <!--<li>
+                            <span>潮州</span>
+                        </li>-->
+                    </ul>
+                </div>
+            </div>
+            <div class="site_bottom none">
+                <ul>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+    <input id="cultid" type="hidden">
+    <input type="hidden" id="area">
+    <input type="hidden" id="city">
+    <input type="hidden" id="province" th:value="${apiPath.province}">
+
+    <script type="text/javascript" th:inline="javascript">
+        //动态区域选择
+        var cultid = $.cookie('cultid');
+        var cityid = $.cookie('cityid');
+        var flag = [[${qh}]];
+        if(flag){
+            $(".select-city-list").show();
+        } else {
+            $(".select-city-list").hide();
+        };
+        dataInit.ajax({
+            api: [[${apiPath.query}]],
+            fn: query, //查询现属场馆
+            params: {
+                id: cultid
+            }
+        });
+        dataInit.ajax({
+            api: [[${apiPath.cultdetail}]],
+            fn: getCultDetail, //自定义菜单栏
+            params: {
+                cultid: cultid
+            }
+        });
+        $(function () {
+            $(".city_bottom>ul li").click(function () {
+                var text1 = $(this).text();
+                $(".addrs span a").text(text1);
+                $(".city_bottom").hide();
+                $(".site_bottom").show();
+                //   $(".city_top span").hide();
+                dataInit.ajax({
+                    api: [[${apiPath.switch}]],
+                    fn: Cultural, //文化活动
+                    params: {
+                        city: text1
+                    }
+                });
+            })
+            $(".city_top").click(function () {
+                $(".city_box").hide();
+                $(".site_bottom").hide();
+            })
+            $(".select-city-list").click(function () {
+                $(".city_box").show();
+                $(".city_bottom").show();
+            })
+            if (cultid == '') {
+                $(".city-name").text('全省站');
+                $("#span_qsz").addClass("active");
+            } else if (cultid == '0000000000000000') {
+                $(".city-name").text('广东省文化馆');
+                $(".addrs span a").text('广东市');
+                $("#span_gdsg").addClass("active");
+            }
+        })
+        function Cultural(data) {
+            var img = [[${basePath}]] + '/assets/img/public/building-white.png';
+            if (data.rows.length) {
+                var html = '';
+                for (var i = 0; i < data.rows.length; i++) {
+                    var model = data.rows[i];
+                    var line = '<li onclick="city(\'' + model.id + '\')">' +
+                        '<a>' +
+                        '<span><i class="icon-wxbmingxingdianpu iconfont"></i>' + model.name + '</span>' +
+                        '</a>' +
+                        '</li>';
+                    html = html + line;
+                }
+                $(".site_bottom ul").html(html);
+            } else {
+                rongDialog.init({
+                    ico: 2,
+                    type: 1,
+                    desc: '该地区暂未开通文化馆站点'
+                });
+                $(".city_box").hide();
+                $(".site_bottom").hide();
+            }
+        }
+
+        function query(data) {
+            if (data.code == 0 && data.data) {
+                if (cultid == '') {
+                    $(".city-name").text('全省站');
+                    $("#span_qsz").addClass("active");
+                } else if (cultid == '0000000000000000') {
+                    $(".city-name").text('广东省文化馆');
+                    $(".addrs span a").text('广东市');
+                    $("#span_gdsg").addClass("active");
+                } else {
+                    $(".city-name").text(data.data.city);
+                    $(".addrs span a").text(data.data.city);
+                }
+                //文化馆联盟标题名称
+                $(".city-name-union").text(data.data.city);
+            }else {
+                $(".city-name").text('全省站');
+                $(".addrs span a").text('广东省');
+                //文化馆联盟标题名称
+                $(".city-name-union").text('广东省');
+            }
+        }
+
+        function getCultDetail(data) {//自定义菜单栏
+            if (data.code == 0 && data.data) {
+                if (cultid != '' || cultid == '0000000000000000') {
+                    var menu = data.data.frontmenu;
+                    $("#menulan").find("li").each(function (i) {
+                        if ($(this).attr("data-biz") && $(this).attr("data-biz") != "" && menu) {
+                            if (menu.indexOf($(this).attr("data-biz"))== -1) {
+                                $(this).hide();
+                            }
+                        }
+                    })
+                    if(data.data.logopicture && data.data.logopicture != undefined){
+                        var logo_image_bg = "url("+data.imgPath+data.data.logopicture+")  no-repeat";
+                        $("#logo-image").css(
+                            "background",logo_image_bg
+                        )
+                    }
+                }
+            }
+        }
+        function city(id) {
+            var cultid = id;
+            $.cookie('cultid', cultid, { path: "/",expires: 7 });
+            $(".site_bottom").hide();
+            $(".city_box").hide();
+            window.location.href = window.location.href;
+            if(id == ''){
+                getcityid(id);
+            }
+            /*var tet = $(".addrs span a").text();
+
+             $("#cultid").val(tet);
+             var tet = $(".addrs span a").text();
+             $(".city-name").text(tet);*/
+        }
+        var html = '';
+        var line1 = ''
+        var line = '';
+        for (var i = 0; i < cityData.length; i++) {
+            var clas = 'none';
+            var first = '<ul class="' + clas + '">';
+            var last = '</ul>';
+            var name = cityData[i].name;
+            var html1 = '';
+            for (var j = 0; j < cityData[i].cities.length; j++) {
+                if(cityData[i].cities[j]){
+                    var cityName = cityData[i].cities[j].name;
+                    if (cityData[i].cities[j].name) {
+                        clas = '';
+                    }
+                    line1 = '<li onclick="getcityid(\''+cityName+'\')">' + cityName + '</li>';
+                    html1 = html1 + line1;
+                }
+            }
+            line = '<div class="color">' + name + '</div>';
+            html = html + '<ul class="' + clas + '">' + line + html1 + last;
+        }
+        $(".city_bottom").html(html)
+
+        function getcityid(id) {
+            $.cookie('cityid', id, { path: "/",expires: 7 });
+        }
+
+        function showAre(id) {
+            var __cultid = $.cookie('cultid');
+            var __cityName = "",cityList = [];
+            var areList = $("#areList");
+            $("#areList").html("");
+            if(__cultid == '0000000000000000' || id == '' || id === undefined){
+                __cityName = '广东省';
+                cityList = changeProvince(__cityName);
+                areList.append("<span class='item active'><a href='javascript:void(0)' _province='广东省' _city='' _area='' onclick='setArea(this," + null + ")'>全部</a></span>")
+                for (var i in cityList) {
+                    areList.append("<span class='item'><a href='javascript:void(0)' _province='广东省' _city='"+cityList[i].name+"'  onclick='setArea(this,\"" + cityList[i].name + "\")'>" + cityList[i].name + "</a></span>");
+                }
+            }else {
+                __cityName = id;
+                cityList = changeCity(__cityName);
+                areList.append("<span class='item active'><a href='javascript:void(0)' _province='广东省' _city='"+__cityName+"' _area='' onclick='setArea(this," + null + ")'>全部</a></span>")
+                for (var i in cityList) {
+                    areList.append("<span class='item'><a href='javascript:void(0)' _province='广东省' _city='"+__cityName+"' _area='"+cityList[i].name+"'  onclick='setArea(this,\"" + cityList[i].name + "\")'>" + cityList[i].name + "</a></span>");
+                }
+            }
+        }
+
+        function setArea(dom, id) {
+            var _province=$(dom).attr("_province");
+            var _city=$(dom).attr("_city");
+            var _area=$(dom).attr("_area");
+            $("#province").val("");
+            $("#city").val("");
+            $("#area").val("");
+            if(_province&&_province!=""){
+                $("#province").val(_province);
+            }
+            if(_city&&_city!=""){
+                $("#city").val(_city);
+            }
+            if(_area&&_area!=""){
+                $("#area").val(_area);
+            }
+            dataPage();
+            setActive(dom);
+        }
+
+        //高亮导航栏
+        var headerNav = {
+            top: $('.header-nav-content ul li'),
+            init: function () {
+                var m = this;
+                $(document).ready(function () {
+                    m.active();
+                });
+                m.top.on('click', function () {
+                    m.topChnage($(this));
+                });
+            },
+            topChnage: function (e) {
+                $(e).addClass("active").siblings().removeClass("active");
+            },
+            active: function () {
+                var m = this;
+                var url = document.URL;
+                var act = "";
+                var host = window.location.host;
+                url = url.split("/");
+                var line = url.length-4;
+                for (var i = 0; i < url.length; i++) {
+                    if (url[i] == host) {
+                        act = url[i + line];
+                        break;
+                    }
+                }
+                act = act.split(/[\/#?\.]/)[0];
+                $(".header-nav-content ul").find("li[data-title='" + act + "']").addClass("active");
+                $(".header-nav-content ul li .son-nav").find("p[data-title='" + act + "']").addClass("active");
+                var temp_son = $(".header-nav-content ul li .son-nav p[class='active']");
+                if (temp_son.length > 0) {
+                    temp_son.parents('li').addClass("active");
+                }
+            }
+        }
+        setTimeout(function () {
+            headerNav.init();
+        },200)
+    </script>
+</header>
+

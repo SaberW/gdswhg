@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong_gx/public/resource :: copy"></head>
+<body style="background-color:#fff">
+<link rel="stylesheet" th:href="${basePath}+'/assets/style/index/index.css'">
+<script th:src="${basePath}+'/assets/js/public/sly.js'" type="text/javascript"></script>
+<div class="wrapper clearfix">
+    <div class="content">
+        <!--公共主头部开始-->
+        <div id="header" th:include="guangdong_gx/public/header :: copy"></div>
+        <!--公共主头部结束-->
+        <!--主体开始-->
+        <!--首页轮播开始-->
+        <div class="banner">
+            <div class="big-banner">
+                <div class="banner-count">
+                    <ul id="showLbt">
+
+                    </ul>
+                </div>
+            </div>
+            <div class="pages"></div>
+        </div>
+        <!--首页轮播结束-->
+        <!--第一层开始-->
+        <div class="cont-row cont-row-1">
+            <div class="index-public-title clearfix">
+                <span class="line l-l"></span>
+                <span class="name">线下培训</span>
+                <span class="line l-r"></span>
+                <a th:href="${basePath}+'/'+${cultsite}+'/xxpx/list'" class="more">更多<i class="icon iconfont icon-enter"></i></a>
+            </div>
+            <ul class="clearfix" id="showPx">
+
+            </ul>
+        </div>
+        <!--第一层结束-->
+        <!--第二层开始-->
+        <div class="cont-row cont-row-2">
+            <div class="cont-row-2-cont">
+                <div class="index-public-title clearfix">
+                    <span class="line l-l"></span>
+                    <span class="name">在线课程</span>
+                    <span class="line l-r"></span>
+                    <a th:href="${basePath}+'/'+${cultsite}+'/zxkc/list'" class="more">更多<i class="icon iconfont icon-enter"></i></a>
+                </div>
+                <ul class="clearfix" id="showKc">
+
+
+                </ul>
+            </div>
+        </div>
+        <!--第二层结束-->
+        <!--第三层开始-->
+        <div class="cont-row cont-row-3">
+            <div class="index-public-title clearfix">
+                <span class="line l-l"></span>
+                <span class="name">微专业</span>
+                <span class="line l-r"></span>
+                <a th:href="${basePath}+'/'+${cultsite}+'/wzy/list'" class="more">更多<i class="icon iconfont icon-enter"></i></a>
+            </div>
+            <ul class="clearfix" id="traMajorList">
+
+
+            </ul>
+        </div>
+        <!--第三层结束-->
+        <!--主体结束-->
+    </div>
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong_gx/public/footer :: copy"></div>
+<!--底部结束-->
+<a class="to-top"></a>
+<script type="text/javascript" th:inline="javascript">
+    $(document).ready(function () {
+        dataInit.ajax({
+            api: [[${apiPath.showAdver}]],
+            fn: banner, //首页轮播图数据
+            params: {
+                type: 2,
+                city: $.cookie('city'),
+                cultid: $.cookie('cultid')
+            }
+        });
+        dataInit.ajax({
+            api: [[${apiPath.indexTraList}]],
+            fn: indexTraList, //线下培训
+            params: {
+                page: 1,
+                pageSize: 3,
+                cultid: $.cookie('cultid')
+            }
+        });
+       dataInit.ajax({
+            api: [[${apiPath.indexTraliveList}]],
+            fn: traliveList, //在线课程
+            params: {
+                page: 1,
+                pageSize: 4,
+                cultid: $.cookie('cultid')
+            }
+        });
+          dataInit.ajax({
+            api: [[${apiPath.indexTraMajorList}]],
+            fn: traMajorList, //微专业
+            params: {
+                page: 1,
+                pageSize: 4,
+                cultid: $.cookie('cultid')
+            }
+        });
+    });
+
+    function banner(data) {
+        if (data.rows.length && data.code == 0) {
+            for (var i = 0; i < data.rows.length; i++) {
+                if(data.rows[i].url&&data.rows[i].url!=""){
+                    $("#showLbt").append('<li style="background-image:url(' + data.imgPath + data.rows[i].picture + ')"><a href="' + data.rows[i].url + '"></a></li>');
+                }else{
+                    $("#showLbt").append('<li style="background-image:url(' + data.imgPath + data.rows[i].picture + ')"><a href="javascript:void(0)"></a></li>');
+                }
+            }
+            $(".banner-count").sly({
+                itemNav: "forceCentered",
+                easing: "easeOutExpo",
+                pagesBar: ".pages",
+                pageBuilder:function (dom) {
+                    return "<span></span>";
+                },
+                cycleBy: 'items',
+                horizontal: 1,
+                cycleInterval: 5000
+            });
+        }else{
+            $("#showLbt").append('<li style="background-image:url(' + [[${basePath}]] + '/assets/img/public/px_banner.jpg)"><a href="javascript:void(0)"></a></li>');
+        }
+    }
+
+    function indexTraList(data) {
+        if (data.data) {
+            var html = '';
+            for (var i = 0; i < data.data.length; i++) {
+                if(i >= 3)break;
+                var model = data.data[i];
+                var img = data.imgPath + dataInit.getSmallImage(model.trainimg);
+                var title = model.title;
+                var adr = model.address;
+                var startTime = moment(model.starttime).format('YYYY-MM-DD');
+                var endTime = moment(model.endtime).format('YYYY-MM-DD');
+                var time = startTime + ' 至 ' + endTime;
+                var age = model.age;
+                if (age) {
+                    age = age.split(',');
+                    age = age[0] + '-' + age[1] + '岁';
+                } else {
+                    age = '不限';
+                }
+                var maxnumber = 0;
+                var enrolcount = 0;
+                var cutNum = 0;
+                if (model.maxnumber) {
+                    maxnumber = model.maxnumber;
+                }
+                if (model.enrolcount) {
+                    enrolcount = model.enrolcount;
+                }
+                cutNum = maxnumber - enrolcount;
+                cutNum = cutNum <= 0 ? 0 : cutNum;
+
+                html += '\
+                    <li>\
+                        <div class="mask">\
+                            <a href="xxpx/detail?id='+model.id+'" target="_blank"></a>\
+                            <h2>'+title+'</h2>\
+                            <p>地址：<span>'+adr+'</span></p>\
+                            <p>时间：<span>'+time+'</span></p>\
+                            <p>人数：<span>仅剩'+cutNum+'人</span></p>\
+                            <p>年龄：<span>'+age+'</span></p>\
+                            <i class="icon iconfont icon-jiantou1"></i>\
+                        </div>\
+                        <div class="title">'+title+'</div>\
+                        <img src="'+img+'">\
+                    </li>';
+            }
+            $("#showPx").html(html);
+        }
+    }
+
+    function traliveList(data) {
+        if (data.data) {
+            var html = '';
+            for (var i = 0; i < data.data.length; i++) {
+                if(i >= 4)break;
+                var model = data.data[i];
+                var title = model.title;
+                var stime = moment(model.starttime).format('YYYY-MM-DD');
+                var etime = moment(model.endtime).format('YYYY-MM-DD');
+                var imgurl = data.imgPath + dataInit.getSmallImage(model.trainimg);
+                var age = model.age;
+                if (age) {
+                    age = age.split(',');
+                    age = age[0] + '-' + age[1] + '岁';
+                } else {
+                    age = '不限';
+                }
+                var line = '<li>' +
+                    '<div class="item-cont"><div class="img">' +
+                    '<img src="' + imgurl + '"></div><div class="info">' +
+                    ' <a href="' + [[${basePath}]] +'/'+[[${cultsite}]]+ '/zxkc/detail?id=' + model.id + '" target="_blank">' +
+                    ' </a><h2>' + title + '</h2>' +
+                    '<p>时间：<span>'+stime+'至'+etime+'</span></p>' +
+                    '<p>年龄：<span>'+age+'</span></p>' +
+                    '</div>' +
+                    '</div>' +
+                    '</li>';
+                html = html + line;
+            }
+            $("#showKc").html(html);
+        }
+    }
+    /*<li>
+    <a href="#" target="_blank"></a>
+        <div class="title">
+        微专业三
+        <hr>
+        </div>
+        <div class="img">
+        <img th:src="${basePath}+'/assets/img/img_demo/demo.png'">
+        <i class="icon iconfont icon-jiantou i-t"></i>
+        </div>
+        </li>
+        <li>
+        <a href="#" target="_blank"></a>
+        <div class="img">
+        <img th:src="${basePath}+'/assets/img/img_demo/demo_big2.jpg'">
+        <i class="icon iconfont icon-arrfill_u-copy-copy i-b"></i>
+        </div>
+        <div class="title">
+        微专业四
+        <hr>
+        </div>
+        </li>*/
+    function traMajorList(data) {
+        if (data.rows) {
+            var html = '';
+            for (var i = 0; i < data.rows.length; i++) {
+                if(i >= 4)break;
+                var model = data.rows[i];
+                var img = data.imgPath + dataInit.getSmallImage(model.image);
+                var title = model.name;
+                if((i+1)%2 == 0){
+                    html += '<li>\
+                        <a href="wzy/detail?id='+model.id+'" target="_blank"></a>\
+                        <div class="img">\
+                        <img src="'+img+'">\
+                        <i class="icon iconfont icon-arrfill_u-copy-copy i-b"></i>\
+                        </div>\
+                        <div class="title">\
+                        '+title+'\
+                        <hr>\
+                        </div>\
+                        </li>';
+                }else{
+                    html += '<li>\
+                        <a href="wzy/detail?id='+model.id+'" target="_blank"></a>\
+                        <div class="title">\
+                        '+title+'\
+                        <hr>\
+                        </div>\
+                        <div class="img">\
+                        <img src="'+img+'">\
+                        <i class="icon iconfont icon-jiantou i-t"></i>\
+                        </div>\
+                        </li>';
+                }
+            }
+            $("#traMajorList").html(html);
+        }
+    }
+
+</script>
+</body>
+</html>

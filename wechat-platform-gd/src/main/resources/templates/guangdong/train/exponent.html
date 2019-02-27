@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/public/list.css'">
+<div th:include="guangdong/public/leftBar :: copy"></div>
+<div id="page">
+    <div class="mui-content">
+        <!--下拉刷新容器-->
+        <!--数据列表-->
+        <div class="public-list-l-r">
+            <ul class="clearfix" id="model-list">
+                <li>
+                    <div class="cont">
+                        <div class="face-train">
+                            <img th:src="${basePath}+'/assets/img/train/1.png'" alt="demo">
+                        </div>
+                        <h2><span id="wz">loading...</span>人</h2>
+                        <p>微专业</p>
+                    </div>
+                </li>
+
+                <li>
+                    <div class="cont">
+                        <div class="face-train">
+                            <img th:src="${basePath}+'/assets/img/train/2.png'" alt="demo">
+                        </div>
+                        <h2><span id="xx">loading...</span>场</h2>
+                        <p>线下培训</p>
+
+                    </div>
+                </li>
+                <li>
+                    <div class="cont">
+                        <div class="face-train">
+                            <img th:src="${basePath}+'/assets/img/train/3.png'" alt="demo">
+                        </div>
+                        <h2><span id="zb">loading...</span>场</h2>
+                        <p>在线课程</p>
+
+                    </div>
+                </li>
+                <li>
+                    <div class="cont">
+                        <div class="face-train">
+                            <img th:src="${basePath}+'/assets/img/train/4.png'" alt="demo">
+                        </div>
+                        <h2><span id="sz">loading...</span>人</h2>
+                        <p>培训师资</p>
+
+                    </div>
+                </li>
+                <li>
+                    <div class="cont">
+                        <div class="face-train">
+                            <img th:src="${basePath}+'/assets/img/train/5.png'" alt="demo">
+                        </div>
+                        <h2><span id="zy">loading...</span>个</h2>
+                        <p>培训资源</p>
+
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" th:inline="javascript">
+    $().ready(function () {
+        modelData();
+    })
+
+    function modelData(){
+        dataInit.ajax({
+            api:[[${apiPath.pxzs}]],
+            params:{
+                cultid:$.cookie('cultid')
+            },
+            fn:function(data){
+                if(data.code == 0){
+                    var model = data.data;
+                    $("#sz").text(model.SZ+" ");
+                    $("#wz").text(model.WZ+" ");
+                    $("#xx").text(model.XX+" ");
+                    $("#zb").text(model.ZB+" ");
+                    $("#zy").text(model.ZY+" ");
+                }else{
+                    mui.toast("数据加载失败")
+                }
+
+            }
+        })
+    }
+
+
+</script>
+</body>
+</html>

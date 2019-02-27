@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/style/brand/brand.css'">
+<div class="wrapper clearfix">
+    <div class="content">
+        <!--公共主头部开始-->
+        <div id="header" th:include="guangdong/public/header :: copy"></div>
+        <!--公共主头部结束-->
+        <!--面包屑开始-->
+        <!--<div class="sys-crumbs">
+            <span><a href="../index">首页</a></span>
+            <i class="icon iconfont icon-enter"></i>
+            <span><a href="list">资讯</a></span>
+            <i class="icon iconfont icon-enter"></i>
+            <span class="active" id="crumbs-title">这是一个标题</span>
+        </div>-->
+        <!--面包屑结束-->
+        <div class="brand-dtail">
+            <div class="brand-content">
+                <div class="brand-image">
+                    <img id="brandImgPath" th:src="${basePath}+'/assets/img/public/loading.png'">
+                </div>
+                <div class="brand-text">
+                    <h1 id="title">&nbsp;</h1>
+                    <div class="text" id="brandDetail">
+                        <div id="introduction"></div>
+                        <div class="scrollbar" id="scrollbar">
+                            <div class="handle"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="brand-demo">
+            <div class="brand-news">
+                <div class="brand-news-title">品牌资讯</div>
+                <div class="brand-news-list">
+                    <ul class="new-group clearfix" id="brandNews">
+                        <!--<li>-->
+                        <!--<a href="detail?id=2018053116580297" target="_blank"></a>-->
+                        <!--<h2>头条资源1</h2>-->
+                        <!--<p> 源自：<span>网络</span> 关键字：<span>无</span></p>-->
+                        <!--<div class="info">无</div>-->
+                        <!--<div class="date-cont">-->
+                        <!--<p class="day">31</p>-->
+                        <!--<p class="year">2018-05</p>-->
+                        <!--</div>-->
+                        <!--</li>-->
+                    </ul>
+                </div>
+                <!--分页开始 -->
+                <div class="green-black" id="artPagging" style="margin-bottom: 40px"></div>
+                <!--分页结束-->
+            </div>
+            <div class="brand-activity">
+                <div class="brand-activity-title">品牌活动</div>
+                <div class="brand-act-list">
+                    <ul class="clearfix" id="brandActList">
+                        <!--<li>
+                            <div class="img">
+                                <img src="http://183.131.126.132:8092/whgstatic/img/2017/201709/20170921/e7f2cf27ba3b41b680c1f10651db8800.jpg">
+                            </div>
+                            <div class="detail">
+                                <h2>品牌标题</h2>
+                                <p>地点：<span>广东省文化馆</span></p>
+                                <p>时间：<span>2017-10-10 至 2017-10-20</span></p>
+                            </div>
+                            <a href="javascript:void(0)"></a>
+                        </li>-->
+                    </ul>
+                </div>
+            </div>
+            <div class="brand-resources">
+                <div class="brand-resources-title">
+                    <span class="active" onclick="loadResources(this)">品牌图片</span>
+                    <span onclick="loadResources(this)">品牌视频</span>
+                    <span onclick="loadResources(this)">品牌音频</span>
+                    <span onclick="loadResources(this)">品牌文档</span>
+                </div>
+                <div class="brand-resources-list">
+                    <ul class="clearfix" id="brandResourcesList">
+                        <!--<li>
+                            <div class="img">
+                                <img src="http://183.131.126.132:8092/whgstatic/img/2017/201709/20170921/e7f2cf27ba3b41b680c1f10651db8800.jpg">
+                            </div>
+                            <div class="detail">
+                                <h2>活动标题</h2>
+                            </div>
+                            <a href="javascript:void(0)"></a>
+                        </li>-->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong/public/footer :: copy"></div>
+<!--底部结束-->
+<a class="to-top"></a>
+<script th:src="${basePath}+'/assets/js/plugins/roll/jquery.sly.min.js'" type="text/javascript"></script>
+<script type="text/javascript" th:inline="javascript">
+    var itemId = dataInit.getUrlParam('id');
+    $(document).ready(function () {
+        //加载详情数据
+        loadDetail();
+        //控制滚动条是否显示
+        setTimeout(function () {
+            if ($("#introduction").height() > 72) {
+                $("#scrollbar").show();
+                $("#brandDetail").sly({
+                    scrollBy: 50,
+                    scrollBar: "#scrollbar",
+                    startAt: 0
+                })
+            }
+        }, 200);
+        //加载品牌关联活动列表
+        loadActList();
+        //加载品牌活动资源
+        loadResources();
+        //加载品牌活动资讯
+        loadNews();
+
+    })
+
+    function loadDetail() {
+        dataInit.ajax({
+            api: [[${apiPath.ppdetail}]],
+            params: {
+                id: itemId
+            },
+            fn: function (data) {
+                if (data.code == 0 && data.data) {
+                    var model = data.data;
+                    var imgPath = data.imgPath + model.picture;
+                    var title = model.name;
+                    var introduction = removeHTMLTag(model.introduction);
+                    $("#title").text(title);
+                    $("#introduction").html(introduction);
+                    $("#brandImgPath").attr("src", imgPath);
+                    $(".brand-dtail").css("background", "url(" + data.imgPath + model.bgpicture + ") repeat-x 50% 0 #fff");
+                }
+            }
+        });
+    }
+
+    function loadActList() {
+        dataInit.ajax({
+            api: [[${apiPath.ppActList}]],
+            params: {
+                id: itemId,
+                cultid: cultid,
+                index: 1,
+                size: 20
+            },
+            fn: function (data) {
+                if (data.code == 0 && data.data) {
+                    var model = data.rows;
+                    var _html = '';
+                    for (var i in model) {
+                        var _basePath = [[${basePath}]] + '/' + [[${cultsite}]] + '/hd/detail?id=' + model[i].id;
+                        var _imgPath = data.imgPath + dataInit.getBigImage(model[i].imgurl);
+                        var begin = moment(model[i].starttime).format('YYYY-MM-DD');
+                        var end = moment(model[i].endtime).format('YYYY-MM-DD');
+                        var time = begin + ' ~ ' + end;
+                        if (begin == end) {
+                            time = begin;
+                        }
+                        _html += '<li>' +
+                            '    <div class="img">' +
+                            '        <a href="' + _basePath + '" target="_blank"><img src="' + _imgPath + '"></a>' +
+                            '    </div>' +
+                            '    <div class="detail">' +
+                            '        <h2>' + model[i].name + '</h2>' +
+                            '        <p>地点：<span>' + model[i].address + '</span></p>' +
+                            '        <p>时间：<span>' + time + '</span></p>' +
+                            '    </div>' +
+                            '    <a href="' + _basePath + '" target="_blank"></a>' +
+                            '</li>';
+                    }
+                    if (_html) {
+                        $("#brandActList").html(_html);
+                    } else {
+                        $(".brand-activity").hide();
+                    }
+                }
+            }
+        });
+    }
+
+    function loadResources(e) {
+        var res_type = $(e).index() != -1 ? $(e).index() : 0;
+        res_type = res_type + 1;
+        $(e).addClass("active").siblings().removeClass("active");
+        dataInit.ajax({
+            api: [[${apiPath.ppResourceList}]],
+            params: {
+                id: itemId,
+                cultid: cultid,
+                type: res_type
+            },
+            fn: function (data) {
+
+                if (data.code == 0 && data.rows) {
+                    var model = data.rows;
+                    var _html = '';
+
+                    for (var i in model) {
+
+                        var ResFileFunc = '', resImgPath = '', resBasePath = [[${basePath}]];
+                        var res_url = '';
+                        var _enturl = model[i].enturl.indexOf('http') >= 0 ? model[i].enturl : data.imgPath + model[i].enturl;
+                        switch (res_type) {
+                            case 1:
+                                ResFileFunc = "rongDialog.init({ico : 1,type : 6, title:\'" + model[i].name + "\',imgUrl : \'" + _enturl + "\'})";
+                                resImgPath = dataInit.getRemoteURL(data.imgPath, dataInit.getMidImage(model[i].enturl));
+                                break;
+                            case 2:
+                                resImgPath = dataInit.getRemoteURL(data.imgPath, dataInit.getMidImage(model[i].deourl));
+                                ResFileFunc = "rongDialog.init({ico : 1,type : 5, vedioUrl : \'" + _enturl + "\',vedioImg : \'\',vedioType: 'mp4',vedioTitle : \'" + model[i].name + "\',basePath:'" + resBasePath + "'})";
+                                break;
+                            case 3:
+                                resImgPath = [[${basePath}]] + '/assets/img/brand/brand-music.jpg';
+                                ResFileFunc = "rongDialog.init({ico : 1,type : 5, vedioUrl : \'" + _enturl + "\',vedioImg : \'\',vedioType: 'mp3',vedioTitle : \'" + model[i].name + "\',basePath:'" + resBasePath + "'});setWidth();";
+                                break;
+                            case 4 : //文档
+                                //resImgPath = [[${basePath}]] + '/assets/img/brand/xiazai.jpg';
+                                resImgPath = dataInit.getFileTypeIcon(model[i].enturl, '/assets/img/brand/xiazai.jpg');
+
+                                res_url = dataInit.getRemoteURL(data.imgPath, model[i].enturl);
+                                ResFileFunc = "goPage(\'" + res_url + "\')";
+                                break;
+                        }
+
+                        _html += '<li onclick="' + ResFileFunc + '">' +
+                            '    <div class="img">' +
+                            '        <img src="' + resImgPath + '">' +
+                            '    </div>' +
+                            '    <div class="detail">' +
+                            '        <h2>' + model[i].name + '</h2>' +
+                            '    </div>' +
+                            '</li>';
+
+                    }
+                    if (_html) {
+                        $("#brandResourcesList").html(_html);
+                    } else {
+                        $("#brandResourcesList").html('<div class="public-no-message"></div>');
+                    }
+                } else {
+                    $("#brandResourcesList").html('<div class="public-no-message"></div>');
+                }
+            }
+        });
+    }
+
+    function loadNews(page,rows) {
+        var params_page = page || 1;
+        var params_rows = rows || 4;
+        dataInit.ajax({
+            api: [[${apiPath.ppnews}]],
+            params: {
+                entityid: itemId,
+                page: params_page,
+                pageSize: params_rows
+            },
+            fn: function (data) {
+                if (data.code == 0 && data.rows) {
+                    if (data.rows.length > 0) {
+                        $("#brandNews").html('');
+                        for (var i in data.rows) {
+                            var model = data.rows[i];
+                            var _basePath = [[${basePath}]] + '/' + [[${cultsite}]] + '/zx/detail?id=' + model.clnfid;
+                            var year = moment(model.clnfcrttime).format('YYYY-MM');
+                            var day = moment(model.clnfcrttime).format('DD');
+                            var clnfsource = model.clnfsource ? model.clnfsource : "本站点";
+                            var clnfkey = model.clnfkey ? model.clnfkey : "无";
+                            var clnfintroduce = '无';
+                            if (model.clnfintroduce)
+                                clnfintroduce = removeHTMLTag(model.clnfintroduce);
+                            $("#brandNews").append('<li>\
+                        <a href="' + _basePath + '" target="_blank"></a>\
+                                <h2>' + model.clnftltle + '</h2>\
+                            <p>\
+                            源自：<span>' + clnfsource + '</span>\
+                            关键字：<span>' + clnfkey + '</span>\
+                            </p>\
+                            <div class="info">' + clnfintroduce + '</div>\
+                            <div class="date-cont">\
+                                <p class="day">' + day + '</p>\
+                                <p class="year">' + year + '</p>\
+                            </div>\
+                        </li>\
+                        ');
+                        }
+                    } else {
+                        $("#brandNews").append("<div class='public-no-message'></div>");
+                    }
+                }
+                dataInit.pageInit('artPagging', params_page, params_rows, data.total, loadNews);
+            }
+        });
+    }
+
+    //给消息过滤HTML标签
+    function removeHTMLTag(str) {
+        str = str.replace(/<\/?[^>]*>/g, ''); //去除HTML tag
+        str = str.replace(/[ | ]*\n/g, '\n'); //去除行尾空白
+        //str = str.replace(/\n[\s| | ]*\r/g,'\n'); //去除多余空行
+        return str;
+    }
+
+    function goPage(_url) {
+        window.location.href = _url;
+    }
+</script>
+</body>
+</html>

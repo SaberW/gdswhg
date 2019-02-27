@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/usercenter/usercenter.css'" >
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/public/detail.css'" >
+<div th:include="guangdong/public/leftBar :: copy"></div>
+<div id="page">
+    <div class="mui-content">
+        <!--手机绑定-->
+        <div class="tel breadth">
+            <div class="mui-input-group" id="f-1">
+                <div class="mui-input-row">
+                    <input type="tel" class="mui-input-clear" name="phoneNum" id="phoneNum" placeholder="请输入您的原手机号" maxlength="11" minlength="11">
+                </div>
+                <div class="mui-input-row mui-row">
+                    <div class="mui-col-sm-8 mui-col-xs-8">
+                        <input type="tel" class="mui-input-clear"  name="code" id="code" placeholder="请输入手机验证码" maxlength="6">
+                    </div>
+                    <div class="mui-col-sm-4 mui-col-xs-4">
+                        <button class="confirm phoneNum" style="display: none"><span>120</span></button>
+                        <button class="confirm postCode sendCodeP"  id="sendCode">获取验证码</button>
+                    </div>
+                </div>
+            </div>
+            <div class="mui-input-group"  style="display: none" id="f-2">
+                <div class="mui-input-row">
+                    <input type="tel" class="mui-input-clear" name="phoneNum2" id="phoneNum2"  placeholder="请输入您新绑定的手机号" maxlength="11" minlength="11">
+                </div>
+                <div class="mui-input-row mui-row">
+                    <div class="mui-col-sm-8 mui-col-xs-8">
+                        <input type="tel" class="mui-input-clear"  name="code2" id="code2" placeholder="请输入手机验证码" maxlength="6">
+                    </div>
+                    <div class="mui-col-sm-4 mui-col-xs-4">
+                        <button class="confirm phoneNum2" style="display: none"><span>120</span></button>
+                        <button class="confirm postCode2 sendCodeP"  id="sendCode2">获取验证码</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--手机绑定-->
+        <nav class="mui-bar mui-bar-tab">
+            <div class="mui-tab-item">
+                <a class="goNext" href="javascript:void(0)" id="btn-1">确定</a>
+            </div>
+            <div class="mui-tab-item" style="display: none">
+                <a class="goNext" href="javascript:void(0)" id="btn-2">确定</a>
+            </div>
+        </nav>
+    </div>
+</div>
+<script type="text/javascript" th:inline="javascript">
+    var userId = $("#temp_userId").val();
+    var sendCodeType = true,btnType = 0 ;
+    var reg = /^0?(13[0-9]|15[012356789]|17[013678]|18[0-9]|14[57])[0-9]{8}$/;
+    $().ready(function(){
+        goNext()
+    })
+    //时间重置
+    function numAdd() {
+        $('.postCode').hide();
+        $('.phoneNum').show();
+        function loadTime() {
+            var countdown = $('.phoneNum span').html();
+            if (countdown == 0) {
+                $('.phoneNum').hide();
+                $('.phoneNum span').html(120);
+                $('.postCode').show();
+                sendCodeType = true;
+                return;
+            }
+            countdown--;
+            $('.phoneNum span').html(countdown);
+            setTimeout(function () {
+                loadTime()
+            }, 1000)
+        }
+        loadTime();
+    }
+
+    function numAdd2() {
+        $('.postCode2').hide();
+        $('.phoneNum2').show();
+        function loadTime2() {
+            var countdown = $('.phoneNum2 span').html();
+            if (countdown == 0) {
+                $('.phoneNum2').hide();
+                $('.phoneNum2 span').html(120);
+                $('.postCode2').show();
+                sendCodeType = true;
+                return;
+            }
+            countdown--;
+            $('.phoneNum2 span').html(countdown);
+            setTimeout(function () {
+                loadTime2()
+            }, 1000)
+        }
+
+        loadTime2();
+    }
+
+    mui(".mui-col-xs-4").on("tap","#sendCode",function(){
+        var phone = $("#phoneNum").val();
+        $("#phoneNum").blur();
+        //前端验证手机号是否真实
+        if (reg.test(phone) && phone == $("#temp_mobile").val() && sendCodeType == true) {
+            sendCodeType = false;
+            dataInit.ajax({
+                api: [[${apiPath.hasPhone}]],
+                params: {"phone": phone},
+                fn: function (data) {
+                    if (data.data == 1) {
+                        dataInit.ajax({
+                            api: [[${apiPath.sendSmsCode}]],
+                            params: {
+                                phone: phone
+                            },
+                            fn: function (data) {
+                                if (data.code != 0) {
+                                    mui.toast(data.msg || "验证码异常");
+                                    $("#code").val("");
+                                    $("#code").onfocus;
+                                    sendCodeType = true;
+                                } else {
+                                    $("#phoneNum").attr("readonly","readonly");
+                                    $("#temp_pid").val(data.temp_pid);
+                                    numAdd();
+                                }
+                            }
+                        })
+                    } else {
+                        mui.toast(data.msg || "手机号异常,请重新登录本系统");
+                        sendCodeType = true;
+                    }
+                }
+            });
+        }else{
+            mui.toast("请输入该账号绑定的手机号");
+        }
+    });
+
+    mui(".mui-col-xs-4").on("tap","#sendCode2",function(){
+        var phone = $("#phoneNum2").val();
+        $("#phoneNum2").blur();
+        //前端验证手机号是否真实
+        if (reg.test(phone) &&  sendCodeType == true) {
+            sendCodeType = false;
+            dataInit.ajax({
+                api: [[${apiPath.hasPhone}]],
+                params: {"phone": phone},
+                fn: function (data) {
+                    //console.log(data);
+                    if (data.data == 1) {
+                        mui.toast("手机号已存在");
+                        sendCodeType = true;
+                    } else { //手机号验证能过发送短信息
+                        dataInit.ajax({
+                            api: [[${apiPath.sendSmsCode}]],
+                            params: {
+                                phone: phone
+                            },
+                            fn: function (data) {
+                                //console.log(data);
+                                if (data.code != 0) {
+                                    mui.toast(data.msg || "验证码异常");
+                                    $("#code").val("");
+                                    $("#code").onfocus;
+                                } else {
+                                    $("#phoneNum2").attr("readonly","readonly");
+                                    $("#temp_pid").val(data.temp_pid);
+                                    numAdd2();
+                                }
+                            }
+                        })
+                    }
+                }
+            })
+        }else{
+            mui.toast("请输入需绑定的手机号");
+        }
+    })
+
+    function verification(){
+        if(!reg.test($("#phoneNum").val())){
+            mui.toast("请输入正确的手机号码");
+            return false;
+        }else if($("#code").val().length < 1){
+            mui.toast("请输入手机验证码");
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+    function verification2(){
+        if(!reg.test($("#phoneNum2").val())){
+            mui.toast("请输入正确的手机号码");
+            return false;
+        }else if($("#code2").val().length < 1){
+            mui.toast("请输入手机验证码");
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+    function goNext(){
+        mui(".mui-tab-item").on("tap","#btn-1",function(){
+                if(verification()){
+                    dataInit.ajax({
+                        api: [[${apiPath.hasCode}]],
+                        params: {
+                            temp_pid: $("#temp_pid").val(),
+                            phone: $("#phoneNum").val(),
+                            code: $("#code").val()
+                        },
+                        fn: function (data) {
+                            //验证通过即可修改密码
+                            if (data.code == 0 && data.data == 1) {
+                                $('#f-1').hide();
+                                $('#f-2').show();
+                                $("#btn-1").parent().hide();
+                                $("#btn-2").parent().show();
+                                btnType = 1;
+                                sendCodeType = true;
+                            } else {
+                                mui.toast(data.msg || "验证码错误");
+                            }
+                        }
+                    })
+                }
+            })
+        mui(".mui-tab-item").on("tap","#btn-2",function(){
+                if(verification2()){
+                    dataInit.ajax({
+                        api: [[${apiPath.relationMobile}]],
+                        params: {
+                            userId: userId,
+                            phone: $("#phoneNum2").val(),
+                            code: $("#code2").val()
+                        },
+                        fn: function (data) {
+                            if (data.code == 0) {
+                                mui.toast("绑定成功");
+                                setTimeout(function () {
+                                    window.location.href = "index";
+                                },2000)
+                            } else {
+                                mui.toast(data.msg || "手机绑定异常");
+                            }
+                        }
+                    });
+                }
+        })
+
+    }
+</script>
+</body>
+</html>

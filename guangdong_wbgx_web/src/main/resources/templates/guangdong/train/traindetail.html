@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link th:href="${basePath}+'/assets/css/activity/activityDetaiil.css'" rel="stylesheet">
+<script th:src="${basePath}+'/assets/common/js/whg.maps.js'"></script>
+<div class="wrapper clearfix">
+    <!--公共主头部开始-->
+    <div id="header" th:include="guangdong/public/header :: copy"></div>
+    <!--公共主头部结束-->
+    <!--主体开始-->
+    <input type="hidden" id="temp_type" value="5">
+    <div class="special-bg">
+        <div class="activity-main">
+            <div class="public-crumbs"><span><a href="../index">首页</a></span><span>></span><span><a id="returnList"
+                                                                                                    href="javascript:void(0)"></a></span><span>></span><span
+                    class="title">&nbsp;</span></div>
+            <div class="special-content clearfix">
+                <div class="con-left clearfix">
+                    <div class="color-bg"></div>
+                    <div class="public-info-step">
+                        <div class="main-info-cont clearfix">
+                            <h2 class="title" id="title">&nbsp;</h2>
+                            <div class="special-head-left">
+                                <img id="imgPath" th:src="${basePath}+'/assets/img/public/loading.png'"
+                                     style="width:380px;height: 240px">
+                            </div>
+                            <div class="detail">
+                                <div class="tel"><i class="public-s-ico s-ico-10"></i><span class="tt">培训地址：</span><span
+                                        class="desc" id="address"></span></div>
+                                <div class="time1 clearfix"><i class="public-s-ico s-ico-8"></i><span
+                                        class="tt">报名开始时间：</span><span class="desc" id="registTime"> </span></div>
+                                <div class="tel"><i class="public-s-ico s-ico-9"></i><span class="tt">报名结束时间：</span><span
+                                        class="desc" id="ActionTime"></span></div>
+                                <div class="tel"><i class="public-s-ico s-ico-15"></i><span class="tt">已报名数：</span><span
+                                        class="desc" id="number"></span>人；<span class="desc" id="maxNumber">报名上限：<i
+                                        style="font-style: normal"></i>人</span>
+                                </div>
+                                <div class="tel" id="age" style="display: none">
+                                    <i class="public-s-ico s-ico-16"></i>
+                                    <span class="tt">适合年龄：</span>
+                                    <span class="desc" id="ageSize"></span>
+                                </div>
+                                <div class="tel"><i class="public-s-ico s-ico-17"></i><span class="tt">联系电话：</span><span
+                                        class="desc phone"></span></div>
+                                <div class="time" id="sheshi">
+                                    <i class="public-s-ico s-ico-19"></i><span class="tt">培训类型：</span>
+                                    <span class="desc" id="labelList"></span>
+                                </div>
+                                <div class="goNext" id="goNext">
+                                    <a href="javascript:void(0)"></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="main-info-cont clearfix">
+                            <p class="prompt">温馨提示：需要报名培训，请点击“立即报名”按钮进行培训报名。有任何问题欢迎拨打电话咨询（<span class="phone"></span>）</p>
+                        </div>
+                        <h3 style="border-bottom: none;margin-bottom: 0;"><span>课程表</span></h3>
+                        <div class="info">
+                            <div class="dg-train-info dg-train-table">
+                                <table>
+                                    <tbody>
+                                    <tr>
+                                        <th>序列</th>
+                                        <th>开课时间</th>
+                                        <th>结束时间</th>
+                                    </tr>
+                                    </tbody>
+                                    <tbody id="syllabus">
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!--分页开始 -->
+                            <div class="green-black" id="artPagging" style="margin-bottom: 40px"></div>
+                            <!--分页结束-->
+                        </div>
+                        <div id="__summary">
+                            <h3><span>培训详情</span></h3>
+                            <div class="info"></div>
+                        </div>
+                        <div id="__present">
+                            <h3><span>培训大纲</span></h3>
+                            <div class="info"></div>
+                        </div>
+                        <div id="__require">
+                            <h3><span>老师介绍</span></h3>
+                            <div class="info"></div>
+                        </div>
+                        <!--分享 -->
+                        <div class="public-share">
+                            <span class="btn qq"><a href="javascript:void(0);" class="fxqq"></a></span>
+                            <span class="btn weixin"><a a href="javascript:void(0);" class="fxweix"></a></span>
+                            <span class="btn weibo"><a href="javascript:void(0)" class="fxweibo"></a></span>
+                            <span class="btn dianzan">
+                             <em>1</em>
+                             <a href="javascript:void(0)" reftyp="4" refid="2017060600000155" id="good" title="点赞"
+                                class="dianzanclick"></a>
+                         </span>
+                            <span class="btn shoucang">
+                            <em>1</em>
+                            <a href="javascript:void(0)" reftyp="4" refid="2017060600000155" id="collection" title="收藏"
+                               class="shoucangclick"></a>
+                        </span>
+                        </div>
+                    </div>
+                    <!--<div class="public-info-step site clearfix">
+                        <ul class="tab clearfix">
+                            <li class="active">活动图片</li>
+                            <li>活动视频</li>
+                            <li>活动音频</li>
+                        </ul>
+                        <div class="list1 on">
+                            <div class="demo-list list-video clearfix">
+                                <a href="javascript:void(0)"
+                                   onClick="show_img(this,{url:'../../static/assets/img/img_demo/works-1.jpg'})">
+                                    <div class="img1">
+                                        <img src="../../assets/img/img_demo/works-1.jpg">
+                                        <span>文化暖心 点亮生活</span>
+                                    </div>
+                                </a>
+                                <a href="javascript:void(0)"
+                                   onClick="show_img(this,{url:'../../static/assets/img/img_demo/works-1.jpg'})">
+                                    <div class="img1">
+                                        <img src="../../assets/img/img_demo/works-1.jpg">
+                                        <span>文化暖心 点亮生活</span>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="list1">
+                            <div class="demo-list list-video clearfix">
+                                <a href="javascript:void(0)"
+                                   onClick="show_vedio(this,{url:'../../static/assets/img/img_demo/xl.mp4'})">
+                                    <div class="mask"></div>
+                                    <div class="video1">
+                                        <img src="../../assets/img/img_demo/works-1.jpg">
+                                        <span>文化暖心 点亮生活</span>
+                                    </div>
+                                </a>
+                                <a href="javascript:void(0)"
+                                   onClick="show_vedio(this,{url:'../../static/assets/img/img_demo/xl.mp4'})">
+                                    <div class="mask"></div>
+                                    <div class="video1">
+                                        <img src="../../assets/img/img_demo/works-1.jpg">
+                                        <span>文化暖心 点亮生活</span>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="list1">
+                            <div class="demo-list list-mp3 clearfix">
+                                <a href="javascript:void(0)"
+                                   onClick="show_vedio(this,{url:'../../static/assets/img/img_demo/m.mp3'})">
+                                    <div class="mask"></div>
+                                    <div class="mp31">
+                                        <span>文化暖心 点亮生活</span>
+                                    </div>
+                                </a>
+                                <a href="javascript:void(0)"
+                                   onClick="show_vedio(this,{url:'../../static/assets/img/img_demo/m.mp3'})">
+                                    <div class="mask"></div>
+                                    <div class="mp31">
+                                        <span>文化暖心 点亮生活</span>
+                                    </div>
+                                </a>
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="public-comment">
+                        <h3>我要评论</h3>
+                        <div class="public-comment-list" id="szwhgCommentContainer">
+                            <div class="item" refrmid="2017060700000001">
+                                <p class="author">ninelie :<span>2017-06-07&nbsp;14:05:41</span></p>
+                                <p class="msg">121221</p>
+                            </div>
+                            <div class="getMsg">
+                                <textarea id="szwhgCommentContent"></textarea>
+
+                            </div>
+                            <div class="postMsg clearfix">
+                                <span><a href="javascript:void(0)" id="szwhgCommentBtn">点评</a></span>
+                            </div>
+                        </div>
+                    </div>-->
+                    <!--  <div th:include="public/coment :: copy"></div>
+                      <div th:include="public/voteup :: copy"></div>
+                      <div th:include="public/fav :: copy"></div>-->
+                    <input type="hidden" id="commType">
+                </div>
+                <div class="public-right-main">
+                    <div class="public-other-notice margin-bottom padding-bottom-0">
+                        <div class="map" id="maps_ven_target" style="width:340px;height:222px">
+                        </div>
+                    </div>
+                    <div class="public-other-notice">
+                        <h2>推荐培训</h2>
+                        <div id="Recommend"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--主体结束-->
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong/public/footer :: copy"></div>
+<!--底部结束-->
+<a class="to-top"></a>
+<script type="text/javascript" th:inline="javascript">
+    var itemId = dataInit.getUrlParam('id');
+    var userid = $("#temp_userId").val();
+    var code;
+    var latitude, longitude, venueAddress, title, ismoney;
+    $(document).ready(function () {
+        dataInit.ajax({
+            api: [[${apiPath.getRecommendTra}]],
+            fn: showRecommendTra,
+            params: {id: itemId,cultid:cultid}
+        });
+        dataInit.ajax({
+            api: [[${apiPath.traDetail}]],
+            fn: showTriDetail,
+            params: {itemId: itemId, userId: userid}
+        });
+         dataInit.ajax({
+            api: [[${apiPath.bookingvalid}]],
+            fn: Verification,
+            params: {itemId: itemId, userId: userid}
+        });
+        dataPage();
+    })
+    function dataPage(page, rows) {
+        var params_page = page || 1;
+        var params_rows = rows || 10;
+        var params = {
+            index: params_page,
+            size: params_rows,
+            id: itemId,
+            userId: userid
+        }
+    /*    dataInit.ajax({
+            api: [[${apiPath.getSyllabus}]],
+            fn: function (data) {
+                showSyllabus(data, params_page);
+                dataInit.pageInit('artPagging', params_page, params_rows, data.total, dataPage);
+            },
+            params: params
+        });*/
+    }
+    function showTriDetail(data) {
+        var model = data.data;
+       // var remark = model.remark;
+        console.log(model)
+        //人数上限
+        var maxnumber = model.maxApplyNum;
+        $('#maxNumber i').text(maxnumber);
+        if (model.isshowmaxnumber) {
+            $('#maxNumber').hide();
+        }
+        //报名人数
+        var signCount = data.data.enrolcount;
+        $('#number').text(signCount);
+        //限制年龄
+        if (model.age) {
+            var age = model.age.split(",");
+            $("#age").show();
+            $("#ageSize").text(age[0] + '岁-' + age[1] + '岁');
+        }
+
+        //培训是否收费
+        ismoney = model.ismoney;
+
+        //报名时间
+        var enrollstarttime = moment(model.trainingBegin).format('YYYY-MM-DD HH:mm:ss');
+        var enrollendtime = moment(model.trainingEnd).format('YYYY-MM-DD HH:mm:ss');
+        var myDate = new Date();
+        var time = moment(myDate).format('YYYY-MM-DD HH:mm:ss');
+
+        $('#ActionTime').text(enrollendtime);
+        $('#registTime').text(enrollstarttime);
+        var phone = model.phone;
+        var address = model.address;
+        title = model.title;
+        if (model.trainimg)
+            var imgPath = data.imgPath + dataInit.getBigImage(model.image);
+        //调分享接口
+        dataInit.share(title, imgPath);
+       // $('#info').html(remark);
+       if (phone) {
+            $('.phone').text(phone);
+        } else {
+            $('.phone').parent().hide();
+        }
+        $('#address').text(address);
+        $('.title').text(title);
+        $('#imgPath').attr('src', imgPath);
+        //培训标签
+        var labelListl = model.etype;
+        if (labelListl)
+            labelListl = labelListl.split(",");
+        var labelListHtml = '';
+        if (labelListl && labelListl.length > 0) {
+            for (var j in labelListl) {
+                labelListHtml += '<em>' + dataInit.checkDict(labelListl[j]) + '</em>';
+            }
+            $('#labelList').html(labelListHtml);
+        } else {
+            $("#sheshi").hide();
+        }
+        //判断培训分类 - 普通培训 0 --文化超市 1
+        if (model.isbasictra == 1) {
+            $('#returnList').text("文化超市");
+            $('#returnList').attr('href', 'list?pxtype=1');
+        } else {
+            $('#returnList').text("普通培训");
+            $('#returnList').attr('href', 'list?pxtype=2');
+        }
+        //课程简介
+        var __summary = model.coursedesc;
+        if (__summary) {
+            $("#__summary .info").html(__summary);
+        } else {
+            $("#__summary").hide();
+        }
+        //课程简介
+        var __present = model.outline;
+        if (__present) {
+            $("#__present .info").html(__present);
+        } else {
+            $("#__present").hide();
+        }
+        //课程简介
+        var __require = model.teacherdesc;
+        if (__require) {
+            $("#__require .info").html(__require);
+        } else {
+            $("#__require").hide();
+        }
+        if(code == 0){
+            $("#goNext a").text("立即报名");
+            $("#goNext a").attr("onclick","goSignUp()")
+        }else if(code==101){
+            $("#goNext a").text(data.msg)
+            $("#goNext a").removeAttr('onclick');
+            $("#goNext a").css('background-color', '#A6BBCE');
+        }else if(code==102) {
+            $("#goNext a").text("不是已发布")
+            $("#goNext a").removeAttr('onclick');
+            $("#goNext a").css('background-color', '#A6BBCE');
+        }else if(code==103){
+            $("#goNext a").text("已结束")
+            $("#goNext a").removeAttr('onclick');
+            $("#goNext a").css('background-color', '#A6BBCE');
+        }else if(code==104){
+            $("#goNext a").text("名额已满")
+            $("#goNext a").removeAttr('onclick');
+            $("#goNext a").css('background-color', '#A6BBCE');
+        }else if(code==105){
+            $("#goNext a").text("已报名")
+            $("#goNext a").removeAttr('onclick');
+            $("#goNext a").css('background-color', '#A6BBCE');
+        }else if(code==107){
+            $("#goNext a").text("立即报名");
+            $("#goNext a").attr("onclick","goSignUp()")
+        }else if(data.code==108){
+            $("#goNext a").text("立即报名");
+            $("#goNext a").attr("onclick","goSignUp()")
+        }else if(data.code==109){
+            $("#goNext a").text("立即报名");
+            $("#goNext a").attr("onclick","goSignUp()")
+        }
+        //判断培训状态
+      /*  if (data.data.canSign == 0) {
+            $("#goNext a").attr('onclick', 'goSignUp(' + data.data.canSign + ')');
+        } else if (data.data.canSign == 104) {
+            $("#goNext a").text('即将开始');
+            $("#goNext a").removeAttr('onclick');
+            $("#goNext a").css('background-color', '#A6BBCE');
+        } else if (data.data.canSign == 101 || data.data.canSign == 102) {
+            $("#goNext a").attr('onclick', 'goSignUp(' + data.data.canSign + ')');
+        } else if (data.data.canSign == 103) {
+            $("#goNext a").text('人数已满');
+            $("#goNext a").removeAttr('onclick');
+            $("#goNext a").css('background-color', '#A6BBCE');
+        } else if (data.data.canSign == 105) {
+            $("#goNext a").text('报名已结束');
+            $("#goNext a").removeAttr('onclick');
+            $("#goNext a").css('background-color', '#A6BBCE');
+        } else if (data.data.canSign == 106) {
+            $("#goNext a").attr('onclick', 'goSignUp(' + data.data.canSign + ')');
+        } else if(data.data.canSign == 108){
+            var whgTraEnrol = data.data.whgTraEnrol;
+            if(whgTraEnrol && 2 != whgTraEnrol.state){
+                $("#goNext a").text('已报过名');
+                $("#goNext a").removeAttr('onclick');
+                $("#goNext a").css('background-color', '#A6BBCE');
+            }else {
+                $("#goNext a").attr('onclick', 'goSignUp(' + data.data.canSign + ')');
+            }
+        }else {
+            $("#goNext a").hide();
+            rongDialog.init({
+                ico: 2,
+                type: 1,
+                desc: data.data.errormsg || "数据异常"
+            });
+        }*/
+        var modelSyllabus = data.data.whgTraCourseList;
+        if(modelSyllabus.length<10){
+            $("#artPagging").hide();
+        }
+        $("#syllabus").empty();
+        for (var i in modelSyllabus) {
+            var activeTime = moment(modelSyllabus[i].starttime).format('YYYY-MM-DD HH:mm:ss');
+            var endTime = moment(modelSyllabus[i].endtime).format('YYYY-MM-DD HH:mm:ss');
+            var j = parseInt(i) + 1;
+            var count = '';
+     /*      if (params_page != 1) {
+                if (j == 10) {
+                    count = parseInt(params_page) + '' + 0;
+                } else {
+                    count = parseInt(params_page) - 1 + '' + j;
+                }
+
+            } else {
+                count = j;
+            }*/
+
+            $("#syllabus").append(
+                '<tr>' +
+                '<td class="not-conform">' + j + '</td>' +
+                '<td class="not-conform">' + activeTime + '</td>' +
+                '<td class="not-conform">' + endTime + '</td>' +
+                '</tr>'
+            );
+        }
+        //获取经纬度
+        if (model.latitude)
+            latitude = model.latitude;
+        if (model.longitude)
+            longitude = model.longitude;
+        venueAddress = model.title;
+        WhgMap.showMap('maps_ven_target', venueAddress, longitude, latitude);
+
+
+    }
+  function Verification(data){
+       console.log(data.code);
+       code = data.code;
+    }
+    function goSignUp() {
+       if(code ==0){
+       window.location.href = "step1st?id=" + itemId;
+       } else if(code ==105){
+            rongDialog.init({
+                ico: 2,
+                type: 1,
+                desc: '不能重复报名',
+                nextFn: function () {
+                    window.location.href = "step1st?id=" + itemId;
+                }
+            })
+        }else if(code ==106) {
+            rongDialog.init({
+                ico: 2,
+                type: 1,
+                desc: '手机号码不存在',
+                nextFn: function () {
+
+                }
+            })
+        }else if(code ==107){
+           rongDialog.init({
+               ico: 2,
+               type: 1,
+               desc: '培训课程时间冲突',
+               nextFn: function () {
+
+               }
+           })
+       }else if(code==108){
+           rongDialog.init({
+               ico: 2,
+               type: 1,
+               desc: '未进行实名认证',
+               nextFn: function () {
+                   window.location.href = "../center/safely/real";
+               }
+           })
+       }else if(code ==109){
+           rongDialog.init({
+               ico: 2,
+               type: 1,
+               desc: '报名未开始',
+               nextFn: function () {
+                   window.location.href = "../center/safely/real";
+               }
+           })
+       }
+  }
+   /* function showSyllabus(data, params_page) {
+        var modelSyllabus = data.rows;
+        if(modelSyllabus.length<10){
+            $("#artPagging").hide();
+        }
+        $("#syllabus").empty();
+        for (var i in modelSyllabus) {
+            var activeTime = moment(modelSyllabus[i].starttime).format('YYYY-MM-DD HH:mm:ss');
+            var endTime = moment(modelSyllabus[i].endtime).format('YYYY-MM-DD HH:mm:ss');
+            var j = parseInt(i) + 1;
+            var count = '';
+            if (params_page != 1) {
+                if (j == 10) {
+                    count = parseInt(params_page) + '' + 0;
+                } else {
+                    count = parseInt(params_page) - 1 + '' + j;
+                }
+
+            } else {
+                count = j;
+            }
+
+            $("#syllabus").append(
+                '<tr>' +
+                '<td class="not-conform">' + count + '</td>' +
+                '<td class="not-conform">' + activeTime + '</td>' +
+                '<td class="not-conform">' + endTime + '</td>' +
+                '</tr>'
+            );
+        }
+    }*/
+    function showRecommendTra(data) {
+        //推荐列表
+        var trainRecom = data.rows;
+        if (trainRecom && trainRecom.length > 0) {
+            var i_length = trainRecom.length > 3 ? 3 : trainRecom.length;
+            for (var i = 0; i < i_length; i++) {
+                var imgPath = data.imgPath + dataInit.getBigImage(trainRecom[i].trainimg);
+                var starttime = moment(trainRecom[i].starttime).format('YYYY-MM-DD');
+                if (trainRecom[i].id != itemId) {
+                    $("#Recommend").append(
+                        '<div class="item clearfix">' +
+                        '<div class="right-img">' +
+                        '<a href="detail?id=' + trainRecom[i].id + '&type=2">' +
+                        '<img src="' + imgPath + '" width="130" height="90"></a></div>' +
+                        '<div class="right-detail"><a href="detail?id=' + trainRecom[i].id + '&type=2">' +
+                        '<h3>' + trainRecom[i].title + '</h3>' +
+                        '</a>' +
+                        '<p class="time">' + starttime + '</p>' +
+                        '</div>' +
+                        '</div>'
+                    );
+                }
+
+            }
+        } else {
+            $("#Recommend").append('<div class="public-no-message-detail"></div>');
+        }
+    }
+</script>
+</body>
+</html>

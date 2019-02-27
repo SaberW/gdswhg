@@ -1,0 +1,45 @@
+<div class="nav_m-center w">
+    <ul class="clearfix" id="whzt_nav_ul">
+        <li><a _href="/whzt/index">主页</a></li>
+        <li><a _href="/whzt/zpList">作品库</a></li>
+        <li><a _href="/whzt/rcList">艺术人才</a></li>
+        <li><a _href="/whzt/winning">获奖作品</a></li>
+        <li><a _href="/whzt/jtList">创作讲坛</a></li>
+        <li><a _href="/whzt/history">历届情况</a></li>
+    </ul>
+</div>
+
+
+<script>
+
+    var ZtnavTool = {
+        setNavhref: function(brandid, batchid){
+
+            var pathname = window.location.pathname;
+            var protocol = window.location.protocol;
+            var host = window.location.host;
+
+            var content = "";
+            if (pathname.indexOf("/whzt") != -1){
+                content = pathname.substring(0, pathname.indexOf("/whzt") );
+            }
+
+            $("#whzt_nav_ul").find("a[_href]").each(function(){
+                var _href = $(this).attr("_href");
+                if (!_href || _href == ''){
+                    return true;
+                }
+
+                if (pathname.indexOf(_href) != -1) {
+                    $(this).addClass("active");
+                }
+
+                var hrefStr = protocol+"//"+host+content+_href;
+                hrefStr+="?id="+batchid+"&brandid="+brandid;
+
+                $(this).attr("href", hrefStr);
+            });
+        }
+    }
+
+</script>

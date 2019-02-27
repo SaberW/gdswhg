@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link th:href="${basePath}+'/assets/style/login/login.css'" rel="stylesheet">
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/rong.validate.js'"></script>
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/rong.message.js'"></script>
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/jquery.md5.js'"></script>
+<div class="bg-img">
+    <div class="login-cont">
+        <div class="step-cont clearfix">
+            <div class="step active">
+                手机验证
+                <i class="line-icon-border"></i>
+            </div>
+            <div class="step">
+                修改密码
+                <i class="line-icon-border"></i>
+            </div>
+            <div class="step">
+                修改成功
+            </div>
+        </div>
+        <form method="post" id="step-1">
+            <div class="form-cont step-1">
+                <div class="input-cont phone-cont">
+                    <div class="left-icon"></div>
+                    <!--valid error-->
+                    <input type="text" class="input-row" id="account" name="account"  placeholder="手机号"  maxlength="11" required>
+                </div>
+                <div class="input-cont code-cont clearfix">
+                    <div class="left-icon"></div>
+                    <input type="text" class="input-row code-row" placeholder="短信验证码" maxlength="6" minlength="6"id="code" name="code" required>
+                    <div class="send-code phoneNum none"><span>120</span></div>
+                    <div class="send-code postCode" id="sendCode">发送验证码</div>
+                </div>
+                <div class="go-next">
+                    <button type="submit" class="login-btn goNext">下一步</button>
+                    <!--<a href="javascript:void(0)">登录</a>-->
+                </div>
+            </div>
+        </form>
+        <form method="post" id="step-2">
+            <div class="form-cont step-2 none">
+                <div class="input-cont pwd-cont">
+                    <div class="left-icon"></div>
+                    <input type="password" class="input-row" id="password" name="password"  placeholder="密码" minlength="6" maxlength="18" required>
+                </div>
+                <div class="input-cont pwd-cont">
+                    <div class="left-icon"></div>
+                    <input type="password" class="input-row" id="password_again" name="password_again"  placeholder="确认密码">
+                </div>
+                <div class="go-next">
+                    <button type="submit" class="login-btn goNext">下一步</button>
+                    <!--<a href="javascript:void(0)">登录</a>-->
+                </div>
+            </div>
+        </form>
+        <div class="form-cont step-3 none">
+            <div class="login-message">
+                <i class="icon iconfont icon-gou"></i>
+                <h1>密码修改成功</h1>
+                <a href="../index">返回首页<i class="icon iconfont icon-enter"></i><i class="icon iconfont icon-enter"></i></a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- core public JavaScript -->
+
+<script type="text/javascript" th:inline="javascript">
+    var map = {}; map["dev-name"]="ZJ)6so!-";
+    var timestamp = new Date().getTime();
+    var arr2 = sortToMap();
+    var token = sign(arr2)
+    //对参数拼接成 XXX=XXX&XXX==XXXX 字符串的形式 后再进行加密
+    function sign(arr2) {
+        var str = "";
+        for (var i = 0; i < arr2.length; i++){
+            if (map[arr2[i]] == null || map[arr2[i]] == "" || map[arr2[i]] == undefined) {
+                continue;
+            }
+            str += arr2[i] + "=" + map[arr2[i]]+"&";
+        }
+        str = str.substring(0, str.length - 1);
+        return $.md5(str+timestamp).toUpperCase();
+    }
+    // 对参数排序
+    function sortToMap() {
+        var arr=new Array()
+        for(var key in map) {
+            arr.push(key);
+        }
+        arr.sort();
+        return arr;
+    }
+
+
+
+    $(window).resize(function(){
+        positionCenter($('.login-cont'));
+    })
+    $().ready(function () {
+        positionCenter($('.login-cont'));
+        var msg = [[${loginErrMsg}]];
+        if (msg) {
+            msg = msg.replace(/\"/g, "");
+            rongDialog.init({
+                ico: 2,
+                type: 1,
+                desc: msg
+            });
+        }
+        //手机号格式
+        $.validator.addMethod("phoneType", function (value) {
+            var reg = /^0?(13[0-9]|15[012356789]|17[013678]|18[0-9]|14[57])[0-9]{8}$/;
+            return reg.test(value);
+        }, '请输入正确的手机号码');
+        $("#step-1").validate({
+            errorElement: "em",
+            rules: {
+                account: "phoneType",
+                code: "required"
+            },
+            messages: {
+                account: {
+                    required: "请输入您的手机号"
+                },
+                code: {
+                    required: "请输入短信验证码"
+                }
+            },
+            submitHandler: function (form) {
+                //验证验证码是否通过
+                var phone = $('#account').val();
+                var code = $('#code').val();
+                dataInit.ajax({
+                    api: [[${apiPath.hasCode}]],
+                    params:{
+                        phone:phone,
+                        code:code
+                    },
+                    fn:function(data){
+                        if(data.code == 0 && data.data == 1){
+                            $(".step-1").hide();
+                            $(".step-2").show();
+                            $(".step-cont .step").eq(1).addClass("active");
+                        }else{
+                            rongDialog.init({
+                                ico: 2,
+                                type: 1,
+                                desc: data.msg || "验证码错误"
+                            });
+                        }
+                    }
+                })
+            }
+
+        });
+        $.validator.addMethod("pwdType", function (value) {
+            var reg = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$/;
+            return reg.test(value);
+        }, '密码必须由6-18位的数字或字母组成');
+
+        $("#step-2").validate({
+            errorElement: "em",
+            rules: {
+                password: "pwdType",
+                password_again: {
+                    equalTo: "#password"
+                }
+            },
+            messages: {
+                password: {
+                    required: "请输入您的登录密码"
+                },
+                password_again: {
+                    equalTo: "两次密码输入不一致"
+                }
+            },
+            submitHandler: function (form) {
+                //验证验证码是否通过
+                var phone = $('#account').val();
+                var code = $('#code').val();
+                var password = $.md5($('#password').val());
+                dataInit.ajax({
+                    api:[[${apiPath.findPassword}]],
+                    params:{
+                        mobile:phone,
+                        code:code,
+                        password:password,
+                        token:token,
+                        timestamp:timestamp
+                    },
+                    fn:function(data){
+                        if(data.code == 0){
+                            $(".step-2").hide();
+                            $(".step-3").show();
+                            $(".step-cont .step").eq(2).addClass("active");
+                        }else{
+                            rongDialog.init({
+                                ico: 2,
+                                type: 1,
+                                desc: data.msg || "异常"
+                            });
+                        }
+                    }
+                })
+            }
+
+        });
+    });
+
+    function positionCenter (dom) {
+        dom.css({
+            position: 'fixed',
+            left: ($(window).width() - dom.outerWidth()) / 2,
+            top: ($(window).height() - dom.outerHeight()) / 2,
+            zIndex: 1
+        })
+    }
+
+
+    $("#sendCode").on("click", function () {
+        var phone = $('#account').val();
+        var reg = /^0?(13[0-9]|15[012356789]|17[013678]|18[0-9]|14[57])[0-9]{8}$/;
+        //前端验证手机号是否真实
+        if (reg.test(phone)) {
+            dataInit.ajax({
+                api: [[${apiPath.hasPhone}]],
+                params: {phone : phone,token:token,timestamp:timestamp},
+                fn: function (data) {
+                    if (data.data == 1) {
+                        dataInit.ajax({
+                            api: [[${apiPath.sendSmsCode}]],
+                            params: {
+                                phone: phone
+                            },
+                            fn: function (data) {
+                                if (data.code != 0) {
+                                    rongDialog.init({
+                                        ico: 2,
+                                        type: 1,
+                                        desc: data.msg || "验证码异常",
+                                        nextFn: function () {
+                                            $("#code").val("");
+                                            $("#code").onfocus;
+                                        }
+                                    });
+                                } else {
+                                    $('#account').attr("readonly","readonly").addClass("readonly");
+                                    numAdd();
+                                }
+                            }
+                        })
+                    } else { //手机号验证能过发送短信息
+                        rongDialog.init({
+                            ico: 2,
+                            type: 1,
+                            desc: "手机号不存在",
+                            nextFn: function () {
+                                window.location.href = "find";
+                            }
+                        });
+                    }
+                }
+            });
+        }else{
+            rongDialog.init({
+                ico: 2,
+                type: 1,
+                desc: "请输入正确的手机号码"
+            });
+        }
+    })
+
+    //时间重置
+    function numAdd() {
+        $('.postCode').hide();
+        $('.phoneNum').show();
+        function loadTime() {
+            var countdown = $('.phoneNum span').html();
+            if (countdown == 0) {
+                $('.phoneNum').hide();
+                $('.phoneNum span').html(120);
+                $('.postCode').show();
+                return;
+            }
+            countdown--;
+            $('.phoneNum span').html(countdown);
+            setTimeout(function () {
+                loadTime()
+            }, 1000)
+        }
+
+        loadTime();
+    }
+
+    /*//密码格式
+    $.validator.addMethod("pwdType", function (value) {
+        var reg = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$/;
+        return reg.test(value);
+    }, '密码必须由6-18位的数字或字母组成');
+    $("#findPwd").validate({
+        errorElement: "em",
+        rules: {
+            password: "pwdType"
+        },
+        messages: {
+            code: {
+                required: "短信验证码不能为空"
+            },
+            password: {
+                required: "请输入您的新登录密码",
+                minlength: "密码长度不能小于6个字符"
+            },
+        },
+        submitHandler: function () {
+            var phone = [[${phoneNum}]];
+            //验证验证码是否通过
+            dataInit.ajax({findPassword
+                params:{
+                    mobile:phone,
+                    code:$("#code").val(),
+                    password:$.md5($("#password").val())
+                },
+                fn:function(data){
+                    console.log(data);
+                    if(data.code == 0){
+                        window.location.href="findpwd3";
+                    }else{
+                        rongDialog.init({
+                            ico: 2,
+                            type: 1,
+                            desc: data.msg || "异常"
+                        });
+                    }
+                }
+            })
+        }
+    });
+    $(".goNext").on("click", function () {
+        $(".submit").click();
+    })*/
+
+
+    $(function () {
+        //回车事件
+        $("body").keydown(function (e) {
+            click(e)
+        });
+    })
+
+
+    function click(e) {
+        if (document.all) {
+            if (event.button == 2 || event.button == 3) {
+                console.log("谢谢您的合作！");
+                oncontextmenu = 'return false';
+            }
+        }
+        if (document.layers) {
+            if (e.which == 3) {
+                oncontextmenu = 'return false';
+            }
+        }
+    }
+
+    if (document.layers) {
+        document.captureEvents(Event.MOUSEDOWN);
+    }
+    document.onmousedown = click;
+    document.oncontextmenu = new Function("return false;")
+    document.onkeydown = document.onkeyup = document.onkeypress = function () {
+        if (window.event.keyCode == 123) {
+            window.event.returnValue = false;
+            return (false);
+        }
+    }
+</script>
+</body>
+</html>

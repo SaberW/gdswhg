@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/brand/brand.css'" >
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/public/detail.css'" >
+<div th:include="guangdong/public/leftBar :: copy"></div>
+<div id="page">
+    <div class="mui-content">
+        <div class="wrapper-detail">
+            <div id="venue-detail">
+                <!--<div class="wrapper-detail-box">
+                    <div class="img">
+                        <img id="image" class="lazy" src="http://183.131.126.132:8092/whgstatic/img/2017/201709/20170921/e7f2cf27ba3b41b680c1f10651db8800.jpg"/>
+                    </div>
+                    <div class="info">
+                        <div class="title">广东省文化馆-展览大厅</div>
+                        <p>区域：广州</p>
+                        <div class="label">标签：<span>品牌活动</span></div>
+                    </div>
+                    <div class="address">地址：<span id="address">长沙市橘子洲头</span></div>
+                    <a href="tel:15012345645"><div class="phone">电话：<span id="phone">130****1545</span></div></a>
+                </div>
+                <div class="wrapper-detail-box">
+                    <h2>场馆介绍</h2>
+                    <div class="detail-box-text" id="desc-cont">
+                        　　1885年的伦敦，杰克医生因其父亲患有疾病，决定开始寻找其根源的研究，但因医院理事会全员的反对而告吹。律师厄特森为了安慰杰克，带他来到西区的酒吧，邂逅了舞女露西。无路可走的杰克把自己作为实验对象，却分裂出了双重人格，白天是善良正直的医生杰克，晚上则化身成邪恶的海德，对曾经反对他的理事会成员实施谋杀计划。他终日徘徊在善恶之间，被内心的负罪感和犯罪快感拉扯撕裂。同时，与出身高贵的未婚妻和底层舞女的情感纠葛也令他无所适从……
+                    </div>
+                </div>-->
+            </div>
+            <div class="wrapper-detail-box" id="roomlistcont">
+                <h2>推荐活动室</h2>
+                <div class="scroll-box res-box mui-scroll-wrapper mui-slider-indicatorcode mui-segmented-control mui-segmented-control-inverted">
+                    <div class="mui-scroll" id="roomlist">
+                        <!--<a>
+                            <div class="mask">休息室</div>
+                            <img th:src="${basePath}+'/assets/img/img_demo/q1.jpg'" alt="demo">
+                        </a>
+                        <a>
+                            <div class="mask">录音室</div>
+                            <img th:src="${basePath}+'/assets/img/img_demo/q2.jpg'" alt="demo">
+                        </a>
+                        <a>
+                            <div class="mask">活动室</div>
+                            <img th:src="${basePath}+'/assets/img/img_demo/q3.jpg'" alt="demo">
+                        </a>
+                        <a>
+                            <div class="mask">休息室</div>
+                            <img th:src="${basePath}+'/assets/img/img_demo/q4.jpg'" alt="demo">
+                        </a>
+                        <a>
+                            <div class="mask">会议室</div>
+                            <img th:src="${basePath}+'/assets/img/img_demo/q5.jpg'" alt="demo">
+                        </a>
+                        <a>
+                            <div class="mask">休息室</div>
+                            <img th:src="${basePath}+'/assets/img/img_demo/q6.jpg'" alt="demo">
+                        </a>-->
+                    </div>
+                </div>
+            </div>
+
+            <div class="wrapper-detail-box">
+                <h2>相关资源</h2>
+                <div th:include="guangdong/resource/publicres :: copy" class="gather-nav-content" id="res-box" style="display: block"></div>
+            </div>
+        </div>
+    </div>
+    <nav class="mui-bar mui-bar-tab">
+        <div th:include="guangdong/public/collectionAndVoteup :: copy" class="zan-collection mui-tab-item"></div>
+        <div class="mui-tab-item" id="goNext"><a class="goNext" href="javascript:void(0)">选择活动室</a></div>
+    </nav>
+    <input type="hidden" id="temp_type" value="2">
+    <input type="hidden" id="toproject" value="WBGX">
+    <input type="hidden" id="commType">
+</div>
+<script type="text/javascript" th:inline="javascript">
+    var itemId = dataInit.getUrlParam('id');
+    var userId = $("#temp_userId").val();
+    var map_params = {};
+
+    $().ready(function(){
+        dataInit.ajax({
+            api: [[${apiPath.venueDetail}]],
+            fn: showActivityDetail,
+            params: {itemId: itemId}
+        });
+
+    })
+
+    function showActivityDetail(data) {
+        if(data && data.code == 0){
+            $("#venue-detail").html('');
+            var model = data.data;
+            var imgPath = data.imgPath + dataInit.getBigImage(model.image);
+            //活动时间
+            var summary = dataInit.removeHTMLTag(model.intro);
+            var description = dataInit.removeHTMLTag(model.description);
+            var facilitydesc = dataInit.removeHTMLTag(model.facilitydesc);
+            var show_1 = summary ? "" : "none";
+            var show_2 = description ? "" : "none";
+            var show_3 = facilitydesc ? "" : "none";
+            var tag = "";
+            var tag_html = "";
+            map_params = {
+                latitude:model.latitude,
+                longitude:model.longitude,
+                name: model.address,
+                address: model.address
+            }
+            if(model.tag){
+                tag = model.tag.split(',');
+                tag_html += "<div class='tag'><i class='iconfont icon-label'></i> 标签：";
+                for(var j in tag){
+                    tag_html += '<span>'+tag[j]+'</span>'
+                }
+                tag_html += "</div>";
+            }
+            var html = '<div class="wrapper-detail-box">\
+                            <div class="img">\
+                                <img id="image" class="lazy" src="'+imgPath+'"/>\
+                            </div>\
+                            <div class="info">\
+                                <div class="title">'+model.title+'</div>\
+                                <p><i class="iconfont icon-flag"></i> 区域：'+model.area+'</p>\
+                                '+tag_html+'\
+                            </div>\
+                            <div class="address" id="_address"><i class="iconfont icon-coordinates"></i> 地址：<span id="address">'+model.address+'</span></div>\
+                            <a href="tel:'+model.phone+'"><div class="phone"><i class="iconfont icon-mobilephone"></i> 电话：<span id="phone">'+model.phone+'</span></div></a>\
+                        </div>\
+                        <div class="wrapper-detail-box '+show_1+'">\
+                                <h2>场馆介绍</h2>\
+                                <div class="detail-box-text" id="desc-cont-1">\
+                                    '+summary+'\
+                                </div>\
+                        </div>\
+                        <div class="wrapper-detail-box '+show_2+'">\
+                                <h2>场馆描述</h2>\
+                                <div class="detail-box-text" id="desc-cont-2">\
+                                    '+description+'\
+                                </div>\
+                        </div>\
+                        <div class="wrapper-detail-box '+show_3+'">\
+                                <h2>设备描述</h2>\
+                                <div class="detail-box-text" id="desc-cont-3">\
+                                    '+facilitydesc+'\
+                                </div>\
+                        </div>';
+            var roomlist = model.roomList;
+            var roomHtml = "";
+            if(roomlist && roomlist.length){
+                for (var i in roomlist) {
+                    var roomModel = roomlist[i];
+                    var imgPath_room = data.imgPath + dataInit.getBigImage(roomModel.image);
+                    var title_room = roomModel.title;
+                    roomHtml += '<a href="roomDetail?id='+roomModel.itemId+'">\
+                            <div class="mask">'+title_room+'</div>\
+                            <img src="'+imgPath_room+'" alt="'+title_room+'">\
+                        </a>';
+                }
+                $('#goNext').find('a').attr('href','roomList?id='+itemId);
+                mui('.mui-scroll-wrapper').scroll();
+            }else {
+                $('#roomlistcont').remove();
+                $('#goNext').remove();
+            }
+            $("#venue-detail").html(html);
+            $("#roomlist").html(roomHtml);
+            mui('.wrapper-detail-box').on('tap','a',function(){document.location.href=this.href});
+            mui('.mui-bar-tab').on('tap','a',function(){document.location.href=this.href});
+            cont.init({
+                panelCls:"#desc-cont-1,#desc-cont-2,#desc-cont-3"
+            })
+            mui('body').on('tap','#_address',function () {
+                dataInit.menuMap(map_params)
+            });
+        }else {
+            mui.toast(data.msg);
+        }
+    }
+</script>
+</body>
+</html>

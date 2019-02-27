@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong_gx/public/resource :: copy"></head>
+<body>
+<script type="text/javascript" th:src="${basePath}+'/assets/js/public/sly.js'"></script>
+<!--<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/digital.js'"></script>-->
+<link rel="stylesheet" th:href="${basePath}+'/assets/style/center/center.css'">
+<div class="wrapper clearfix">
+    <div class="content">
+        <!--公共主头部开始-->
+        <div id="header" th:include="guangdong_gx/public/header :: copy"></div>
+        <!--公共主头部结束-->
+        <!--主体开始-->
+        <div class="container res-center-bg">
+            <div class="sys-crumbs">
+                <span><a href="../index">首页</a></span>
+                <i class="icon iconfont icon-enter"></i>
+                <span><a href="index">用户中心</a></span>
+                <i class="icon iconfont icon-enter"></i>
+                <span class="active" id="title">课程表</span>
+            </div>
+            <div class="page-list">
+                <div class="center-nav">
+                    <ul class="clearfix">
+                        <li class="active" data-type="1">
+                            课程表
+                        </li>
+                    </ul>
+                    <div class="sly-btn sly-next none">
+                        <i class="icon iconfont icon-enter"></i>
+                    </div>
+                    <div class="sly-btn sly-prev none">
+                        <i class="icon iconfont icon-return"></i>
+                    </div>
+                </div>
+                <div class="table-nav">
+                    <ul class="ks-cont" id="myTrainListCont" style="margin-right:-13px;">
+                        <li class="active" onclick="trainDateNow()">
+                            <div class="info">
+                                <div class="time">
+                                    <i class="icon iconfont icon-time"></i>
+                                    <p>当前培训</p>
+                                </div>
+                            </div>
+                            <div class="arrow">
+                                <i class="icon iconfont icon-jiantou"></i>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="msg-cont">
+                    <i class="icon iconfont icon-packup none"></i>
+                    <i class="icon iconfont icon-unfold none"></i>
+                    <i class="icon iconfont icon-laba"></i>
+                    <div class="ks-msg">
+                        <ul id="ks-msg"></ul>
+                    </div>
+                </div>
+                <ul class="center-list" id="modelList" style=" width:1150px; margin-top:30px; ">
+
+                </ul>
+                <!--分页开始 -->
+                <div class="green-black" id="artPagging" style="padding-bottom:30px;"></div>
+                <!--分页结束-->
+            </div>
+
+        </div>
+        <!--主体结束-->
+    </div>
+</div>
+<!--请假弹出框-->
+<div class="message-box-bg none">
+    <div class="message-cont">
+        <h2>请假申请</h2>
+        <p><i class="icon iconfont icon-prompt"></i>培训名称：<span id="cTitle"></span></p>
+        <p><i class="icon iconfont icon-time"></i>上课时间：<span id="cTime"></span></p>
+        <!--有审核结果则显示结果-->
+        <p class="msg m-1" id="courseMessage"><i class="icon iconfont icon-message"></i>审核结果：<span><!--审核失败 ( 打麻将不能少人 )--></span></p>
+        <textarea placeholder="请输入你的请假事由" id="courseMsg" name="message" maxlength="500"></textarea>
+        <!--审核中、审核通过，不显示该按钮-->
+        <div class="message-btn">
+            <a hrer="javascript:void(0);" class="btn btn-close-qj" style="background-color: #eee; background-image: none; border: 1px solid #ccc; color: black;">取消</a>
+            <a hrer="javascript" class="btn btn-submit-qj">提交</a>
+        </div>
+    </div>
+    <input type="hidden" name="courseid">
+    <input type="hidden" name="traid">
+    <input type="hidden" name="title">
+    <input type="hidden" name="starttime">
+    <input type="hidden" name="endtime">
+    <!--<div class="msg-close"></div>-->
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong_gx/public/footer :: copy"></div>
+<!--底部结束-->
+<a class="to-top"></a>
+<script type="text/javascript" th:inline="javascript">
+
+    var basePath = [[${basePath}]];
+    var userId = $("#temp_userId").val();
+    var serviceTime = "";
+    var traid,courseid;
+
+    //程序初始化
+    $().ready(function () {
+        trainData();
+        trainDateNow();
+        trainDataIn();
+    })
+
+    //按钮切换
+    function navChange() {
+        $('.table-nav ul li').on('click', function (e) {
+            $(this).addClass('active').siblings().removeClass('active');
+            if($(this).attr('data-traid')){
+                traid = $(this).attr('data-traid');
+                trainDateList();
+            }else{
+                traid = '';
+            }
+        })
+    }
+
+    //按钮滚动
+    function btnSly() {
+        //数量超过4个才即可滚动
+        if ($('.table-nav ul li').size() > 4) {
+            $('.sly-next,.sly-prev').fadeIn(1000);
+            $('.table-nav').sly({
+                itemNav: "smart",
+                horizontal: 1,
+                dragContent: 1,
+                scrollBy: 1,
+                nextPage: ".sly-next",
+                prevPage: ".sly-prev",
+                elasticBounds: 1
+            });
+        }
+    }
+
+    //消息滚动
+    function msgSly() {
+        //消息数量超过1个即可滚动
+        if ($('.ks-msg ul li').size() > 1) {
+            $('.icon-unfold,.icon-packup').fadeIn(1000);
+            $('.ks-msg').sly({
+                itemNav: "smart",
+                dragContent: 1,
+                scrollBy: 1,
+                elasticBounds: 1,
+                nextPage: ".icon-unfold",
+                prevPage: ".icon-packup",
+                //下面是加入自动滚动
+                cycleBy: 'items',
+                cycleInterval: 2000
+            });
+        }
+    }
+
+    //查询单个课程的详情信息
+    function courseDate(id){
+        dataInit.ajax({
+            api:[[${apiPath.traliveInfo}]],
+            params:{
+                userId:userId,
+                id:id
+            },
+            fn:function(data){
+                initCourseDate(data);
+            }
+        })
+    }
+
+    //初始化请假详情信息
+    function initCourseDate(data){
+        if(data.code == 0){
+            var model = data.data;
+            var title = model.title;
+            var starttime = moment(model.starttime).format('YYYY-MM-DD HH:mm');
+            var endtime = moment(model.endtime).format('HH:mm');
+            var time =starttime + ' - '+endtime;
+            $("#cTitle").text(title);
+            $("#cTime").text(time);
+            $("input[name='courseid']").val(model.id);
+            $("input[name='traid']").val(model.traid);
+            $("input[name='title']").val(title);
+            $("input[name='starttime']").val(model.starttime);
+            $("input[name='endtime']").val(model.endtime);
+            if(model.applyLeaveSuggest){
+                $("#courseMessage span").text(model.applyLeaveSuggest);
+                $("#courseMessage").show();
+                $(".message-btn a.btn-submit-qj").text("重新提交");
+            }else{
+                $("#courseMessage").hide();
+                $(".message-btn a.btn-submit-qj").text("提交")
+            }
+        }
+    }
+
+    //提交请假单
+    function getCourse(params){
+        dataInit.ajax({
+            api:[[${apiPath.leave}]],
+            params:params,
+            fn:function(data){
+                $('.message-box-bg').fadeOut();
+                if(data.code == 0){
+                    rongDialog.init({ico: 1, type: 1, desc: "申请已提交",nextFn:function(){
+                        var page = $("#artPagging span[class='current']").text();
+                        if(traid){
+                            trainDateList(page);
+                        }else{
+                            trainDateNow(page);
+                        }
+                    }});
+                }else{
+                    rongDialog.init({ico: 2, type: 1, desc: data.msg || "申请提交异常"});
+                }
+                $("#courseMsg").val("")
+            }
+        })
+    }
+
+    //打开请假弹出框
+    function openDialog(id) {
+        $('.message-box-bg').fadeIn();
+        courseid = id;
+        courseDate(id);
+
+        $(window).keyup(function (e) {
+            if (e.keyCode == 27) {
+                $('.message-box-bg').fadeOut();
+            }
+        });
+        $('.msg-close').on('click', function () {
+            $('.message-box-bg').fadeOut();
+
+        });
+        $('.message-btn .btn-close-qj').on('click', function () {
+            $('.message-box-bg').fadeOut();
+        });
+
+        $('.message-btn .btn-submit-qj').off('click');
+        $('.message-btn .btn-submit-qj').one('click',subLeave);
+
+        function subLeave(){
+            //$('.message-btn .btn-submit-qj').unbind('click');
+            if(!$("#courseMsg").val()){
+                rongDialog.init({ico: 2, type: 1, desc:"请填写请假事由"});
+                $('.message-btn .btn-submit-qj').one('click',subLeave);
+                return;
+            }
+            var params = {
+                traid : $("input[name='traid']").val(),
+                userid:userId,
+                courseid : $("input[name='courseid']").val(),
+                title :  $("input[name='title']").val(),
+                starttime :  $("input[name='starttime']").val(),
+                endtime :  $("input[name='endtime']").val(),
+                name : $("#temp_nickName").val(),
+                cause : $("#courseMsg").val()
+            }
+            getCourse(params);
+        }
+    }
+
+    //获取所有培训数据
+    function trainData() {
+        dataInit.ajax({
+            api: [[${apiPath.mytraCenterList}]],
+            params: {
+                userid: userId,
+                cultid: $.cookie('cultid')
+            },
+            fn: function (data) {
+                createTrainNav(data);
+            }
+        })
+    }
+
+    //生成培训导航
+    function createTrainNav(data) {
+        if (data.code == 0 && data.data.infoList.length > 0) {
+            var panel = $("#myTrainListCont");
+            serviceTime = data.data.nowdate;
+            for (var i in data.data.infoList) {
+                var model = data.data.infoList[i];
+                var state = "";
+                if (model.starttime < serviceTime && serviceTime < model.endtime) {
+                    state = "<em>进行中</em>";
+                }
+                panel.append('\
+                    <li data-traid="' + model.id + '">\
+                        <div class="info">\
+                            <div class="desc">\
+                                <h2>' + model.title + '</h2>\
+                                <p>' + moment(model.endtime).format("YYYY-MM-DD") + '到期</p>\
+                                ' + state + '\
+                            </div>\
+                        </div>\
+                        <div class="arrow">\
+                            <i class="icon iconfont icon-jiantou"></i>\
+                        </div>\
+                    </li>');
+            }
+        }
+        navChange();
+        btnSly();
+    }
+
+    //获取当前培训的数据列表
+    function trainDateNow(page, rows) {
+        var params_page = page || 1;
+        var params_rows = rows || 5;
+        var params = {
+            page: params_page,
+            pageSize: params_rows,
+            userid: userId,
+            cultid: $.cookie('cultid')
+        }
+        rongDialog.init({ico: 3, type: 1, desc: '', overTime: 8000});
+        dataInit.ajax({
+            api: [[${apiPath.traliveList}]],
+            params: params,
+            fn: function (data) {
+                rongDialog.closeMaskPanel();
+                createTrainNow(data,1);
+                dataInit.pageInit('artPagging', params_page, params_rows, data.total, trainDateNow);
+            }
+        })
+    }
+
+    //获取单个培训的数据列表
+    function trainDateList(page, rows) {
+        var params_page = page || 1;
+        var params_rows = rows || 5;
+        var params = {
+            page: params_page,
+            pageSize: params_rows,
+            userid: userId,
+            traid:traid
+        }
+        rongDialog.init({ico: 3, type: 1, desc: '', overTime: 8000});
+        dataInit.ajax({
+            api: [[${apiPath.kecheng}]],
+            params: params,
+            fn: function (data) {
+                rongDialog.closeMaskPanel();
+                createTrainNow(data,0);
+                dataInit.pageInit('artPagging', params_page, params_rows, data.total, trainDateList);
+            }
+        })
+    }
+
+    //生成当前培训列表
+    function createTrainNow(data,type) {
+        var panel = $("#modelList");
+        panel.html("");
+        if (data.code == 0 && data.rows.length > 0) {
+            for (var i=0; i< data.rows.length; i++) {
+                var model = data.rows[i];
+                var state = model.vstate;
+                var stateCls = '';
+                var stateTxt = '';
+                var startTime = moment(model.starttime).format('YYYY-MM-DD HH:mm');
+                var endTime =  moment(model.endtime).format('HH:mm');
+                var time = startTime + "-" + endTime;
+                var title = '';
+                if(type == 0){
+                    title = model.title+'（第'+(i+1)+'课）';
+                }else{
+                    title = model.title;
+                }
+                var em = "";
+                var end = "";
+                var btnCls = "none";
+                var click = "javascript:void(0)"
+
+                var listState = 0;
+                if(model.isover > 0){
+                    listState = 2;
+                }else if(model.liveing == 1){
+                    listState = 1;
+                }else{
+                    listState = 0;
+                }
+                var stynode = '';
+                if(model.islive == 0){
+                    switch (state){
+                        case 0:
+                            stateTxt = "请假申请中";
+                            stateCls = 's-2';
+                            break;
+                        case 1:
+                            stateTxt = "已请假";
+                            stateCls = 's-2';
+                            break;
+                        case 2:
+                            stateTxt = "请假失败";
+                            stateCls = 's-1';
+                            click = 'openDialog('+model.id+')';
+                            break;
+                        default:
+                            if (model.starttime > data.data){
+                                stateTxt = "请假";
+                                stateCls = 's-1';
+                                click = 'openDialog('+model.id+')';
+                            }else{
+                                stynode='style="display:none"';
+                            }
+                    }
+                }else {
+                    if(listState == 0){
+                        stateCls = 's-1';
+                        stateTxt = '直播未开始';
+                        click = 'toTraLiveDetail('+model.tid+')';
+                    }else if(listState == 1){
+                        stateCls = 's-1';
+                        stateTxt = '进入直播';
+                        click = 'toTraLiveDetail('+model.tid+')';
+                    }else if(listState == 2){
+                        stateCls = 's-1';
+                        stateTxt = '查看回顾';
+                        click = 'toTraLiveDetail('+model.tid+')';
+                    }
+                }
+                if(model.islive == 0){
+                    if (model.starttime < serviceTime && serviceTime < model.endtime) {
+                        em = "<em>正在上课</em>";
+                    }
+                    if(model.starttime > serviceTime){
+                        btnCls = "";
+                    }
+                    if(model.endtime < serviceTime){
+                        btnCls = "";
+                        stateCls = 's-2';
+                        end = "";
+                        click = "";
+                    }
+                }else{
+                    btnCls = " ";
+                    end = " ";
+                }
+
+                panel.append('\
+                    <li class="table-item">\
+                        <div class="date">\
+                            <i></i>\
+                            '+time+'\
+                        </div>\
+                        <div class="info">\
+                            <div class="desc">\
+                                <a href="javascript:void(0);" class="'+ end +'" >\
+                                    '+ em +'\
+                                    ' + title + '\
+                                </a>\
+                                <div class="state '+stateCls+' '+btnCls+'" '+stynode+' onclick="'+click+'">'+stateTxt+'</div>\
+                            </div>\
+                        </div>\
+                    </li>');
+            }
+        }else {
+            panel.append("<div class='public-no-message'></div>");
+        }
+    }
+
+    function toTraLiveDetail(id) {
+        window.location.href = basePath+'/'+[[${cultsite}]]+'/zxkc/detail?id='+id;
+    }
+    //获取所有正在上课的课程数据
+    function trainDataIn() {
+        var params = {
+            userid: userId,
+            cultid: $.cookie('cultid')
+        }
+        dataInit.ajax({
+            api:[[${apiPath.inClass}]],
+            params:params,
+            fn:function(data){
+                createTrainIn(data);
+            }
+        })
+    }
+
+    //生成正在上课的课程滚动通知
+    function createTrainIn(data){
+        var panel = $("#ks-msg");
+        panel.html("");
+        if (data.code == 0 && data.data.length > 0) {
+            for(var i in data.data){
+                var model = data.data[i];
+                panel.append('\
+                    <li>\
+                        '+model.title+'\
+                        <em>\
+                            正在上课\
+                        </em>\
+                    </li>');
+            }
+        }else{
+            panel.parent().parent().hide();
+        }
+        msgSly();
+    }
+
+    //请假 traliveInfo
+
+
+</script>
+</body>
+</html>

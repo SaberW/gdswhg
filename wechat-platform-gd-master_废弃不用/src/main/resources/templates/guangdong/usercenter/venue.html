@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/usercenter/usercenter.css'" >
+<script th:src="${basePath}+'/assets/js/jquery.qrcode.min.js'" type="text/javascript"></script>
+<div th:include="guangdong/public/leftBar :: copy"></div>
+<div id="page">
+    <div class="mui-content">
+        <div class="current">
+            <!-- 顶栏-->
+            <div class="top mui-row">
+                <div class="mui-col-sm-6 mui-col-xs-6 active">
+                    <a href="javascript:void(0)" data-type="now">当前预定</a>
+                </div>
+                <div class="cl"></div>
+                <div class="mui-col-sm-6 mui-col-xs-6">
+                    <a href="javascript:void(0)" data-type="old">历史预定</a>
+                </div>
+            </div>
+            <!-- 顶栏-->
+            <div class="blank"></div>
+            <!--订单详情-->
+            <div id="model-list-panel" class="mui-scroll-wrapper order" style="top:62px;">
+                <div class="mui-scroll">
+                    <div id="model-list">
+                        <!--<div class="main">
+                            <div class="main-top">
+                                <p>订单号： 12546593344526</p>
+                                <span class="time">2017-01-30 17:21</span>
+                            </div>
+                            <div class="main-m">
+                                <div class="img">
+                                    <img class="lazy" src="http://mpic.tiankong.com/8a5/a3a/8a5a3add3a77d981060fbd858dff9bda/EV601-043.jpg"/>
+                                </div>
+                                <div class="detail">
+                                    <h3>新中式露露服饰服饰服饰服饰</h3>
+                                    <p>
+                                        <i class="icon iconfont icon-location"></i>
+                                        <span>广东省文化服务中心</span>
+                                    </p>
+                                    <p>
+                                        <i class="icon iconfont icon-time"></i>
+                                        <span>2017-03-12 &nbsp;17:30-18:00</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="main-bot">
+                                <div class="seat">
+                                    <span>2排3座</span>
+                                    <span>2排3座</span>
+                                </div>
+                                <div class="ticket">
+                                    <p>未取票</p>
+                                    <button>退订</button>
+                                    <button class="frame ">取票码</button>
+                                </div>
+                            </div>
+                        </div>-->
+                    </div>
+                </div>
+            </div>
+            <!--订单详情-->
+        </div>
+        <input type="hidden" id="type" value="now">
+        <div class="qr-wrapper">
+            <div>
+                <div class="qr-code">
+                    <div style="background-color:#fff;">
+                        <div style="line-height:40px; text-align: center; overflow: auto; margin-top:20px; padding-top:15px;">取票码 </div>
+                        <div class="qr-number" style="line-height:20px;margin-top:-5px;margin-bottom:20px; padding-bottom:20px; text-align: center; overflow: auto; font-weight:700; border-bottom:1px #ddd solid;"></div>
+                        <div class="qr-img" style="text-align:center"></div>
+                        <div style="text-align:center;margin-top:10px;padding-bottom:20px;">出示二维码进行验票</div>
+                    </div>
+                    <div class="close-qr" style="text-align: center" onclick="colseQr()">
+                        <img th:src="${basePath}+'/assets/img/public/msg-close.png'">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="history">
+             &lt;!&ndash; 顶栏&ndash;&gt;
+             <div class="top mui-row">
+                 <div class="mui-col-sm-6 mui-col-xs-6">
+                     <a href="#">当前活动</a>
+                 </div>
+                 <div class="cl"></div>
+                 <div class="mui-col-sm-6 mui-col-xs-6">
+                     <a href="#" class="active">历史活动</a>
+                 </div>
+             </div>
+             &lt;!&ndash; 顶栏&ndash;&gt;
+             <div class="blank"></div>
+             &lt;!&ndash;订单详情&ndash;&gt;
+             <div class="order">
+                 <div class="main">
+                     <div class="main-top">
+                         <p>订单号：&nbsp;12546593344526</p>
+                         <span class="time">2017-01-30 17:21</span>
+                     </div>
+                     <div class="main-m">
+                         <div class="img">
+                             <img class="lazy" src="http://mpic.tiankong.com/8a5/a3a/8a5a3add3a77d981060fbd858dff9bda/EV601-043.jpg"/>
+                         </div>
+                         <div class="detail">
+                             <h3>新中式露露服饰服饰服饰服饰</h3>
+                             <p>
+                                 <i class="icon iconfont icon-location"></i>
+                                 <span>广东省文化服务中心</span>
+                             </p>
+                             <p>
+                                 <i class="icon iconfont icon-time"></i>
+                                 <span>2017-03-12 &nbsp;17:30-18:00</span>
+                             </p>
+                         </div>
+                     </div>
+                     <div class="main-bot">
+                         <div class="seat">
+                             <span>2排3座</span>
+                             <span>2排3座</span>
+                         </div>
+                         <div class="ticket">
+                             <p>未取票</p>
+                             <button>退订</button>
+                             <button class="frame ">取票码</button>
+                         </div>
+                     </div>
+                 </div>
+             </div>
+             &lt;!&ndash;订单详情&ndash;&gt;
+         </div>-->
+    </div>
+</div>
+<script type="text/javascript" th:inline="javascript">
+    var userid = $("#temp_userId").val();
+    var type = $("#type").val();
+    $(document).ready(function () {
+        modelData();
+        mui(".top").on('tap','.mui-col-sm-6',function () {
+            $(this).addClass('active').siblings().removeClass('active');
+            $("#type").val($(this).find('a').attr('data-type'));
+            type = $("#type").val();
+            $("#model-list").html('');
+            modelData();
+            mui('#model-list-panel').pullRefresh().scrollTo(0,0,0);
+            mui('#model-list-panel').pullRefresh().refresh(true);
+        })
+    })
+    function refreshPage() {
+        $("#model-list").html('');
+        modelData();
+    }
+    function modelData(page, size) {
+        var page = page || 1;
+        var size = size || 10;
+        dataInit.ajax({
+            api: [[${apiPath.myVenue}]],
+            params: {
+                page: page,
+                pageSize: size,
+                userId: userid,
+                nowtype:$("#type").val() || 'now'
+            },
+            forceUpdate: false,
+            fn: function (data) {
+                var params = {
+                    page: page,
+                    size: size,
+                    total: data.total
+                }
+                dataInit.htmlAdd(page, showModelHtml(data));
+                dataInit.pullUp(params, modelData);
+            }
+        })
+    }
+
+    function showModelHtml(data) {
+        if(data && data.code == 0){
+            var html = '';
+            if(data.rows.length>0){
+                for(var i in data.rows){
+                    var model = data.rows[i];
+                    var ordercreatetime = moment(model.crtdate).format('YYYY-MM-DD HH:mm:ss');//订单生成时间
+                    var imgPath = model.imgurl?data.imgPath + dataInit.getSmallImage(model.imgurl):'';
+                    var state = model.state;
+                    var delBtn = "",ticketNone = '';
+                    var status =''; //订单状态
+                    switch(state)
+                    {
+                        case 0:
+                            status = "申请中";
+                            ticketNone = 'none'
+                            break;
+                        case 1:
+                            status = "已取消";
+                            ticketNone = 'none'
+                            break;
+                        case 2:
+                            status = "申请失败";
+                            ticketNone = 'none'
+                            break;
+                        default:
+                            status = "预订成功"
+                    }
+                    var venueid = model.roomid; //场馆id
+                    var name = model.title; //场馆名称
+                    var address = model.address + model.location; //场馆地址
+                    var orderphoneno = model.phone;  //取票手机号
+                    var ordernumber = model.orderid; //取票码
+                    var seatCode = model.ticketstatus; //取票状态
+                    var actUrl = [[${basePath}]]+"/cg/venueroom?id="; //场馆详情页链接
+                    var id = model.orderid; //场馆订单ID
+                    var orderUser = model.ordercontact; //预订联系人
+                    var orderPhone = model.ordercontactphone; //预订联系手机号
+                    var ticketcheckstate = model.ticketcheckstate == 1 ?  "未验票" : "已验票";  //验票状态
+                    var ticketstatus = model.ticketstatus == 1 ?  "未取票" : "已取票"; //取票状态
+                    var ordersummary  = model.ordersummary; //订单摘要
+                    var showType =  state == 2 ? "" : "none";
+                    var delId = model.id; //为了删除而加的ID
+                    var orderTime = model.timeday;
+                    var orderStart = model.timestart;
+                    var orderEnd = model.timeend;
+                    //活动室开始时间
+                    var actTime = moment(orderTime+orderStart).format("x");
+                    orderTime = moment(orderTime).format("YYYY-MM-DD")+" "+moment(orderStart).format("HH:mm")+"-"+moment(orderEnd).format("HH:mm");
+                    //状态为未取票时或活动开始时间离当前时间只剩48小时
+                    if(model.state == 0 && type == "now" && data.data.twoDayAgo < actTime){
+                        delBtn = "<button onclick=\"delOrder("+delId+")\">取消预订</button>";
+                    }
+                    if(type == "old" && state == 1){
+                        delBtn = "<button onclick=\"delThis("+delId+")\">删除订单</button>";
+                    }
+                    if(type == 'old') ticketNone = 'none';
+                    html+='<div class="main">'+
+                        '    <div class="main-top">'+
+                        '        <p>订单号： '+id+'</p>'+
+                        '        <span class="time">'+ordercreatetime+'</span>'+
+                        '    </div>'+
+                        '    <a href="javascript:goPage(\''+model.roomid+'\')">'+
+                        '    <div class="main-m">'+
+                        '           <div class="img">'+
+                        '               <img class="lazy" src="'+imgPath+'"/>'+
+                        '           </div>'+
+                        '           <div class="detail">'+
+                        '               <h3>'+name+'</h3>'+
+                        '               <p>'+
+                        '                   <i class="icon iconfont icon-location"></i>'+
+                        '                   <span>'+address+'</span>'+
+                        '               </p>'+
+                        '               <p>'+
+                        '                   <i class="icon iconfont icon-dianhua"></i>'+
+                        '                   <span>'+orderphoneno+'</span>'+
+                        '               </p>'+
+                        '           </div>'+
+                        '    </div>'+
+                        '       </a>'+
+                        '    <div class="main-bot">'+
+                        '        <div class="book">'+
+                        '        <p>预定时间：'+orderTime+'</p>'+
+                        '        <p class="error-msg '+showType+'">拒绝理由：'+ordersummary+'</p>'+
+                        '        </div>'+
+                        '        <div class="ticket">'+
+                        '            <p>'+status+'</p>'+delBtn+
+                        '            <button class="frame '+ticketNone+'" onclick="showCode(\''+ordernumber+'\')">取票码</button>'+
+                        '        </div>'+
+                        '    </div>'+
+                        '</div>';
+                }
+            }else {
+                html = "<div class='newbility-no-msg'></div>";
+            }
+            return html;
+        }else {
+            mui.toast(data.msg || '获取订单信息失败')
+        }
+    }
+
+    //删除订单
+    function delThis(id){
+        var orderId  = id;
+        var btnArray = ['否', '是'];
+        mui.confirm('您确定删除订单吗？', '', btnArray, function (e) {
+            if (e.index == 1) {
+                dataInit.ajax({
+                    api:[[${apiPath.delVen}]],
+                    params:{
+                        orderId : orderId
+                    },
+                    fn:function(data){
+                        if(data.code == 0){
+                            mui.toast('订单删除成功！')
+                            refreshPage();
+                        }else{
+                            mui.toast(data.msg || '订单删除失败！')
+                        }
+                    }
+                })
+            }
+        });
+    }
+    //取消订单
+    function delOrder(id){
+        var orderId  = id;
+        var btnArray = ['否', '是'];
+        mui.confirm('您确定取消预订吗？', '', btnArray, function (e) {
+            if (e.index == 1) {
+                dataInit.ajax({
+                    api:[[${apiPath.venueUnOrder}]],
+                    params:{
+                        userId:userid,
+                        orderId: orderId
+                    },
+                    fn:function(data){
+                        if(data.code == 0){
+                            mui.toast('活动室取消成功！')
+                            refreshPage();
+                        }else{
+                            mui.toast(data.msg || '活动室取消失败！')
+                        }
+                    }
+                })
+            }
+        });
+    }
+
+    function showCode(number){
+        $(".qr-img").html('');
+        $(".qr-number").html('');
+        $(".qr-number").html(number);
+        $(".qr-img").qrcode({width: 160, height: 160, text:String(number)});
+        $(".qr-wrapper").show();
+    }
+    function colseQr(){
+        $(".qr-wrapper").hide();
+
+    }
+
+    function menuQr(txt, ticketStatus, ready) {
+        if (!ready)
+            return;
+        $('.qr-wrapper').fadeIn(250, function () {
+            $('.qr-wrapper').on('click', function () {
+                $(this).fadeOut(250, function () {
+                    $('.qr-wrapper').off('click');
+                });
+            });
+        });
+        $(".qr-code").remove();
+        $('.qr-wrapper > div').append('<div class="qr-code"></div>');
+        $(".qr-code").qrcode({render: "canvas", width: 200, height: 200, text: txt});
+    }
+    function goPage(id) {
+        var actUrl = [[${basePath}]]+"/venue/roomDetail?id="; //活动详情页链接
+        window.location.href = actUrl+id;
+    }
+</script>
+</body>
+</html>

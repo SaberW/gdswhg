@@ -1,0 +1,49 @@
+<header th:fragment="copy" xmlns:th="http://www.w3.org/1999/xhtml">
+    <script th:src="${basePath}+'/assets/js/plugs/supply.fav.min.js'"></script>
+    <script type="text/javascript" th:inline="javascript">
+        var id = dataInit.getUrlParam("id");
+        var userId = $("#temp_userId").val();
+        var fav_type = $('#temp_type').val();
+        var url = window.location.href;
+        var temp_url = [[${basePath}]];
+        temp_url = temp_url.length;
+        url = url.substring(temp_url,url.length);
+        $().ready(function () {
+            favInit();
+        });
+        function favInit(){
+            var params = {
+                api:[[${apiPath.isLightenColle}]],
+                userId:userId,
+                cmrefid:id,
+                cmreftyp:fav_type
+            }
+            fav.isFav(params,function(){
+                $(".ks-add-Fav").on('click',function(){
+                    var fav_title =$("#title").text() || $("#supply-title").text();
+                    var params = {
+                        api:[[${apiPath.addFav}]],
+                        cmrefid:id,
+                        cmreftyp:fav_type,
+                        cmopttyp:0,
+                        cmuid:userId,
+                        cmurl:url,
+                        toproject:"NBGX",
+                        cmtitle:fav_title
+                    }
+                    fav.addFav(params);
+                })
+                $(".ks-del-Fav").on('click',function(){
+                    var fav_title =$("#title").text() || $("#supply-title").text();
+                    var params = {
+                        api:[[${apiPath.delListFav}]],
+                        cmuid:userId,
+                        cmreftyp:fav_type,
+                        cmrefid:id
+                    }
+                    fav.delFav(params);
+                })
+            });
+        }
+    </script>
+</header>

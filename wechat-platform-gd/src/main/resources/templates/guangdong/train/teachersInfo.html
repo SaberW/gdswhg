@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/public/detail.css'" >
+<script th:src="${apiPath.statistics}" id="whgtongji"></script>
+<div th:include="guangdong/public/leftBar :: copy"></div>
+<div id="page">
+    <div class="mui-content">
+        <div class="wrapper-detail">
+            <div class="wrapper-detail-box teacher-info-cont">
+                <div class="img">
+                    <img id="image" class="blur-img lazy" src="" height="150"/>
+                    <div class="face">
+                        <div class="face-img">
+                            <img src="" >
+                        </div>
+                    </div>
+                </div>
+                <h1 id="name"></h1>
+                <div class="teacher-project" id="city"></div>
+                <div class="teacher-project" id="works"></div>
+                <!--<div style="text-align: center;" id="visit_Count"></div>-->
+                <div class="teacher-detail-title">
+                    讲师简介
+                    <div class="hr"></div>
+                </div>
+                <div class="teacher-detail">
+                    <div id="teacher-detail"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <nav class="mui-bar mui-bar-tab">
+        <div th:include="guangdong/public/collectionAndVoteup :: copy" class="zan-collection mui-tab-item"></div>
+    </nav>
+    <input type="hidden" id="temp_type" value="31">
+    <input type="hidden" id="commType">
+    <input type="hidden" id="toproject" value="ZXPX">
+</div>
+<script type="text/javascript" th:inline="javascript">
+    var itemId = dataInit.getUrlParam('id');
+    var userid = $("#temp_userId").val();
+    $().ready(function(){
+        dataInit.ajax({
+            api: [[${apiPath.teaDetail}]],
+            params: {id: itemId},
+            fn:showTeaDetail
+        });
+    })
+
+    function showTeaDetail(data){
+        if(data.code == 0){
+            model = data.data;
+            var traaera = model.city;
+            var imgPath = data.imgPath + dataInit.getBigImage(model.teacherpic);
+            $("#name").text(model.name);
+            $(".face-img img").attr("src",imgPath);
+            $("#image").attr("src",imgPath);
+            $("#city").text(traaera);
+            getVisitSumCount4url(itemId, function(count){
+                $("#works").html("专长："+model.teachertype + ' &nbsp;&nbsp;&nbsp; 访问量：'+count);
+            });
+            $("#teacher-detail").html(dataInit.removeHTMLTag(model.teacherdesc));
+
+        }else{
+            mui.toast(data.msg || '服务器异常');
+        }
+
+
+    }
+
+</script>
+</body>
+</html>

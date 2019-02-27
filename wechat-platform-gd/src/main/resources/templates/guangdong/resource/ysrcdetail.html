@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/public/detail.css'">
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/resource/digital.css'">
+<div th:include="guangdong/public/leftBar :: copy"></div>
+<div id="page">
+    <div class="mui-content">
+        <div class="wrapper-detail">
+            <div class="wrapper-detail-box" id="person-detail">
+                <!--<div class="person-header">
+                    <div class="logo">
+                        <img src="http://p1.music.126.net/LeAnYk_eIob1SyLdcukOXw==/109951163059774882.jpg">
+                    </div>
+                    <div class="person-name">阿岚</div>
+                    <div class="person-detail mui-clearfix">
+                        <div class="person-text">性别：男</div>
+                        <div class="person-text">出生日期：1960年1月</div>
+                        <div class="person-text">地区：广州</div>
+                        <div class="person-text">职务：粤海艺术团团长</div>
+                    </div>
+                </div>-->
+            </div>
+            <div class="wrapper-detail-box">
+                <div class="gather-nav">
+                    <span class="gather-nav-list active">简介</span>
+                    <span class="gather-nav-list">工作经历</span>
+                    <span class="gather-nav-list">获奖情况</span>
+                    <span class="gather-nav-list">作品</span>
+                </div>
+                <div class="gather-nav-content gather-nav-content-qw on">
+                    <div class="gather-content-list">
+                        <div class="info" id="abstract">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="gather-nav-content gather-nav-content-qw">
+                    <div class="gather-content-list">
+                        <div class="info" id="work">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="gather-nav-content gather-nav-content-qw">
+                    <div class="gather-content-list">
+                        <div class="info" id="jiangli">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="gather-nav-content gather-nav-content-qw">
+                    <div class="gather-content-list">
+                        <!--<div class='newbility-no-msg2' style="height: 300px"></div>-->
+                        <div id="ref-resource" class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" th:inline="javascript">
+    var id = dataInit.getUrlParam('id');
+    var userid = $("#temp_userId").val();
+    $().ready(function () {
+        mui(".gather-nav").on("tap", ".gather-nav-list", function () {
+            $(this).addClass("active").siblings().removeClass("active");
+            $(".gather-nav-content").eq($(".gather-nav .gather-nav-list").index(this)).addClass("on").siblings().removeClass('on');
+        });
+        dataInit.ajax({
+            api: [[${apiPath.artistInfo}]],
+            fn: showpersonList,
+            params: {id:id}
+        });
+
+        loadResources();
+    })
+    function showpersonList(data) {
+        if(data && data.data && data.code == 0){
+            $("#person-detail").html('');
+            var img = data.imgPath + data.data.imgurl;
+            var sex = '男';
+            if(data.data.sex == '0'){
+                sex = '女';
+            }
+            var birthday = moment(data.data.birthday).format("YYYY年MM月DD日");
+            var html = '<div class="person-header">'+
+                '    <div class="logo">'+
+                '        <img class="lazy" src="'+img+'" alt="'+data.data.name+'">'+
+                '    </div>'+
+                '    <div class="person-name">'+data.data.name+'</div>'+
+                '    <div class="person-detail mui-clearfix">'+
+                '        <div class="person-text">性别：'+sex+'</div>'+
+                '        <div class="person-text">出生日期：'+birthday+'</div>'+
+                '        <div class="person-text">地区：'+data.data.area+'</div>'+
+                '        <div class="person-text">职务：'+data.data.job+'</div>'+
+                '    </div>'+
+                '</div>';
+            $("#person-detail").html(html);
+            $("#abstract").html(data.data.summary);
+            $("#work").html(data.data.live);
+            $("#jiangli").html(data.data.prize);
+        }
+    }
+
+    //作品加载
+    function loadResources(){
+        var jq_content = $("#ref-resource");
+        var row_temp = '<div class="ref_item">\
+        <a>\
+        <img src="">\
+        <p></p>\
+        </a>\
+        </div>';
+
+        dataInit.ajax({
+            api: [[${apiPath.qwRefResources}]],
+            params: {
+                refid:id,
+                reftype: 52,
+                page:1,
+                pageSize:10000
+            },
+            fn: function(data){
+                if (!data || !data.rows || !data.rows.length){
+                    return;
+                }
+                for(var i in data.rows){
+                    var row = data.rows[i];
+                    var jq_item = $(row_temp);
+                    jq_content.append(jq_item);
+
+                    var imgurl;
+                    switch (row.enttype){ //区分图、视、音、文档不同类型图像显示
+                        case '1': imgurl = row.enturl; break;
+                        case '2': imgurl = row.deourl; break;
+                        case '3': imgurl = [[${basePath}]]+'/assets/img/gather/mp3.jpg'; break;
+                        case '4':
+                            //imgurl = [[${basePath}]]+'/assets/img/gather/music.jpg';
+                            imgurl = [[${basePath}]] + dataInit.getFileTypeIcon(row.enturl, '/assets/img/gather/xiazai.jpg');
+                            break;
+                    }
+                    jq_item.find("a").attr("href", "javascript:goPage('"+row.libid+"','"+row.resid+"','"+row.enttype+"')");
+                    jq_item.find("img").attr("src", imgurl);
+                    jq_item.find("p").text(row.name);
+                }
+            }
+        });
+    }
+
+    function goPage(lid,rid,type) {
+        if(type == '1'){
+            window.location.href = [[${basePath}]] + '/resource/digitalimage?libid='+lid+'&resid='+rid;
+        }else if(type == '2') {
+            window.location.href = [[${basePath}]] + '/resource/digitalvideo?libid='+lid+'&resid='+rid;
+        }else if(type == '3') {
+            window.location.href = [[${basePath}]] + '/resource/digitalaudio?libid='+lid+'&resid='+rid;
+        }else if(type == '4') {
+            window.location.href = [[${basePath}]] + '/resource/digitalfile?libid='+lid+'&resid='+rid;
+        }
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.creatoo.hn.dao.mapper.api.ApiInsSupplyMapper">
+
+    <sql id="supplyListExample">
+        <!--<if test="cultid!=null and cultid!=''.toString()">
+            and  ${alias}.cultid = #{cultid}
+        </if>-->
+        <if test="cultid!=null">
+            and xxx.cultid in
+            <foreach collection="cultid" item="item" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="deptid!=null">
+            and xxx.deptid in
+            <foreach collection="deptid" item="item" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
+        <!--<if test="gxtype!=null and gxtype!=''.toString()">
+            and  ${alias}.gxtype = #{gxtype}
+        </if>-->
+        <if test="etype!=null and etype!=''.toString()">
+            and  ${alias}.etype = #{etype}
+        </if>
+        <if test="province!=null and province!=''.toString()">
+            and  ${alias}.province = #{province}
+        </if>
+        <if test="city!=null and city!=''.toString()">
+            and  ${alias}.city = #{city}
+        </if>
+        <if test="area!=null and area!=''.toString()">
+            and  ${alias}.area = #{area}
+        </if>
+        <if test="psprovince!=null and psprovince!=''.toString()">
+            and  ${alias}.psprovince = #{psprovince}
+        </if>
+        <if test="pscity!=null and pscity!=''.toString()">
+            and  ${alias}.pscity LIKE "%"#{pscity}"%"
+        </if>
+        <if test="beginDay!=null">
+            and  ${alias}.statemdfdate &gt;= #{beginDay}
+        </if>
+        <if test="endDay!=null">
+            and  ${alias}.statemdfdate &lt;= #{endDay}
+        </if>
+        <if test="srchkey!=null and srchkey!=''.toString()">
+            and (
+            ${alias}.title LIKE "%"#{srchkey}"%"
+            or  ${alias}.content LIKE "%"#{srchkey}"%"
+            )
+        </if>
+    </sql>
+    <!--查询供需信息列表-->
+    <select id="selectSupplyList" resultType="hashmap">
+        select xxx.*
+        ,cult.name as cultidName
+        ,cult.picture as cultidImg
+        FROM whg_sys_cult cult, whg_supply xxx
+        WHERE xxx.state = 6 and cult.id = xxx.cultid
+
+        <include refid="supplyListExample">
+            <property name="alias" value="xxx"/>
+        </include>
+
+        <choose>
+            <when test="sortType!=null and sortType=='1'.toString()">
+                order by xxx.publishdate desc
+            </when>
+            <otherwise>
+                order by xxx.publishdate desc
+            </otherwise>
+        </choose>
+
+    </select>
+    <!--统计供需计数-->
+    <select id="countSupplyList" resultType="int">
+        select count(xxx.id)
+        FROM whg_sys_cult cult, whg_supply xxx
+        WHERE xxx.state = 6 and cult.id = xxx.cultid
+
+        <include refid="supplyListExample">
+            <property name="alias" value="xxx"/>
+        </include>
+    </select>
+
+
+
+    <sql id="fkListExample">
+        <if test="cultid!=null">
+            and xxx.cultid in
+            <foreach collection="cultid" item="item" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
+
+        <if test="deptid!=null">
+            and xxx.deptid in
+            <foreach collection="deptid" item="item" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
+
+        <if test="etype!=null and etype!=''.toString()">
+            and  ${alias}.type = #{etype}
+        </if>
+        <if test="province!=null and province!=''.toString()">
+            and  ${alias}.province = #{province}
+        </if>
+        <if test="city!=null and city!=''.toString()">
+            and  ${alias}.city = #{city}
+        </if>
+        <if test="area!=null and area!=''.toString()">
+            and  ${alias}.area = #{area}
+        </if>
+        <if test="psprovince!=null and psprovince!=''.toString()">
+            <!-- and  ${alias}.psprovince = #{psprovince} -->
+            and ${alias}.fkid in (select supplyid from whg_supply_time where psprovince like "%"#{province}"%")
+        </if>
+        <if test="pscity!=null and pscity!=''.toString()">
+            <!-- and  ${alias}.pscity LIKE "%"#{pscity}"%" -->
+            and ${alias}.fkid in (select supplyid from whg_supply_time where pscity like "%"#{pscity}"%")
+        </if>
+        <if test="beginDay!=null">
+            and  ${alias}.createtime &gt;= #{beginDay}
+        </if>
+        <if test="endDay!=null">
+            and  ${alias}.createtime &lt;= #{endDay}
+        </if>
+        <if test="srchkey!=null and srchkey!=''.toString()">
+            and  ${alias}.title LIKE "%"#{srchkey}"%"
+        </if>
+    </sql>
+    <!--查询供给信息列表-->
+    <select id="selectFkProjectList" resultType="hashmap">
+        select xxx.*
+        ,cult.name as cultidName
+        ,cult.picture as cultidImg
+        FROM whg_sys_cult cult, whg_fk_project xxx
+        WHERE xxx.state = 6 and cult.id = xxx.cultid
+
+        <include refid="fkListExample">
+            <property name="alias" value="xxx"/>
+        </include>
+
+        <choose>
+            <when test="sortType!=null and sortType=='1'.toString()">
+                order by xxx.publishdate desc
+            </when>
+            <otherwise>
+                order by xxx.publishdate desc
+            </otherwise>
+        </choose>
+    </select>
+    <!--统计供给计数-->
+    <select id="countFkProjectList" resultType="int">
+        select count(xxx.id)
+        FROM whg_fk_project xxx
+        WHERE xxx.state = 6
+
+        <include refid="fkListExample">
+            <property name="alias" value="xxx"/>
+        </include>
+    </select>
+</mapper>

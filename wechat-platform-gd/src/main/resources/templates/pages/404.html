@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0"/>
+    <link th:href="${basePath}+'/assets/css/error_.css'" rel="stylesheet">
+</head>
+<body>
+<img th:src="${basePath}+'/assets/img/public/err-404.png'" class="errImg">
+<div class="errMsg">对不起，您要访问的页面可能不存在了</div>
+<a class="back" th:href="${basePath}">返回首页</a>
+</body>
+</html>

@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong_gx/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/style/public/list.css'">
+<div class="wrapper clearfix">
+    <div class="content">
+        <!--公共主头部开始-->
+        <div id="header" th:include="guangdong_gx/public/header :: copy"></div>
+        <!--公共主头部结束-->
+        <!--主体开始-->
+        <div class="categoryChange">
+            <div class="row clearfix">
+                <div class="title">区域：</div>
+                <div class="adrList" id="areList"></div>
+            </div>
+            <div class="row clearfix">
+                <div class="title">艺术类型：</div>
+                <div class="adrList" id="condition_1"></div>
+            </div>
+            <div class="row clearfix">
+                <div class="title">培训类型：</div>
+                <div class="adrList" id="condition_2"></div>
+            </div>
+            <div class="row clearfix">
+                <div class="title">播放状态：</div>
+                <div class="adrList">
+                    <span class="item active"><a href="javascript:void(0)" onclick="conditionChange(this,3)">全部</a></span><span
+                        class="item"><a href="javascript:void(0)" onclick="conditionChange(this,3,'0')">直播预告</a>
+                </span>
+                    <span class="item"><a href="javascript:void(0)" onclick="conditionChange(this,3,'1')">正在直播</a></span>
+                    <span class="item"><a href="javascript:void(0)" onclick="conditionChange(this,3,'2')">精彩回顾</a></span>
+                </div>
+            </div>
+        </div>
+        <div class="container content">
+            <div class="filter">
+                <div class="filter-list">
+                    <div class="clearfix page-type">
+                        <span class="active"><a href="javascript:void(0)" data-type="1">智能排序</a></span>
+                        <span><a href="javascript:void(0)" data-type="2">热门直播</a></span>
+                        <span><a href="javascript:void(0)" data-type="3">最新发布</a></span>
+                    </div>
+                </div>
+                <div class="search">
+                    <input id="searchValue" onkeydown="if(event.keyCode==13) searchList();" placeholder="输入关键词" type="text">
+                    <a href="javascript:searchList()"><i class="iconfont icon-search"></i></a>
+                </div>
+            </div>
+            <div class="page-list">
+                <ul class="center-list clearfix" id="modelList">
+                    <!--<li class="live-item">
+                        <a href="detail" target="_blank"></a>
+                        <div class="img">
+                            <div class="desc">
+                                <i class="icon iconfont icon-time"></i>
+                                <span>距直播还有10天</span>
+                            </div>
+                            <div class="state s-3">直播预告</div>
+                            <img th:src="${basePath}+'/assets/img/img_demo/demo.png'">
+                        </div>
+                        <div class="info">
+                            <h2>线下培训标题线下，标题线下培。标题线下培训标题</h2>
+                            <p>时间：<span>2017-09-10至2017-10-10</span></p>
+                            <p>人数：<span>仅剩20人</span></p>
+                            <p>年龄：<span>7-12岁</span></p>
+                        </div>
+                    </li>
+                    <li class="live-item">
+                        <a href="detail" target="_blank"></a>
+                        <div class="img">
+                            <div class="desc none">
+                                <i class="icon iconfont icon-time"></i>
+                                <span>报名结束仅剩12天</span>
+                            </div>
+                            <div class="state s-1">正在直播</div>
+                            <img th:src="${basePath}+'/assets/img/img_demo/demo.png'">
+                        </div>
+                        <div class="info">
+                            <h2>线下培训标题线下，标题线下培。标题线下培训标题</h2>
+                            <p>时间：<span>2017-09-10至2017-10-10</span></p>
+                            <p>人数：<span>仅剩20人</span></p>
+                            <p>年龄：<span>7-12岁</span></p>
+                        </div>
+                    </li>
+                    <li class="live-item">
+                        <a href="detail" target="_blank"></a>
+                        <div class="img">
+                            <div class="desc none">
+                                <i class="icon iconfont icon-time"></i>
+                                <span>报名结束仅剩12天</span>
+                            </div>
+                            <div class="state s-2">精彩回顾</div>
+                            <img th:src="${basePath}+'/assets/img/img_demo/demo.png'">
+                        </div>
+                        <div class="info">
+                            <h2>线下培训标题线下，标题线下培。标题线下培训标题</h2>
+                            <p>时间：<span>2017-09-10至2017-10-10</span></p>
+                            <p>人数：<span>仅剩20人</span></p>
+                            <p>年龄：<span>7-12岁</span></p>
+                        </div>
+                    </li>
+                    <li class="live-item last">
+                        <a href="detail" target="_blank"></a>
+                        <div class="img">
+                            <div class="desc none">
+                                <i class="icon iconfont icon-time"></i>
+                                <span>报名结束仅剩12天</span>
+                            </div>
+                            <div class="state s-2">精彩回顾</div>
+                            <img th:src="${basePath}+'/assets/img/img_demo/demo.png'">
+                        </div>
+                        <div class="info">
+                            <h2>线下培训标题线下，标题线下培。标题线下培训标题</h2>
+                            <p>时间：<span>2017-09-10至2017-10-10</span></p>
+                            <p>人数：<span>仅剩20人</span></p>
+                            <p>年龄：<span>7-12岁</span></p>
+                        </div>
+                    </li>-->
+                </ul>
+                <!--分页开始 -->
+                <div class="green-black" id="artPagging" style="margin-bottom: 40px;margin-top:60px;"></div>
+                <!--分页结束-->
+            </div>
+        </div>
+        <!--主体结束-->
+    </div>
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong_gx/public/footer :: copy"></div>
+<!--底部结束-->
+<a class="to-top"></a>
+<script type="text/javascript" th:inline="javascript">
+    var userId = $("#temp_userId").val();
+    var pageType = 1; //排序按钮
+    //筛选条件  searhVal为关键词 sort为排序方式 condition_1,2,3为筛选条件从上往下数
+    var sort = "", condition_1 = "", condition_2 = "", condition_3 = ""; searhVal = "";
+
+    //程序初始化
+    $().ready(function () {
+        showAre($.cookie("city"));
+        navChange();
+        cateCreate();
+        dataPage();
+    })
+
+    //排序切换
+    function navChange() {
+        $('.page-type span').on('click', function (e) {
+            $(this).addClass('active').siblings().removeClass('active');
+            pageType = $(this).children().attr('data-type');
+            if (pageType == 1) {
+                sort = '0';
+            } else if (pageType == 2) {
+                sort = '1';
+            } else {
+                sort = '2';
+            }
+            dataPage();
+        })
+    }
+
+    //筛选条件切换
+    function conditionChange(dom,index,data) {
+        var that = $(dom);
+        setActive(dom);
+        if (data) {
+            if(index == 1){
+                condition_1 = data;
+            }else if(index == 2){
+                condition_2 = data;
+            }else if(index == 3){
+                condition_3 = data;
+            }
+        } else{
+            if(index == 1){
+                condition_1 = "";
+            }else if(index == 2){
+                condition_2 = "";
+            }else if(index == 3){
+                condition_3 = "";
+            }
+        }
+        //alert(sort+'\n'+condition_1+'\n'+condition_2+'\n'+condition_3+'\n'+searhVal);
+        dataPage();
+    }
+
+    //加载分类
+    function cateCreate(){
+        dataInit.ajax({
+            api:[[${apiPath.getTypes}]],
+            params:{cultid:$.cookie('cultid'),type:1},
+            fn:function(data){
+                cateCondition_1(data);
+            }
+        })
+        dataInit.ajax({
+            api:[[${apiPath.getTypes}]],
+            params:{cultid:$.cookie('cultid'),type:16},
+            fn:function(data){
+                cateCondition_2(data);
+            }
+        })
+    }
+
+    //生成艺术分类
+    function cateCondition_1(data){
+        if(data.code == 0 && data.rows.length > 0){
+            var panel = $('#condition_1');
+            panel.html("");
+            panel.append('<span class="item active"><a href="javascript:void(0)" onclick="conditionChange(this,1)">全部</a></span>');
+            for(var i in data.rows){
+                var model = data.rows[i];
+                panel.append('<span class="item"><a href="javascript:void(0)" onclick="conditionChange(this,1,\''+model.id+'\')">'+model.name+'</a></span>');
+            }
+        }
+    }
+
+    //生成培训分类
+    function cateCondition_2(data){
+        if(data.code == 0 && data.rows.length > 0){
+            var panel = $('#condition_2');
+            panel.html("");
+            panel.append('<span class="item active"><a href="javascript:void(0)" onclick="conditionChange(this,2)">全部</a></span>');
+            for(var i in data.rows){
+                var model = data.rows[i];
+                panel.append('<span class="item"><a href="javascript:void(0)" onclick="conditionChange(this,2,\''+model.id+'\')">'+model.name+'</a></span>');
+            }
+        }
+    }
+
+    //加载数据
+    function dataPage(page,rows) {
+        var params_page = page || 1;
+        var params_rows = rows || 12;
+        var params = {
+            userid:userId,
+            cultid:$.cookie('cultid'),
+            arttype:condition_1,
+            etype:condition_2,
+            area: $("#area").val(), //区域
+            city: $("#city").val(), //市
+            province: $("#province").val(), //省
+            deptid: $("#deptid").val(), //部门id
+            livestate: condition_3,
+            sort:sort,
+            title:$("#searchValue").val(),
+            page:params_page,
+            pageSize:params_rows,
+        }
+        //调用接口
+        rongDialog.init({ico: 3, type: 1, desc: '', overTime: 8000});
+        dataInit.ajax({
+             api: [[${apiPath.nowkecheng}]],
+             params: params,
+             fn: function(data){
+                 rongDialog.closeMaskPanel();
+                 showModelList(data);
+                 dataInit.pageInit('artPagging', params_page, params_rows, data.total, dataPage);
+             }
+         })
+    }
+
+    //生成HTML
+    function showModelList(data) {
+        var modelList = $("#modelList");
+        modelList.html("");
+        if (data.code == 0) {
+            if (data.rows.length > 0) {
+                for (var i in data.rows) {
+                    var model = data.rows[i];
+
+                    var title = model.title;
+                    var stime = moment(model.starttime).format('YYYY-MM-DD');
+                    var etime = moment(model.endtime).format('YYYY-MM-DD');
+                    var curtPeoples = model.curtPeoples;
+                    var restPeoples = model.restPeoples;
+                    var maxnumber = model.maxnumber;
+                    var listState = model.listState;//0-未开始(直播预告), 1-正在直播，2-已结束(精彩回顾)
+                    var listStateDesc = listState == 0 ? '直播预告' : (listState == 1 ? "正在直播" : "精彩回顾");
+                    var listStateNone = listState == 0 ? '' : 'none';
+                    var enrolState = model.enrolState;//0-未开始，1-可报名, 2-已报满, 3-已结束, 4-不满足条件, 5-已报名
+                    var showPeople = '';
+                    if(enrolState == 3 || enrolState == 2){
+                        showPeople = curtPeoples+' / '+maxnumber+' 人';
+                    }else{
+                        showPeople = curtPeoples+' / '+maxnumber+' 人';
+                    }
+                    var imgurl = data.imgPath+model.trainimg;
+                    var mustsignup = model.mustsignup;
+
+                    var html = ''+
+                        '<li class="live-item">                                           '+
+                        '	<a href="detail?id='+model.id+'" target="_blank"></a>                         '+
+                        '	<div class="img">                                             '+
+                        '		<div class="desc '+listStateNone+'">                                        '+
+                        '			<i class="icon iconfont icon-time"></i>               '+
+                        '			<span>距直播还有'+model.restTimes+model.restTimesUnit+'</span>                           '+
+                        '		</div>                                                    '+
+                        '		<div class="state s-3">'+listStateDesc+'</div>                     '+
+                        '		<img src="'+imgurl+'">'+
+                    '	</div>                                                        '+
+                    '	<div class="info">                                            '+
+                    '		<h2>'+title+'</h2>   '+
+                    '		<p>时间：<span>'+stime+'至'+etime+'</span></p>          '+
+                        (mustsignup == 1 ? '		<p>人数：<span>'+showPeople+'</span></p>                        ' : '<p>人数：<span>不限</span></p>')+
+                        (mustsignup == 1 ? '		<p>年龄：<span>'+model.age+model.ageUnit+'</span></p>                          ' : '<p>年龄：<span>不限</span></p>')+
+                    '	</div>                                                        '+
+                    '</li>                                                            ';
+
+
+                    modelList.append(html);
+                }
+            } else {
+                modelList.append("<div class='public-no-message'></div>");
+            }
+        } else {
+            rongDialog.init({ico: 2, type: 1, desc: data.msg});
+        }
+    }
+
+    //搜索框
+    function searchList() {
+        if($("#searchValue").val()){
+            searhVal = $("#searchValue").val();
+            dataPage();
+        }else {
+            searhVal = "";
+            dataPage();
+        }
+    }
+
+    function setActive(dom){
+        $(dom).parent('span').addClass("active").siblings().removeClass("active");
+    }
+
+    function setArea(dom, id) {
+        var _province=$(dom).attr("_province");
+        var _city=$(dom).attr("_city");
+        var _area=$(dom).attr("_area");
+        $("#province").val("");
+        $("#city").val("");
+        $("#area").val("");
+        if(_province&&_province!=""){
+            $("#province").val(_province);
+        }
+        if(_city&&_city!=""){
+            $("#city").val(_city);
+        }
+        if(_area&&_area!=""){
+            $("#area").val(_area);
+        }
+        dataPage();
+        setActive(dom);
+    }
+</script>
+</body>
+</html>

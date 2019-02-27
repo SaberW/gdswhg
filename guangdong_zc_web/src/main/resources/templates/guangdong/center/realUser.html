@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/style/center/center.css'">
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/jquery-form.js'"></script>
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/rong.validate.js'"></script>
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/rong.message.js'"></script>
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/jquery.md5.js'"></script>
+<div class="wrapper clearfix">
+    <div class="content">
+        <!--公共主头部开始-->
+        <div id="header" th:include="guangdong/public/header :: copy"></div>
+        <!--公共主头部结束-->
+        <!--主体开始-->
+        <div class="container res-center-bg">
+            <div class="sys-crumbs">
+                <span><a href="../index">首页</a></span>
+                <i class="icon iconfont icon-enter"></i>
+                <span><a href="index">个人中心</a></span>
+                <i class="icon iconfont icon-enter"></i>
+                <span class="active">安全设置</span>
+            </div>
+            <div class="page-list" id="step-1">
+                <div class="chapter"></div>
+                <div class="center-nav">
+                    <ul class="clearfix">
+                        <li data-type="1"  onclick="window.location.href='pwdChange'">
+                            修改密码
+                        </li>
+                        <li data-type="2"  onclick="window.location.href='phoneChange'">
+                            修改绑定手机
+                        </li>
+                        <li  class="active" data-type="3">
+                            实名认证
+                        </li>
+                    </ul>
+                </div>
+                <div class="form-cont">
+                    <form method="post" id="userForm" enctype="multipart/form-data">
+                        <h3>
+                            <em>1</em>姓名
+                        </h3>
+                        <div class="row">
+                            <div class="input-bg">
+                                <input class="input-panel" name="realName" id="realName" minlength="2" maxlength="15"
+                                       placeholder="请输入您的真实姓名" required>
+                            </div>
+                        </div>
+                        <h3>
+                            <em>2</em>身份证号
+                        </h3>
+                        <div class="row">
+                            <div class="check-box-bg">
+                                <label><input type="radio" name="idcardtype" value="1" checked>中国大陆</label>
+                                <label><input type="radio" name="idcardtype" value="2">港澳台</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-bg">
+                                <input class="input-panel" name="userCode" id="userCode" maxlength="18"
+                                       placeholder="请输入您的身份证号码" >
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-bg">
+                                <input class="input-panel" name="birthday" id="birthday" maxlength="18"
+                                       placeholder="请输入您的出生日期" maxlength="20">
+                            </div>
+                        </div>
+                        <h3>
+                            <em>3</em>性别
+                        </h3>
+                        <div class="row">
+                            <div class="check-box-bg">
+                                <label><input type="radio" name="sex" value="1" checked>男 </label>
+                                <label><input type="radio" name="sex" value="0">女 </label>
+                            </div>
+                        </div>
+                        <input class="submit none" type="submit" value="Submit">
+                    </form>
+                    <form method="post" id="userForm2" enctype="multipart/form-data">
+                        <h3>
+                            <em>4</em>身份证正面照
+                        </h3>
+                        <div class="row">
+                            <div class="card-bg" id="cardA">
+                                <a href="javascript:void(0)" onclick="$('#cardAimg').click();" class="card cardA js__p_cardA_start"><span>点击上传（身份证正面）</span></a>
+                                <div class="none">
+                                    <input type="hidden" name="filemake" value="idcardface">
+                                    <input type="hidden" name="userId" th:value="${session.wbgx_sessUserKey.userId}">
+                                    <input type="file" name="file" id="cardAimg"
+                                           accept="image/png,image/gif,image/jpeg" onchange="initRead(this,'.cardA','正面')" required></div>
+                            </div>
+                        </div>
+                    </form>
+                    <form method="post" id="userForm3" enctype="multipart/form-data">
+                        <h3>
+                            <em>5</em>身份证反面照
+                        </h3>
+                        <div class="row">
+                            <div class="card-bg" id="cardB">
+                                <a href="javascript:void(0)" onclick="$('#cardBimg').click();" class="card cardB js__p_cardB_start"><span>点击上传（身份证反面）</span></a>
+                                <div class="none">
+                                    <input type="hidden" name="filemake" value="idcardback">
+                                    <input type="hidden" name="userId" th:value="${session.wbgx_sessUserKey.userId}">
+                                    <input type="file" name="file" id="cardBimg"
+                                           accept="image/png,image/gif,image/jpeg" onchange="initRead(this,'.cardB','反面')" required></div>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="lq-msg none"></div>
+                    <div class="row">
+                        <input type="submit" id="next-btn" class="none">
+                        <a href="javascript:void(0)" class="next-btn ok-next" style="display:none;margin-left:0px;">确定</a>
+                        <a href="javascript:void(0)" class="next-btn ok-reres" style="display:none;margin-left:20px;">重新认证</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!--主体结束-->
+    </div>
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong/public/footer :: copy"></div>
+<!--底部结束-->
+<a class="to-top"></a>
+<script type="text/javascript" th:inline="javascript">
+    var userId = $("#temp_userId").val();
+    //身份证格式
+    $.validator.addMethod("userCode", function (value, element, params) {
+        var idcardtype = '1';
+        if (params && params.length){
+            var refel = params[0];
+            var idcardtype = $(refel).val();
+        }
+
+        if (idcardtype == '2'){
+            /*var taiwanreg=/^[A-Z][0-9]{9}$/;
+            var xianggangreg=/^[A-Z][0-9]{6}\([0-9A]\)$/;
+            var aomenreg=/^[157][0-9]{6}\([0-9]\)$/;
+
+            return taiwanreg.test(value) || xianggangreg.test(value) || aomenreg.test(value);*/
+            return value && $.trim(value)!='';
+        }else{
+            var reg = /^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X|x)$/;
+            return reg.test(value);
+        }
+    }, '请输入正确的身份证号码');
+    //出生日期
+    $.validator.addMethod("birthday", function (value, element, params) {
+        var idcardtype = '1';
+        if (params && params.length){
+            var refel = params[0];
+            var idcardtype = $(refel).val();
+        }
+
+        if (idcardtype == '2'){
+            return /^\d{4}-\d{2}-\d{2}$/.test(value);
+        }else{
+            return true;
+        }
+    }, '请输入正确的出生日期,如2000-01-01');
+
+    function selectIdcardtype(){
+        $('[name=idcardtype]').off().on('change', function(){
+            var idcardtype = $('[name=idcardtype]:checked').val();
+            if (idcardtype && idcardtype=='2'){
+                $("#birthday").parents(".row").show();
+            }else{
+                $("#birthday").val('');
+                $("#birthday").parents(".row").hide();
+            }
+        })
+    }
+
+    function submitImg(frm, success){
+        $(frm).ajaxSubmit({
+            url: [[${apiPath.uploadCardPic}]],
+            type: "post",
+            dataType: "json",
+            success: function (data) {
+                if (success && $.isFunction(success)){
+                    success(data);
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert(JSON.stringify(errorThrown))
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        selectIdcardtype();
+        userDataInit();
+        $("#userForm").validate({
+            debug: true,
+            errorElement: "em",
+            rules: {
+                realName: "required",
+                userCode: "required",
+                //userCode: "userCode"
+                userCode: {userCode:['[name=idcardtype]:checked']},
+                birthday: {birthday:['[name=idcardtype]:checked']}
+            },
+            messages: {
+                realName: {
+                    required: "请输入您的真实姓名"
+                },
+                userCode: {
+                    required: "请输入您的身份证号码"
+                }
+            },
+            submitHandler: function () {
+                //上传用户基本信息
+                dataInit.ajax({
+                    api: [[${apiPath.saveCardInfo}]],
+                    params: {
+                        userId: [[${session.wbgx_sessUserKey.userId}]],
+                        idcard: $("#userCode").val(),
+                        name: $("#realName").val(),
+                        sex:$("input[name='sex']:checked").val(),
+                        idcardtype:$("input[name='idcardtype']:checked").val(),
+                        birthday: $('#birthday').val()
+                    },
+                    fn: function (data) {
+                        if (data.code == 0) {
+
+                            function submitImgLast(frm){
+                                if (($(frm).find(".card-bg a.card img").size())){
+                                    rongDialog.init({
+                                        ico: 1,
+                                        type: 1,
+                                        desc: '认证已提交',
+                                        nextFn: function () {
+                                            window.location.href='realUser';
+                                        }
+                                    });
+                                    return;
+                                }
+                                submitImg(frm, function(data){
+                                    if (data.code != 0){
+                                        rongDialog.init({
+                                            ico: 2,
+                                            type: 1,
+                                            desc: data.msg || '认证出错'
+                                        });
+                                        return;
+                                    }
+                                    rongDialog.init({
+                                        ico: 1,
+                                        type: 1,
+                                        desc: '认证已提交',
+                                        nextFn: function () {
+                                            window.location.href='realUser';
+                                        }
+                                    })
+                                });
+                            }
+
+                            if (!$("#userForm2 .card-bg a.card img").size()){
+                                submitImg("#userForm2", function(data){
+                                    if (data.code != 0){
+                                        rongDialog.init({
+                                            ico: 2,
+                                            type: 1,
+                                            desc: data.msg || '认证出错'
+                                        });
+                                        return;
+                                    }
+                                    submitImgLast("#userForm3");
+                                });
+                            }else{
+                                submitImgLast("#userForm3");
+                            }
+
+
+
+                            //上传身份证照
+                            /*$("#userForm2").ajaxSubmit({
+                                url: [[${apiPath.uploadCardPic}]],
+                                type: "post",
+                                dataType : "json",
+                                success: function (data) {
+                                    //上传反面照
+                                    if(data.code == 0) {
+                                        $("#userForm3").ajaxSubmit({
+                                            url: [[${apiPath.uploadCardPic}]],
+                                            type: "post",
+                                            dataType: "json",
+                                            success: function (data) {
+                                                if (data.code == 0) {
+                                                    rongDialog.init({
+                                                        ico: 1,
+                                                        type: 1,
+                                                        desc: '认证已提交',
+                                                        nextFn: function () {
+                                                            window.location.href='realUser';
+                                                        }
+                                                    })
+                                                } else {
+                                                    rongDialog.init({
+                                                        ico: 2,
+                                                        type: 1,
+                                                        desc: data.msg || '认证出错'
+                                                    })
+                                                }
+
+                                            },
+                                            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                                                alert(JSON.stringify(errorThrown))
+                                            }
+                                        });
+                                    }else{
+                                        rongDialog.init({
+                                            ico: 2,
+                                            type: 1,
+                                            desc: data.msg || '认证出错'
+                                        })
+                                    }
+                                },
+                                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                                    alert(JSON.stringify(XMLHttpRequest))
+                                }
+                            });*/
+                        } else {
+                            rongDialog.init({
+                                ico: 2,
+                                type: 1,
+                                desc: '身份证已存在'
+                            })
+                        }
+                    }
+                })
+            }
+        });
+    });
+    //用户数据初始化
+    function userDataInit(){
+        dataInit.ajax({
+            api:[[${apiPath.userInfo}]],
+            params:{
+                userId:[[${session.wbgx_sessUserKey.userId}]]
+            },
+            fn:function(data){
+                if(data.code === 0){
+                    $("#cardA a,#cardB a").find("img").remove();
+                    $("#realName").val(data.data.realName);
+                    //$("#userCode").val(data.data.idCard);
+                    var idcard = data.data.idCard;
+                    if (data.data.authState == 1){
+                        var mln = idcard.length;
+                        if (mln>3){
+                            var cln = Math.ceil(mln/2);
+                            var idx = cln==1? cln : Math.floor(cln/2);
+                            var cxxx = '';
+                            var reg = new RegExp("^(.{"+idx+"})(.*)(.{"+idx+"})$");
+                            if (reg.test(idcard)){
+                                var cnum = RegExp.$2.length;
+                                while(cxxx.length < cnum){
+                                    cxxx+='*';
+                                }
+                            }
+                            idcard = idcard.replace(reg, '$1'+cxxx+'$3');
+                        }
+                        $("#userCode").removeAttr("name");
+                        $("#userForm2,#userForm3").hide();
+                    }
+                    //$("#userCode").val(data.data.idCard);
+                    $("#userCode").val(idcard);
+
+                    if(data.data.sex == "1"){
+                        $("input[name='sex']").eq(0).attr("checked","checked");
+                    }else{
+                        $("input[name='sex']").eq(1).attr("checked","checked");
+                    }
+                    if (data.data.idcardtype && data.data.idcardtype == 2){
+                        $("input[name='idcardtype']").eq(1).attr("checked","checked");
+                        $("#birthday").parents(".row").show();
+                        $("#birthday").val(moment(data.data.birthday).format('YYYY-MM-DD'));
+                    }else{
+                        $("input[name='idcardtype']").eq(0).attr("checked","checked");
+                        $("#birthday").parents(".row").hide();
+                    }
+
+                    if(data.data.checkmsg && data.data.authState == 2){
+                        $(".lq-msg").show().html("审核失败原因："+data.data.checkmsg+"（ 请修改后重新提交 ）");
+                        $(".ok-reres").show();
+                    }else {
+                        $(".lq-msg").hide();
+                        $(".ok-reres").hide();
+                    }
+
+                    if(data.data.idcardface){
+                        $("#cardA a").append("<img src='"+data.imgPath+data.data.idcardface+"' width='100%' height='100%'>").find("span").remove();
+                    }
+                    if(data.data.idcardback){
+                        $("#cardB a").append("<img src='"+data.imgPath+data.data.idcardback+"' width='100%' height='100%'>").find("span").remove();
+                    }
+                    if(data.data.authState != 0 && data.data.authState != 2){
+                        $("#realName").attr({ readonly: 'true' });
+                        $("#userCode").attr({ readonly: 'true' });
+                        $("#cardA a, #cardB a").removeAttr("onclick");
+                        $(".goNext,.submit").remove();
+                        $("[name='idcardtype']").attr('disabled', true);
+                        $("[name='sex']").attr('disabled', true);
+                        $("#birthday").attr({ readonly: 'true' });
+                    }
+                    var chapter  = $('.chapter ');
+                    var ok_next = $('.ok-next');
+                    //0-待完善; 1-已认证;  2-认证失败; 3-提交审核中
+                    switch(data.data.authState){
+                        case 1:
+                            chapter.addClass("c-ok");
+                            break;
+                        case 2:
+                            chapter.addClass("c-no");
+                            break;
+                        case 3:
+                            chapter.addClass("c-sh");
+                            break;
+                        default:
+                            ok_next.show();
+
+                    }
+                }
+                //console.log(data);
+            }
+        })
+    }
+
+    $(".ok-next").on("click", function () {
+        $(".submit").click();
+    });
+
+    $(".ok-reres").on("click", function () {
+        /*$("input[name='realName'],input[name='userCode']").val('');
+        $('.chapter ').removeClass();
+        $(".cardA,.cardB").find('img').remove();
+        $(".lq-msg").hide();
+        $(this).hide();
+        $('.cardA').append("<span>点击上传（身份证正面）</span>");
+        $('.cardB').append("<span>点击上传（身份证反面）</span>");
+        $('.ok-next').show();*/
+
+        $(".submit").click();
+    });
+
+    function initRead(file, dom, txt) {
+        var cls = 'ready';
+        if (file.files.length > 0) {
+            $(dom).addClass(cls);
+            $(dom).find("span").remove();
+            $(dom).find("img").remove();
+            $(dom).append("<span></span>");
+            $(dom).find('span').html('（身份证' + txt + '照）已选择');
+        } else {
+            $(dom).removeClass(cls);
+            $(dom).find("span").remove();
+            $(dom).find("img").remove();
+            $(dom).append("<span></span>");
+            $(dom).find('span').html('点击上传（身份证' + txt + '）');
+        }
+    }
+
+</script>
+</body>
+</html>

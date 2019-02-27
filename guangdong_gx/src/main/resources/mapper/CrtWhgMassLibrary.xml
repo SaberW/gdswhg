@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.creatoo.hn.dao.mapper.mass.CrtWhgMassLibraryMapper">
+    <!-- 统计资源库中是否有数据 -->
+    <select id="countByTableName" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT count(*) FROM ${tableName}
+    </select>
+
+    <!-- 条件统计发布量 -->
+    <select id="countByTableNameExample" resultType="int">
+        SELECT count(*) FROM ${tableName} xxx
+        <where>
+            <if test="example.state != null">
+                and xxx.state = #{example.state}
+            </if>
+            <if test="example.delstate != null">
+                and xxx.delstate = #{example.delstate}
+            </if>
+            <if test="example.beginPublishtime !=null">
+                and xxx.publishtime &gt;= #{example.beginPublishtime}
+            </if>
+            <if test="example.endPublishtime !=null">
+                and xxx.publishtime &lt;= #{example.endPublishtime}
+            </if>
+            <if test="example.month != null">
+                and month(xxx.publishtime) = #{example.month}
+            </if>
+        </where>
+    </select>
+
+    <!-- 条件统计发布量 -->
+    <select id="countByTableNameExample1" resultType="hashmap">
+        SELECT count(xxx.id) rescount,sum(xxx.ressize) ressize FROM ${tableName} xxx
+        <where>
+            <if test="example.state != null">
+                and xxx.state = #{example.state}
+            </if>
+            <if test="example.delstate != null">
+                and xxx.delstate = #{example.delstate}
+            </if>
+            <if test="example.beginPublishtime !=null">
+                and xxx.publishtime &gt;= #{example.beginPublishtime}
+            </if>
+            <if test="example.endPublishtime !=null">
+                and xxx.publishtime &lt;= #{example.endPublishtime}
+            </if>
+            <if test="example.month != null">
+                and month(xxx.publishtime) = #{example.month}
+            </if>
+        </where>
+    </select>
+
+    <select id="countByTop" resultType="hashmap">
+        select etype, eid, count ,
+            (select sum(visit_count) from whg_visit_data where visit_type=1 and visit_eid = eid) as pxcount,
+            (select sum(visit_count) from whg_visit_data where visit_type=2 and visit_eid = eid) as wxcount
+        from (
+            select
+                sum(t.visit_count) as count,
+                t.visit_type as type ,
+                t.visit_etype as etype,
+                t.visit_eid as eid
+            from whg_visit_data t
+            where t.visit_eid is not null and t.visit_eid &lt;&gt; ''
+
+            and t.visit_eid in (
+                select trs.id from (
+                <foreach collection="tablenames" item="item" index="index" separator=" UNION ">
+                    select t1.id as id from ${item} t1 where t1.state=6 and t1.delstate=0
+                </foreach>
+                ) trs
+            )
+
+            group by t.visit_eid
+            order by count desc
+            limit 10
+        ) xxx
+    </select>
+
+    <!-- 删除资源表 -->
+    <update id="dropByTableName" parameterType="java.lang.String">
+      drop table ${tableName}
+    </update>
+
+    <!-- 创建资源表 -->
+    <update id="createTable">
+        CREATE TABLE IF NOT EXISTS ${tablename} (
+          id varchar(32) NOT NULL COMMENT '资源唯一标识',
+          crtuser varchar(32) DEFAULT NULL COMMENT '创建管理员',
+          crtdate datetime DEFAULT NULL COMMENT '创建时间',
+          checkor varchar(32) DEFAULT NULL COMMENT '审核人标识',
+          checkdate datetime DEFAULT NULL COMMENT '审核时间',
+          publisher varchar(32) DEFAULT NULL COMMENT '发布人标识',
+          statemdfuser varchar(32) DEFAULT NULL COMMENT '状态变更用户ID',
+          statemdfdate datetime NULL DEFAULT NULL COMMENT '状态变更时间',
+          <foreach collection="fields" item="item" index="index" separator="," close=",">
+              ${item.name} ${item.type} DEFAULT NULL COMMENT #{item.comment}
+          </foreach>
+          PRIMARY KEY (id)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT = #{tablecomment}
+    </update>
+
+    <!-- 添加资源表字段 -->
+    <update id="alertTableAddField">
+        <foreach collection="fields" item="item" index="index" separator=";" >
+            ALTER TABLE ${tablename} ADD column ${item.name} ${item.type} DEFAULT NULL COMMENT #{item.comment}
+        </foreach>
+    </update>
+
+    <!-- 修改资源表字段 -->
+    <update id="alertTableModifyField">
+        <foreach collection="fields" item="item" index="index" separator=";" >
+            ALTER TABLE ${tablename} MODIFY ${item.name} ${item.type} DEFAULT NULL COMMENT #{item.comment}
+        </foreach>
+    </update>
+
+    <update id="alertTableDropField">
+        ALTER TABLE ${tablename} DROP column ${fieldname} ;
+    </update>
+
+    <!-- 查询群文库资源 -->
+    <select id="selectResource" resultType="hashmap">
+        select *
+        from ${tablename}
+        where 1=1
+        <foreach collection="condition" item="item" index="index" separator=" AND " open=" AND ">
+            ${item.name} ${item.opt} <if test="item.name == 'state'">${item.val}</if> <if test="item.name != 'state'">#{item.val}</if>
+        </foreach>
+        order by ${sort} ${order}
+    </select>
+    <select id="selectResource2" resultType="hashmap">
+        select t.id,t.crtuser,t.crtdate,t.checkor,t.checkdate,t.publisher,t.statemdfuser,t.statemdfdate,t.respicture,t.resname,t.resauthor,t.resarttype,t.restype,t.restag,t.resurl,t.resorigin,t.resintroduce
+        ,t.resheight,t.reswidth,t.ressize,t.resmimetype,t.state,t.delstate,t.recommend,t.publishtime,t.recommendtime,t.libid, t2.resourcetype,t2.name from (
+        <foreach collection="tablenames" item="item" index="index" separator=" UNION ">
+            select t1.id,t1.crtuser,t1.crtdate,t1.checkor,t1.checkdate,t1.publisher,t1.statemdfuser,t1.statemdfdate,t1.respicture
+            ,t1.resname,t1.resauthor,t1.resarttype,t1.restype,t1.restag,t1.resurl,t1.resorigin,t1.resintroduce
+            ,t1.resheight,t1.reswidth,t1.ressize,t1.resmimetype,t1.state,t1.delstate,t1.recommend,t1.publishtime,t1.recommendtime,t1.libid
+            from ${item} t1
+        </foreach>
+        ) t, whg_mass_library t2
+        where t.libid=t2.id AND t2.state=1
+        <foreach collection="condition" item="item" index="index" separator=" AND " open=" AND ">
+            t.${item.name} ${item.opt} <if test="item.name == 'state'">${item.val}</if> <if test="item.name != 'state'">#{item.val}</if>
+        </foreach>
+        order by t.${sort} ${order}
+    </select>
+
+    <!-- 添加群文库资源 -->
+    <insert id="insertResource">
+        insert into ${tablename} (
+        <foreach collection="fields" item="item" index="index" separator=" , ">
+            ${item}
+        </foreach>
+        ) values (
+        <foreach collection="values" item="item" index="index" separator=" , ">
+            #{item}
+        </foreach>
+        )
+    </insert>
+
+    <!-- 修改群文库资源 -->
+    <update id="updateResource">
+        update ${tablename} set
+        <foreach collection="fields" item="item" index="index" separator=" , ">
+            ${item.name} = #{item.val}
+        </foreach>
+        where id=#{id}
+    </update>
+
+    <!-- 删除群文库资源 -->
+    <delete id="deleteResource">
+        delete from ${tablename} where <if test="id != null">id=#{id}</if><if test="refid != null">refid=#{refid}</if>
+    </delete>
+
+
+    <!-- 搜索资源 -->
+    <select id="globalFindResource" resultType="hashmap">
+        select t.libid, t.resid, t.respicture, t.resname, t.publishtime, t.recommendtime, t2.resourcetype,t2.name, t.resurl,
+        t.resauthor from (
+            <foreach collection="tablenames" item="item" index="index" separator=" UNION ">
+                select t1.libid, t1.id as resid, t1.respicture, t1.resname, t1.publishtime,
+                       t1.recommendtime, t1.resurl,t1.resarttype,t1.resauthor
+                from ${item} t1 where t1.state=6 and t1.delstate=0
+            </foreach>
+        ) t, whg_mass_library t2
+        where t.libid=t2.id
+        <if test="srchkey != null">
+          and t.resname like #{srchkey}
+        </if>
+        <if test="resarttype != null">
+            and t.resarttype like #{resarttype}
+        </if>
+        <if test="restypes != null">
+            and t2.resourcetype in (
+            <foreach collection="restypes" item="item" index="index" separator=",">
+              #{item}
+            </foreach>
+            )
+        </if>
+        <if test="cultids != null">
+            and t2.cultid in
+            <foreach collection="cultids" item="item" open="(" close=")" separator=",">
+                ${item}
+            </foreach>
+        </if>
+        <if test="resid != null">
+            and t.resid = #{resid}
+        </if>
+        order by t.recommendtime desc, t.publishtime desc
+    </select>
+
+
+
+
+
+
+
+
+    <!-- 搜索资源 -->
+    <select id="apiGlobalFindResource" resultType="hashmap">
+        select t.libid, t.resid, t.respicture, t.resname, t.publishtime, t.recommendtime, t2.resourcetype,t2.name, t.resurl,
+        t.resauthor,t3.authority from (
+        <foreach collection="tablenames" item="item" index="index" separator=" UNION ">
+            select t1.libid, t1.id as resid, t1.respicture, t1.resname, t1.publishtime,
+            t1.recommendtime, t1.resurl,t1.resarttype,t1.resauthor
+            from ${item} t1 where t1.state=6 and t1.delstate=0
+        </foreach>
+        ) t
+        left join whg_mass_library t2 on t.libid = t2.id
+        left join whg_mass_user_auth t3 on t3.masslibraryid = t.libid and t3.userid = #{userid}
+
+        where t.libid=t2.id
+        <if test="srchkey != null">
+            and t.resname like #{srchkey}
+        </if>
+        <if test="resarttype != null">
+            and t.resarttype like #{resarttype}
+        </if>
+        <if test="restypes != null">
+            and t2.resourcetype in (
+            <foreach collection="restypes" item="item" index="index" separator=",">
+                #{item}
+            </foreach>
+            )
+        </if>
+        <if test="cultids != null">
+            and t2.cultid in
+            <foreach collection="cultids" item="item" open="(" close=")" separator=",">
+                ${item}
+            </foreach>
+        </if>
+        <if test="resid != null">
+            and t.resid = #{resid}
+        </if>
+        order by t.recommendtime desc, t.publishtime desc
+    </select>
+
+
+
+</mapper>

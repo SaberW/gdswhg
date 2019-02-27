@@ -1,0 +1,130 @@
+apply plugin: 'com.android.library'
+//apply plugin: 'me.tatarka.retrolambda' //加上这句加,入plugin声明
+
+android {
+    compileSdkVersion 27
+    buildToolsVersion '27.0.3'
+
+    packagingOptions {
+        exclude 'META-INF/*'
+    }
+    defaultConfig {
+        minSdkVersion 19
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
+        ndk {
+            //设置支持的SO库架构
+            abiFilters 'armeabi', 'x86', 'armeabi-v7a', 'x86_64', 'arm64-v8a'
+        }
+        multiDexEnabled true
+    }
+
+    sourceSets {
+        main {
+            jni.srcDirs = []
+            jniLibs.srcDirs = ['src/main/jniLibs']
+        }
+
+        // Move the tests to tests/java, tests/res, etc...
+        androidTest.setRoot('tests')
+
+        // Move the build types to build-types/<type>
+        // For instance, build-types/debug/java, build-types/debug/AndroidManifest.xml, ...
+        // This moves them out of them default location under src/<type>/... which would
+        // conflict with src/ being used by the main source set.
+        // Adding new build types or product flavors should be accompanied
+        // by a similar customization.
+        debug.setRoot('build-types/debug')
+        release.setRoot('build-types/release')
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        //noinspection all
+        task copyNativeLibs(type: Copy) {
+            // third party lib so
+            from(new File(projectDir, 'libs')) { include 'armeabi/*.so' }
+            into new File(buildDir, 'native-libs')
+        }
+
+        tasks.withType(JavaCompile) {
+            compileTask ->
+                //noinspection all
+                compileTask.dependsOn copyNativeLibs
+        }
+    }
+}
+
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+    google()
+}
+
+dependencies {
+    implementation fileTree(include:'*.so',dir:'src/main/jniLibs')
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    api rootProject.ext.dependencies.SupportAppcompatV4
+    api rootProject.ext.dependencies.SupportRecyclerViewV7
+    api rootProject.ext.dependencies.EventBus
+    api rootProject.ext.dependencies.Autolayout
+    api rootProject.ext.dependencies.Stetho
+    api rootProject.ext.dependencies.Sonic
+    api rootProject.ext.dependencies.Once
+    api rootProject.ext.dependencies.Toasty
+    // network
+    api rootProject.ext.dependencies.Gson
+    api rootProject.ext.dependencies.Retrofit
+    api rootProject.ext.dependencies.RetrofitConverterGson
+    api rootProject.ext.dependencies.RetrofitAdapterRxJava
+    api rootProject.ext.dependencies.RetrofitAdapterRxJava2
+    api rootProject.ext.dependencies.Okttp
+    api rootProject.ext.dependencies.OkHttpLoggingInterceptor
+    //glide
+    api rootProject.ext.dependencies.Glide
+    api rootProject.ext.dependencies.GlideOkHttp
+    api rootProject.ext.dependencies.GlideTransformations
+    api rootProject.ext.dependencies.GlideTransLibrary
+    //rxjava
+    api rootProject.ext.dependencies.RxJava
+    api rootProject.ext.dependencies.RxAndroid
+    api rootProject.ext.dependencies.Multidex
+    api rootProject.ext.dependencies.MaterialDialogs
+    api rootProject.ext.dependencies.PullloadmoreRecyclerview
+    //Architecture Component
+    api rootProject.ext.dependencies.ViewModelAndLiveData
+    api rootProject.ext.dependencies.ViewModel
+    api rootProject.ext.dependencies.LiveData
+    //    api rootProject.ext.dependencies.LifecycleJava
+    annotationProcessor rootProject.ext.dependencies.VMLiveDataCompiler
+    api rootProject.ext.dependencies.Room
+    annotationProcessor rootProject.ext.dependencies.RoomCompiler
+    api rootProject.ext.dependencies.Paging
+    api rootProject.ext.dependencies.LiveDataTesting
+    api rootProject.ext.dependencies.RoomTesting
+    api rootProject.ext.dependencies.RoomLiveData
+    api rootProject.ext.dependencies.RoomLiveRxjava
+    api rootProject.ext.dependencies.PagingRxjava
+    //Rxlifecycle
+    api rootProject.ext.dependencies.Rxlifecycle
+    api rootProject.ext.dependencies.RxlifecycleComponents
+    api rootProject.ext.dependencies.RxlifecycleAndroid
+    api rootProject.ext.dependencies.EasyPermissions
+
+
+    api rootProject.ext.dependencies.XRecyclerview
+    api rootProject.ext.dependencies.SupportDesign
+//    api (rootProject.ext.dependencies.XRecyclerview){
+//        exclude group: 'com.android.support:design'
+//    }
+}
+

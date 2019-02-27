@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong_ytj/public/header :: copy"></head>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/index.css'">
+<body>
+
+<div class="switch_modal">
+    <div class="modal">
+        <div class="switch_head">
+            切换城市
+            <span class="close iconfont icon-close"></span>
+        </div>
+        <div class="switch_body">
+            <div class="current">
+                当前位置：
+                <span id="location">全省站</span>
+            </div>
+            <div class="province" id="province">
+                <!--<span class="active">全省站</span>
+                <span>广东省文化馆</span>-->
+            </div>
+            <div class="areas" id="areas">
+                <!--<span><i class="iconfont icon-wxbmingxingdianpu"></i> 清溪镇</span>
+                <span><i class="iconfont icon-wxbmingxingdianpu"></i> 清溪镇</span>-->
+            </div>
+        </div>
+        <div class="switch_foot">
+            <ul id="cities_box">
+                <!--<li>
+                    <span class="active">C</span>
+                    <span>潮州市</span>
+                </li>-->
+            </ul>
+        </div>
+    </div>
+</div>
+
+<header>
+    <div class="container_">
+        <a class="pull-left" href="#">
+            <img th:src="${basePath}+'/assets/imac/news/logoSmall.png'">
+        </a>
+        <a class="pull-right areas" id="switch_btn" href="javascript:void (0)">[切换城市]</a>
+        <span class="pull-right area" id="head_location">
+            全省站
+        </span>
+    </div>
+</header>
+
+<div class="mui-slider" id="headBanner">
+    <div class="mui-slider-group mui-slider-loop" id="slider">
+        <!--<div class="mui-slider-item">
+            <a href="#">
+                <img th:src="${basePath}+'/assets/img/index/search-bg2.jpg'">
+            </a>
+        </div>
+        <div class="mui-slider-item">
+            <a href="#">
+                <img th:src="${basePath}+'/assets/imac/img/banner.jpg'">
+            </a>
+        </div>
+        <div class="mui-slider-item">
+            <a href="#">
+                <img th:src="${basePath}+'/assets/img/index/search-bg2.jpg'">
+            </a>
+        </div>
+        <div class="mui-slider-item">
+            <a href="#">
+                <img th:src="${basePath}+'/assets/imac/img/banner.jpg'">
+            </a>
+        </div>-->
+    </div>
+    <div class="mui-slider-indicator" id="slider_">
+        <div class="mui-indicator mui-active"></div>
+        <div class="mui-indicator"></div>
+    </div>
+</div>
+
+<div class="main_nav">
+    <ul class="container_ nav_list">
+        <li class="active" href="infoList">
+            <div class="logo">
+                <img th:src="${basePath}+'/assets/imac/img/zixun1.png'">
+            </div>
+            <div class="title">
+                文化资讯
+            </div>
+            <div class="small">
+                CULTURAL NEWS
+            </div>
+            <div class="cut"></div>
+        </li>
+        <li href="activityList">
+            <div class="logo">
+                <img th:src="${basePath}+'/assets/imac/img/huodong1.png'">
+            </div>
+            <div class="title">
+                文化活动
+            </div>
+            <div class="small">
+                CULTURAL ACTIVITY
+            </div>
+            <div class="cut"></div>
+        </li>
+        <li href="trainList">
+            <div class="logo">
+                <img th:src="${basePath}+'/assets/imac/img/peixun1.png'">
+            </div>
+            <div class="title">
+                培训驿站
+            </div>
+            <div class="small">
+                TRAINING STATION
+            </div>
+            <div class="cut"></div>
+        </li>
+        <li href="venueList">
+            <div class="logo">
+                <img th:src="${basePath}+'/assets/imac/img/changguan1.png'">
+            </div>
+            <div class="title">
+                场馆服务
+            </div>
+            <div class="small">
+                VENUE SERVICE
+            </div>
+            <div class="cut"></div>
+        </li>
+        <li href="digitList">
+            <div class="logo">
+                <img th:src="${basePath}+'/assets/imac/img/zhanting1.png'">
+            </div>
+            <div class="title">
+                数字展厅
+            </div>
+            <div class="small">
+                DIGITAL EXHIBITION HALL
+            </div>
+            <!--<div class="cut"></div>-->
+        </li>
+    </ul>
+    <img th:src="${basePath}+'/assets/imac/news/pxyz.png'">
+</div>
+
+<main>
+    <div>
+        <div class="container_">
+            <div class="mp4_box">
+                <div class="title" id="videoTitle">广东</div>
+                <div id="player">
+                    <video autoplay="autoplay" loop="loop" controls="controls" controlsList="nodownload" src="/assets/imac/video/v1.mp4"></video>
+                </div>
+                <!--<div class="controls">
+                    <div class="times">01:00 / 12:12</div>
+                    <div class="play"></div>
+                    <div class="control">
+                        <div class="voice"></div>
+                        <div class="full"></div>
+                    </div>
+                </div>-->
+                <!--<div class="footer">
+                    <span class="prev">上一个</span>
+                    &nbsp; &nbsp; &nbsp; &nbsp;
+                    <span class="next">下一个</span>
+                </div>-->
+            </div>
+            <div class="img_box">
+                <ul id="img_nav">
+                    <li data-fn="getAct" class="active">文化活动</li>
+                    <li data-fn="getTra">培训驿站</li>
+                    <li data-fn="getVen">场馆服务</li>
+                </ul>
+                <div class="img_ clearfix" id="img_box">
+                    <!--<div>
+                        <img th:src="${basePath}+'/assets/imac/img/spbj.jpg'">
+                        <h5>阿瑟帝国大厦阿瑟帝国大厦阿瑟帝国大厦阿瑟帝国大厦</h5>
+                    </div>
+                    <div>
+                        <img th:src="${basePath}+'/assets/imac/img/spbj.jpg'">
+                        <h5>阿瑟帝国大厦阿瑟帝国大厦</h5>
+                    </div>
+                    <div>
+                        <img th:src="${basePath}+'/assets/imac/img/spbj.jpg'">
+                        <h5>阿瑟帝国大厦阿瑟帝国大厦</h5>
+                    </div>
+                    <div>
+                        <img th:src="${basePath}+'/assets/imac/img/spbj.jpg'">
+                        <h5>阿瑟帝国大厦阿瑟帝国大厦</h5>
+                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <div class="container_">
+            <div class="news_box">
+                <div class="title">
+                <span>
+                    文 化
+                </span>
+                    <span>
+                    资 讯
+                </span>
+                </div>
+                <div class="list" id="info_list">
+                    <!--<div>
+                        <div class="msg">自动轮播周期，若为0则不自动播放，默认为0自动轮播周期，若为0则不自动播放，默认为0自动轮播周期，若为0则不自动播放，默认为0自动轮播周期，若为0则不自动播放，默认为0</div>
+                        <div class="times">1988.03.11</div>
+                    </div>
+                    <div>
+                        <div class="msg">自动轮播周期，若为0则不自动播放，默认为0自动轮播周期，若为0则不自动播放，默认为0自动轮播周期，若为0则不自动播放，默认为0自动轮播周期，若为0则不自动播放，默认为0</div>
+                        <div class="times">1988.03.11</div>
+                    </div>
+                    <div>
+                        <div class="msg">自动轮播周期，若为0则不自动播放，默认为0自动轮播周期，若为0则不自动播放，默认为0自动轮播周期，若为0则不自动播放，默认为0自动轮播周期，若为0则不自动播放，默认为0</div>
+                        <div class="times">1988.03.11</div>
+                    </div>
+                    <div>
+                        <div class="msg">自动轮播周期，若为0则不自动播放，默认为0自动轮播周期，若为0则不自动播放，默认为0自动轮播周期，若为0则不自动播放，默认为0自动轮播周期，若为0则不自动播放，默认为0</div>
+                        <div class="times">1988.03.11</div>
+                    </div>
+                    <div>
+                        <div class="msg">自动轮播周期，若为0则不自动播放，默认为0自动轮播周期，若为0则不自动播放，默认为0自动轮播周期，若为0则不自动播放，默认为0自动轮播周期，若为0则不自动播放，默认为0</div>
+                        <div class="times">1988.03.11</div>
+                    </div>-->
+                </div>
+                <div class="slid">
+                    <div class="mui-slider" id="newsBanner">
+                        <div class="mui-slider-group mui-slider-loop" id="dig_slid">
+                            <!--<div class="mui-slider-item">
+                                <img th:src="${basePath}+'/assets/img/index/search-bg2.jpg'">
+                                <div class="inlineMsg">自动轮播周期，若为0则不自动播放，默认为0自动轮播周期，若为0则不自动播放，默认为0自动轮播周期，</div>
+                            </div>
+                            <div class="mui-slider-item">
+                                <img th:src="${basePath}+'/assets/imac/img/banner.jpg'">
+                                <div class="inlineMsg">自动轮播周期，若为0则不自动播放，默认为0自动轮播周期，若为0则不自动播放，默认为0自动轮播周期，</div>
+                            </div>
+                            <div class="mui-slider-item">
+                                <img th:src="${basePath}+'/assets/imac/img/banner.jpg'">
+                                <div class="inlineMsg">自动轮播周期，若为0则不自动播放，默认为0自动轮播周期，若为0则不自动播放，默认为0自动轮播周期，</div>
+                            </div>
+                            <div class="mui-slider-item">
+                                <img th:src="${basePath}+'/assets/img/index/search-bg2.jpg'">
+                                <div class="inlineMsg">自动轮播周期，若为0则不自动播放，默认为0自动轮播周期，若为0则不自动播放，默认为0自动轮播周期，</div>
+                            </div>
+                            <div class="mui-slider-item">
+                                <img th:src="${basePath}+'/assets/imac/img/banner.jpg'">
+                                <div class="inlineMsg">自动轮播周期，若为0则不自动播放，默认为0自动轮播周期，若为0则不自动播放，默认为0自动轮播周期，</div>
+                            </div>-->
+                        </div>
+                        <div class="mui-slider-indicator" id="dig_slid_">
+                            <!--<div class="mui-indicator mui-active"></div>
+                            <div class="mui-indicator"></div>
+                            <div class="mui-indicator"></div>-->
+                        </div>
+                    </div>
+                    <div class="title">
+                    <span>
+                        数 字
+                    </span>
+                        <span>
+                        展 厅
+                    </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <div class="container_">
+        <span class="footer_btn" id="qp_btn">
+            <img th:src="${basePath}+'/assets/imac/img/qupiao.png'">
+            取票
+        </span>
+        <span class="footer_btn" id="qd_btn">
+            <img th:src="${basePath}+'/assets/imac/img/qiandao.png'">
+            签到
+        </span>
+    </div>
+</footer>
+
+</body>
+
+<script th:inline="javascript">
+
+    function getSli() {
+        var param = {
+            type: 1,
+            city: $.cookie('city'),
+            cultid: $.cookie('cultid')
+        };
+        $.post( [[${rootUrl}]] + 'api/basic/lbts' ,param,function (r) {
+            var data = JSON.parse(r);
+            if(data.code == '0'){
+                var imgPath = data.imgPath;
+                var errImg = [[${basePath}]]+'/assets/imac/news/aatext.png';
+                var slider = '';
+                var slider_ = '';
+                if(data.rows.length){
+                    slider = '<div class="mui-slider-item">' +
+                        '<a href="#">' +
+                        '<img src="'+ imgPath + data.rows[data.rows.length-1].picture +'" onerror="this.src=\''+errImg+'\'">' +
+                        '</a>' +
+                        '</div>';
+
+
+
+                    $.each(data.rows,function (i, v) {
+                        slider += '<div class="mui-slider-item">' +
+                            '<a href="#">' +
+                            '<img src="'+ imgPath +v.picture +'" onerror="this.src=\''+errImg+'\'">' +
+                            '</a>' +
+                            '</div>';
+                        slider_ += '<div class="mui-indicator"></div>';
+                    });
+
+                    slider += '<div class="mui-slider-item">' +
+                        '<a href="#">' +
+                        '<img src="'+ imgPath + data.rows[0].picture +'" onerror="this.src=\''+errImg+'\'">' +
+                        '</a>' +
+                        '</div>';
+                }
+
+                $('#slider').html(slider);
+
+                $('#slider_').html(slider_).find('div:first-child').addClass('mui-active');
+
+                mui('#headBanner').slider({
+                    interval:5000//自动轮播周期，若为0则不自动播放，默认为0
+                });
+
+            }else{
+                mui.alert(data.msg);
+            }
+        });
+    }
+
+    function getDigSli() {
+        var param = {
+            size:       3,
+            index:      1,
+            cultid: $.cookie('cultid')
+        };
+        $.post( [[${rootUrl}]] + 'api/digitalExhibition/list' ,param,function (r) {
+            var data = JSON.parse(r);
+            if(data.code == '0'){
+                if(data.rows.length){
+                    var imgPath = data.imgPath;
+                    var lastImg = data.rows[data.rows.length-1].imgurl;
+                    var imgUrlLast = lastImg.indexOf('http://')>=0 ? lastImg : imgPath + lastImg;
+
+                    var slider =
+                        '<div class="mui-slider-item" data-id="'+data.rows[data.rows.length-1].id+'">' +
+                        '<img src="'+ imgUrlLast +'">' +
+                        '<div class="inlineMsg">'+data.rows[data.rows.length-1].title+'</div>' +
+                        '</div>';
+
+                    var slider_ = '';
+
+                    $.each(data.rows,function (i, v) {
+                        var imgUrl = v.imgurl.indexOf('http://')>=0 ? v.imgurl : imgPath + v.imgurl;
+                        slider +=
+                            '<div class="mui-slider-item" data-id="'+v.id+'">' +
+                            '<img src="'+ imgUrl +'">' +
+                            '<div class="inlineMsg">'+ v.title +'</div>' +
+                            '</div>';
+
+                        slider_ += '<div class="mui-indicator"></div>';
+                    });
+
+                    var firstImg = data.rows[0].imgurl;
+                    var firstImgUrl = firstImg.indexOf('http://')>=0 ? firstImg : imgPath + firstImg;
+
+                    slider +=
+                        '<div class="mui-slider-item" data-id="'+data.rows[0].id+'">' +
+                        '<img src="'+ firstImgUrl +'">' +
+                        '<div class="inlineMsg">'+ data.rows[0].title +'</div>' +
+                        '</div>';
+
+                    $('#dig_slid').html(slider);
+
+                    $('#dig_slid_').html(slider_).find('div:first-child').addClass('mui-active');
+
+                    mui('#newsBanner').slider({
+                        interval:5000 //自动轮播周期，若为0则不自动播放，默认为0
+                    });
+                }
+            }else{
+                mui.alert(data.msg);
+            }
+        });
+    }
+
+    function getAct() {
+        var param = {
+            index: 1,
+            size: 4,
+            cultid: $.cookie('cultid')
+        };
+        $.post( [[${rootUrl}]] + 'api/activity/list' ,param,function (r) {
+            var data = JSON.parse(r);
+            if(data.code == '0'){
+                var imgPath = data.imgPath;
+                var img = '';
+                $.each(data.rows,function (i, v) {
+                    img += '<div data-type="act" data-id="'+v.id+'">' +
+                        '<img src="'+ imgPath+ v.imgurl+'">' +
+                        '<h5>'+ v.name +'</h5>' +
+                        '</div>'
+                });
+                $('#img_box').html(img);
+            }else{
+                mui.alert(data.msg);
+            }
+        });
+    }
+
+    function getVen() {
+        var param = {
+            pageSize: 4,
+            cultid: $.cookie('cultid')
+        };
+        $.post( [[${rootUrl}]] + 'api/venue/indexList' ,param,function (r) {
+            var data = JSON.parse(r);
+            if(data.code == '0'){
+                var imgPath = data.imgPath;
+                var img = '';
+                $.each(data.rows,function (i, v) {
+                    img += '<div data-type="ven" data-id="'+v.id+'">' +
+                        '<img src="'+ imgPath+ v.imgurl+'">' +
+                        '<h5>'+ v.title +'</h5>' +
+                        '</div>'
+                });
+                $('#img_box').html(img);
+            }else{
+                mui.alert(data.msg);
+            }
+        });
+    }
+
+    function getTra() {
+        var param = {
+            size: 4,
+            page: 1,
+            cultid: $.cookie('cultid')
+        };
+        $.post( [[${rootUrl}]] + 'api/px/indexTraList' ,param,function (r) {
+            var data = JSON.parse(r);
+            if(data.code == '0'){
+                var imgPath = data.imgPath;
+                var img = '';
+                $.each(data.data,function (i, v) {
+                    img += '<div data-type="tra" data-id="'+v.id+'">' +
+                        '<img src="'+ imgPath+ v.trainimg+'">' +
+                        '<h5>'+ v.title +'</h5>' +
+                        '</div>'
+                });
+                $('#img_box').html(img);
+            }else{
+                mui.alert(data.msg);
+            }
+        });
+    }
+
+    function getInf() {
+        var param = {
+            size: 4,
+            index: 1,
+            cultid: $.cookie('cultid')
+        };
+        $.post( [[${rootUrl}]] + 'api/information/infolist' ,param,function (r) {
+            var data = JSON.parse(r);
+            if(data.code == '0'){
+                var info = '';
+                $.each(data.rows,function (i, v) {
+                    var date = new Date(v.clnfopttime);
+                    date = date.format('yyyy-MM-dd');
+                    info += '<div class="info_item" data-id="'+v.clnfid+'">' +
+                        '<div class="msg">'+v.clnftltle+'</div>' +
+                        '<div class="times">'+ date +'</div>' +
+                        '</div>'
+                });
+                $('#info_list').html(info);
+            }else{
+                mui.alert(data.msg);
+            }
+        });
+    }
+
+    function bindEvent() {
+        // 跳转页面
+        $('.main_nav').on('tap','li',function () {
+            window.location.href = $(this).attr('href');
+        });
+        // 切换nav
+        $('#img_nav').on('click','li',function () {
+            var fn = $(this).attr('data-fn');
+            $(this).addClass('active').siblings().removeClass('active');
+            if(fn == 'getAct') return getAct();
+            if(fn == 'getVen') return getVen();
+            if(fn == 'getTra') return getTra();
+
+        });
+        // 资讯详情
+        $('#info_list').on('tap','.info_item',function () {
+            var id = $(this).attr('data-id');
+            location.href = 'infoDtl?id='+id +'&from=1';
+        });
+        // 活动， 场馆， 培训 详情
+        $('#img_box').on('tap','div',function () {
+            var type = $(this).attr('data-type');
+            var id = $(this).attr('data-id');
+            if(type == 'act')return  location.href = 'activityDtl?id='+id +'&from=1';
+            if(type == 'ven')return  location.href = 'venueDtl?id='+id +'&from=1';
+            if(type == 'tra')return  location.href = 'trainDtl?id='+id +'&from=1';
+        });
+        $('#dig_slid').on('tap','.mui-slider-item',function () {
+            var id = $(this).attr('data-id');
+            location.href = 'digitDtl?id='+id +'&from=1';
+        });
+        // 打开城市模态框
+        $('#switch_btn').on('tap',function () {
+            initCities();
+            //$('#player').hide();
+            $('.switch_modal').show();
+        });
+        // 关闭模态框
+        $('.switch_modal').on('tap',function (e) {
+            var tar = e.target.className;
+            if(tar == 'switch_modal' || tar.indexOf('close')>=0){
+                $(this).hide();
+                $('#player').show();
+            }
+        });
+        // 选择城市
+        $('#cities_box').on('click','.city',function () {
+            var city = $(this).text();
+            var cultid = $.cookie('cultid');
+            $('#location').text(city);
+
+            $.post([[${apiPath.switch}]],{city: city, level: '2,3'},function (r) {
+                var data = JSON.parse(r);
+                var allCity = '';
+                if(data.code == '0' && data.rows.length){
+                    var span =  '';
+                    var span_= '';
+                    $.each(data.rows,function (i, v) {
+                        allCity += (','+v.id);
+                        span_   += '';
+                        if(v.level==2){
+                            if(v.id == cultid){
+                                span+= '<span class="active" data-id="'+v.id+'" data-city="'+ v.city +'" data-cultsite="'+ v.cultsite+'">'+v.name+'</span>'
+                            }else
+                                span+= '<span data-id="'+v.id+'" data-city="'+ v.city +'" data-cultsite="'+ v.cultsite +'">'+v.name+'</span>'
+                        }
+                        if(v.level==3){
+                            span_+= '<span data-id="'+v.id+'" data-city="'+ v.city +'" data-cultsite="'+ v.cultsite +'">'+v.name+'</span>'
+                        }
+                    });
+                    var allSpan = '';
+                    getCityCode(city, function(citycode){
+                        if (cultid.indexOf(",")!=-1 && $.cookie('city')==city) {
+                            allSpan = '<span data-id="'+allCity+'" data-city="'+city+'" data-cultsite="'+ citycode +'" class="active">全市站</span>';
+                        }else{
+                            allSpan = '<span data-id="'+allCity+'" data-city="'+city+'" data-cultsite="'+ citycode +'">全市站</span>';
+                        }
+                        allSpan = allSpan + span;
+
+                        $('#province').html(allSpan);
+                        if(span_)
+                            $('#areas').html(span_).show();
+                    });
+                }else{
+                    $('#province').html('该地区暂未开通文化馆站点');
+                    $('#areas').hide();
+                }
+            });
+        });
+        // 选择分馆
+        $('#province,#areas').on('tap','span',function () {
+            var cultid = $(this).attr('data-id') || '';
+            var city = $(this).attr('data-city') || '';
+            var cultsite = $(this).attr('data-cultsite');
+            if(cultsite){
+                $.post([[${apiPath.query}]],{cultsite: cultsite, city:city},function (res) {
+                    var data = JSON.parse(res);
+                    setCult(data);
+                })
+            }else {
+                $.cookie('cultid', '', {path: "/", expires: 7});
+                $.cookie('city', '', {path: "/", expires: 7});
+                init(1);
+            }
+            // $.cookie('cultid', cultid, {path: "/", expires: 7});
+            // $.cookie('city', city, {path: "/", expires: 7});
+            //$.cookie('cityName', cityName, {path: "/", expires: 7});
+            $('.switch_modal').hide();
+            $('#player').show();
+        });
+
+        // 取票
+        $('#qp_btn').on('tap',function () {
+            var res = prompt("js://ticket");
+        });
+        // 签到
+        $('#qd_btn').on('tap',function () {
+            var res = prompt("js://sign");
+        });
+
+    }
+
+    function initCities() {
+        var city = $.cookie('city') || '全省站';
+        var cultid = $.cookie('cultid');
+        $('#head_location').text(city);
+        $('#location').text(city);
+        $('#areas').hide();
+        var html = '';
+        $.each(cityData,function (i, v) {
+            var span = '';
+            var span_= '';
+            if(v.cities.length){
+                span = '<span class="active">'+ v.name +'</span>';
+                $.each(v.cities,function (j, k) {
+                    span_ += '<span class="city" data-id="'+ k.cityid +'">'+ k.name +'</span>';
+                });
+                html += '<li>'+ span + span_ +'</li>';
+            }
+        });
+        $('#cities_box').html(html);
+
+        $.post([[${apiPath.switch}]],{level: 1},function (r) {
+            var data = JSON.parse(r);
+            if(data.code == '0' && data.rows.length){
+                var span = '<span>全省站</span>';
+                if( !cultid  ){
+                    span = '<span class="active">全省站</span>';
+                }
+                $.each(data.rows,function (i, v) {
+                    if(v.id == cultid)
+                        span += '<span class="active" data-city="'+ v.city +'"  data-cultsite="'+ v.cultsite +'">'+ v.name +'</span>';
+                    else
+                        span += '<span data-id="'+v.id+'" data-city="'+ v.city +'" data-cultsite="'+ v.cultsite +'">'+ v.name +'</span>';
+                });
+                $('#province').html(span);
+            }
+        });
+    }
+
+    function getVideo() {
+        $.post( [[${rootUrl}]] + 'api/comm/ytjvideo' ,{type:'video',cultid: $.cookie('cultid') },function (r) {
+            var data = JSON.parse(r);
+            if(data.code == '0'){
+                if(!data.data){
+                    return false;
+                }
+                var url = data.data.url;
+                var title = data.data.title;
+                $('#player').find('video').attr('src',url);
+                $('#videoTitle').text(title);
+            }else{
+                mui.alert(data.msg);
+            }
+        });
+    }
+
+    function init(reload) {
+        initCities();
+        getSli();
+        getDigSli();
+        getAct();
+        getInf();
+        getVideo();
+        if(reload) return ;
+        bindEvent();
+        /*mui('#newsBanner').slider({
+            interval:5000//自动轮播周期，若为0则不自动播放，默认为0
+        });*/
+
+        /*var videoObject = {
+            container: '#player',//“#”代表容器的ID，“.”或“”代表容器的class
+            variable: 'player_',// 该属性必需设置，值等于下面的new chplayer()的对象
+            flashplayer:false,// 如果强制使用flashplayer则设置成true
+            loop:true,//	播放结束后是否循环播放
+            autoplay:true,//	是否自动播放
+            // front:'frontVideo',
+            // next:'nextVideo',
+            // mobileCkControls: true,
+            video:'/assets/imac/video/v1.mp4'//视频地址
+        };
+        var player_=new ckplayer(videoObject);*/
+
+    }
+    $().ready(function () {
+        init();
+    });
+
+    function setCult(data) {//根据文化馆标志找准对应文化馆，进行返选设置
+        if (data.code == 0 && data.data) {
+            $.cookie('cultid', data.data.id, {path: "/", expires: 7});
+            if(data.data.city&&data.data.city!=""&&data.data.city.indexOf("市")!=-1){
+                if(data.data.level==2){
+                    $.cookie('city', data.data.city, {path: "/", expires: 7});
+                }else if(data.data.level==3){
+                    $.cookie('city', data.data.area, {path: "/", expires: 7});
+                }else {
+                    $.cookie('city', data.data.city, {path: "/", expires: 7});
+                }
+            }else  if(data.data.city&&data.data.city!=""&&data.data.city.indexOf("省")!=-1){
+                $.cookie('city', '', {path: "/", expires: 7});
+            }
+            init(1);
+        }else{
+            $.cookie('cultid', '', {path: "/", expires: 7});
+            $.cookie('city', '', {path: "/", expires: 7});
+            init(1);
+        }
+    }
+</script>
+</html>

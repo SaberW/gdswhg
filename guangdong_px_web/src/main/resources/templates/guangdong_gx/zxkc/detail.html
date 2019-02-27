@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong_gx/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/style/public/detail.css'">
+<link rel="stylesheet" th:href="${basePath}+'/assets/style/center/center.css'">
+<style>
+    .live-list-cont ul li .noclick {
+        background-color: #eee;
+        color:black;
+    }
+
+    .live-list-cont ul li .curtnoclick {
+        background-color: #eee;
+        color:red;
+    }
+
+    .live-list-cont ul li .curtclick {
+        background-color: #41c99b;
+        color:#fff;
+    }
+
+    .live-list-cont ul li .preclick {
+        background-color: #608ee9;
+        color:#fff;
+    }
+</style>
+<div class="wrapper clearfix">
+    <div class="content">
+        <!--公共主头部开始-->
+        <div id="header" th:include="guangdong_gx/public/header :: copy"></div>
+        <!--公共主头部结束-->
+
+        <!--主体开始-->
+        <div class="sys-crumbs">
+            <span><a th:href="${basePath}+'/'+${cultsite}+'/'">首页</a></span>
+            <i class="icon iconfont icon-enter"></i>
+            <span><a th:href="${basePath}+'/'+${cultsite}+'/zxkc/list'">在线课程</a></span>
+            <i class="icon iconfont icon-enter"></i>
+            <span class="active" id="title"><!--在线课程标题--></span>
+        </div>
+
+        <div class="sys-main-info">
+            <div class="img">
+                <img id="detail-img">
+            </div>
+            <div class="info">
+                <h1 id="detail-title"></h1>
+                <p class="tag-list" id="types">
+                    <!--<span class="tag">展览</span>-->
+                </p>
+                <p class="desc">
+                    主办单位：<span id="hostVal"></span>
+                </p>
+                <p class="desc none" id="teachername" style="display: none">
+                    培训讲师：<span id="detail-teachername"><!--曾袁博，周星驰--></span>
+                </p>
+                <p class="desc none" id="enroltime">
+                    报名时间：<span id="detail-enroltime"><!--2017-09-19 至 2017-09-29--></span>
+                </p>
+                <p class="desc" id="traintime">
+                    培训时间：<span id="detail-traintime"><!--2017-10-19 至 2017-10-29--></span>
+                </p>
+                <p class="desc none" id="phone" style="display: none;">
+                    联系电话：<span id="detail-phone"><!--13874889988--></span>
+                </p>
+                <p class="desc none" id="address">
+                    培训地址：<span id="detail-address"><!--长沙市天心区三兴街三兴商场4栋209号--></span>
+                </p>
+
+                <div class="go-next none"><a href="javascript:void(0)">Loading...</a></div>
+                <div class="order-info none" style="display: block;" id="detail-condi">
+                    <!--仅剩<span class="surplus">20</span>个，
+                    总名额<span class="more">40</span>个 ( 限制年龄<span class="more">7-12</span>岁 )-->
+                </div>
+                <div class="other-cont clearfix">
+                    <div class="fav-vote-cont clearfix">
+                        <div class="sys-vote" title="点赞"><i class="icon iconfont icon-praise icon-praise_fill" id="good"></i><span>0</span></div>
+                        <div class="sys-fav" title="收藏"><i class="icon iconfont icon-collection icon-collection_fill" id="collection"></i><span>0</span></div>
+                        <div class="sys-fav" title="访问量"><i class="icon iconfont icon-search icon-collection_fill" id="visitCount"></i><span>0</span></div>
+                    </div>
+                    <!--点赞和收藏封装的代码start-->
+                    <div th:include="guangdong_gx/public/fav :: copy"></div>
+                    <div th:include="guangdong_gx/public/voteup :: copy"></div>
+                    <!--temp_type 的 值需和 WJQ 对接-->
+                    <input type="hidden" id="temp_type" value="16">
+                    <input type="hidden" id="commType">
+                    <!--点赞和收藏封装的代码end-->
+                    <div class="sns-cont" title="分享">
+                        分享到
+                        <a href="javascript:void(0);" target="_blank" class="fxweix"><i class="icon iconfont icon-wechat"></i></a>
+                        <a href="javascript:void(0);" target="_blank" class="fxweibo"><i class="icon iconfont icon-xinlang"></i></a>
+                        <a href="javascript:void(0);" target="_blank" class="fxqq"><i class="icon iconfont icon-kongjian"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="sys-main-bottom">
+            <div class="main-cont clearfix">
+                <div class="left-cont">
+                    <div class="help-msg none">
+                        温馨提示：<span></span>
+                    </div>
+                    <div class="item-cont">
+                        <div class="sys-main-title">
+                            <div class="title">课程详情</div>
+                            <hr>
+                        </div>
+                        <div class="sys-detail-list">
+                            <div class="title">课程目录</div>
+                            <div class="html-panel">
+                                <div class="live-list-cont">
+                                    <ul id="detail-course">
+                                        <!--<li>
+                                            <a href="live" onclick="javascript:void(0);"></a>
+                                            <span class="time">
+                                                2017-09-29 15:00-18:00
+                                            </span>
+                                            <span class="title">
+                                                在线课程神童麻将教学（第一章）
+                                            </span>
+                                            <div class="btn">进入直播</div>
+                                        </li>
+                                        <li>
+                                            <a href="live" target="_blank"></a>
+                                            <span class="time">
+                                                2017-09-29 15:00-18:00
+                                            </span>
+                                            <span class="title">
+                                                在线课程神童麻将教学（第二章）
+                                            </span>
+                                            <div class="btn loading">直播未开始</div>
+                                        </li>
+                                        <li>
+                                            <a href="live" target="_blank"></a>
+                                            <span class="time">
+                                                2017-09-29 15:00-18:00
+                                            </span>
+                                            <span class="title">
+                                                在线课程神童麻将教学（第三章）
+                                            </span>
+                                            <div class="btn loading">直播未开始</div>
+                                        </li>
+                                        <li>
+                                            <a href="live" target="_blank"></a>
+                                            <span class="time">
+                                                2017-09-29 15:00-18:00
+                                            </span>
+                                            <span class="title">
+                                                在线课程神童麻将教学（第四章）
+                                            </span>
+                                            <div class="btn end">直播已结束</div>
+                                        </li>-->
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="sys-detail-list">
+                            <div class="title">课程简介</div>
+                            <div class="html-panel" id="detail-coursedesc">
+
+                            </div>
+                        </div>
+                        <div class="sys-detail-list" id="outline">
+                            <div class="title">课程内容</div>
+                            <div class="html-panel" id="detail-outline">
+
+                            </div>
+                        </div>
+                        <div class="sys-detail-list" id="teacherdesc">
+                            <div class="title">老师简介</div>
+                            <div class="html-panel" id="detail-teacherdesc">
+
+                            </div>
+                        </div>
+                        <div class="sys-detail-list" id="res-cont">
+                            <div class="title">相关资源：</div>
+                            <div class="html-panel">
+                                <div class="res-detail-cont">
+                                    <div class="res-filter">
+                                        <div class="filter-list">
+                                            <div class="clearfix" id="fileter-nav">
+                                                <span onclick="resDate(1)"class="active"><a href="javascript:void(0)">图片</a></span>
+                                                <span onclick="resDate(2)"><a href="javascript:void(0)">视频</a></span>
+                                                <span onclick="resDate(3)"><a href="javascript:void(0)">音频</a></span>
+                                                <span onclick="resDate(4)"><a href="javascript:void(0)">文档</a></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="style-list">
+                                        <div class="content-list">
+                                            <ul class="clearfix" id="modelList_2"></ul>
+                                        </div>
+                                        <!--分页开始 -->
+                                        <div class="green-black" id="artPagging_2" style="margin-bottom: 40px"></div>
+                                        <!--分页结束-->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="right-cont">
+                    <div class="item-cont" id="kczl_div" style="display: none">
+                        <div class="sys-main-title">
+                            <div class="title">课程资料</div>
+                            <hr>
+                        </div>
+                        <div class="train-res-cont">
+                            <ul class="clearfix" id="detail-docs">
+                                <!--<li>
+                                    <a href="#">课件（一）<i class="icon iconfont icon-download-copy"></i></a>
+                                </li>-->
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="item-cont none" id="users">
+                        <div class="sys-main-title">
+                            <div class="title">培训人员公示</div>
+                            <hr>
+                        </div>
+                        <div class="train-recommend-cont">
+                            <ul class="clearfix" id="detail-users">
+                               <!-- <li>
+                                    <div class="img">
+                                        <img th:src="${basePath}+'/assets/img/img_demo/demo.png'">
+                                    </div>
+                                    <p>梁博</p>
+                                </li>-->
+                            </ul>
+                            <a href="javascript:void(0);" style="margin-left: 210px; display: none;" id="morePeople">更多&gt;</a>
+                        </div>
+                    </div>
+                    <div class="item-cont">
+                        <div class="sys-main-title">
+                            <div class="title">相关推荐</div>
+                            <hr>
+                        </div>
+                        <div class="recommend-cont" id="detail-recommend">
+                            <ul>
+                                <!--<li>
+                                    <div class="img">
+                                        <a href="detail?id=170919-835948534">
+                                            <img th:src="${basePath}+'/assets/img/img_demo/demo.png'">
+                                        </a>
+                                    </div>
+                                    <p><a href="detail?id=170919-835948534">江门市文化馆活动A</a></p></li>
+                                <li>-->
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="item-cont" id="_zixun">
+                        <div class="sys-main-title">
+                            <div class="title">相关资讯</div>
+                            <hr>
+                        </div>
+                        <div class="recommend-cont">
+                            <ul id="zixun">
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--主体结束-->
+    </div>
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong_gx/public/footer :: copy"></div>
+<a class="to-top"></a>
+<!--底部结束-->
+<script th:src="${apiPath.myvisitnote}" id="whgtongji"></script>
+
+
+<!--人员公示-->
+<div class="message-box-bg none">
+    <div class="message-cont" style="height: auto; width: 960px;">
+        <h2>培训人员公示</h2>
+        <div class="train-recommend-cont" style="overflow-y: auto; overflow-x:hidden; border-bottom: 1px solid #ccc; height: 500px;">
+            <ul id="train_people_dialog">
+            </ul>
+        </div>
+        <div class="message-btn" style="text-align: center; clear: both;">
+            <a hrer="javascript:void(0);" class="btn btn-close-qj" style="background-color: #eee; background-image: none; border: 1px solid #ccc; color: black;">关闭</a>
+        </div>
+    </div>
+</div>
+
+<!-- bottom script -->
+<script th:src="${basePath}+'/assets/js/FilteDatail.js'"></script>
+<script type="text/javascript" th:inline="javascript">
+    var userId = $("#temp_userId").val();
+    var itemId = dataInit.getUrlParam('id');
+    var basePath = [[${basePath}]];
+
+    //load data
+    function loadDetail() {
+        dataInit.ajax({
+            api: [[${apiPath.traliveDetail}]],
+            params: {id:itemId, userId:userId},
+            fn: function(data){
+                FilteDatail.options({
+                    toUrl: [[${basePath}]]+'/'+[[${cultsite}]]+'/index',
+                    info: data.data
+                }).filte();
+
+                createModelHtml(data);
+            }
+        });
+    }
+
+    //加载相关推荐
+    function loadRecommend(){
+        dataInit.ajax({
+            api: [[${apiPath.traliveRecommend}]],
+            params: {cultid:$.cookie('cultid')},
+            fn: function(data){
+                createRecommendHtml(data);
+            }
+        });
+    }
+
+    //show html
+    function createModelHtml(data){
+        if(data.code == 0) {
+            var model = data.data;
+            var row=data.rows;
+            var img = data.imgPath + dataInit.getBigImage(model.trainimg);
+            var title = model.title;
+            var notice = model.notice;
+            var tags = model.tags || [];
+            var mustsignup = model.mustsignup;
+            var tagsHtml = '';
+            for(var i=0; i<tags.length; i++){
+                tagsHtml += '<span class="tag">'+tags[i]+'</span>';
+            }
+            $('#hostVal').text(model.host);
+            $('#detail-img').attr('src', img);
+            $('#detail-title').text(title);
+            $('#types').html(tagsHtml);
+            if(model.teachername){
+                $('#detail-teachername').text(model.teachername || '不详');
+                $('#teachername').show();
+            }else{
+                $('#teachername').hide();
+            }
+
+            if(mustsignup == 1){
+                var enroltime = moment(model.enrollstarttime).format('YYYY-MM-DD HH:mm')+" 至 "+ moment(model.enrollendtime).format('YYYY-MM-DD HH:mm');
+                $('#detail-enroltime').text(enroltime);
+                $('#enroltime').show();
+            }else{
+                $('#enroltime').hide();
+            }
+
+            if(model.phone){
+                $('#detail-phone').text(model.phone);
+                $('#phone').show();
+            }else{
+                $('#phone').hide();
+            }
+
+            if(model.address){
+                $('#detail-address').text(model.address || '');
+                $('#address').show();
+            }else{
+                $('#address').hide();
+            }
+
+            $('#title').text(title);
+            if(mustsignup == 1){
+                if(notice){
+                    $(".help-msg span").text(notice);
+                }else{
+                    $(".help-msg span").text("需要报名培训，请点击“立即报名”按钮进行报名，有任何问题欢迎拨打电话咨询");
+                }
+                $(".help-msg").fadeIn();
+            }
+
+            //报名按钮===============================
+            //enrolstate: 0-未开始，1-可报名, 2-已报满, 3-已结束, 4-不满足条件, 5-已报名
+            if(mustsignup == 1) {
+                var state_cls = 's-4';
+                var state_txt = '';
+                var condi_html = '';
+                var age_html = '';
+                if (model.enrolState == 0) {
+                    state_txt = '即将开始';
+                    condi_html = '总名额<span class="more">' + model.maxnumber + '</span>个';
+                } else if (model.enrolState == 1) {
+                    state_txt = '<a class="btn-enrol" href="javascript:void(0);">立即报名</a>';
+                    state_cls = 's-1';
+                    condi_html = '仅剩<span class="surplus">' + model.restPeoples + '</span>个，总名额<span class="more">' + model.maxnumber + '</span>个';
+                    //是否有培训组限制
+                    if(model.limitEnrolForTrainGroup){
+                        state_cls = 's-4';
+                        $('.go-next').after('<div class="order-info">注意：<span style="color: #ec7168;">已超过该专题培训报名限制班数</span></div>');
+                    }
+                } else if (model.enrolState == 2) {
+                    state_txt = '已报满';
+                    condi_html = '已报<span class="surplus">' + model.curtPeoples + '</span>个，总名额<span class="more">' + model.maxnumber + '</span>个';
+                } else if (model.enrolState == 3) {
+                    state_txt = '报名结束';
+                    condi_html = '已报<span class="surplus">' + model.curtPeoples + '</span>个，总名额<span class="more">' + model.maxnumber + '</span>个';
+                } else if (model.enrolState == 4) {
+                    //state_txt = '未实名';
+                    state_txt = '<a href="javascript:void(0);" id="enrolState4">立即报名</a>';
+                    state_cls = 's-1';
+                    condi_html = '仅剩<span class="surplus">' + model.restPeoples + '</span>个，总名额<span class="more">' + model.maxnumber + '</span>个';
+                } else if (model.enrolState == 5) {
+                    state_txt = '已报名';
+                    condi_html = '仅剩<span class="surplus">' + model.restPeoples + '</span>个，总名额<span class="more">' + model.maxnumber + '</span>个';
+                }
+                if (model.age && model.age.length > 0) {
+                    age_html = ' ( 限制年龄<span class="more">' + model.age + '</span>' + model.ageUnit + ' )';
+                } else {
+                    age_html = ' ( 不限年龄 )';
+                }
+                $('.go-next').addClass(state_cls).removeClass('none').html(state_txt);
+                $('#detail-condi').html(condi_html + age_html);
+                $('#enrolState4').on('click', function () {
+                    //rongDialog.init({ico: 2, type: 1, desc: '未进行实名认证'});
+                    rongDialog.init({
+                        type: 2,
+                        desc: '您还未完成实名认证，请先完成实名认证！',
+                        nextFn: function(){
+                            window.location.href = [[${basePath}]]+'/'+[[${cultsite}]]+'/usercenter/realUser';
+                        }
+                    });
+                });
+                $('.btn-enrol').on('click', function (e) {
+                    checkUserTrain();
+                });
+            }
+            //报名按钮===============================END
+
+            //调分享接口
+            dataInit.share(title,img);
+
+            //详情
+            if(model.coursedesc){
+                $('#detail-coursedesc').html(model.coursedesc);
+            }
+            if(model.outline){
+                $('#detail-outline').html(model.outline);
+            }else{
+                $('#outline').hide();
+            }
+            if(model.teacherdesc){
+                $('#detail-teacherdesc').html(model.teacherdesc);
+            }else{
+                $('#teacherdesc').hide();
+            }
+
+            var docs_html="";
+            //学习资料===============================
+            for(var i=0; i<row.length; i++){
+                var obj = row[i];
+                  docs_html += '<li><a href="'+data.imgPath+obj.uplink+'" ><span style="font-size:12px;">'+obj.upname+'</span><i class="icon iconfont icon-download-copy"></i></a></li>';
+            }
+            if(row.length>0){
+                $('#detail-docs').html(docs_html);
+                $("#kczl_div").show();
+            }
+            //学习资料===============================END
+
+
+            //培训人员公示===============================
+            if(mustsignup == 1){
+                $('#users').fadeIn();
+                var users_html = '';
+                var userArr = model.users || [];
+
+                for(var i=0; i<userArr.length; i++){
+                    var user = userArr[i];
+                    var nickname = user.realname.substring(0,1)+"**";
+                    if(i >= 6) break;
+                    users_html += '<li><div class="img"><img src="'+basePath+'/assets/img/field/teacher-logo.png"></div><p>'+nickname+'</p></li>';
+                }
+                $('#detail-users').html(users_html);
+
+                if(userArr.length > 6){
+                    $('#morePeople').show();
+                    var ul_dialog = $("#train_people_dialog");
+                    for (var i in userArr) {
+                        var model = userArr[i];
+                        var nickname = model.realname.substring(0,1)+"**";
+                        ul_dialog.append('<li><div class="img"><img src="'+basePath+'/assets/img/field/teacher-logo.png"></div><p>'+nickname+'</p></li>');
+                    }
+                    var dialog_h = 500;
+                    var body_h = $("body").height();
+                    var p_h;
+                    if((dialog_h+143) < body_h){
+                        p_h = parseInt((body_h-dialog_h-143)/2,10).toFixed(0);
+                    }else{
+                        p_h = 10;
+                        dialog_h = body_h - 143 - p_h -p_h;
+                    }
+                    ul_dialog.parent('div').css('height', dialog_h+"px");
+                    $('.message-box-bg .message-cont').css('margin-top', p_h+"px");
+
+                    $('#morePeople').on('click', function () {
+                        $('.message-box-bg').fadeIn();
+                        $('.message-box-bg .btn-close-qj').on('click', function () {
+                            $('.message-box-bg').fadeOut();
+                        });
+                    });
+                }
+            }
+            //培训人员公示=============================== END
+
+
+            //直播课程目录===============================
+            var courses = model.courses || [];
+            var course_html = '';
+            var _livestime = '', _liveetime = '';
+            for(var i=0; i<courses.length; i++){
+                var row = courses[i];
+                var rowid = row.id;
+                var _time = moment(row.starttime).format('YYYY-MM-DD HH:mm')+" - "+moment(row.endtime).format('HH:mm');
+
+                //通过课程时间计算培训的直播开始和结束时间
+                if(!_livestime) _livestime = row.starttime;
+                _liveetime = row.endtime;
+
+                var _title = row.title+'（第'+(i+1)+'课）';
+                var listState = row.listState;//0-未开始, 1-正在直播, 2-已结束;
+                var canSee = row.canSee;//能否观看直播
+                var btnCls = '', btnTxt = '', livelink = '';
+                if(canSee){//当前会员可以观看直播
+                    if(listState == 0){
+                        btnCls = 'end';
+                        btnTxt = '直播未开始';
+                    }else if(listState == 1){
+                        btnCls = 'curtclick';
+                        btnTxt = '进入直播';
+                        livelink = '<a href="'+basePath+'/'+[[${cultsite}]]+'/zxkc/live?id='+rowid+'"></a>';
+                    }else if(listState == 2){
+                        btnCls = 'preclick';
+                        btnTxt = '查看回顾';
+                        livelink = '<a href="'+basePath+'/'+[[${cultsite}]]+'/zxkc/live?id='+rowid+'"></a>';
+                    }
+                }else{//当前会员不能观看直播
+                    livelink = '<a href="javascript:void(0);" onclick="showNoSee();"></a>';
+                    if(listState == 0){
+                        btnCls = 'noclick';
+                        btnTxt = '直播未开始';
+                    }else if(listState == 1){
+                        btnCls = 'curtnoclick';
+                        btnTxt = '正在直播';
+                    }else if(listState == 2){
+                        btnCls = 'noclick';
+                        btnTxt = '直播已结束';
+                    }
+                }
+                course_html += ''+
+                    '<li>'+
+                    '    '+livelink+
+                    '    <span class="time">'+_time+'</span>'+
+                    '    <span class="title">'+_title+'</span>'+
+                    '    <div class="btn '+btnCls+'">'+btnTxt+'</div>'+
+                    '</li>';
+            }
+            $('#detail-course').html(course_html);
+            if(!_livestime || !_liveetime){
+                $('#traintime').hide();
+            }else{
+                var traintime = moment(_livestime).format('YYYY-MM-DD HH:mm')+" 至 "+ moment(_liveetime).format('YYYY-MM-DD HH:mm');
+                $('#detail-traintime').text(traintime);
+            }
+            //直播课程目录=============================== END
+        }
+    }
+
+    function showNoSee() {
+        rongDialog.init({ico: 2, type: 1, desc: '未报名不能在线观看'});
+    }
+
+    //验证该用户是否可以报名
+    function checkUserTrain(){
+        dataInit.ajax({
+            api:[[${apiPath.checkEnrol}]],
+            params:{
+                userid:userId,
+                id:itemId
+            },
+            fn:function(data){ console.log(data)
+                if(data.code == 0) {
+                    window.location.href = basePath + '/' + [[${cultsite}]] + '/zxkc/step?id=' + itemId;
+                }else if (data.code == 200){
+                    rongDialog.init({
+                        type: 2,
+                        desc: data.msg || '您还未完成实名认证，请先完成实名认证！',
+                        nextFn: function(){
+                            window.location.href = [[${basePath}]]+'/'+[[${cultsite}]]+'/usercenter/realUser';
+                        }
+                    });
+                }else{
+                    rongDialog.init({ico: 2, type: 1, desc: data.msg || '报名异常'});
+                }
+            }
+        })
+    }
+
+    //show recommend
+    function createRecommendHtml(data) {
+        if(data.code == 0) {
+            var rows = data.rows;
+            if($.isArray(rows)){
+                var recommend_html = '';
+                for(var i=0; i<rows.length; i++){
+                    var traRow = rows[i];
+                    var traimg = data.imgPath+traRow.trainimg;
+                    recommend_html += ''+
+                    '<li>'+
+                    '    <div class="img">'+
+                    '       <a href="'+basePath+'/'+[[${cultsite}]]+'/zxkc/detail?id='+traRow.id+'">'+
+                    '       <img src="'+traimg+'">'+
+                    '       </a>'+
+                    '   </div>'+
+                    '   <p><a href="'+basePath+'/'+[[${cultsite}]]+'/zxkc/detail?id='+traRow.id+'">'+traRow.title+'</a></p>'+
+                    '</li>';
+                }
+                $('#detail-recommend').html(recommend_html);
+            }else {
+                $('#detail-recommend').hide();
+            }
+        }
+    }
+
+    //获取资源数据
+    function resDate(type){
+        var enttype = type ? type : 1;
+        dataInit.ajax({
+            api:[[${apiPath.resourceList}]],
+            params:{
+                refid:itemId,
+                reftype:16,
+                enttype:enttype
+            },
+            fn:function(data){
+                showResList(data,enttype);
+            }
+        })
+    }
+    //生成资源列表
+    function showResList(data,type){
+        var modelUL = $("#modelList_2");
+        var type = type+"";
+        modelUL.empty();
+        if(data.code == 0){
+            if (data.data.length > 0) {
+                for (var i in data.data) {
+                    var module = data.data[i];
+                    var html = $('<li>\
+                                    <div class="img">\
+                                        <img >\
+                                    </div>\
+                                    <div class="info">\
+                                        <div class="title">'+module.name+'</div>\
+                                    </div>\
+                                    <div class="mask"><img></div>\
+                                    <a href="javascript:void(0)"></a>\
+                                    </li>');
+                    if(module.enturl){
+                        var _enturl = module.enturl.indexOf('http') >= 0 ? module.enturl : data.imgPath + module.enturl;
+                    }
+                    var resBasePath = [[${basePath}]];
+                    switch (type){
+                        case "1" : //图片
+                            html.find(".img img").attr("src", dataInit.getRemoteURL(data.imgPath,dataInit.getMidImage(module.enturl)));
+                            html.find(".mask").empty();
+                            html.find("a:last").attr("onClick", "rongDialog.init({\
+                                            ico : 1,\
+                                            type : 6,\
+                                            imgUrl : '"+_enturl+"',\
+                                            title : '"+ module.name +"'\
+                                        });"
+                            );
+                            break;
+                        case "2" :  //视频
+                            html.find(".img img").attr("src", dataInit.getRemoteURL(data.imgPath,dataInit.getMidImage(module.deourl)));
+                            html.find(".mask img").attr("src", [[${basePath}]] + '/assets/img/brand/play.png');
+                            html.find("a:last").attr("onClick", "rongDialog.init({\
+                                            type : 5,\
+                                            vedioUrl : '"+_enturl+"',\
+                                            vedioImg : '',\
+                                            vedioTitle : '"+module.name+"',\
+                                            basePath : '"+resBasePath+"'\
+                                        })"
+                            );
+                            break;
+                        case "3" :  //音频
+                            html.find(".img img").attr("src", [[${basePath}]] + '/assets/img/brand/brand-music.jpg');
+                            html.find(".mask img").attr("src", [[${basePath}]] + '/assets/img/brand/macphone.png');
+                            html.find("a:last").attr("onClick", "rongDialog.init({\
+                                            type : 5,\
+                                            vedioUrl : '"+_enturl+"',\
+                                            vedioType: 'mp3',\
+                                            vedioImg : '"+resBasePath+"/assets/img/brand/brand-music.jpg',\
+                                            vedioTitle : '"+module.name+"',\
+                                            basePath : '"+resBasePath+"'\
+                                        });setWidth();"
+                            );
+                            break;
+                        case "4" : //文档
+                            var iconImg = dataInit.getFileTypeIcon(module.enturl, '/assets/img/brand/xiazai.jpg');
+                            html.find(".img img").attr("src", [[${basePath}]] + iconImg);
+                            //html.find(".img img").attr("src", [[${basePath}]] + '/assets/img/brand/xiazai.jpg');
+                            html.find(".mask").empty();
+                            html.find("a:last").attr({
+                                target:"_blank",
+                                href: dataInit.getRemoteURL(data.imgPath,module.enturl)
+                            });
+                            break;
+
+                        default:
+                            html.find(".mask").empty();
+                    }
+                    modelUL.append(html);
+                }
+            } else {
+                modelUL.append("<div class='public-no-message'></div>");
+            }
+        }else {
+            $("#res-cont").hide();
+        }
+    }
+
+    /**
+     * 加载培训资讯内容
+     */
+    function zx_dataPage(){
+        var params = {};
+        params.entityid = itemId;
+        params.clnftype = '2016111900000021';
+        dataInit.ajax({
+            api: [[${apiPath.xgzxList}]],
+            params: params,
+            fn: function(data){
+                zx_showModelList(data);
+            }
+        })
+    }
+
+    /**
+     * 根据加载的资讯数据,展示页面
+     * @param data
+     */
+    function zx_showModelList(data){
+        var modelUL = $("#zixun");
+        modelUL.empty();
+        var acttj = data.data;
+        if(acttj && acttj.length){
+            var i_length = acttj.length > 3 ? 3 : acttj.length;
+            for (var i=0;i<i_length;i++) {
+                $("#zixun").append(
+                    '<li> ' +
+                    '<a href="../pxzx/detail?id='+acttj[i].clnfid+'">'+acttj[i].clnftltle+'</a> ' +
+                    '<p class="time">'+moment(acttj[i].clnfcrttime).format('YYYY-MM-DD HH:mm:ss')+'</p> ' +
+                    '</li>'
+                );
+            }
+        }else {
+            $("#_zixun").hide();
+            $("#zixun").append('<div class="public-no-message-detail"></div>');
+        }
+    }
+
+    //程序初始化
+    $(function () {
+        loadDetail();
+        loadRecommend();
+        resDate();
+        $("#fileter-nav span").on('click',function(){
+            $(this).addClass('active').siblings().removeClass('active');
+        });
+        zx_dataPage();
+
+        getVisitSumCount4url(itemId, function(count){
+            $("#visitCount").next("span").text(count);
+        });
+    });
+</script>
+<!-- bottom script END -->
+</body>
+</html>

@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/style/public/detail.css'">
+<style>
+    .file-download-cont{line-height:50px;border:1px #ccc dashed;border-width:1px 0px;}
+    .file-download-cont ul li{height:32px; line-height:32px; padding-left:42px; position:relative; margin:15px 0px;}
+    .file-download-cont ul li a{color:#333; display:block;}
+    .file-download-cont ul li i{height:32px; width:32px; position:absolute; background:url(../../assets/img/public/fileBtn.png) no-repeat 50% 50%; left:0px; bottom:0px;}
+    .file-download-cont ul li a:hover{color:#c8161d;}
+    .html-panel > p > img {
+        max-width: 860px;
+    }
+</style>
+<script th:src="${basePath}+'/assets/js/plugs/jquery.qrcode.min.js'" type="text/javascript"></script>
+<div class="wrapper clearfix">
+    <div class="content">
+        <!--公共主头部开始-->
+        <div id="header" th:include="guangdong/public/header :: copy"></div>
+        <!--公共主头部结束-->
+
+        <!--主体开始-->
+        <div class="sys-crumbs">
+            <span><a th:href="${basePath}+'/index'">首页</a></span>
+            <i class="icon iconfont icon-enter"></i><span><a th:href="${basePath}+'/qwzy/index'">群文资源</a></span>
+            <i class="icon iconfont icon-enter"></i><span><a th:href="${basePath}+'/qwzy/list?libid='+${resclazz}+'&type='+${type}+'&srchkey='+${srchkey}">群文资源列表</a></span>
+            <i class="icon iconfont icon-enter"></i><span class="active" id="title"></span>
+        </div>
+
+        <div class="res-main-info" style="height: auto;">
+            <div class="main-info">
+                <h1 id="detail-title"></h1>
+                <div class="info">
+                    <span>作者：<span id="resauthor"></span></span>
+                    <span>来源：<span id="resorigin"></span></span>
+                    <span>时间：<span id="publishtime"></span></span>
+
+                    <div class="other-cont clearfix">
+                        <div class="sns-cont" title="分享">
+                            分享到
+                            <a href="javascript:void(0);" target="_blank" class="fxweix"><i class="icon iconfont icon-wechat"></i></a>
+                            <a href="javascript:void(0);" target="_blank" class="fxweibo"><i class="icon iconfont icon-xinlang"></i></a>
+                            <a href="javascript:void(0);" target="_blank" class="fxqq"><i class="icon iconfont icon-kongjian"></i></a>
+                        </div>
+                        <div class="download-cont">
+                            <a href="javascript:void(0)" target="_blank">下载<i class="icon iconfont icon-download-copy"></i></a>
+                            <div class="download-code">
+                                <div class="arrow">
+                                    <i class="icon iconfont icon-arrfill_u-copy-copy"></i>
+                                </div>
+                                <div class="code-cont">
+                                    <p class="pc-load"><a href="javascript:void(0)" target="_blank" class="download_a">直接下载</a></p>
+                                    <p class="code-load">扫二维码下载</p>
+                                    <div class="code"> </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="fav-vote-cont clearfix">
+                            <div class="sys-vote" title="点赞" id="good"><i class="icon iconfont icon-praise icon-praise_fill"></i><span>0</span></div>
+                            <div class="sys-fav" title="收藏" id="collection"><i class="icon iconfont icon-collection icon-collection_fill"></i><span></span></div>
+                        </div>
+                        <!--点赞和收藏封装的代码start-->
+                        <div th:include="guangdong/public/fav :: copy"></div>
+                        <div th:include="guangdong/public/voteup :: copy"></div>
+                        <!--temp_type 的 值需和 WJQ 对接-->
+                        <input type="hidden" id="commType" value="0">
+                        <input type="hidden" id="temp_type" value="53">
+                        <input type="hidden" id="cmtitle">
+                        <input type="hidden" id="cmurl">
+                        <!--点赞和收藏封装的代码end-->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="sys-main-bottom">
+            <div class="main-cont clearfix">
+                <div class="left-cont">
+                    <div class="item-cont" id="ext-property" style="display: none;">
+                        <div class="sys-main-title">
+                            <div class="title">资源属性</div><hr>
+                        </div>
+                        <div class="sys-detail-list">
+                            <ul>
+                                <li><span style="font-weight: bold;">属性1</span><label>：</label>传值w</li>
+                                <li><span style="font-weight: bold;">属性2</span><label>：</label>wfwff</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="item-cont">
+                        <div class="sys-main-title">
+                            <div class="title">资源简介</div><hr>
+                        </div>
+                        <div class="sys-detail-list">
+                            <div class="html-panel" id="desc"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="right-cont">
+                    <div class="item-cont">
+                        <div class="sys-main-title">
+                            <div class="title">相关资源</div>
+                            <hr>
+                        </div>
+                        <div class="recommend-cont">
+                            <ul id="recomment">
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--主体结束-->
+    </div>
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong/public/footer :: copy"></div>
+<a class="to-top"></a>
+<!--底部结束-->
+
+<script type="text/javascript" th:inline="javascript">
+    var basePath = [[${basePath}]];
+    function loadDeail(){
+        var libid = [[${libid}]];//资源库标识
+        var resid = [[${resid}]];//资源标识
+        dataInit.ajax({
+            api: [[${apiPath.massResDetail}]],
+            params: {"libid": libid, "resid": resid},
+            fn: function (data) {
+                var resData = data.data;
+                //标题
+                $('#title').text(resData.resname);
+                $('#detail-title').text(resData.resname);
+                $('#resauthor').text(resData.resauthor);
+                $('#resorigin').text(resData.resorigin);
+                $('#publishtime').text(moment(resData.publishtime).format("YYYY-MM-DD"));
+                $('#cmtitle').val(resData.resname);
+                $('#cmurl').val(resData.resurl);
+
+                //分享
+                var respicture = resData.respicture || [[${basePath}]]+'/assets/img/public/file.png';
+                dataInit.share(resData.resname, respicture);
+
+                //下载
+                if(resData.restype == 'file'){
+                    $('.download-cont').show();
+                    $('.download-cont .download_a').attr('href', resData.resurl);
+                    $('.download-cont .code').qrcode({width: 100, height: 100, text:resData.resurl });
+                }else{
+                    $('.download-cont').hide();
+                }
+                //资源图片/视频/音频/文件
+                if(resData.restype == 'img'){
+                    $('.main-info:first').append('<div style="padding: 10px 2px; text-align: center;"><img style="border: 1px #666 dashed; border-radius:10px; max-width: 100%;" src="'+resData.respicture+'" /></div>');
+                }else if(resData.restype == 'video'){
+                    var video_html = '\
+                        <div class="res-cont" style="padding: 10px 0;">\
+                            <div class="res-video">\
+                                <div class="mask" onclick="rongDialog.init({type : 5, vedioUrl : \''+resData.resurl+'\', vedioImg : \''+resData.respicture+'\', vedioType: \'mp4\', vedioTitle : \''+resData.resname+'\', basePath:\''+basePath+'\' });">\
+                                    <div class="play"></div>\
+                                </div>\
+                                <img src="'+resData.respicture+'">\
+                            </div>\
+                        </div>\
+                        ';
+                    $('.main-info:first').append(video_html);
+                }else if(resData.restype == 'audio'){
+                    var respicture = [[${basePath}]]+'/assets/img/public/audio.png';
+                    var video_html = '\
+                        <div class="res-cont" style="padding: 10px 0;">\
+                            <div class="res-video">\
+                                <div class="mask" onclick="rongDialog.init({type : 5, vedioUrl : \''+resData.resurl+'\', vedioImg : \''+respicture+'\', vedioType: \'mp3\', vedioTitle : \''+resData.resname+'\', basePath:\''+basePath+'\' });setWidth();">\
+                                    <div class="play"></div>\
+                                </div>\
+                                <img src="'+respicture+'">\
+                            </div>\
+                        </div>\
+                        ';
+                    $('.main-info:first').append(video_html);
+                }else{
+                    var file_download = '\
+                    <div class="file-download-cont">\
+                        <ul>\
+                            <li><a href="'+resData.resurl+'" class="js-urlencode"><i></i>'+resData.resname+'</a></li>\
+                        </ul>\
+                    </div>\
+                    ';
+                    $('.item-cont:eq(1)').append(file_download);
+                }
+                //简介
+                $('#desc').html(resData.resintroduce||'');
+
+                //需要显示的扩展属性
+                var ext_prarms = data.rows;
+                if($.isArray(ext_prarms) && ext_prarms.length > 0){
+                    var _html = '';
+                    for(var i=0; i<ext_prarms.length; i++){
+                        _html += '<li><span style="font-weight: bold;">'+ext_prarms[i].fieldname+'</span><label>：</label>'+ext_prarms[i].fielddefaultval+'</li>';
+                    }
+
+                    //显示扩展属性
+                    $('#ext-property .sys-detail-list ul').html(_html);
+                    $('#ext-property').show();
+                }
+            }
+        });
+    }
+
+    /** 加载相关资源 */
+    function loadData() {
+        var this_resid = [[${resid}]];
+        dataInit.ajax({
+            api: [[${apiPath.massResList}]],
+            params: {"libid":[[${libid}]], "page":1, "pageSize":4},
+            fn: function(data){
+                var UL = $("#recomment");
+                UL.empty();
+
+                var li_html = '';
+                var cnt = 0;
+                if (data && $.isArray(data.rows) && data.rows.length > 0) {
+                    var li_html = '';
+                    for (var i = 0; i < data.rows.length; i++) {
+                        var row = data.rows[i];
+                        var restype = row.resourcetype;
+                        var libid = row.libid;
+                        var resid = row.resid;
+                        var respicture = dataInit.getMidImage(row.respicture);//图片地址
+                        var resname = row.resname;//资源名称
+
+                        if(this_resid == resid || cnt == 3){
+                            continue;
+                        }else{
+                            cnt++;
+                        }
+
+                        var imghtml = '';
+                        if(restype == 'img' || restype == 'video'){
+                            imghtml = '<div class="img"><a href="'+basePath+'/qwzy/detail?libid='+libid+'&resid='+resid+'"><img src="'+respicture+'"></a></div>';
+                        }
+                        li_html += '\
+                            <li>\
+                                '+imghtml+'\
+                                <p><a href="'+basePath+'/qwzy/detail?libid='+libid+'&resid='+resid+'">'+resname+'</a></p>\
+                            </li>\
+                        ';
+                    }
+                    UL.append(li_html);
+                }
+                if(cnt == 0) UL.append("<div class='public-no-message'></div>");
+            }
+        })
+    }
+
+    $(function () {
+        //详情
+        loadDeail();
+
+        //相关资源
+        loadData();
+    });
+</script>
+</body>
+</html>

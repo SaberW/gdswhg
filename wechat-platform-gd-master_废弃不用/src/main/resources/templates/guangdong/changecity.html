@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/changecity/changecity.css'">
+<div th:include="guangdong/public/leftBar :: copy"></div>
+
+<div id="page">
+    <div class="mui-content">
+        <div class="city_box">
+            <div class="city">
+                <div class="address">
+                    <span class="cityname">当前定位:<i class="iconfont icon-coordinates"></i><a class="color">全省站</a></span>
+                    <div class="shengguang">
+                    </div>
+                </div>
+                <div class="city_bottom_box">
+                    <div class="city_bottom">
+                        <ul>
+                            <div class="color">c</div>
+                            <!--<li>
+                                <span>潮州</span>
+                            </li>-->
+                        </ul>
+                    </div>
+                </div>
+                <div class="site_bottom">
+                    <ul>
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <nav class="mui-bar mui-bar-tab" style="display:none;">
+            <div class="mui-tab-item"><a class="goNext" href="javascript:window.location.reload()">返回</a></div>
+        </nav>
+    </div>
+</div>
+<script type="text/javascript" th:inline="javascript">
+    //动态区域选择
+    var cultid = $.cookie('cultid') || '', cityName, coocity = $.cookie('city') || '';
+    //console.log(cultid + '___' + cityid)
+    dataInit.ajax({
+        api: [[${apiPath.query}]],
+        fn: query, //查询文化馆
+        params: {
+            id: cultid,
+            city: coocity
+        }
+    });
+    dataInit.ajax({
+        api: [[${apiPath.switch}]],
+        fn: showPvi, //省馆
+        params: {
+            level: 1
+        }
+    });
+    showCityList();
+    $(function () {
+        $(".city_bottom>ul li").click(function () {
+            cityName = $(this).text();
+            $(".city_bottom").hide();
+            $(".site_bottom").show();
+            $(".mui-bar.mui-bar-tab").show();
+            $(".site_bottom ul").html('');
+            dataInit.ajax({
+                api: [[${apiPath.switch}]],
+                fn: function (data) {
+                    Cultural(data,cityName);
+                },
+                params: {
+                    city: cityName,
+                    level: '2,3'
+                }
+            });
+        });
+        /*if (cultid == '') {
+            $("#span_qsz").addClass("active");
+            $(".address span a").text('广东省');
+        } else if (cultid == '0000000000000000') {
+            $(".address span a").text('广州市');
+            $("#span_gdsg").addClass("active");
+        } else {
+            $(".address span a").text(coocity);
+        }*/
+
+        $(".shengguang span").on("click",function () {
+            $(this).addClass("active").siblings().removeClass('active');
+        })
+    })
+
+    function Cultural(data,city) {
+        if (data.rows.length) {
+            dataInit.ajax({
+                api: [[${apiPath.switch}]],
+                fn: function (data) {
+                    showCity(data,city);
+                }, //市馆
+                params: {
+                    city: city,
+                    level: '2,3'
+                }
+            });
+            var html = '';
+
+            for (var i = 0; i < data.rows.length; i++) {
+                var model = data.rows[i];
+                var line = '<li onclick=city("' + model.id + '","' + model.area + '",5,"'+model.area+'") data-area = "'+model.area+'">' + model.name + '</li>';
+                if (model.level && model.level == 3) {
+                    html = html + line;
+                }
+            }
+            $(".site_bottom ul").html(html);
+            areaAddClass();
+        } else {
+            mui.toast('该地区暂未开通文化馆站点');
+            setTimeout(function () {
+                $(".site_bottom").hide();
+                $(".city_bottom").show();
+            }, 1000)
+        }
+    }
+
+    function showCity(data,city) {
+        var html = '';
+        var cityhtml = '';
+        var allCity = '';
+        if (data.code == 0 && data.data) {
+            if (data.rows.length) {
+                for (var i = 0; i < data.rows.length; i++) {
+                    var model = data.rows[i];
+                    var line = '';
+                    allCity = allCity + "," + model.id;
+                    if (model.level == 2) {//市级
+                        if (cultid == model.id) {
+                            $(".city-name-union").text(model.name);
+                            $(".city-name").text(model.name);
+                            $(".address span a").text(model.city);
+                            line = '<span id="span_gdsg' + model.id + '" class="active" onclick=city("' + model.id + '","' + model.city + '",4,"'+model.city+'")>' +
+                                model.name + '</span>';
+                        } else {
+                            line = '<span id="span_gdsg' + model.id + '"  onclick=city("' + model.id + '","' + model.city + '",4,"'+model.city+'")>' +
+                                model.name + '</span>';
+                        }
+                        html = html + line;
+                    }
+                }
+            }
+        }
+        if (cultid.indexOf(",") != -1 && coocity == city) {
+            cityhtml = '<span id="span_sz" class="active" onclick=city("' + allCity + '","' + city + '",3,"'+city+'站")>全市站</span>';
+        } else {
+            cityhtml = '<span id="span_sz" onclick=city("' + allCity + '","' + city + '",3,"'+city+'站")>全市站</span>';
+        }
+        $(".shengguang").html("");
+        $(".shengguang").append(cityhtml);
+        $(".shengguang").append(html);
+    }
+
+
+    function showPvi(data) {
+        var html;
+        if (cultid == '' && coocity == '') {
+            html = '<span id="span_qsz" class="active" onclick=city("","",1,"全省站")>全省站</span>';
+        } else {
+            html = '<span id="span_qsz" onclick=city("","",1,"全省站")>全省站</span>';
+        }
+        if (data.code == 0 && data.data) {
+            if (data.rows.length) {
+                for (var i = 0; i < data.rows.length; i++) {
+                    var model = data.rows[i];
+                    var line = '';
+                    if (cultid == model.id) {
+                        $(".city-name-union").text(model.name);
+                        $(".city-name").text(model.name);
+                        $(".address span a").text(model.province);
+                        line = '<span id="span_gdsg' + model.id + '" class="active" onclick=city("' + model.id + '","' + model.city + '",2,"广东省")>' +
+                            model.name + '</span>';
+                    } else {
+                        line = '<span id="span_gdsg' + model.id + '"  onclick=city("' + model.id + '","' + model.city + '",2,"广东省")>' +
+                            model.name + '</span>';
+                    }
+                    html = html + line;
+                }
+            }
+        }
+        $(".shengguang").html("");
+        $(".shengguang").append(html);
+    }
+
+    function query(data) {
+        if (data.code == 0 && data.data) {
+            if (cultid == ''&&coocity=='') {
+                $(".address span a").text('全省站');
+                $("#span_qsz").addClass("active");
+            }else if (cultid!=""&&cultid.indexOf(",")!=-1&&coocity!='') {
+                $(".address span a").text('全市站');
+                $("#span_sz").addClass("active");
+            }else {
+                $(".address span a").text(data.data.city);
+            }
+        }else {
+            if (cultid == ''&&coocity=='') {
+                $(".address span a").text('全省站');
+            }else if (cultid!=""&&cultid.indexOf(",")!=-1&&coocity!='') {
+                $("#span_sz").addClass("active");
+                $(".address span a").text(coocity);
+            }
+        }
+        cityAddClass();
+    }
+    function city(id,city,type,siteName) {
+        //type: 1-全省站,2-省级馆,3-全市站,4-市级馆,5-区级馆
+        //siteName: type=1-全省站,type=2-广东省,type=3-xx市站, type=4-XX市,type=5-xx区
+        $.cookie('cultid', id, {path: "/", expires: 7});
+        $.cookie('city', city, {path: "/", expires: 7});
+        $.cookie('cultType', type, {path: "/", expires: 7});
+        $.cookie('siteName', siteName, {path: "/", expires: 7});
+        $(".site_bottom").hide();
+        $(".city_bottom").show();
+        window.location.replace('index?wechat=1123');// 附加参数 是为了能成功在 微信中多次跳转
+//        history.back(-1);
+    }
+
+    function showCityList() {
+        var html = '';
+        var line1 = ''
+        var line = '';
+        for (var i = 0; i < cityData.length; i++) {
+            var clas = 'none';
+            var first = '<ul class="' + clas + '">';
+            var last = '</ul>';
+            var name = cityData[i].name;
+            var html1 = '';
+            for (var j = 0; j < cityData[i].cities.length; j++) {
+                if (cityData[i].cities[j]) {
+                    var cityName = cityData[i].cities[j].name;
+                    if (cityData[i].cities[j].name) {
+                        clas = '';
+                    }
+                    line1 = '<li>' + cityName + '</li>';
+                    html1 = html1 + line1;
+                }
+            }
+            line = '<div class="color">' + name + '</div>';
+            html = html + '<ul class="' + clas + '">' + line + html1 + last;
+        }
+        $(".city_bottom").html(html)
+    }
+
+    function cityAddClass() {
+        if (cultid == '') {
+            $("#span_qsz").addClass("active");
+        } else if (cultid == '0000000000000000') {
+            $("#span_gdsg").addClass("active");
+            $(".city_bottom ul").each(function () {
+                $(this).find('li').each(function () {
+                    $(this).removeClass("active");
+                    if ('广州市' == String($(this).text())) {
+                        $(this).addClass('active');
+                    }
+                })
+            });
+        } else {
+            $(".city_bottom ul").each(function () {
+                $(this).find('li').each(function () {
+                    $(this).removeClass("active");
+                    if ($(".address span a").text() == String($(this).text())) {
+                        $(this).addClass('active');
+                    }
+                })
+            });
+        }
+    }
+
+    function areaAddClass() {
+        $(".site_bottom ul li").each(function () {
+            $(this).removeClass("active");
+            if ($(this).attr('data-area') == coocity) {
+                $(this).addClass('active');
+            }
+        })
+    }
+</script>
+</body>
+</html>

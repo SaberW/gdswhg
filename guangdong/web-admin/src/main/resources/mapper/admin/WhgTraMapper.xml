@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.creatoo.hn.mapper.WhgTraMapper">
+
+    <select id="selCourseByTraid" resultType="hashmap">
+       SELECT
+            MIN(c.starttime) 'starttime',
+            MAX(c.endtime) 'endtime'
+        FROM
+            whg_tra_course c,
+            whg_tra t
+        WHERE
+            c.traid = t.id
+        AND t.id = #{traid}
+    </select>
+</mapper>

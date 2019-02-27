@@ -1,0 +1,229 @@
+// out: ../../css/public/config.css, sourcemap: false, compress: true
+
+/* ==CONFIG:=========================================================
+  $__version:       1.0.0
+  $__author:        JackyZeng
+  $__help:          zrongs@vip.qq.com
+  $__website:       http://hn.creatoo.cn
+  -------------------------------------------------------------------*/
+
+@charset "UTF-8";
+
+//==全局配置开始==========================================================
+
+//背景色
+@-bg-color:#f6f2f1;
+
+//主色
+//@-main-color: #cd0a1b;
+@-main-color:#db1c4d;
+//hover颜色
+//@-hover-color: #bd0a1b;
+@-hover-color: #9a133a;
+
+//辅助色
+@-auxiliary-color: #147bda;
+
+//流程图标色
+@-step-color:#ff9702;
+@-step-color-end:#5ebb2b;
+
+//文字颜色
+
+//边框颜色
+@-border-color:#ebebeb;
+@-border-color-2:#eaeaea;
+
+//文字颜色
+@-font-color-1:#333333;
+@-font-color-2:#666666;
+@-font-color-3:#999999;
+
+//图片配置:LOGO
+@-sys-logo:"../../../assets/img/public/logoSmall.png";
+@-sys-logo-new:"../../../assets/img/index/logo_new.png";
+
+//文字样式
+.font-h1(@c:@-font-color-1){
+  font-size:22px;
+  line-height:32px;
+  color:@c;
+  font-weight: normal;
+}
+.font-h2(@c:@-font-color-2){
+  font-size:14px;
+  line-height:24px;
+  color:@c;
+  font-weight: normal;
+}
+.font-h3(@c:@-font-color-3){
+  font-size:12px;
+  line-height:22px;
+  color:@c;
+  font-weight: normal;
+}
+
+.ftc-3(@color: #333){
+  color: @color;
+}
+.ftc-6(@color: #666){
+  color: @color;
+}
+.ftc-9(@color: #999){
+  color: @color;
+}
+.bc(@color: #e5e5e5){
+  border:solid 1px @color;
+}
+//==全局配置结束==========================================================
+
+
+//主色并成生主色的微调色
+@-main-color-a:lighten(spin(@-main-color,1),1%);
+@-main-color-a-a:lighten(spin(@-main-color,2),2%);
+@-main-color-s:lighten(spin(@-main-color,-1),1%);
+@-main-color-s-s:lighten(spin(@-main-color,-2),2%);
+
+//辅助色并成生辅助色色的微调色
+@-auxiliary-color-a:lighten(spin(@-auxiliary-color,1),2%);
+@-auxiliary-color-a-a:lighten(spin(@-auxiliary-color,2),3%);
+@-auxiliary-color-s:lighten(spin(@-auxiliary-color,-1),2%);
+@-auxiliary-color-s-s:lighten(spin(@-auxiliary-color,-2),3%);
+
+//圆角
+.border-radius (@radius: 3px) {
+  -webkit-border-radius: @radius;
+  -moz-border-radius: @radius;
+  border-radius: @radius;
+}
+
+//通用按钮
+.button(@color:@-main-color,@color-h:@-main-color-a-a,@text-color:#fff,@border-color:@-main-color,@padding: .5em 2em .55em){
+  display:inline-block;
+  zoom:1;
+  vertical-align: baseline;
+  outline:none;
+  overflow: visible;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  font-family: Microsoft YaHei, Arial, Helvetica, sans-serif;
+  line-height:100%;
+  padding:@padding;
+  .border-radius();
+  border:1px solid @border-color;
+  color:@text-color;
+  .gradient(top,@color,@color-h);
+  &:hover{
+    .gradient(top,@color-h,@color);
+  }
+}
+
+.button-2(@color:@-auxiliary-color,@color-h:@-auxiliary-color-s-s,@text-color:#fff,@border-color:@-auxiliary-color,@padding: .5em 2em .55em){
+  .button(@color,@color-h,@text-color,@border-color,@padding)
+}
+
+//阴影
+.box-shadow (@x: 0px, @y: 3px, @blur: 5px, @alpha: 0.5) {
+  -webkit-box-shadow: @x @y @blur rgba(0, 0, 0, @alpha);
+  -moz-box-shadow: @x @y @blur rgba(0, 0, 0, @alpha);
+  box-shadow: @x @y @blur rgba(0, 0, 0, @alpha);
+}
+
+//透明度
+.opacity (@opacity) {
+  @opacityPercentage: @opacity * 100;
+  opacity: @opacity;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(opacity=@{opacityPercentage})";
+  filter: "alpha(opacity = @{opacityPercentage})";
+}
+
+//动画
+.transition (@prop: all, @time: 1s, @ease: linear) {
+  -webkit-transition: @prop @time @ease;
+  -moz-transition: @prop @time @ease;
+  -o-transition: @prop @time @ease;
+  -ms-transition: @prop @time @ease;
+  transition: @prop @time @ease;
+}
+
+//渐变
+.gradient (@origin: left, @start: @-main-color, @stop: @-main-color-a-a) {
+  background-color: @start;
+  background-image: -webkit-linear-gradient(@origin, @start, @stop);
+  background-image: -moz-linear-gradient(@origin, @start, @stop);
+  background-image: -o-linear-gradient(@origin, @start, @stop);
+  background-image: -ms-linear-gradient(@origin, @start, @stop);
+  background-image: linear-gradient(@origin, @start, @stop);
+}
+
+//纯色渐变
+.qk-gradient (@origin: left, @alpha: 0.2) {
+  background-image: -webkit-linear-gradient(@origin, rgba(0,0,0,0.0), rgba(0,0,0,@alpha));
+  background-image: -moz-linear-gradient(@origin, rgba(0,0,0,0.0), rgba(0,0,0,@alpha));
+  background-image: -o-linear-gradient(@origin, rgba(0,0,0,0.0), rgba(0,0,0,@alpha));
+  background-image: -ms-linear-gradient(@origin, rgba(0,0,0,0.0), rgba(0,0,0,@alpha));
+  background-image: linear-gradient(@origin, rgba(0,0,0,0.0), rgba(0,0,0,@alpha));
+}
+
+.text-line (@lineH: 1){
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: @lineH;
+  -webkit-box-orient: vertical;
+}
+
+.li-flex {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.after(@c:@-border-color){
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 1px;
+  content: '';
+  -webkit-transform: scaleY(0.5);
+  transform: scaleY(0.5);
+  background-color: @c;
+}
+
+.before(@c:@-border-color){
+  position: absolute;
+  right: 0;
+  top: 0;
+  left: 0;
+  height: 1px;
+  content: '';
+  -webkit-transform: scaleY(0.5);
+  transform: scaleY(0.5);
+  background-color: @c;
+}
+
+.textFormat(){
+  overflow:hidden;
+  text-overflow: ellipsis;
+  white-space:nowrap;
+}
+
+.a(){
+  display: block;
+  height:100%;
+  width:100%;
+  position:absolute;
+  left:0px;
+  top:0px;
+  cursor: pointer;
+  z-index:10;
+  background:url(../../../assets/img/public/none.png) repeat;
+}

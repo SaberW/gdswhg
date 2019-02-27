@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/resource/resource.css'">
+<div th:include="guangdong/public/leftBar :: copy"></div>
+<div id="page">
+    <div class="mui-content">
+        <div id="category-cont"
+             class="category-cont mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+            <div class="mui-scroll">
+                <a href="javascript:void(0)" class="mui-control-item" data-index="c-1">区域<i></i></a>
+                <a href="javascript:void(0)" class="mui-control-item" data-index="c-2">类型<i></i></a>
+                <a href="javascript:void(0)" class="mui-control-item" data-index="c-3">年代<i></i></a>
+            </div>
+        </div>
+        <div class="category-mask none">
+            <div class="category-group none" data-index="c-1">
+                <ul class="clearfix" id="areList">
+                    <!--<li class="active" data-txt="区域">全部</li>
+                    <li item-data="0">雨花区</li>
+                    <li item-data="1">天心区</li>
+                    <li item-data="2">开福区</li>
+                    <li item-data="3">岳麓区</li>
+                    <li item-data="4">芙蓉区</li>-->
+                </ul>
+            </div>
+            <div class="category-group none" data-index="c-2">
+                <ul class="clearfix" id="artList">
+                    <!--<li class="active" data-txt="艺术类型">全部</li>
+                    <li item-data="5">展览</li>
+                    <li item-data="6">讲座</li>
+                    <li item-data="7">演出</li>
+                    <li item-data="8">赛事活动</li>-->
+                </ul>
+            </div>
+            <div class="category-group none" data-index="c-3">
+                <ul class="clearfix">
+                    <li item-data="" class="active" data-txt="全部">全部</li>
+                    <li item-data="90">00</li>
+                    <li item-data="90">90</li>
+                    <li item-data="80">80</li>
+                    <li item-data="70">70</li>
+                    <li item-data="60">60</li>
+                    <li item-data="50">50</li>
+                    <li item-data="40">40</li>
+                    <li item-data="30">30</li>
+                    <li item-data="20">20</li>
+                    <li item-data="10">10</li>
+                </ul>
+            </div>
+        </div>
+        <!--下拉刷新容器-->
+        <div id="model-list-panel" class="mui-content mui-scroll-wrapper" style="margin-top: 46px">
+            <div class="mui-scroll">
+                <!--数据列表-->
+                <div class="qw-person-list">
+                    <ul id="model-list">
+                        <!--<li>
+                            <a href="detail?id=2017110127436518">
+                                <div class="img">
+                                    <img src="http://183.131.126.132:8092/whgstatic/img/2017/201709/20170921/e7f2cf27ba3b41b680c1f10651db8800.jpg"
+                                         alt="">
+                                    <div class="gather-title">
+                                        <h2>亲子陶艺大作战</h2>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>-->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" th:inline="javascript">
+    $().ready(function () {
+        dataInit.ajax({
+            api: [[${apiPath.actCate}]],
+            params: {
+                type: 25,//活动分类type
+                cultid: $.cookie('cultid')
+            },
+            fn: showActClass
+        });
+        select.create(modelData);
+        dataInit.showAre($.cookie("city"),[[${apiPath.depts}]]);
+        modelData();
+    })
+
+    function modelData(page, size) {
+        var page = page || 1;
+        var size = size || 10;
+        var params = {};
+
+        var _param = {
+            page: page,
+            pageSize: size,
+            city: $("#city").val(),
+            feattype: $("#c-2").val(),
+            years: $("#c-3").val(),
+            deptid: $("#deptid").val(), //区
+            province: $("#province").val(),
+            cultid: $.cookie('cultid')
+        };
+
+        for(var k in _param){
+            if (!_param[k] || _param[k]=='' || _param[k]=='undefined')
+                delete _param[k];
+        }
+
+        dataInit.ajax({
+            api: [[${apiPath.artistList}]],
+            params: _param,
+            forceUpdate: false,
+            fn: function (data) {
+                params = {
+                    page: page,
+                    size: size,
+                    total: data.total
+                }
+                dataInit.htmlAdd(page, showModelHtml(data));
+                dataInit.pullUp(params, modelData);
+            }
+        })
+    }
+
+    function showModelHtml(data) {
+        var html = "";
+        if (data.code == 0 && data.rows.length > 0) {
+            for (var i in data.rows) {
+                var model = data.rows[i];
+                var img = data.imgPath + dataInit.getBigImage(model.imgurl);
+                html += '<li>'+
+                    '    <div class="person-pic">'+
+                    '        <div class="img">'+
+                    '            <img class="lazy" src="'+img+'">'+
+                    '        </div>'+
+                    '    </div>'+
+                    '    <div class="person-info">'+
+                    '        <div class="person-name">'+model.name+'</div>'+
+                    '        <div class="person-info-text">'+model.summary+'</div>'+
+                    '    </div>'+
+                    '    <a href="ysrcdetail?id='+model.id+'"></a>'+
+                    '</li>';
+            }
+        } else {
+            html = '<div class="newbility-no-msg"></div>';
+        }
+        return html;
+    }
+
+
+    function showActClass(data) {
+        $("#artList").html("");
+        var region = data.rows;
+        var regList = $("#artList");
+        regList.append('<li class="active" item-data="" data-txt="类型">全部</li>');
+        for (var i in region) {
+            regList.append('<li item-data="' + region[i].id + '">' + region[i].name + '</li>');
+        }
+    }
+</script>
+</body>
+</html>

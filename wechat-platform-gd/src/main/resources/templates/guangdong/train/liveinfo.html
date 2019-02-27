@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/public/detail.css'" >
+<link rel="stylesheet" href="https://g.alicdn.com/de/prismplayer/2.1.0/skins/default/aliplayer-min.css" />
+<script type="text/javascript" src="https://g.alicdn.com/de/prismplayer/2.1.0/aliplayer-min.js"></script>
+
+<div th:include="guangdong/public/leftBar :: copy"></div>
+
+<div id="page">
+    <div class="mui-content">
+        <div class="wrapper-detail">
+            <div id="liveContainer">
+            </div>
+            <div class="wrapper-detail-box">
+                <div class="info">
+                    <div class="title" style="margin-bottom:0px;" id="title">Loading...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" th:inline="javascript">
+    var userId = $("#temp_userId").val();
+    var itemId = dataInit.getUrlParam('id');
+    var type = dataInit.getUrlParam('type');
+    var basePath = [[${basePath}]];
+
+    $().ready(function(){
+        if(type == "tra"){
+            dataInit.ajax({
+                api:[[${apiPath.pxDetail}]],
+                params:{userid: userId, id:itemId},
+                fn: createModelHtml
+            })
+        }else if(type == 'act'){
+            dataInit.ajax({
+                api: [[${apiPath.actdetail}]],
+                params: {actId: itemId, cultid:cultid},
+                fn: createModelHtml
+            });
+        }
+    });
+
+    function createModelHtml(data) {
+        if(data.code == 0 && data.data.liveInfo.hasLive == '1'){
+            var livestate = data.data.liveInfo.state;
+            var liveurl = data.data.liveInfo.url;
+            var time = data.data.liveInfo.time;
+            var title = data.data.liveInfo.title;
+            var imgPath = '';
+            if(type == 'act'){
+                imgPath = data.imgPath + dataInit.getBigImage(data.data.actdetail.imgurl);
+            }else if(type == 'tra'){
+                imgPath = data.imgPath + dataInit.getBigImage(data.data.tra.image);
+            }
+
+            //标题
+            $('#title').text(title);
+            // 1-正在进行, 2-未开始， 3-已结束， 4-回看
+            if(livestate == '1'){
+                $('#liveState').text('正在直播');
+            }else if(livestate == '2'){
+                $('#liveState').text('未开始');
+            }else if(livestate == '3'){
+                $('#liveState').text('已结束');
+            }else if(livestate == '4'){
+                $('#liveState').text('精彩回顾');
+            }
+            //直播时间
+            $('#livestarttime').text(time);
+            //显示直播组件
+            showLive(livestate, liveurl, time);
+        }
+    }
+
+    /**
+     * 根据状态显示视频
+     * @param listState 1-正在进行, 2-未开始， 3-已结束， 4-回看
+     * @param liveUrl 直播地址
+     * @param backUrl 回放地址
+     */
+    function showLive(listState, liveUrl, time){
+        var liveContainer = $('#liveContainer');
+
+        //插放器地址
+        var sourceUrl = false;
+        var isLive = false;
+        if(listState == '2'){//显示未开始图片
+            var html = ''+
+                '<div class="live-not-started">'+
+                '        <i class="icon iconfont icon-xinhaota1"></i>'+
+                '        <h2>直播尚未开始</h2>'+
+                '        <p>直播时间：<span>'+time+'</span></p>'+
+                '</div>';
+            liveContainer.append(html);
+        }else if(listState == '4'){//视频回放
+            sourceUrl = liveUrl;
+        }else if(listState == '1'){//视频直播
+            sourceUrl = liveUrl;
+            isLive = true;
+        }else if(listState == '3'){//已结束
+            var html = ''+
+                '<div class="live-not-started">'+
+                '        <i class="icon iconfont icon-xinhaota1"></i>'+
+                '        <h2>直播已结束</h2>'+
+                '        <p>结束时间：<span>'+time+'</span></p>'+
+                '</div>';
+            liveContainer.append(html);
+        }
+
+        //插放视频
+        if(sourceUrl){
+            sourceUrl = sourceUrl.replace(/.flv/,".m3u8");
+            liveContainer.append('<div id="J_prismPlayer" class="prism-player"></div>');
+            window.player = new Aliplayer({
+                id: 'J_prismPlayer',
+                autoplay: false,
+                playsinline:true,
+                isLive:isLive,
+                source:sourceUrl,
+                useH5Prism:true,
+                x5_type:'h5', //声明启用同层H5播放器，支持的值：h5
+                width: "100%",       // 播放器宽度
+                height: "280px",
+                controlBarVisibility: 'always'
+            });
+        }
+    }
+</script>
+</body>
+</html>

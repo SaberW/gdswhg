@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong_gx/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/style/public/detail.css'">
+<div class="wrapper clearfix">
+    <div class="content">
+        <!--公共主头部开始-->
+        <div id="header" th:include="guangdong_gx/public/header :: copy"></div>
+        <!--公共主头部结束-->
+        <!--主体开始-->
+        <div class="sys-crumbs">
+            <span><a href="../index">首页</a></span>
+            <i class="icon iconfont icon-enter"></i>
+            <span><a href="list">培训资源</a></span>
+            <i class="icon iconfont icon-enter"></i>
+            <span class="active" id="title"></span>
+        </div>
+        <div class="res-main-info">
+            <div class="main-info">
+                <h1 id="detail-title"></h1>
+                <div class="info">
+                    <span>时长：<span id="time"></span></span>
+                    <span>来源：<span id="form"></span></span>
+                    <div class="other-cont clearfix">
+                        <div class="sns-cont" title="分享">
+                            分享到
+                            <a href="javascript:void(0);" target="_blank" class="fxweix"><i class="icon iconfont icon-wechat"></i></a>
+                            <a href="javascript:void(0);" target="_blank" class="fxweibo"><i class="icon iconfont icon-xinlang"></i></a>
+                            <a href="javascript:void(0);" target="_blank" class="fxqq"><i class="icon iconfont icon-kongjian"></i></a>
+                        </div>
+                        <div class="fav-vote-cont clearfix">
+                            <div class="sys-vote" title="点赞"><i class="icon iconfont icon-praise icon-praise_fill"
+                                                                id="good"></i><span>0</span></div>
+                            <div class="sys-fav" title="收藏"><i class="icon iconfont icon-collection icon-collection_fill"
+                                                               id="collection"></i><span>0</span></div>
+                            <div class="sys-fav" title="访问量"><i class="icon iconfont icon-search icon-collection_fill" id="visitCount"></i><span>0</span></div>
+                        </div>
+                        <!--点赞和收藏封装的代码start-->
+                        <div th:include="guangdong_gx/public/fav :: copy"></div>
+                        <div th:include="guangdong_gx/public/voteup :: copy"></div>
+                        <!--temp_type 的 值需和 WJQ 对接-->
+                        <input type="hidden" id="temp_type" value="32">
+                        <input type="hidden" id="commType">
+                        <!--点赞和收藏封装的代码end-->
+                    </div>
+                </div>
+                <div class="res-cont">
+
+                </div>
+            </div>
+        </div>
+        <div class="sys-main-bottom">
+            <div class="main-cont clearfix">
+                <div class="left-cont">
+                    <div class="item-cont">
+                        <div class="sys-main-title">
+                            <div class="title">资源详情</div>
+                            <hr>
+                        </div>
+                        <div class="sys-detail-list">
+                            <div class="title">资源简介</div>
+                            <div class="html-panel" id="desc"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="right-cont">
+                    <div class="item-cont">
+                        <div class="sys-main-title">
+                            <div class="title">相关资源</div>
+                            <hr>
+                        </div>
+                        <div class="recommend-cont">
+                            <ul id="recomment">
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--主体结束-->
+    </div>
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong_gx/public/footer :: copy"></div>
+<!--底部结束-->
+<a class="to-top"></a>
+<script th:src="${apiPath.myvisitnote}" id="whgtongji"></script>
+
+<script th:src="${basePath}+'/assets/js/FilteDatail.js'"></script>
+<script type="text/javascript" th:inline="javascript">
+
+    var itemId = dataInit.getUrlParam('id');
+    var userId = $("#temp_userId").val();
+
+    $().ready(function(){
+        initDetail();
+        initRecomment();
+
+        getVisitSumCount4url(itemId, function(count){
+            $("#visitCount").next("span").text(count);
+        });
+    })
+
+    function initDetail(){
+        dataInit.ajax({
+            api:[[${apiPath.traDescDetail}]],
+            params:{
+                userId: userId,
+                id:itemId
+            },
+            fn:function(data){
+                FilteDatail.options({
+                    toUrl: [[${basePath}]]+'/'+[[${cultsite}]]+'/index',
+                    info: data.data,
+                    state: 'drscstate'
+                }).filte();
+
+                createModelHtml(data);
+            }
+        })
+    }
+
+    function initRecomment(){
+        dataInit.ajax({
+            api:[[${apiPath.getRecommendDesc}]],
+            params:{
+                cultid : $.cookie('cultid'),
+                id:itemId
+            },
+            fn:function(data){
+                createRecommentHtml(data);
+            }
+        })
+    }
+
+    function createModelHtml(data){
+        if(data.code == 0) {
+            var model = data.data;
+            var title =  model.drsctitle;
+            var time = model.drsctime ? model.drsctime : "不详";
+            var form = model.drscfrom;
+            var img = data.imgPath + dataInit.getBigImage(model.drscpic);
+            var drscintro = model.drscintro;
+
+            $("#title,#detail-title").text(title);
+            if( time == '不详'){
+                $("#time").parent('span').hide();
+            }else{
+                $("#time").text(time);
+            }
+            if(form){
+                $("#form").text(form);
+            }else{
+                $("#form").parent('span').hide();
+            }
+            if(drscintro){
+                $("#desc").html(drscintro);
+            }else{
+                $("#desc").parent('div').parent('div').hide();
+            }
+
+            //调分享接口
+            dataInit.share(title,img);
+
+
+            var drsctyp = model.drsctyp+"";
+            var drscpath = model.enturl;
+            var resHTML = "";
+            var basePath = [[${basePath}]];
+
+            //1图片 2视频 3音频 4其它
+            switch (drsctyp){
+                case "1":
+                    resHTML = '\
+                    <div class="res-other">\
+                        <a href="'+dataInit.getRemoteURL(data.imgPath,model.drscpic)+'" target="_blank"></a>\
+                        <div class="mask none">\
+                            <div class="play"></div>\
+                        </div>\
+                        <img src="'+img+'">\
+                    </div>';
+                    break;
+                case "2":
+                    resHTML = '\
+                    <div class="res-video">\
+                        <div class="mask" onclick="rongDialog.init({\
+                            type : 5,\
+                            vedioUrl : \''+drscpath+'\',\
+                            vedioImg : \''+img+'\',\
+                            vedioType: \'mp4\',\
+                            vedioTitle : \''+title+'\',\
+                            basePath:\''+basePath+'\'\
+                    });">\
+                            <div class="play"></div>\
+                        </div>\
+                        <img src="'+img+'">\
+                    </div>';
+                    break;
+                case "3":
+                    resHTML = '\
+                    <div class="res-video">\
+                        <div class="mask" onclick="rongDialog.init({\
+                            type : 5,\
+                            vedioUrl : \''+drscpath+'\',\
+                            vedioImg : \''+img+'\',\
+                            vedioType: \'mp3\',\
+                            vedioTitle : \''+title+'\',\
+                            basePath:\''+basePath+'\'\
+                    });setWidth();">\
+                            <div class="play"></div>\
+                        </div>\
+                        <img src="'+img+'">\
+                    </div>';
+                    break;
+                case "4":
+                    resHTML = '\
+                    <div class="res-other">\
+                        <a href="'+dataInit.getRemoteURL(data.imgPath,drscpath)+'" target="_blank"></a>\
+                        <div class="mask">\
+                            <div class="play"></div>\
+                        </div>\
+                        <img src="'+img+'">\
+                    </div>';
+                    break;
+            }
+            $('.res-cont').html("").html(resHTML);
+        }
+    }
+
+    function createRecommentHtml(data){
+        var panel = $("#recomment");
+        panel.html("");
+        if(data.code == 0) {
+            if (data.rows.length > 0) {
+                for(var i in data.rows){
+                    if(i>=3)break;
+                    var model = data.rows[i];
+                    var img  = data.imgPath + dataInit.getSmallImage(model.drscpic);
+                    panel.append('\
+                        <li>\
+                            <div class="img">\
+                                <a href="detail?id='+model.drscid+'">\
+                                    <img src="'+img+'">\
+                                </a>\
+                            </div>\
+                            <p><a href="detail?id='+model.drscid+'">'+model.drsctitle+'</a></p>\
+                        </li>');
+                }
+            }else{
+                $("#recomment_cont").hide();
+            }
+        }else{
+            rongDialog.init({ico: 2, type: 1, desc: data.msg});
+        }
+    }
+
+
+</script>
+</body>
+</html>

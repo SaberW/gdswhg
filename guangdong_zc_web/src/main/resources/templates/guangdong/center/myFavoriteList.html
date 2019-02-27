@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/style/supply_sys/center.css'">
+<div class="wrapper clearfix">
+    <div class="content">
+        <!--公共主头部开始-->
+        <div id="header" th:include="guangdong/public/header :: copy"></div>
+        <!--公共主头部结束-->
+        <!--主体开始-->
+        <div class="container res-center-bg">
+            <div class="sys-crumbs">
+                <span><a href="../index">首页</a></span>
+                <i class="icon iconfont icon-enter"></i>
+                <span><a href="index">用户中心</a></span>
+                <i class="icon iconfont icon-enter"></i>
+                <span class="active" id="title">我的收藏</span>
+            </div>
+            <div class="page-list">
+                <div class="center-nav">
+                    <ul class="clearfix">
+                        <li class="active">
+                            我的收藏
+                        </li>
+                    </ul>
+                </div>
+                <div class="center-list">
+                    <ul id="modelList">
+                        <!--<li>
+                            <div class="title clearfix">
+                                <div class="title-list title-list-1">
+                                    已筹到:<span>5份</span>
+                                </div>
+                                <div class="title-list title-list-2">
+                                    支持份数:<span>20份</span>
+                                </div>
+                                <div class="title-list title-list-3">
+                                    <span class="blue">众筹中</span>
+                                </div>
+                            </div>
+                            <div class="detail clearfix">
+                                <div class="img">
+                                    <img src="http://183.131.126.132:8092/whgstatic/img/2017/201709/20170921/e7f2cf27ba3b41b680c1f10651db8800_750_500.jpg">
+                                </div>
+                                <div class="text">
+                                    <div class="text-title">众筹标题</div>
+                                    <div class="text-list">众筹时间：<span>这是活动地址</span></div>
+                                    <div class="text-list">活动时间：<span>这是活动地址</span></div>
+                                    <div class="text-list">联系电话：<span>15694548564</span></div>
+                                    <div class="text-list">活动地址：<span>342342342342423</span></div>
+                                    <div class="text-list">
+                                        培训讲师：<span style="margin-right: 15px">哇哈哈</span>
+                                        适合年龄：<span>10-50岁</span>
+                                    </div>
+                                </div>
+                                <div class="msg">众筹结果信息众筹结果信息众筹结果信息众筹结果信息众筹结果信息众筹结果信息</div>
+                                <div class="support">我要支持</div>
+                                <div class="progress-table clearfix">
+                                    <div class="progress-table-list">
+                                        <span>60%</span>
+                                        <span class="text">达成率</span>
+                                    </div>
+                                    <div class="progress-table-list">
+                                        <span>100</span>
+                                        <span class="text">剩余份数</span>
+                                    </div>
+                                    <div class="progress-table-list no-border">
+                                        <span>20天</span>
+                                        <span class="text">剩余时间</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="title clearfix">
+                                <div class="title-list title-list-1">
+                                    已筹到:<span>5份</span>
+                                </div>
+                                <div class="title-list title-list-2">
+                                    支持份数:<span>20份</span>
+                                </div>
+                                <div class="title-list title-list-3">
+                                    <span class="blue">众筹中</span>
+                                </div>
+                            </div>
+                            <div class="detail clearfix">
+                                <div class="img">
+                                    <img src="http://183.131.126.132:8092/whgstatic/img/2017/201709/20170921/e7f2cf27ba3b41b680c1f10651db8800_750_500.jpg">
+                                </div>
+                                <div class="text">
+                                    <div class="text-title">众筹标题</div>
+                                    <div class="text-list">众筹时间：<span>这是活动地址</span></div>
+                                    <div class="text-list">活动时间：<span>这是活动地址</span></div>
+                                    <div class="text-list">联系电话：<span>15694548564</span></div>
+                                    <div class="text-list">活动地址：<span>342342342342423</span></div>
+                                    <div class="text-list">
+                                        培训讲师：<span style="margin-right: 15px">哇哈哈</span>
+                                        适合年龄：<span>10-50岁</span>
+                                    </div>
+                                </div>
+                                <div class="msg">众筹结果信息众筹结果信息众筹结果信息众筹结果信息众筹结果信息众筹结果信息</div>
+                                <div class="support">我要支持</div>
+                                <div class="progress-table clearfix">
+                                    <div class="progress-table-list">
+                                        <span>60%</span>
+                                        <span class="text">达成率</span>
+                                    </div>
+                                    <div class="progress-table-list">
+                                        <span>100</span>
+                                        <span class="text">剩余份数</span>
+                                    </div>
+                                    <div class="progress-table-list no-border">
+                                        <span>20天</span>
+                                        <span class="text">剩余时间</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="title clearfix">
+                                <div class="title-list title-list-1">
+                                    已筹到:<span>5份</span>
+                                </div>
+                                <div class="title-list title-list-2">
+                                    支持份数:<span>20份</span>
+                                </div>
+                                <div class="title-list title-list-3">
+                                    <span class="gray">已结束</span>
+                                </div>
+                            </div>
+                            <div class="detail clearfix">
+                                <div class="img">
+                                    <img src="http://183.131.126.132:8092/whgstatic/img/2017/201709/20170921/e7f2cf27ba3b41b680c1f10651db8800_750_500.jpg">
+                                </div>
+                                <div class="text">
+                                    <div class="text-title">众筹标题</div>
+                                    <div class="text-list">众筹时间：<span>这是活动地址</span></div>
+                                    <div class="text-list">活动时间：<span>这是活动地址</span></div>
+                                    <div class="text-list">联系电话：<span>15694548564</span></div>
+                                    <div class="text-list">活动地址：<span>342342342342423</span></div>
+                                    <div class="text-list">
+                                        培训讲师：<span style="margin-right: 15px">哇哈哈</span>
+                                        适合年龄：<span>10-50岁</span>
+                                    </div>
+                                </div>
+                                <div class="msg">众筹结果信息众筹结果信息众筹结果信息众筹结果信息众筹结果信息众筹结果信息</div>
+                                <div class="support support-gray">我要支持</div>
+                                <div class="progress-table clearfix">
+                                    <div class="progress-table-list">
+                                        <span>60%</span>
+                                        <span class="text">达成率</span>
+                                    </div>
+                                    <div class="progress-table-list">
+                                        <span>100</span>
+                                        <span class="text">剩余份数</span>
+                                    </div>
+                                    <div class="progress-table-list no-border">
+                                        <span>20天</span>
+                                        <span class="text">剩余时间</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>-->
+                    </ul>
+                </div>
+                <!--分页开始 -->
+                <div class="green-black" id="artPagging"></div>
+                <!--分页结束-->
+            </div>
+        </div>
+        <!--主体结束-->
+    </div>
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong/public/footer :: copy"></div>
+<!--底部结束-->
+<a class="to-top"></a>
+<!--<script th:src="${basePath}+'/assets/js/zcproject/activitylist.js'" type="text/javascript"></script>-->
+<script type="text/javascript" th:inline="javascript">
+
+    var userId = $("#temp_userId").val();
+
+    $().ready(function(){
+        dataPage();
+    })
+
+    function dataPage(page, rows) {
+        var params = {
+            page: page || 1,
+            pageSize: rows || 12,
+            userid: userId
+        };
+
+        dataInit.ajax({
+            api: [[${apiPath.userColleGathers}]],
+            params: params,
+            fn: function (data) {
+                showModelList(data);
+                dataInit.pageInit("artPagging", params.page, params.pageSize, data.total, dataPage);
+            }
+        })
+    }
+
+    var li_temp = '<li>\
+            <div class="title clearfix">\
+                <div class="title-list title-list-1">\
+                        支持份数:<span>5份</span>\
+                </div>\
+                <div class="title-list title-list-2">\
+                        众筹上限:<span>20份</span>\
+                </div>\
+                <div class="title-list title-list-3">\
+                        <span class="blue">众筹中</span>\
+                </div>\
+            </div>\
+            <div class="detail clearfix">\
+                <div class="img">\
+                    <a><img ></a>\
+                </div>\
+                <div class="text">\
+                    <div class="text-title">众筹标题</div>\
+                    <div class="text-list">众筹时间：<span>这是活动地址</span></div>\
+                    <div class="text-list">活动时间：<span>这是活动地址</span></div>\
+                    <div class="text-list">联系电话：<span>15694548564</span></div>\
+                    <div class="text-list">活动地址：<span>342342342342423</span></div>\
+                    <div class="text-list">\
+                    培训讲师：<span style="margin-right: 15px">哇哈哈</span>\
+                    适合年龄：<span>10-50岁</span>\
+                    </div>\
+                </div>\
+                <div class="msg">众筹结果信息众筹结果信息众筹结果信息众筹结果信息众筹结果信息众筹结果信息</div>\
+                <div class="support">我要支持</div>\
+                <div class="progress-table clearfix">\
+                    <div class="progress-table-list">\
+                        <span>60%</span>\
+                        <span class="text">达成率</span>\
+                    </div>\
+                    <div class="progress-table-list">\
+                        <span>100</span>\
+                        <span class="text">剩余份数</span>\
+                    </div>\
+                    <div class="progress-table-list no-border">\
+                        <span>20天</span>\
+                        <span class="text">剩余时间</span>\
+                    </div>\
+                </div>\
+            </div>\
+            </li>';
+
+    function showModelList(data) {
+        $("#modelList").html("");
+        var modelList = $("#modelList");
+        var basePath = [[${basePath}]];
+        basePath += '/'+$.cookie("cultsite");
+        if (data.code == 0) {
+            if (data.rows.length > 0) {
+                for (var i in data.rows) {
+                    var model = data.rows[i];
+
+                    var timestart = model.timestart;
+                    var timeend = model.timeend;
+                    var gatherState = "";
+                    var gatherShowString = "";
+                    var gatherStateCode = 0;
+
+                    if (timeend < data.data.now){
+                        gatherState = "已结束";
+                        /*if (model.issuccess && model.issuccess !=0) {
+                            if (model.issuccess == 1) {
+                                gatherState = "众筹成功";
+                                //gatherShowString = "众筹成功，恭喜您已自动获得参与资格，请您依据众筹相关内容享受文化之旅！";
+                                gatherStateCode = 1;
+                            } else {
+                                gatherState = "众筹失败";
+                                //gatherShowString = "因众筹人数未达到要求，本次众筹失败。更多的众筹正在或将要进行，也许就有您咸兴趣的，敬请关注！";
+                                gatherStateCode = 2;
+                            }
+                        }else{
+                            gatherState = "已结束";
+                        }*/
+                    }else if (timestart<=data.data.now && timeend>=data.data.now) {
+                        gatherState = "众筹中";
+                        gatherStateCode = 1;
+                    }else{
+                        gatherState = "未开始";
+                    }
+
+                    var li = $(li_temp);
+                    li.find(".title .title-list-1 span").text(model.orderCount+"份");
+                    li.find(".title .title-list-2 span").text(model.numsum+"份");
+                    li.find(".title .title-list-3 span").text(gatherState);
+                    if (gatherStateCode == 1){
+                        li.find(".title .title-list-3 span").addClass("red");
+                    }else if (gatherStateCode == 2){
+                        li.find(".title .title-list-3 span").addClass("gray");
+                    }else{
+                        li.find(".title .title-list-3 span").addClass("blue");
+                    }
+
+                    li.find(".detail .img img").attr("src", data.imgPath+ dataInit.getSmallImage(model.imgurl));
+
+                    var detail_text = li.find(".detail>.text");
+                    detail_text.find(".text-title").text(model.title);
+                    detail_text.find(".text-list").remove();
+
+                    detail_text.append('<div class="text-list">众筹单位：<span>'+(model.company||'')+'</span></div>');
+                    detail_text.append('<div class="text-list">众筹时间：<span>'+moment(model.timestart).format("YYYY-MM-DD HH:mm")
+                            +' 至 '+moment(model.timeend).format("YYYY-MM-DD HH:mm")+'</span></div>');
+
+                    var infoUrl = '';
+                    //众筹类型
+                    switch (model.etype){
+                        case "4":   //活动
+                            if (model.refInfo){
+                                detail_text.append('<div class="text-list">活动时间：<span>'+moment(model.refInfo.starttime).format("YYYY-MM-DD")
+                                        +' 至 '+moment(model.refInfo.endtime).format("YYYY-MM-DD")+'</span></div>');
+                                detail_text.append('<div class="text-list">联系电话：<span>'+(model.refInfo.telphone||'无')+'</span></div>');
+                                detail_text.append('<div class="text-list">活动地址：<span>'+model.refInfo.address+'</span></div>');
+                            }
+                            infoUrl = basePath+'/project/actdetail?id='+model.id;
+                            break;
+                        case "5":   //培训
+                            if (model.refInfo){
+                                detail_text.append('<div class="text-list">开课日期：<span>' + moment(model.refInfo.starttime).format("YYYY-MM-DD HH:mm:ss") + '</span></div>');
+                                detail_text.append('<div class="text-list">联系电话：<span>'+(model.refInfo.phone||'无')+'</span></div>');
+                                detail_text.append('<div class="text-list">培训地址：<span>'+model.refInfo.address+'</span></div>');
+                                var age = model.refInfo.age || ',';
+                                age = age.replace(/,/g, '-');
+                                detail_text.append('<div class="text-list">\
+                                                    培训讲师：<span style="margin-right: 15px">'+(model.refInfo.teachername||'无')+'</span>\
+                                                    适合年龄：<span>'+age+'岁</span>\
+                                                    </div>');
+                            }
+                            infoUrl = basePath+'/project/traindetail?id='+model.id;
+                            break;
+                        default:
+                            if (model.phone){
+                                detail_text.append('<div class="text-list">联系电话：<span>'+model.phone+'</span></div>');
+                            }
+                            infoUrl = basePath+'/project/otherdetail?id='+model.id;
+                    }
+                    //li.find(".detail .img a").attr("href", basePath + model.cmurl);
+                    li.find(".detail .img a").attr("href", infoUrl);
+                    li.find(".detail .msg").text(gatherShowString);
+
+                    var dcr = Math.floor(Number(model.orderCount) / Number(model.nummin) * 100);
+                    dcr = dcr > 100? 100 : dcr;
+                    var srfs = Number(model.numsum) - Number(model.orderCount);
+                    li.find(".detail .progress-table .progress-table-list:eq(0) span:eq(0)").text(dcr+"%");
+                    li.find(".detail .progress-table .progress-table-list:eq(1) span:eq(0)").text(srfs);
+                    li.find(".detail .progress-table .progress-table-list:eq(2) span:eq(0)").text(getDays(model.timeend, data.data.now, model.timestart));
+
+                    if (gatherStateCode == 1){
+                        li.find(".detail .support").removeClass("support-gray");
+                        //li.find(".detail .support").off().on("click", {url: basePath + model.cmurl}, toInfo);
+                        li.find(".detail .support").off().on("click", {url: infoUrl}, toInfo);
+                    }else{
+                        li.find(".detail .support").addClass("support-gray");
+                        li.find(".detail .support").off();
+                    }
+                    modelList.append(li);
+                }
+            } else {
+                modelList.append("<div class='public-no-message'></div>");
+            }
+        } else {
+            rongDialog.init({ico: 2, type: 1, desc: data.msg});
+        }
+
+
+    }
+
+    function toInfo(event){
+        if (event.data.url) {
+            window.location.href = event.data.url;
+        }
+    }
+
+    //获取剩余天数
+    function getDays(timeend,_dataNow,timestart) {
+        if(_dataNow>timeend){
+            return '已结束';
+        }else if(_dataNow>timestart){
+            return moment(timeend).fromNow(true);
+        }else {
+            return '未开始';
+        }
+    }
+
+    //给消息过滤HTML标签
+    function removeHTMLTag(str) {
+        str = str.replace(/<\/?[^>]*>/g,''); //去除HTML tag
+        str = str.replace(/[ | ]*\n/g,'\n'); //去除行尾空白
+        //str = str.replace(/\n[\s| | ]*\r/g,'\n'); //去除多余空行
+        str=str.replace(/&nbsp;/ig,'');//去掉&nbsp;
+        return str;
+    }
+
+</script>
+</body>
+</html>

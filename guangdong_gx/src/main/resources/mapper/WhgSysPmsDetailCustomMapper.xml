@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.creatoo.hn.dao.mapper.admin.WhgSysPmsDetailCustomMapper">
+
+	<!-- 批量插入权限表 -->
+	<insert id="batchInsert" parameterType="java.util.List">
+		INSERT INTO whg_sys_pms_detail (id, pmsid, pmsstr)
+		VALUES
+		<foreach collection="list" item="item" index="index" separator=",">
+			(#{item.id}, #{item.pmsid}, #{item.pmsstr})
+		</foreach>
+	</insert>
+
+	<!-- 批量插入权限适应站点表 -->
+	<insert id="batchInsertPmsScope" parameterType="java.util.List">
+		INSERT INTO whg_sys_pms_scope (id, pmsid, cultid)
+		VALUES
+		<foreach collection="list" item="item" index="index" separator=",">
+			(#{item.id}, #{item.pmsid}, #{item.cultid})
+		</foreach>
+	</insert>
+</mapper>

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="public/resource :: copy"></head>
+<link th:href="${basePath}+'/assets/style/regist/regist.css'" rel="stylesheet">
+<body>
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/rong.validate.js'"></script>
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/rong.message.js'"></script>
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/jquery.md5.js'"></script>
+<div class="regist-logo"><a th:href="${basePath}+'/index'"></a></div>
+<ul class="crumbs crumbs-2nd clearfix">
+    <li class="step-1">1. 选择模式<em class="arrow"></em></li>
+    <li class="step-2">2. 验证信息<em class="arrow"></em></li>
+    <li class="step-3 last">3. 修改密码</li>
+</ul>
+<div class="main">
+    <div class="main-cont">
+        <div class="typeChange">
+            <div class="change mobileFind locationP">
+                <h2>通过手机找回密码</h2>
+                <p>Retrieve password with mobile</p>
+            </div>
+            <!--<div class="change emailFind locationE none">
+              <h2>通过邮箱找回密码</h2>
+              <p>Retrieve password with E-mail</p>
+            </div>-->
+        </div>
+        <!--手机找回密码信息验证开始-->
+        <form action="findpwd2" method="post" id="findPwd">
+            <div class="typeMain">
+                <dl class="phoneType clearfix">
+                    <dt class="float-left">手机号</dt>
+                    <dd class="float-left">
+                        <input class="in-txt inputPhone locking" placeholder="输入11位手机号码" maxlength="11"
+                               th:value="${phoneNum}" readonly>
+                        <em></em>
+                    </dd>
+                </dl>
+                <!--<dl class="phoneType clearfix">
+                  <dt class="float-left">验证码</dt>
+                  <dd class="float-left">
+                    <input class="in-txt inputCode" placeholder="输入验证码"  maxlength="4">
+                    <em></em>
+                    <div class="code"><img src="../../assets/img/public/code.gif"></div>
+                  </dd>
+                </dl>-->
+                <dl class="phoneCode clearfix">
+                    <dt class="float-left">手机验证码</dt>
+                    <dd class="float-left">
+                        <input class="in-txt inputPcode" placeholder="输入手机验证码" minlength="6" maxlength="6" id="code"
+                               name="code" required>
+                        <em></em>
+                        <div class="numAdd phoneNum none"><span>120</span>秒后可重新发送</div>
+                        <div class="numAdd postCode sendCodeP" id="sendCode">发送验证码</div>
+                    </dd>
+                </dl>
+                <dl class="clearfix">
+                    <dt class="float-left">设置新密码</dt>
+                    <dd class="float-left">
+                        <input class="in-txt" minlength="6" maxlength="18" placeholder="6-18位数字字母符号组合" type="password"
+                               id="password" name="password" required>
+                        <em></em>
+                    </dd>
+                </dl>
+                <dl class="clearfix">
+                    <dt class="float-left">&nbsp;</dt>
+                    <dd class="float-left">
+                        <input class="submit none" type="submit" value="Submit">
+                        <div class="goNext float-left">下一步</div>
+                    </dd>
+                </dl>
+            </div>
+            <input type="hidden" id="temp_pid" name="temp_pid">
+        </form>
+        <!--手机找回密码信息验证结束-->
+        <!--邮箱找回密码信息验证开始-->
+        <!--<div class="typeMain none">
+          <dl class="mailType clearfix">
+          <dt class="float-left">E-mail</dt>
+          <dd class="float-left">
+            <input class="in-txt inputEmail locking" placeholder="输入邮箱地址" readonly value="Mylovegb@sina.com">
+            <em></em>
+          </dd>
+        </dl>
+        <dl class="mailType clearfix">
+          <dt class="float-left">验证码</dt>
+          <dd class="float-left">
+            <input class="in-txt inputEcode" placeholder="输入邮箱验证码" maxlength="6">
+            <em></em>
+            <div class="numAdd postCode emailCode">发送验证码</div>
+            <div class="numAdd emailNum none"><span></span>秒后可重新发送</div>
+          </dd>
+        </dl>
+          <dl class="clearfix">
+            <dt class="float-left">&nbsp;</dt>
+            <dd class="float-left">
+              <div class="goNext float-left"><a href="findpwd3rd.html">下一步</a></div>
+            </dd>
+          </dl>
+        </div>-->
+        <!--邮箱找回密码信息验证结束-->
+    </div>
+</div>
+<!-- core public JavaScript -->
+<script type="text/javascript" th:inline="javascript">
+
+    $().ready(function () {
+        if ([[${phoneNum}]] == null) {
+            window.location.href = "findpwd";
+        }
+    });
+
+    $("#sendCode").on("click", function () {
+        var phone = [[${phoneNum}]];
+        var reg = /^0?(13[0-9]|15[012356789]|17[013678]|18[0-9]|14[57])[0-9]{8}$/;
+        //前端验证手机号是否真实
+        if (reg.test(phone)) {
+            dataInit.ajax({
+                api: [[${apiPath.hasPhone}]],
+                params: {"phone": phone},
+                fn: function (data) {
+                    if (data.data == 1) {
+                        dataInit.ajax({
+                            api: [[${apiPath.sendSmsCode}]],
+                            params: {
+                                phone: phone
+                            },
+                            fn: function (data) {
+                                //console.log(data);
+                                if (data.code != 0) {
+                                    rongDialog.init({
+                                        ico: 2,
+                                        type: 1,
+                                        desc: data.msg || "验证码异常",
+                                        nextFn: function () {
+                                            $("#code").val("");
+                                            $("#code").onfocus;
+                                        }
+                                    });
+                                } else {
+                                    $("#temp_pid").val(data.temp_pid);
+                                    numAdd();
+                                }
+                            }
+                        })
+                    } else { //手机号验证能过发送短信息
+                        rongDialog.init({
+                            ico: 2,
+                            type: 1,
+                            desc: "手机号异常",
+                            nextFn: function () {
+                                window.location.href = "findpwd";
+                            }
+                        });
+                    }
+                }
+            });
+        }
+    })
+    //时间重置
+    function numAdd() {
+        $('.postCode').hide();
+        $('.phoneNum').show();
+        function loadTime() {
+            var countdown = $('.phoneNum span').html();
+            if (countdown == 0) {
+                $('.phoneNum').hide();
+                $('.phoneNum span').html(120);
+                $('.postCode').show();
+                return;
+            }
+            countdown--;
+            $('.phoneNum span').html(countdown);
+            setTimeout(function () {
+                loadTime()
+            }, 1000)
+        }
+
+        loadTime();
+    }
+    //密码格式
+    $.validator.addMethod("pwdType", function (value) {
+        var reg = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$/;
+        return reg.test(value);
+    }, '密码必须由6-18位的数字和字母组成');
+    $("#findPwd").validate({
+        errorElement: "em",
+        rules: {
+            password: "pwdType"
+        },
+        messages: {
+            code: {
+                required: "短信验证码不能为空"
+            },
+            password: {
+                required: "请输入您的新登录密码",
+                minlength: "密码长度不能小于6个字符"
+            },
+        },
+        submitHandler: function () {
+            var phone = [[${phoneNum}]];
+            //验证验证码是否通过
+            dataInit.ajax({
+                api: [[${apiPath.findPassword}]],
+                params:{
+                    mobile:phone,
+                    code:$("#code").val(),
+                    password:$.md5($("#password").val())
+                },
+                fn:function(data){
+                    console.log(data);
+                    if(data.code == 0){
+                        window.location.href="findpwd3";
+                    }else{
+                        rongDialog.init({
+                            ico: 2,
+                            type: 1,
+                            desc: data.msg || "异常"
+                        });
+                    }
+                }
+            })
+        }
+    });
+    $(".goNext").on("click", function () {
+        $(".submit").click();
+    })
+</script>
+</body>
+</html>

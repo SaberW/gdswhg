@@ -1,0 +1,388 @@
+// out: ../../css/activity/activityreg.css, sourcemap: false, compress: true
+
+@import "../public/config";
+
+.mui-card-content-inner {
+  margin-top: 15px;
+  margin-bottom: 15px;
+  padding: 0;
+  position: relative
+}
+
+.mui-card-content div.title {
+  font-size: 18px;
+  line-height: 30px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  color: #fff;
+  width: 100%;
+  padding: 0 15px;
+  background: rgba(0, 0, 0, .3)
+}
+
+.mui-card-content div.title p {
+  color: #fff
+}
+
+.mui-card-content div.title .ticket {
+  font-size: 12px;
+  color: #fff
+}
+
+.mui-card-content div.title .ticket span {
+  color: #f29220
+}
+
+.mui-card-content-inner .time {
+  font-size: 14px;
+  color: #1a1a1a;
+  margin-top: 5px;
+  margin-bottom: 30px
+}
+
+.mui-card-content-inner .time i {
+  margin: 0 5px
+}
+
+#seatWrapper {
+  margin-top: 10px
+}
+
+.warning {
+  font-size: 12px;
+  line-height: 22px;
+}
+
+.asterisk {
+  color: #f29220;
+  font-size: 18px;
+  position: relative;
+  top: 5px;
+  padding: 0 5px
+}
+
+.input-list {
+  border-radius: 5px;
+  overflow: hidden;
+  border: solid 1px @-border-color;
+  background: #f5f5f5;
+  margin-bottom: 10px
+}
+
+.mui-input-row label {
+  font-size: 14px;
+  font-weight: 400;
+  color: @-font-color-1;
+  line-height: 24px;
+  margin: 14px 0 0 0;
+  padding: 0;
+  width: 30%;
+  text-align: left;
+}
+
+.mui-input-row label ~ input, .mui-input-row label ~ select, .mui-input-row label ~ textarea {
+  font-size: 14px;
+  color: @-font-color-2;
+  width: 68%;
+  height: 50px;
+}
+
+.mui-input-group .mui-input-row:after {
+  left: 0
+}
+
+.mui-numbox {
+  border: none;
+  border-radius: 0;
+  background-color: #fff
+}
+
+.mui-numbox [class*=btn-numbox]:active, .mui-numbox [class*=numbox-btn]:active {
+  background-color: #f5f5f5
+}
+
+.mui-numbox .mui-input-numbox, .mui-numbox .mui-numbox-input {
+  border: none !important;
+  color: @-font-color-1;
+}
+
+.mui-numbox .mui-btn-numbox-minus, .mui-numbox .mui-numbox-btn-minus {
+  width: 30px;
+  height: 31px;
+  background-image: url(../../../assets/img/act/jian@2x.png);
+  background-size: 30px 31px;
+  border-radius: 50%;
+  overflow: hidden;
+  left: 5px
+}
+
+.mui-numbox .mui-btn-numbox-plus, .mui-numbox .mui-numbox-btn-plus {
+  width: 30px;
+  height: 31px;
+  background-image: url(../../../assets/img/act/jia@2x.png);
+  background-size: 30px 31px;
+  border-radius: 50%;
+  overflow: hidden;
+  right: 5px
+}
+
+.help-info p {
+  margin-top:25px;
+  color: #333;
+  padding-left: 0px;
+  font-size: 12px;
+  position: relative;
+}
+.help-info input{
+  vertical-align: middle;
+  margin-bottom: 2px;
+}
+.input-merge{
+  &:after{
+    .after();
+    background-color:#ccc;
+  }
+}
+
+.help-info p a {
+  color: #4c8bff
+}
+.help-info p i{
+  display: block;
+  width: 10px;
+  height: 10px;
+  position: absolute;
+  left: 1px;
+  top: 5px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+.help-info p i {
+  content: " ";
+  display: block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  position: absolute;
+  left: 3px;
+  top: 6px;
+  background: @-main-color;
+  -webkit-box-shadow: 0px 0px 5px @-main-color-a;
+  box-shadow: 0px 0px 5px @-main-color-a;
+}
+.mui-card.no-corner {
+  margin: 0 0 10px 0 !important;
+  border-radius: 0 !important;
+  -webkit-box-shadow: none !important;
+          box-shadow: none !important;
+}
+
+.mui-card.no-corner:first-child {
+  margin-top: 0px;
+}
+.mui-card.no-corner:last-child {
+  margin-bottom: 0px;
+}
+.mui-card .mui-card-header.wrapper-par {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin: 15px;
+  background: #fff;
+  padding: 0;
+  position:relative;
+}
+
+.mui-card .mui-card-header.wrapper-par .left-wrapper, .mui-card .mui-card-header.wrapper-par .right-wrapper {
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
+  flex: 1
+}
+
+.mui-card .mui-card-header.wrapper-par .left-wrapper {
+  -webkit-box-flex: 0;
+  -ms-flex: 0 0 120px;
+  flex: 0 0 120px;
+  width: 120px
+}
+
+.mui-card .mui-card-header.wrapper-par .left-wrapper #pageImg {
+  width: 120px;
+  height: 80px;
+  vertical-align: top
+}
+
+.mui-card .mui-card-header.wrapper-par .right-wrapper {
+  padding-left: 10px
+}
+
+.mui-card .mui-card-header.wrapper-par .right-wrapper .page-title {
+  font-size: 16px;
+  line-height: 26px;
+  color: #1a1a1a;
+}
+
+.mui-card .mui-card-header.wrapper-par .right-wrapper .adr {
+  font-size: 15px;
+  line-height: 1.3em;
+  color: @-font-color-2;
+}
+.mui-card .mui-card-header.wrapper-par .right-wrapper .project {
+  font-size: 10px;
+  color: @-font-color-3;
+  position:absolute;
+  right:0px;
+  bottom:0px;
+}
+
+.mui-card .mui-card-header.wrapper-par .right-wrapper div.time {
+  font-size: 12px;
+  line-height: 22px;
+  color: #666;
+  position: relative;
+}
+.mui-card .mui-card-header.wrapper-par .right-wrapper div.time i{
+  font-size: 14px;
+  position:relative;
+  top:1px;
+  margin-right:2px;
+  color: @-font-color-2;
+}
+.mui-card-footer:before, .mui-card-header:after {
+  height: 0;
+}
+.mui-bar {
+  border-top: solid 1px @-border-color;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+.mui-bar>.mui-tab-item,.mui-bar>.mui-tab-item.mui-active {
+  background: #fff;
+  color: @-auxiliary-color-a;
+}
+.mui-bar>.mui-tab-item>span.text{
+  font-size: 17px;
+}
+.mui-bar>.mui-tab-item>span.text>span.ticket-number{
+  font-size: 12px;
+  margin-left: 5px;
+}
+.mui-bar>.mui-tab-item.next-page {
+  background: @-main-color;
+  color: #fff;
+}
+.mui-card.no-corner.step-table{
+  margin: 10px!important;
+  padding: 0 15px;
+}
+
+.mui-input-row .mui-numbox{
+  float: inherit;
+  margin: 7px 8px 0 8px;
+}
+.limit{
+  height: 81px!important;
+}
+.mui-input-group .mui-input-row{
+  height: 50px;
+  line-height: 50px;
+  color: @-font-color-1;
+}
+.mui-navigate-right:after, .mui-push-right:after {
+  right: 0px;
+  content: '\e581';
+  font-size: 20px;
+}
+
+.detail-header{
+  position:relative;
+  padding:10px;
+  &:before{
+    .before();
+  }
+  .img{
+    float:left;
+    width:40%;
+    img{
+      width:100%;
+      height:auto;
+      display: block;
+    }
+  }
+  .info{
+    width:60%;
+    height:100%;
+    position:absolute;
+    right:0px;
+    top:10px;
+    h2{
+      padding:0px 10px;
+      font-size:16px;
+      line-height:20px;
+      font-weight:normal;
+    }
+    p{
+      padding:0px 10px;
+      color:@-font-color-2;
+      font-size:14px;
+      line-height:1.4em;
+    }
+  }
+  .state-cont{
+    position:absolute;
+    right:0px;
+    bottom:15px;
+    width:100%;
+    font-size:12px;
+    .other{
+      color:@-font-color-3;
+      float:right;
+      margin-right:10px;
+      margin-top:5px;
+      font-size:10px;
+    }
+  }
+}
+
+//iphone4
+@media (device-height:480px) and (-webkit-min-device-pixel-ratio:2){
+  .detail-header{
+      .info{
+        h2{
+          font-size:12px;
+          line-height:16px;
+        }
+        p{
+          font-size:10px;
+        }
+      }
+      .state-cont{
+        font-size:10px;
+        .other{
+          font-size:10px;
+        }
+      }
+    }
+  }
+
+//iphone5
+@media (device-height:568px) and (-webkit-min-device-pixel-ratio:2){
+  .detail-header{
+      .info{
+        h2{
+          font-size:14px;
+          line-height:18px;
+        }
+        p{
+          font-size:12px;
+        }
+      }
+      .state-cont{
+        font-size:12px;
+        .other{
+          font-size:10px;
+        }
+      }
+    }
+  }

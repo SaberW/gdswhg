@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/union/union.css'">
+<div th:include="guangdong/public/leftBar :: copy"></div>
+<div id="page">
+    <div class="mui-content">
+        <div id="model-list-panel" class="mui-content mui-scroll-wrapper">
+            <div class="mui-scroll">
+                <div id="model-list">
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script type="text/javascript" th:inline="javascript">
+    var activeCultid = dataInit.getUrlParam('id');
+    $(document).ready(function () {
+        modelData();
+    })
+    function modelData(page, size) {
+        var page = page || 1;
+        var size = size || 10;
+        activeCultid = activeCultid || $.cookie("cultid");
+
+        dataInit.ajax({
+            api: [[${apiPath.whglmList}]],
+            params: {
+                index: page,
+                size: size,
+                cultid: activeCultid
+            },
+            forceUpdate: false,
+            fn: function (data) {
+                var params = {
+                    page: page,
+                    size: size,
+                    total: data.total
+                }
+                dataInit.htmlAdd(page, showModelHtml(data));
+                dataInit.pullUp(params, modelData);
+            }
+        })
+    }
+    function showModelHtml(data) {
+        if(data && data.code == 0){
+            if(data.rows.length>0){
+                var html = '';
+                for(var i in data.rows){
+                    var model = data.rows[i];
+                    var union_imgPath = data.imgPath + dataInit.getBigImage(model.picture);
+                    if(model.id == activeCultid){
+                        if(data.rows.length == 1){
+                            html = '<div class="newbility-no-msg"></div>';
+                            continue;
+                        }else {
+                            continue;
+                        }
+                    }
+                    html+='<div class="cultural">'+
+                        '    <div class="pic">'+
+                        '        <img class="lazy" src="'+union_imgPath+'">'+
+                        '        <div class="pic-center">'+
+                        '            <div class="para">'+
+                        '                <p>'+model.name+'</p>'+
+                        '            </div>'+
+                        '            <a href="javascript:goPage(\''+model.id+'\')">查看分馆</a>'+
+                        '        </div>'+
+                        '    </div>'+
+                        '    <div class="list">'+
+                        '        <ul class="mui-table-view">'+
+                        '            <li class="mui-table-view-cell">'+
+                        '                <a href="javascript:void(0)">'+
+                        '                    <p class="mui-pull-left">'+
+                        '                       <i class="iconfont icon-message"></i>'+
+                        '                        资讯'+
+                        '                    </p>'+
+                        '                    <p class="mui-pull-right">'+model.zxCount+' 条</p>'+
+                        '                </a>'+
+                        '            </li>'+
+                        '            <li class="mui-table-view-cell">'+
+                        '                <a href="javascript:void(0)">'+
+                        '                    <p class="mui-pull-left">'+
+                        '                       <i class="iconfont icon-homepage"></i>'+
+                        '                        场馆'+
+                        '                    </p>'+
+                        '                    <p class="mui-pull-right">'+model.venueCount+' 个</p>'+
+                        '                </a>'+
+                        '            </li>'+
+                        '            <li class="mui-table-view-cell">'+
+                        '                <a href="javascript:void(0)">'+
+                        '                    <p class="mui-pull-left">'+
+                        '                       <i class="iconfont icon-activity"></i>'+
+                        '                        活动'+
+                        '                    </p>'+
+                        '                    <p class="mui-pull-right">'+model.activityCount+' 个</p>'+
+                        '                </a>'+
+                        '            </li>'+
+                        '            <li class="mui-table-view-cell">'+
+                        '                <a href="javascript:void(0)">'+
+                        '                    <p class="mui-pull-left">'+
+                        '                       <i class="iconfont icon-manage"></i>'+
+                        '                        培训'+
+                        '                    </p>'+
+                        '                    <p class="mui-pull-right">'+model.traCount+' 个</p>'+
+                        '                </a>'+
+                        '            </li>'+
+                        '        </ul>'+
+                        '    </div>'+
+                        '</div>';
+                }
+            }else {
+                html = '<div class="newbility-no-msg"></div>';
+            }
+        }
+        return html;
+    }
+    function goPage(id) {
+        $("#model-list").html('');
+        window.location.href = 'index?id='+id;
+    }
+</script>
+</body>
+</html>

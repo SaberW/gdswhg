@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<script th:src="${basePath}+'/assets/js/jquery.md5.js'" type="text/javascript"></script>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/usercenter/usercenter.css'" >
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/public/detail.css'" >
+<div th:include="guangdong/public/leftBar :: copy"></div>
+<div id="page">
+    <div class="mui-content">
+        <!--手机绑定-->
+        <div  id="step-1">
+            <div class="tel breadth">
+                <div class="mui-input-group" id="f-1">
+                    <div class="mui-input-row">
+                        <input type="tel" name="phoneNum" id="phoneNum" placeholder="请输入您的手机号" maxlength="11" minlength="11">
+                    </div>
+                    <div class="mui-input-row mui-row">
+                        <div class="mui-col-sm-8 mui-col-xs-8">
+                            <input type="tel" name="code" id="code" placeholder="请输入手机验证码" maxlength="6">
+                        </div>
+                        <div class="mui-col-sm-4 mui-col-xs-4">
+                            <button class="confirm phoneNum" style="display: none"><span>120</span></button>
+                            <button class="confirm postCode sendCodeP"  id="sendCode">获取验证码</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--手机绑定-->
+            <nav class="mui-bar mui-bar-tab">
+                <div class="mui-tab-item">
+                    <a class="goNext" href="javascript:bindPhone()" id="btn-1">绑定手机</a>
+                </div>
+            </nav>
+        </div>
+        <div id="step-2" style="display: none">
+            <div class="tel breadth">
+                <div class="mui-input-group" id="f-2">
+                    <div class="mui-input-row">
+                        <input type="password" name="password" id="password" placeholder="请输入密码" maxlength="18" minlength="6" style="width: 100%">
+                    </div>
+                    <div class="mui-input-row mui-row">
+                        <input type="password" name="password_again" id="password_again" placeholder="请输入确认密码" maxlength="18" minlength="6">
+                    </div>
+                </div>
+            </div>
+            <!--手机绑定-->
+            <nav class="mui-bar mui-bar-tab">
+                <div class="mui-tab-item">
+                    <a class="goNext" href="javascript:checkPwdPhone()" id="btn-2">确定</a>
+                </div>
+            </nav>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" th:inline="javascript">
+    var userId = $("#temp_userId").val();
+    var tourl = dataInit.getUrlParam('to');
+    var sendCodeType = true;
+    var reg = /^0?(13[0-9]|15[012356789]|17[013678]|18[0-9]|14[57])[0-9]{8}$/;
+    var checkpwd = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$/;
+    var MD5pwd = '';
+    var openid = $.cookie('wxoid')?$.cookie('wxoid'):'';
+    var phone = '';
+    $().ready(function(){
+
+    })
+    //时间重置
+    function numAdd() {
+        $('.postCode').hide();
+        $('.phoneNum').show();
+        function loadTime() {
+            var countdown = $('.phoneNum span').html();
+            if (countdown == 0) {
+                $('.phoneNum').hide();
+                $('.phoneNum span').html(120);
+                $('.postCode').show();
+                sendCodeType = true;
+                return;
+            }
+            countdown--;
+            $('.phoneNum span').html(countdown);
+            setTimeout(function () {
+                loadTime()
+            }, 1000)
+        }
+        loadTime();
+    }
+
+    mui(".mui-col-xs-4").on("tap","#sendCode",function(){
+        phone = $("#phoneNum").val();
+        $("#phoneNum").blur();
+        //前端验证手机号是否真实
+        if ( reg.test(phone) && sendCodeType ) {
+            sendCodeType = false;
+            dataInit.ajax({
+                api: [[${apiPath.checkMobile}]],
+                params: {"phone": phone,"openid":openid},
+                fn: function (data) {
+                    if (data.code == 0) {
+                        $("#btn-1").attr('href','javascript:bindPhone()');
+                        sendSmsCode();
+                    } else if (data.code == 1) {
+                        $("#btn-1").attr('href','javascript:showPwdInput()');
+                        sendSmsCode();
+                    }else if (data.code == 2)  {
+                        mui.toast(data.msg);
+                        setTimeout(function () {
+                            window.location.reload();
+                        },2000)
+                    }else{
+                        mui.toast(data.msg);
+                        sendCodeType = true;
+                    }
+                }
+            });
+        }else{
+            mui.toast("请输入正确的手机号码");
+        }
+    });
+    function sendSmsCode() {
+        dataInit.ajax({
+            api: [[${apiPath.sendSmsCode}]],
+            params: {
+                phone: phone
+            },
+            fn: function (data) {
+                if (data.code != 0) {
+                    mui.toast(data.msg || "验证码异常");
+                    $("#code").val("");
+                    $("#code").onfocus;
+                    sendCodeType = true;
+                } else {
+                    $("#phoneNum").attr("readonly","readonly");
+                    numAdd();
+                }
+            }
+        })
+    }
+
+    function verification(){
+        if(!reg.test($("#phoneNum").val())){
+            mui.toast("请输入正确的手机号码");
+            return false;
+        }
+        if(!$("#code").val()){
+            mui.toast("请输入手机验证码");
+            return false;
+        }
+        return true;
+    }
+
+    function bindPhone(){
+        if(!verification()){
+            return false;
+        }
+        var _params = {
+            phone: $("#phoneNum").val(),
+            openid: openid,
+            pwd: MD5pwd,
+            code: $("#code").val()
+        };
+        for(var k in _params){
+            if (!_params[k] || _params[k]=='')
+                delete _params[k];
+        }
+        dataInit.ajax({
+            api: [[${apiPath.bindMobile}]],
+            params: _params,
+            fn: function (data) {
+                if (data.code == 0) {
+                    mui.toast("绑定成功");
+                    window.location.href = [[${basePath}]] + '/doLogin?userId='+data.data+'&to='+tourl;
+                } else {
+                    mui.toast(data.msg || "手机绑定异常");
+                }
+            }
+        });
+        /*if(verification()){
+            dataInit.ajax({
+                api: [[${apiPath.hasCode}]],
+                params: {
+                    phone: $("#phoneNum").val(),
+                    code: $("#code").val()
+                },
+                fn: function (data) {
+                    //验证通过即可修改密码
+                    var _params = {
+                        phone: $("#phoneNum").val(),
+                        openid: openid,
+                        pwd: MD5pwd,
+                        code: $("#code").val()
+                    };
+
+                    for(var k in _params){
+                        if (!_params[k] || _params[k]=='')
+                            delete _params[k];
+                    }
+                    if (data.code == 0 && data.data == 1) {
+                        dataInit.ajax({
+                            api: [[${apiPath.bindMobile}]],
+                            params: _params,
+                            fn: function (data) {
+                                if (data.code == 0) {
+                                    mui.toast("绑定成功");
+                                    window.location.href = [[${basePath}]] + '/doLogin?userId='+data.data+'&to='+tourl;
+                                } else {
+                                    mui.toast(data.msg || "手机绑定异常");
+                                }
+                            }
+                        });
+                        sendCodeType = true;
+                    } else {
+                        mui.toast(data.msg || "验证码错误");
+                    }
+                }
+            })
+        }*/
+    }
+    function showPwdInput() {
+        if(verification()){
+            dataInit.ajax({
+                api: [[${apiPath.hasCode}]],
+                params: {
+                    phone: $("#phoneNum").val(),
+                    code: $("#code").val()
+                },
+                fn: function (data) {
+                    if (data.code == 0 && data.data == 1) {
+                        $("#step-1").hide();
+                        $("#step-2").show();
+                        mui.toast('请输入密码');
+                    } else {
+                        mui.toast(data.msg || "验证码错误");
+                    }
+                }
+            })
+        }
+    }
+
+    function checkPwd(){
+        var newPwd = $('#password').val().trim();
+        var confirm = $('#password_again').val().trim();
+        if (newPwd == ''|| 6 > newPwd.length  || 18 < newPwd.length || !checkpwd.test(newPwd)){
+            mui.toast('请输入正确的新密码(6-18位数字字母符号组合)');
+            return false;
+        } else if (confirm == ''){
+            mui.toast('请输入确认密码');
+            return false;
+        } else if (newPwd != confirm){
+            mui.toast('确认密码不一致');
+            return false;
+        }else {
+            return true;
+        }
+    }
+    function checkPwdPhone() {
+        if(checkPwd()){
+            MD5pwd = $.md5($("#password").val());
+            bindPhone();
+        }
+    }
+</script>
+</body>
+</html>

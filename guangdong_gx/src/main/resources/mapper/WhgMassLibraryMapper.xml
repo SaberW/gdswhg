@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.creatoo.hn.dao.mapper.WhgMassLibraryMapper">
+
+    <select id="t_whgsrchList" resultType="hashmap">
+        SELECT
+            mass.id,mass.name,mass.resourcetype,ua.authority as arttype
+        FROM
+            whg_mass_library mass
+            LEFT JOIN whg_mass_user_auth ua ON ua.masslibraryid = mass.id AND ua.userid = #{userid}
+        WHERE 1 = 1
+        <if test="name != null">
+           AND mass.NAME LIKE #{name}
+        </if>
+        AND ((1=1
+        <if test="deptid != null">
+            AND mass.deptid IN
+            <foreach collection="deptid" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="cultid != null">
+            AND mass.cultid = #{cultid}
+        </if>
+        )
+        <if test="sharecultid != null">OR (mass.sharecultid LIKE #{sharecultid})</if>)
+        AND mass.state = #{state}
+        ORDER BY crtdate DESC
+    </select>
+
+
+    <select id="apply_user_list" resultType="hashmap">
+        SELECT t.*,us.account,us.contactnum,cult.name cultname,lib.resourcetype,lib.name libname,cult1.name libcultname
+        FROM whg_mass_apply_user t
+        left join whg_sys_user us on us.id = t.userid
+        left join whg_mass_library lib on lib.id = t.masslibraryid
+        left join whg_sys_cult cult on cult.id = us.cultid
+        left join whg_sys_cult cult1 on cult1.id = lib.cultid
+        WHERE 1 = 1
+        <if test="account != null">
+            AND us.account LIKE #{account}
+        </if>
+        <if test="contactnum != null">
+            AND us.contactnum LIKE #{contactnum}
+        </if>
+        <if test="applytype != null">
+            AND t.applytype LIKE #{applytype}
+        </if>
+        <if test="cultid != null">
+            AND lib.cultid = #{cultid}
+        </if>
+        <if test="libcultid != null">
+            AND lib.cultid = #{libcultid}
+        </if>
+        ORDER BY applytime DESC
+    </select>
+
+    <select id="queryLibByApplyUserId" resultType="com.creatoo.hn.dao.model.WhgMassLibrary">
+         select lib.cultid,lib.tablename from whg_mass_library lib left join whg_mass_user_auth ua on ua.masslibraryid = lib.id
+         where ua.userid = #{userid}
+        <if test="resourcetype != null">
+          and lib.resourcetype = #{resourcetype}
+        </if>
+        and lib.state = 1
+    </select>
+
+
+
+</mapper>

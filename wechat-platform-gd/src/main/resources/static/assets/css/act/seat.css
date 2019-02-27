@@ -1,0 +1,258 @@
+@import "../../fonts/iconfont.css";
+/* ==CONFIG:=========================================================
+  $__version:       1.0.0
+  $__author:        JackyZeng
+  $__help:          zrongs@vip.qq.com
+  $__website:       http://hn.creatoo.cn
+  -------------------------------------------------------------------*/
+@charset "UTF-8";
+.li-flex {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+.clearfix:after {
+  content: ".";
+  display: block;
+  clear: both;
+  visibility: hidden;
+  line-height: 0;
+  height: 0;
+  font-size: 0;
+}
+.none {
+  display: none;
+}
+.no-padding-0 {
+  padding: 0!important;
+}
+.float-left {
+  float: left !important;
+}
+.float-right {
+  float: right !important;
+}
+ul,
+li {
+  list-style: none;
+  padding: 0px;
+  margin: 0px;
+}
+.a {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: block;
+  left: 0px;
+  top: 0px;
+  z-index: 10;
+}
+.seat {
+  background-color: #f0f0f0;
+}
+.seat-on {
+  padding: 0;
+  margin-bottom: 20px;
+  border-bottom: solid 1px #e5e5e5;
+}
+.seat-on > div {
+  position: relative;
+}
+.seat-on > div > span.tt {
+  position: absolute;
+  top: 5px;
+  font-size: 14px;
+  color: #666666;
+}
+.seat-on .seat-on-message {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 10px;
+  margin-left: 60px;
+  display: inline-block;
+  line-height: 30px;
+}
+.seat-on .seat-on-message span.seat-list,
+span.seat-list {
+  display: inline-block;
+  border: dashed 1px #e6162d;
+  color: #e6162d;
+  font-size: 12px;
+  width: 60px;
+  margin-left: 10px;
+  height: 22px;
+  line-height: 21px;
+  text-align: center;
+}
+.seat-on .seat-on-message span.tt {
+  display: inline-block;
+  float: left;
+  height: 22px;
+  line-height: 22px;
+}
+.seat-on .seat-on-message p {
+  margin-top: 10px;
+}
+.seat-on .seat-on-message div.remark {
+  float: left;
+  position: relative;
+  height: 114px;
+}
+.seat-on .seat-on-message div.remark span.msg {
+  color: #ff5b36;
+  font-size: 14px;
+  margin-left: 10px;
+  display: none;
+}
+.seat-on .seat-on-message div.remark input {
+  border: solid 1px #e5e5e5;
+  margin-left: 10px;
+  padding: 5px 10px;
+  margin-bottom: 10px;
+  width: 200px;
+}
+.seat-on .seat-on-message div.remark a {
+  float: right;
+  display: block;
+  width: 100px;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+  background: #e6162d;
+  border-radius: 3px;
+  color: #fff;
+  position: absolute;
+  bottom: 0;
+  left: 132px;
+}
+.seat-on2 {
+  padding: 10px 10px 0 10px;
+  margin-bottom: 10px;
+  border-top: dashed 1px #e5e5e5;
+  border-bottom: dashed 1px #e5e5e5;
+}
+.seat-on3 {
+  padding: 10px;
+}
+.seat-on2 .seat-on-message span.seat-list {
+  margin-left: 0;
+}
+.seat-on2 .seat-on-message span.seat-list + span.seat-list {
+  margin-left: 10px;
+}
+.seat-on2 p {
+  font-size: 14px;
+  color: #666;
+  line-height: 24px;
+}
+.seat {
+  min-height: 150px;
+  padding-bottom: 30px;
+  margin-bottom: 20px;
+  position: relative;
+  background-color: #fff;
+  border-top: 1px solid #e5e5e5;
+  overflow-x: hidden;
+}
+.seat .seat-container {
+  position: relative;
+}
+.seat .led-bg {
+  width: 100%;
+  background: url(../../../assets/img/act/led.png) no-repeat 5px -20px;
+  height: 50px;
+  background-size: 100% 100%;
+}
+.seat .row-num {
+  width: 30px;
+  background: url(../../../assets/img/act/b.png) repeat;
+  position: absolute;
+  left: 10px;
+  top: 50px;
+  min-height: 50px;
+  border-radius: 30px;
+  padding: 16px 0;
+  z-index: 10;
+}
+.seat .row-num ul li {
+  height: 27px;
+  text-align: center;
+  color: #fff;
+  line-height: 25px;
+  margin: 4px 0 5px 0;
+}
+.seat .seat-item-container {
+  margin-top: 20px;
+}
+.seat .seat-item-container ul {
+  height: 27px;
+  overflow: hidden;
+  margin: 4px 0 5px 0;
+  padding-left: 50px;
+}
+.seat .seat-item-container ul li {
+  width: 30px;
+  height: 27px;
+  margin-left: 9px;
+  float: left;
+  background: url(../../../assets/img/act/seat-white@3x.png) no-repeat 0 0;
+  cursor: pointer;
+  background-size: 30px 27px;
+}
+.seat .seat-item-container ul .selected {
+  background: url(../../../assets/img/act/seat-green@3x.png) no-repeat 0 0;
+  background-size: 30px 27px;
+}
+.seat .seat-item-container ul .unavailable {
+  background: url(../../../assets/img/act/seat-red@3x.png) no-repeat 0 0;
+  cursor: default;
+  background-size: 30px 27px;
+}
+.seat .seat-item-container ul .del {
+  background: 0;
+}
+.legend {
+  width: 30px;
+  height: 27px;
+  margin-left: 9px;
+  float: left;
+  background: url(../../../assets/img/act/seat-white@3x.png) no-repeat 0 0;
+  background-size: 30px 27px;
+}
+.legend.selected {
+  background: url(../../../assets/img/act/seat-green@3x.png) no-repeat 0 0;
+  background-size: 30px 27px;
+}
+.legend.unavailable {
+  background: url(../../../assets/img/act/seat-red@3x.png) no-repeat 0 0;
+  background-size: 30px 27px;
+  cursor: default;
+}
+.legend.del {
+  background: 0;
+}
+.legends > div {
+  display: inline-block;
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  display: -webkit-inline-flex;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+.legends > div > .name {
+  padding: 0 5px;
+  font-size: 14px;
+  color: #666666;
+}
+.seat-on .seat-on-message span.msg {
+  border: 0;
+  color: #aaaaaa;
+}
+#seat-on-message {
+  height: 29px;
+}

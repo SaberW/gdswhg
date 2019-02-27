@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong_gx/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/style/center/center.css'">
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/rong.validate.js'"></script>
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/rong.message.js'"></script>
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/jquery.md5.js'"></script>
+<div class="wrapper clearfix">
+    <div class="content">
+        <!--公共主头部开始-->
+        <div id="header" th:include="guangdong_gx/public/header :: copy"></div>
+        <!--公共主头部结束-->
+        <!--主体开始-->
+        <div class="container res-center-bg">
+            <div class="sys-crumbs">
+                <span><a href="../index">首页</a></span>
+                <i class="icon iconfont icon-enter"></i>
+                <span><a href="index">个人中心</a></span>
+                <i class="icon iconfont icon-enter"></i>
+                <span class="active">安全设置</span>
+            </div>
+            <div class="page-list" id="step-1">
+                <div class="center-nav">
+                    <ul class="clearfix">
+                        <li class="active" data-type="1">
+                            修改密码
+                        </li>
+                        <li data-type="2" onclick="window.location.href='phoneChange'">
+                            修改绑定手机
+                        </li>
+                        <li data-type="3" onclick="window.location.href='realUser'">
+                            实名认证
+                        </li>
+                    </ul>
+                </div>
+                <div class="form-cont">
+                    <form method="post" id="pwdForm">
+                        <h3>
+                            <em>1</em>原始密码
+                        </h3>
+                        <div class="row">
+                            <div class="input-bg">
+                                <input type="password" class="input-panel" id="oldPassword" name="oldPassword" minlength="6" maxlength="18"
+                                       placeholder="请输入您的原始登录密码" required>
+                            </div>
+                        </div>
+                        <h3>
+                            <em>2</em>新密码
+                        </h3>
+                        <div class="row">
+                            <div class="input-bg">
+                                <input type="password" class="input-panel" id="password" name="password" minlength="6" maxlength="18"
+                                       placeholder="请输入您的新登录密码"  required>
+                            </div>
+                        </div>
+                        <h3>
+                            <em>3</em>确认新密码
+                        </h3>
+                        <div class="row">
+                            <div class="input-bg">
+                                <input type="password" class="input-panel" id="password_again" name="password_again"
+                                       placeholder="请确认您的新登录密码">
+                            </div>
+                        </div>
+                    <div class="row">
+                        <input type="submit" id="next-btn" class="submit none">
+                        <a href="javascript:void(0)" class="next-btn ok-next">确定</a>
+                    </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+        <!--主体结束-->
+    </div>
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong_gx/public/footer :: copy"></div>
+<!--底部结束-->
+<a class="to-top"></a>
+<script type="text/javascript" th:inline="javascript">
+    var userId = $("#temp_userId").val();
+    //密码格式
+    $.validator.addMethod("pwdType", function(value) {
+        var reg = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$/;
+        return reg.test(value);
+    }, '密码必须由6-18位的数字或字母组成');
+
+    $(document).ready(function() {
+        $("#pwdForm").validate({
+            debug:true,
+            errorElement:"em",
+            rules: {
+                password: "required",
+                password: "pwdType",
+                password_again: {
+                    equalTo: "#password"
+                }
+            },
+            messages: {
+                oldPassword: {
+                    required : "请输入您的登录密码",
+                    minlength : "密码长度不能小于6个字符"
+                },
+                password: {
+                    required : "请输入您的新登录密码",
+                    minlength : "密码长度不能小于6个字符"
+                },
+                password_again: {
+                    equalTo: "两次密码输入不一致"
+                }
+            },
+            submitHandler:function() {
+                dataInit.ajax({
+                    api:[[${apiPath.setPassword}]],
+                    params:{
+                        passWord:$.md5($('#oldPassword').val()),
+                        newPwdMd5:$.md5($('#password').val()),
+                        userId:userId
+                    },
+                    fn:function(data){
+                        if(data.code == 0){
+                            rongDialog.init({
+                                ico : 1,
+                                type : 1,
+                                desc : "密码修改成功",
+                                nextFn:function(){
+                                    $("input[type='password']").val("");
+                                }
+                            });
+                        }else{
+                            rongDialog.init({
+                                ico : 2,
+                                type : 1,
+                                desc : data.msg || "密码修改失败"
+                            });
+                        }
+                    }
+                })
+            }
+        });
+    });
+    $(".ok-next").on("click",function(){
+        $(".submit").click();
+    })
+
+</script>
+</body>
+</html>

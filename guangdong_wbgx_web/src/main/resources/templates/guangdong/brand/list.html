@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/style/brand/brand.css'">
+<div class="wrapper clearfix">
+    <div class="content">
+        <!--公共主头部开始-->
+        <div id="header" th:include="guangdong/public/header :: copy"></div>
+        <!--公共主头部结束-->
+        <div class="categoryChange">
+            <div class="row digitalSearch clearfix">
+                <div class="title">区域：</div>
+                <div class="adrList" id="areList">
+
+                </div>
+
+                <div class="title">品牌类型：</div>
+                <div class="adrList" id="pptypeList">
+                    <span class='item active' pm="pptype" vm=""><a href='javascript:void(0)'>全部</a></span>
+                    <span class='item' pm="pptype" vm="0"><a href='javascript:void(0)'>省级</a></span>
+                    <span class='item' pm="pptype" vm="1"><a href='javascript:void(0)'>市级</a></span>
+                    <span class='item' pm="pptype" vm="2"><a href='javascript:void(0)'>县(区)级</a></span>
+                </div>
+                <div class="searchPosition">
+                    <input type="text" id="searchValue" onkeydown="if(event.keyCode==13) searchList();" placeholder="输入关键词">
+                    <a href="javascript:searchList()"><i class="iconfont icon-search"></i></a>
+                </div>
+                <input type="hidden" id="searchId">
+            </div>
+        </div>
+
+        <!--主体开始-->
+        <div class="brand-main">
+            <ul id="brandList">
+                <!--<li class="clearfix">
+                    <a href="#" target="_blank"></a>
+                    <div class="img">
+                        <img th:src="${basePath}+'/assets/img/img_demo/demo_g.jpg'">
+                    </div>
+                    <div class="info-cont">
+                        <a href="detail" target="_blank"></a>
+                        <h2>哈登36+9+11火箭胜尼克斯 周琦3分钟送2大帽</h2>
+                        <p>北京时间10月10日，火箭前往客场挑战尼克斯，最终他们以117-95击败对手，季前赛取得三连胜，保罗因右肩挫伤缺席本场比赛，埃里克-戈登顶替他出任首发，莱恩-安德森休战一场后复出。周琦此役登场3分27秒，2投1中，在外线飙中一记三分，拿到3分1个篮板2次封盖。</p>
+                        <div class="btn-cont">
+                            <div class="btn">进入品牌<i></i></div>
+                            <i class="iconfont icon-jiantou1"></i>
+                        </div>
+                    </div>
+                </li>
+                <li class="db clearfix">
+                    <a href="#" target="_blank"></a>
+                    <div class="img">
+                        <img th:src="${basePath}+'/assets/img/img_demo/demo_g2.jpg'">
+                    </div>
+                    <div class="info-cont">
+                        <a href="detail" target="_blank"></a>
+                        <h2>哈登36+9+11火箭胜尼克斯 周琦3分钟送2大帽</h2>
+                        <p>北京时间10月10日，火箭前往客场挑战尼克斯，最终他们以117-95击败对手，季前赛取得三连胜，保罗因右肩挫伤缺席本场比赛，埃里克-戈登顶替他出任首发，莱恩-安德森休战一场后复出。周琦此役登场3分27秒，2投1中，在外线飙中一记三分，拿到3分1个篮板2次封盖。</p>
+                        <div class="btn-cont">
+                            <div class="btn">进入品牌<i></i></div>
+                            <i class="iconfont icon-jiantou1"></i>
+                        </div>
+                    </div>
+                </li>-->
+            </ul>
+            <!--分页开始 -->
+            <div class="green-black" id="artPagging" style="margin-bottom: 40px;margin-top: 70px"></div>
+            <!--分页结束-->
+        </div>
+        <!--主体结束-->
+    </div>
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong/public/footer :: copy"></div>
+<!--底部结束-->
+<a class="to-top"></a>
+<script type="text/javascript" th:inline="javascript">
+
+    $(document).ready(function () {
+        showAre($.cookie("city"));
+
+        $("#pptypeList span").off().on("click", function () {
+            $(this).addClass("active").siblings().removeClass("active");
+            dataPage();
+        });
+
+        dataPage();
+    })
+
+    function dataPage(page, rows) {
+        var params_page = page || 1;
+        var params_rows = rows || 6;
+        var params = {
+            page: params_page,
+            pageSize: params_rows,
+            keywords: $("#searchId").val(),
+            area: $("#area").val(), //区域
+            city: $("#city").val(), //市
+            province: $("#province").val(), //省
+            deptid: $("#deptid").val(), //部门id
+            cultid: $.cookie('cultid')
+        };
+
+        var pptype = $("#pptypeList span.active").attr("vm");
+        if (pptype && pptype != '') {
+            params.pptype = pptype;
+        }
+
+        rongDialog.init({ico: 3, type: 1, desc: '', overTime: 8000});
+        dataInit.ajax({
+            api: [[${apiPath.pplist}]],
+            params: params,
+            fn: function (data) {
+                rongDialog.closeMaskPanel();
+                if (data.code == 0) {
+                    showMOdelList(data);
+                } else {
+                    rongDialog.init({ico: 2, type: 1, desc: data.msg || "未知错误"});
+                }
+                dataInit.pageInit('artPagging', params_page, params_rows, data.total, dataPage);
+            }
+        })
+    }
+
+    function showMOdelList(data) {
+        if (data.code == 0 && data.rows.length > 0) {
+            var _html = '';
+            $("#brandList").html("");
+            var model = data.rows;
+            for (var i in model) {
+                //判断html图片左右
+                var db = 'db';
+                if (i % 2 == 0) {
+                    db = '';
+                }
+                var brand_imgPath = data.imgPath + dataInit.getBigImage(model[i].picture);
+                var introduction = removeHTMLTag(model[i].introduction);
+                _html += '<li class="' + db + ' clearfix">' +
+                    '    <div class="img">' +
+                    '        <img src="' + brand_imgPath + '">' +
+                    '    </div>' +
+                    '    <div class="info-cont">' +
+                    '        <a href="detail?id=' + model[i].id + '" target="_blank"></a>' +
+                    '        <h2>' + model[i].name + '</h2>' +
+                    '        <p>' + introduction + '</p>' +
+                    '        <div class="btn-cont">' +
+                    '            <div class="btn">进入品牌</div>' +
+                    '        </div>' +
+                    '    </div>' +
+                    '</li>';
+            }
+            $("#brandList").html(_html);
+        } else {
+            $("#brandList").html("<div class='public-no-message'></div>");
+        }
+    }
+
+    //给消息过滤HTML标签
+    function removeHTMLTag(str) {
+        str = str.replace(/<\/?[^>]*>/g, ''); //去除HTML tag
+        str = str.replace(/[ | ]*\n/g, '\n'); //去除行尾空白
+        //str = str.replace(/\n[\s| | ]*\r/g,'\n'); //去除多余空行
+        return str;
+    }
+
+    function setActive(dom) {
+        $(dom).parent('span').addClass("active").siblings().removeClass("active");
+    }
+
+    function searchList() {
+        if($("#searchValue").val()){
+            var searchValue = removeHTMLTag($("#searchValue").val());
+            $("#searchId").val(searchValue);
+            dataPage();
+        }else {
+            $("#searchId").val("");
+            dataPage();
+        }
+    }
+</script>
+</body>
+</html>

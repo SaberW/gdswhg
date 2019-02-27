@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/brand/brand.css'" >
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/public/detail.css'" >
+<div th:include="guangdong/public/leftBar :: copy"></div>
+<div id="page">
+    <div class="mui-content">
+        <div class="wrapper-detail">
+            <div id="train-info">
+
+            </div>
+            <!--<div class="wrapper-detail-box">-->
+                <!--<div class="img">-->
+                    <!--<img id="image" class="lazy" src="http://183.131.126.132:8092/whgstatic/img/2017/201709/20170921/e7f2cf27ba3b41b680c1f10651db8800.jpg"/>-->
+                <!--</div>-->
+                <!--<div class="info">-->
+                    <!--<div class="title">广东省文化馆-展览大厅</div>-->
+                    <!--<p>讲师：张劲涛 麦泳婷</p>-->
+                    <!--<p>人数：10/20</p>-->
+                    <!--<p>年龄段：7-12岁</p>-->
+                    <!--<p>报名周期：2017-07-17 09:15 至 2017-07-28 17:00</p>-->
+                    <!--<p>培训周期：2017-08-07 至 2017-08-11</p>-->
+                <!--</div>-->
+                <!--<div class="address">地址：<span id="address">长沙市橘子洲头</span></div>-->
+                <!--<a href="tel:15012345645"><div class="phone">电话：<span id="phone">130****1545</span></div></a>-->
+            <!--</div>-->
+            <!--<div class="wrapper-detail-box">-->
+                <!--<h2>培训详情</h2>-->
+                <!--<div class="detail-box-text" id="desc-cont">-->
+                    <!--1885年的伦敦，杰克医生因其父亲患有疾病，决定开始寻找其根源的研究，但因医院理事会全员的反对而告吹。律师厄特森为了安慰杰克，带他来到西区的酒吧，邂逅了舞女露西。无路可走的杰克把自己作为实验对象，却分裂出了双重人格，白天是善良正直的医生杰克，晚上则化身成邪恶的海德，对曾经反对他的理事会成员实施谋杀计划。他终日徘徊在善恶之间，被内心的负罪感和犯罪快感拉扯撕裂。同时，与出身高贵的未婚妻和底层舞女的情感纠葛也令他无所适从……-->
+                <!--</div>-->
+            <!--</div>-->
+            <div class="wrapper-detail-box">
+                <h2>课程表</h2>
+                <div class="gather-nav-content syllabus on">
+                    <div class="syllabus-list" id="model-list-panel">
+                        <div>
+                            <ul id="model-list"></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="wrapper-detail-box">
+                <h2>相关资源</h2>
+                <div class="picture" >
+                    <div th:include="guangdong/resource/publicres :: copy" class="photo" id="res-box">
+                    </div>
+                </div>
+            </div>
+
+            <div class="wrapper-detail-box" id="pxzl-list-div">
+                <h2>培训资料</h2>
+                <div class="gather-content-list syllabus on">
+                    <div class="syllabus-list">
+                        <div>
+                            <ul id="pxzl-list"></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="wrapper-detail-box" id="pxgs-list-div">
+                <h2>培训人员公示</h2>
+                <div class="mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted" style="height: 120px">
+                    <div id="pxgs-list" class="mui-scroll"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <nav class="mui-bar mui-bar-tab">
+        <div th:include="guangdong/public/collectionAndVoteup :: copy" class="zan-collection mui-tab-item"></div>
+        <div class="mui-tab-item"><a class="goNext" href="javascript:void(0)">Loading...</a></div>
+    </nav>
+    <input type="hidden" id="temp_type" value="5">
+    <input type="hidden" id="commType">
+    <input type="hidden" id="toproject" value="ZXPX">
+</div>
+<script type="text/javascript" th:inline="javascript">
+    var itemId = dataInit.getUrlParam('id');
+    var userId = $("#temp_userId").val();
+    var cache = {};
+    var map_params = {};
+    $().ready(function(){
+        dataInit.ajax({
+            api:[[${apiPath.pxDetail}]],
+            params:{
+                userid: userId,
+                id:itemId
+            },
+            fn:showModelInfo
+        })
+        modelData();
+        dataTrainPeople();
+    })
+    //渲染基本数据
+    function showModelInfo(data) {
+        if(data && data.code == 0){
+            var panel = $("#train-info");
+            panel.html('');
+            var model = data.data.tra;
+            var imgPath = data.imgPath + dataInit.getBigImage(model.image);
+            var teachername= model.teachername;
+            if(teachername == undefined){
+                teachername =  "";
+            }else{
+                teachername = (teachername.substring(teachername.length-1)==',') ? teachername.substring(0,teachername.length-1) : teachername;
+            }
+            var teacherNameNone = teachername?'':'none';
+            var notice = model.notice || "需要报名培训，请点击“立即报名”按钮进行报名，有任何问题欢迎拨打电话咨询";
+            teachername = teachername ? teachername.split(',') : '不详';
+            var age = model.age ? model.age.split(',') : "不限制";
+            age = age == "不限制" ? age : age[0] + '-' + age[1] + ' 岁';
+            var applyBegin = moment(model.applyBegin).format('YYYY-MM-DD HH:mm');
+            var applyEnd = moment(model.applyEnd).format('YYYY-MM-DD HH:mm');
+            var trainingBegin = moment(model.trainingBegin).format('YYYY-MM-DD');
+            var trainingEnd = moment(model.trainingEnd).format('YYYY-MM-DD');
+            var cutNum = model.maxApplyNum - model.enrolcount;
+            var people= model.enrolcount + '/' + model.maxApplyNum + '人';
+            if(cutNum <= 0){
+                people = '已满';
+            }
+            var phone = model.phone || '不详';
+            var phoneNone = model.phone?'':'none';
+            var info = dataInit.removeHTMLTag(model.intro);
+            var kechengInfo = dataInit.removeHTMLTag(model.outline);
+            var kechengNone = model.outline?'':'none';
+            var teacheInfo = dataInit.removeHTMLTag(model.teacherdesc);
+            var teacheNone = model.teacherdesc?'':'none';
+            var state,state_cls;
+            map_params = {
+                latitude:model.latitude,
+                longitude:model.longitude,
+                name: model.address,
+                address: model.address
+            }
+
+            if(data.data.tra.date > model.applyEnd ){
+                state = '报名结束';
+                state_cls = 's-4';
+            }else if(cutNum <= 0){
+                state = '名额已满';
+                state_cls = 's-4';
+            }else{ //未报名
+                if(model.applyBegin > data.data.tra.date){
+                    state = '即将开始';
+                    state_cls = 's-3';
+                }else if(model.applyBegin < data.data.tra.date && data.data.tra.date < model.applyEnd){
+                    state = model.enrolstate ? '已报名' : '立即报名';
+                    state_cls = model.enrolstate ? 's-4' : 's-1';
+                    if(state == '立即报名' && cutNum <=0 ){//名额已满
+                        state = '名额已满';
+                        state_cls = 's-4';
+                    }
+                }
+            }
+
+            //培训直播
+            var liveHtml = '';
+            if(data.data.liveInfo.hasLive == '1'){
+                var btnCls = ''; var btnTxt = ''; var livelink = '';
+                var curt_state = data.data.liveInfo.state;
+                // 1-正在进行, 2-未开始， 3-已结束， 4-回看
+                switch (curt_state) {
+                    case '1':
+                        btnTxt = '进入直播';
+                        btnCls = 's-1';
+                        livelink = '<a href="liveInfo?type=tra&id='+itemId+'" class="liveNow-a"></a>';
+                        break;
+                    case '2':
+                        btnTxt = '直播未开始';
+                        btnCls = 's-3';
+                        break;
+                    case '3':
+                        btnTxt = '直播已结束';
+                        btnCls = 's-2';
+                        break;
+                    case '4':
+                        btnTxt = '查看回顾';
+                        btnCls = 's-4';
+                        livelink = '<a href="liveInfo?type=tra&id='+itemId+'" class="liveNow-a"></a>';
+                        break;
+                }
+                liveHtml = '\
+                <div class="wrapper-detail-box">\
+                    <h2>培训直播</h2>\
+                    <div class="detail-box-text">\
+                        <div class="train-table">\
+                            <ul>\
+                                <li>\
+                                '+livelink+'\
+                                <h3>'+data.data.liveInfo.title+'</h3>\
+                                <p>'+data.data.liveInfo.time+'<em class="'+btnCls+'">'+btnTxt+'</em></p></li>\
+                            </ul>\
+                        </div>\
+                    </div>\
+                </div>';
+            }
+
+            $('.goNext').html(state).addClass(state_cls);
+            mui('.mui-tab-item').on('tap','.s-1',function(){
+                checkUserTrain();
+            })
+            var address_none = model.address?'':'none';
+            var html = '<div class="wrapper-detail-box">\
+                            <div class="img">\
+                                <marquee scrollamount="3">温馨提示：'+notice+'</marquee>\
+                                <img id="image" class="lazy" src="'+imgPath+'"/>\
+                            </div>\
+                            <div class="info">\
+                                <div class="title">'+model.title+'</div>\
+                                <p class="'+teacherNameNone+'"><i class="iconfont icon-geren"></i> 讲师：'+teachername+'</p>\
+                                <p><i class="iconfont icon-geren"></i> 主办单位：'+model.host+'</p>\
+                                <p><i class="iconfont icon-group"></i> 人数：'+people+'</p>\
+                                <p><i class="iconfont icon-dynamic"></i> 年龄段：'+age+'</p>\
+                                <p><i class="iconfont icon-time"></i> 报名周期：'+applyBegin+' 至 '+applyEnd+'</p>\
+                                <p><i class="iconfont icon-time"></i> 培训周期：'+trainingBegin+' 至 '+trainingEnd+'</p>\
+                            </div>\
+                            <div class="address '+address_none+'" id="_address"><i class="iconfont icon-coordinates"></i> 地址：<span id="address">'+model.address+'</span></div>';
+                            if(data.data.gatherid&&data.data.gatherid!=""){
+                                html+='<a href="'+[[${basePath}]]+'/gather/actdetail?id=' + data.data.gatherid + '"><div class="phone"><i class="iconfont icon-coordinates"></i> 关联众筹</div></a>';
+                            }
+                             html+=' <a class="'+phoneNone+'" href="tel:'+phone+'"><div class="phone"><i class="iconfont icon-dianhua"></i> 电话：<span">'+phone+'</span></div></a>\
+                       </div>\
+                       '+liveHtml+'<div class="wrapper-detail-box">\
+                            <h2>培训详情</h2>\
+                            <div class="detail-box-text">\
+                                <div id="desc-cont">\
+                                    '+info+'\
+                                </div>\
+                            </div>\
+                        </div>\
+                        <div class="wrapper-detail-box '+kechengNone+'">\
+                            <h2>课程介绍</h2>\
+                            <div class="detail-box-text">\
+                                <div id="desc-cont">\
+                                    '+kechengInfo+'\
+                                </div>\
+                            </div>\
+                        </div>\
+                        <div class="wrapper-detail-box '+teacheNone+'">\
+                            <h2>老师介绍</h2>\
+                            <div class="detail-box-text">\
+                                <div id="desc-cont">\
+                                    '+teacheInfo+'\
+                                </div>\
+                            </div>\
+                        </div>';
+            panel.html(html);
+            cache.itemId = itemId;
+            cache.img = imgPath;
+            cache.title = model.title;
+            cache.adr = model.address;
+            cache.applyTime = applyBegin+' 至 '+applyEnd;
+            cache.trainTime = trainingBegin+' 至 '+trainingEnd;
+            cont.init({
+                panelCls:"#desc-cont",
+                row:6
+            })
+
+            mui('body').on('tap','#_address',function () {
+                if (dataInit.isWeixin()) {
+                    dataInit.menuMap(map_params)
+                }else {
+                    mui.toast('请在微信中使用');
+                }
+            })
+
+            //培训资料
+            if(data.rows && $.isArray(data.rows) && data.rows.length>0){
+                var pxzlhtml = '<li style="padding: 5px 10px"><a></a></li>';
+                var pxzl_list = $("#pxzl-list");
+                for(var i in data.rows){
+                    var pxzl = data.rows[i];
+                    if (pxzl.upname && pxzl.uplink){
+                        var itemjq = $(pxzlhtml);
+                        itemjq.find("a").attr("href", data.imgPath+pxzl.uplink).text(pxzl.upname);
+                        pxzl_list.append(itemjq);
+                    }
+                }
+            }else{
+                $("#pxzl-list-div").hide();
+            }
+
+        }else {
+            mui.toast(data.msg);
+        }
+    }
+
+    //遍历课程表
+    function modelData(page, size) {
+        var page = page || 1;
+        var size = size || 10;
+        var params = {
+            page: page,
+            pageSize: size,
+            id:itemId
+        }
+        dataInit.ajax({
+            api: [[${apiPath.course}]],
+            params: params,
+            forceUpdate: false,
+            fn: function (data) {
+                params = {
+                    page: page,
+                    size: size,
+                    total: data.total
+                }
+                dataInit.htmlAdd(page, showCourse(data));
+                dataInit.pullUp(params, modelData);
+            }
+        })
+    }
+
+    //判断是否可以报名
+    function checkUserTrain(){
+        dataInit.ajax({
+            api:[[${apiPath.checkEnrol}]],
+            params:{
+                userid:userId,
+                id:itemId
+            },
+            fn:function(data){
+                if(data.code == 0){
+                    dataInit.setCache('train-step',cache);
+                    window.location.href = "step?id="+itemId+"";
+                }else{
+                    mui.toast(data.msg || '服务器异常');
+                }
+            }
+        })
+    }
+
+    //生成课程表到页面
+    function showCourse(data) {
+        var modelSyllabus = data.rows;
+        var html = '';
+        if(modelSyllabus.length>0){
+            if(data.page == 1){
+                html = '<li>' +
+                    '<span>序列</span>' +
+                    '<span>开始时间</span>' +
+                    '<span>结束时间</span>' +
+                    '</li>';
+            }
+            for (var i in modelSyllabus) {
+                var activeTime = moment(modelSyllabus[i].starttime).format('YYYY-MM-DD HH:mm:ss');
+                var endTime = moment(modelSyllabus[i].endtime).format('YYYY-MM-DD HH:mm:ss');
+                var count =  (data.page - 1)*10;
+                count = count + Number(i)+1;
+                html += '<li>' +
+                    '<span>' + count + '</span>' +
+                    '<span>' + activeTime + '</span>' +
+                    '<span>' + endTime + '</span>' +
+                    '</li>';
+            }
+        }else {
+            html = '<div class="newbility-no-msg"></div>';
+        }
+        return html;
+    }
+
+    function dataTrainPeople(){
+        var pxgs_div = $("#pxgs-list-div");
+        pxgs_div.hide();
+        dataInit.ajax({
+            api:[[${apiPath.getEnrolPerson}]],
+            params:{
+                id:itemId
+            },
+            fn:function(data){
+                if (data.code != 0 || !data.data || data.data.length==0){
+                    return;
+                }
+                pxgs_div.show();
+                var panel = $("#pxgs-list");
+                var basePath = [[${basePath}]];
+                for (var i in data.data){
+                    var row = data.data[i];
+                    var nickname = row.nickname.substring(0,1)+"**";
+                    panel.append('\
+                        <a class="mui-control-item" href="javascript:void(0)" style="width:90px;height: 120px;display: inline-block; overflow: hidden; position: relative">\
+                            <div class="img">\
+                                 <img src="'+basePath+'/assets/img/index/user@2x.png">\
+                            </div>\
+                            <p>' + nickname + '</p>\
+                        </a>\
+                    ');
+                }
+            }
+        })
+    }
+</script>
+</body>
+</html>

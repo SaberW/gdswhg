@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/brand/brand.css'" >
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/resource/resdetail.css'" >
+<div th:include="guangdong/public/leftBar :: copy"></div>
+<div id="page">
+    <div class="mui-content">
+        <div class="music-box mui-clearfix">
+            <audio id="audio" src=""></audio>
+            <div class="MusicPanel">
+                <div class="PanelRight">
+                    <div id="Play" class="Play"><span class="icon audio-play"></span></div> <!-- Play & Pause Button -->
+                    <div class="Song">
+                        <span id="name" class="SongName">标题</span>
+                        <!-- <span class="song-tags">
+                            <span>类型：<span>舞蹈</span></span>
+                            <span>区域：<span>虎门</span></span>
+                        </span> -->
+                    </div> <!-- Song Title -->
+                </div> <!-- PanelRight End -->
+                <div class="Process"> <!-- Process -->
+                    <div class="ProcessAll" ></div> <!-- ProcessAll -->
+                    <div class="ProcessNow"></div> <!-- ProcessNow -->
+                </div> <!-- Process End -->
+                <div class="SongTime"><span>0:00</span><span>0:00</span></div> <!-- Time -->
+            </div> <!-- MusicPanel End -->
+        </div>
+    </div>
+</div>
+<script type="text/javascript" th:inline="javascript">
+    var rid = dataInit.getUrlParam("resid");
+    var lid = dataInit.getUrlParam("libid");
+
+    var id = dataInit.getUrlParam("id");
+    var reftype = dataInit.getUrlParam("reftype");
+    var refid = dataInit.getUrlParam("refid");
+
+    $(document).ready(function () {
+
+        if (id){
+            dataInit.ajax({
+                api: [[${apiPath.ppResourceList}]],
+                params: {
+                    page: 1,
+                    pageSize: 1000000000,
+                    refid: refid,
+                    reftype: reftype,
+                    wechat: 1,
+                    cultid: $.cookie("cultid")
+                },
+                forceUpdate: false,
+                fn: function (data) {
+                    createModelHtmlOld(data)
+                }
+            })
+        }else {
+            dataInit.ajax({
+                api: [[${apiPath.qwzyDetail}]],
+                params: {
+                    resid: rid,
+                    libid: lid
+                },
+                forceUpdate: false,
+                fn: function (data) {
+                    createModelHtml(data)
+                }
+            });
+        }
+
+        $("#Play").on('click',function () {
+            if(audio.paused){
+                if(audio.ended){
+                    Play();
+
+                }
+                if( $(this).children().hasClass('audio-play') ) {
+                    $("#Play").children("span").removeClass("audio-play").addClass("audio-pause");
+                    Play();
+                }
+            }
+            else{
+                $("#Play").children("span").removeClass("audio-pause").addClass("audio-play");
+                Pause();
+            }
+        });// Button cilick
+    });
+
+    function createModelHtml(data) {
+        var audio = document.getElementById("audio");
+        if(data.code ==0){
+            var model = data.data;
+            if(model.libid == lid){
+                audio.src = model.resurl;
+                $('#name').text(model.resname);
+            }
+        }
+    }
+
+    function createModelHtmlOld(data) {
+        var audio = document.getElementById("audio");
+        if(data.code ==0 && data.rows.length>0){
+            data.rows.forEach(function (model) {
+                if(model.id == id){
+                    var audioPath = '';
+                    if(model.enturl){
+                        audioPath = model.enturl.indexOf('http') >= 0 ? model.enturl : data.imgPath + model.enturl;
+                    }
+                    audio.src = audioPath;
+                    $('#name').text(model.name);
+                }
+            })
+        }
+    }
+
+    function Play() {
+        audio.play();
+        TimeSpan();
+    } //Play()
+
+    function Pause() {
+        audio.pause();
+    } //Pause()
+
+    function TimeSpan() {
+        var ProcessNow = 0;
+        var ProcessAllHeight = $(".ProcessAll").width();
+        var setInterval1 = setInterval(function () {
+            var ProcessNow = (audio.currentTime / audio.duration) * ProcessAllHeight;
+            $(".ProcessNow").css("width", ProcessNow + "px");
+            var currentTime = timeFormat(audio.currentTime);
+            var timeAll = timeFormat(TimeAll());
+            $(".SongTime").html("<span>"+ currentTime + "</span><span>" + timeAll + "</span>");
+        }, 1000);
+        audio.addEventListener('ended',function () {
+            clearInterval(setInterval1);
+        });
+        audio.addEventListener('pause',function () {
+            clearInterval(setInterval1);
+        });
+    }  //TimeSpan()
+
+    function timeFormat(number) {
+        var minute = parseInt(number / 60);
+        var second = parseInt(number % 60);
+        minute = minute >= 10 ? minute : "0" + minute;
+        second = second >= 10 ? second : "0" + second;
+        return minute + ":" + second;
+    } //timeFormat()
+
+    function TimeAll() {
+        return audio.duration;
+    } //TimeAll()
+</script>
+</body>
+</html>

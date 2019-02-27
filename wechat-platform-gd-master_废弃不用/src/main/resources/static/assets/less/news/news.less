@@ -1,0 +1,217 @@
+@charset "UTF-8";
+@import "../public/config";
+div.news-list{
+  margin-top: -1px;
+  &>ul{
+    &>li{
+      position: relative;
+      background: #fff;
+      .li-flex();
+      padding: 10px 10px;
+      div.img{
+        -webkit-box-flex: 0;
+        -ms-flex: 0 0 120px;
+        flex: 0 0 120px;
+        width: 120px;
+        height: 80px;
+        margin-right: 15px;
+        img{
+          width: 120px;
+          height: 80px;
+          display: block;
+          font-size: 12px;
+          color: @-font-color-3;
+        }
+      }
+      div.info{
+        -webkit-box-flex: 1;
+        -ms-flex: 1;
+        flex: 1;
+        height: 80px;
+        position: relative;
+        h2{
+          margin-top:0px;
+          font-size: 18px;
+          color: @-font-color-1;
+          line-height: 1.2;
+          font-weight: normal;
+          .text-line(2);
+        }
+        div.abstract{
+          position: absolute;
+          left: 0px;
+          bottom: 0px;
+          width: 100%;
+          height: 21px;
+          div.source{
+            float: left;
+            font-size: 12px;
+            line-height: 21px;
+            height: 21px;
+            color: @-font-color-3;
+            position: absolute;
+            left: 0px;
+            bottom: 0px;
+            padding-right: 75px;
+            .text-line(1)
+          }
+          div.time{
+            float: right;
+            font-size: 12px;
+            line-height: 21px;
+            height: 21px;
+            color: @-font-color-3;
+            text-align: right;
+            //position: absolute;
+            //right: 15px;
+            bottom: 0px;
+          }
+        }
+      }
+      a{
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        left: 0;
+        top: 0;
+      }
+      &:after{
+        .after();
+      }
+      &:first-child:before{
+        .before();
+      }
+    }
+  }
+}
+div.news-detail{
+  background: #fff;
+  padding: 20px 10px;
+  h2{
+    font-size: 24px;
+    line-height: 1.5;
+    color: @-font-color-1;
+    font-weight: 700;
+    margin-bottom: 5px;
+  }
+  div.abstract{
+    margin-bottom: 30px;
+    div.source{
+      float: left;
+      font-size: 12px;
+      line-height: 21px;
+      height: 21px;
+      color: @-font-color-3;
+      padding-right: 25px;
+      .text-line(1);
+    }
+    div.time{
+      float: left;
+      font-size: 12px;
+      line-height: 21px;
+      height: 21px;
+      color: @-font-color-3;
+      text-align: right;
+    }
+  }
+  .key{
+    font-size: 12px;
+    line-height: 21px;
+    height: 21px;
+    color: @-font-color-3;
+    padding-right: 75px;
+    .text-line(1);
+    margin-bottom: 10px;
+  }
+  div.newsdetail-text{
+    font-size: 14px;
+    color: @-font-color-1;
+    img{
+      max-width: 100%;
+      margin: 10px auto;
+      display: block;
+      height: auto;
+    }
+  }
+}
+
+.mui-scroll-wrapper.mui-slider-indicator.mui-segmented-control.mui-segmented-control-inverted {
+  height: 46px;
+}
+.mui-segmented-control.mui-scroll-wrapper .mui-scroll{
+  height: 46px;
+  background-color: #fff;
+  border-bottom: solid 1px @-border-color;
+  .mui-control-item{
+    height: 46px;
+    font-size: 16px;
+    line-height: 46px;
+  }
+  .mui-active{
+    color: @-main-color;
+    border-bottom: 2px solid @-main-color;
+    font-weight: bold;
+  }
+}
+
+ul.notice-list{
+  padding:  0 12px;
+}
+.notice>ul>li{
+  width: 100%;
+  padding: 12px 0;
+  border-bottom: 1px solid #E6E6E6;
+  /*&:after{
+    height: 1px;
+    content: '';
+    transform: scaleY(0.5);
+    background-color: #e5e5e5;
+    }*/
+  h2{
+      height: 40px;
+      font-size: 15px;
+      line-height: 40px;
+      color: @-font-color-1;
+      .text-line(1);
+      margin: 0 ;
+    }
+  p{
+      max-height: 40px;
+      font-size: 12px;
+      line-height: 20px;
+      color: @-font-color-2;
+      .text-line(2);
+      margin-bottom: 0;
+    }
+  .origin{
+      height: 20px;
+      margin-top: 12px;
+      font-size: 12px;
+      line-height: 20px;
+      .origin-l{
+        float: left;
+        color: @-font-color-3;
+      }
+      .origin-r{
+        float: right;
+        color: @-font-color-3;
+      }
+    }
+  }
+
+.download_box{
+  background: #fff;
+  padding: 10px;
+  h4{
+    margin: 25px 0;
+  }
+  a{
+    display: block;
+    margin-top: 20px;
+    padding: 5px 0;
+    border-bottom: 1px dashed #666;
+    i{
+      float: right;
+    }
+  }
+}

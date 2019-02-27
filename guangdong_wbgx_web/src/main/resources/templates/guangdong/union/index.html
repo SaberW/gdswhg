@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link th:href="${basePath}+'/assets/style/union/union.css'" rel="stylesheet">
+<script th:src="${basePath}+'/assets/js/field/fieldList.js'"></script>
+<div class="wrapper clearfix">
+    <div class="content">
+        <!--公共主头部开始-->
+        <div id="header" th:include="guangdong/public/header :: copy"></div>
+        <!--公共主头部结束-->
+        <!--主体开始-->
+        <div class="union-content">
+            <div class="union-title">
+                <span class="city-name-union"></span>文化联盟
+                <a class="returnBack" href="javascript:void(0)" style="display:none;">返回</a>
+            </div>
+            <div class="union-list">
+                <ul class="clearfix" id="unionList">
+                    <!--<li>
+                        <div class="img">
+                            <img src="http://183.131.126.132:8092/whgstatic/img/2017/201709/20170921/a768d33e5359460e910de9c08ce4425d_750_500.jpg">
+                        </div>
+                        <div class="info">
+                            <h2>广东省文化馆</h2>
+                            <p class="clearfix">
+                                <span class="title">资讯</span>
+                                <span class="number">10</span>
+                            </p>
+                            <p class="clearfix">
+                                <span class="title">场馆</span>
+                                <span class="number">15</span>
+                            </p>
+                            <p class="clearfix">
+                                <span class="title">活动</span>
+                                <span class="number">110</span>
+                            </p>
+                            <p class="clearfix">
+                                <span class="title">培训</span>
+                                <span class="number">30</span>
+                            </p>
+                            <p class="clearfix">
+                                <span class="title">配送</span>
+                                <span class="number">50</span>
+                            </p>
+                            <p class="clearfix">
+                                <span class="title">众筹</span>
+                                <span class="number">11</span>
+                            </p>
+                            <p class="clearfix">
+                                <span class="title">资源</span>
+                                <span class="number">500</span>
+                            </p>
+                        </div>
+                        <div class="look-more">
+                            <a href="javascript:void(0)">查看下属组织</a>
+                        </div>
+                    </li>-->
+                </ul>
+            </div>
+            <!--分页开始 -->
+            <div class="green-black" id="artPagging" style="padding-bottom: 100px"></div>
+            <!--分页结束-->
+        </div>
+        <!--主体结束-->
+    </div>
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong/public/footer :: copy"></div>
+<!--底部结束-->
+<a class="to-top"></a>
+<script type="text/javascript" th:inline="javascript">
+    $(document).ready(function () {
+        showUnion($.cookie("cultid"));
+
+        $(".returnBack").click(function () {
+            showUnion($.cookie("cultid"));
+            $(this).hide();
+        })
+    })
+    function showUnion(cityid) {
+        rongDialog.init({ico: 3, type: 1, desc: '', overTime: 8000});
+        dataInit.ajax({
+            api: [[${apiPath.whglmList}]],
+            params: {
+                cultid:cityid
+            },
+            fn: function (data) {
+                rongDialog.closeMaskPanel();
+                $("#unionList").html('');
+                var _html = '';
+                if(data.code == 0 && data.rows.length>0){
+                    var model = data.rows;
+                    for(var i in model){
+                        var union_imgPath = data.imgPath + dataInit.getBigImage(model[i].picture);
+                        _html+= '<li>'+
+                            '    <div class="img">'+
+                            '        <a href="javascript:showUnion(\''+model[i].id+'\')" onclick="showReturnBack()">' +
+                            '            <img src="'+union_imgPath+'">' +
+                            '        </a>'+
+                            '    </div>'+
+                            '    <div class="info">'+
+                            '        <h2>'+model[i].name+'</h2>'+
+                            '        <p class="clearfix">'+
+                            '            <span class="title">资讯</span>'+
+                            '            <span class="number" onclick=doTurnList("ZX","'+model[i].id+'")>'+model[i].zxCount+'</span>'+
+                            '        </p>'+
+                            '        <p class="clearfix">'+
+                            '            <span class="title">场馆</span>'+
+                            '            <span class="number" onclick=doTurnList("CG","'+model[i].id+'")>'+model[i].venueCount+'</span>'+
+                            '        </p>'+
+                            '        <p class="clearfix">'+
+                            '            <span class="title">活动</span>'+
+                            '            <span class="number" onclick=doTurnList("HD","'+model[i].id+'")>'+model[i].activityCount+'</span>'+
+                            '        </p>'+ '    ' +
+                            '    <p class="clearfix">'+
+                            '            <span class="title">培训</span>'+
+                            '            <span class="number" onclick=doTurnList("PX","'+model[i].id+'")>'+model[i].traCount+'</span>'+
+                            '        </p>'+
+                            '    </div>'+
+                            '    <div class="look-more">'+
+                            '        <a href="javascript:showUnion(\''+model[i].id+'\')" onclick="showReturnBack()">查看分馆</a>'+
+                            '    </div>'+
+                            '</li>';
+                    }
+                }else {
+                    _html = '<div class="public-no-message"></div>'
+                }
+                $("#unionList").html(_html);
+            }
+        });
+    }
+
+    function doTurnList(type,id) {
+        city(id);
+        if(type=="CG"){
+            window.location.href=[[${basePath}]]+'/'+[[${cultsite}]]+"/cg/list";
+        }else if(type=="HD"){
+            window.location.href=[[${basePath}]]+'/'+[[${cultsite}]]+"/hd/list";
+        }else if(type=="ZX"){
+            window.location.href=[[${basePath}]]+'/'+[[${cultsite}]]+"/zx/list";
+        }else if(type=="PX"){
+            window.open([[${rootUrl}]]+'gdpxweb/'+[[${cultsite}]]+"/xxpx/list");
+        }
+    }
+
+
+    function showReturnBack() {
+        $(".returnBack").show();
+    }
+</script>
+</body>
+</html>

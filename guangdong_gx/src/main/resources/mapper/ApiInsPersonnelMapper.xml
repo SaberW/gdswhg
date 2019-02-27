@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.creatoo.hn.dao.mapper.api.ApiInsPersonnelMapper">
+
+    <select id="selectPersonList" resultType="hashmap">
+        select xx.*,
+        cult.name as cultidname
+        from whg_sys_cult cult, whg_personnel xx
+        where cult.id = xx.cultid
+        and xx.state = 6
+
+        <choose>
+            <when test="cultid!=null ">
+                AND xx.cultid IN
+                <foreach item="item" index="index" collection="cultid" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+                <if test="type!=null and type!=''.toString()">
+                    and xx.type = #{type}
+                </if>
+            </when>
+            <otherwise>
+                <if test="type!=null and type!=''.toString()">
+                    and xx.type LIKE "%"#{type}"%"
+                </if>
+            </otherwise>
+        </choose>
+        <if test="deptid !=null">
+            AND xx.deptid IN
+            <foreach item="item" index="index" collection="deptid" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="province!=null and province!=''.toString()">
+            and  xx.province = #{province}
+        </if>
+        <if test="city!=null and city!=''.toString()">
+            and  xx.city= #{city}
+        </if>
+        <if test="area!=null and area!=''.toString()">
+            and  xx.area =#{area}
+        </if>
+        <if test="styletype!=null and styletype!=''.toString()">
+            and xx.styletype = #{styletype}
+        </if>
+        <if test="psprovince!=null and psprovince!=''.toString()">
+            and xx.psprovince = #{psprovince}
+        </if>
+        <if test="pscity!=null and pscity!=''.toString()">
+            and xx.pscity LIKE "%"#{pscity}"%"
+        </if>
+
+        order by xx.statemdfdate desc
+
+    </select>
+
+    <select id="findPerson" resultType="hashmap">
+        select xx.*, cult.name as cultidname
+        from whg_sys_cult cult, whg_personnel xx
+        where cult.id = xx.cultid
+        and xx.state = 6 and xx.delstate = 0
+        and xx.id = #{id}
+    </select>
+
+    <select id="selectRecommonends" resultType="hashmap">
+        select xx.*, cult.name as cultidname
+        from whg_sys_cult cult, whg_personnel xx
+        where cult.id = xx.cultid
+        and xx.state = 6 and xx.delstate = 0
+        and xx.id != #{id}
+        <if test="cultid!=null">
+            AND xx.cultid IN
+            <foreach item="item" index="index" collection="cultid" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        order by xx.statemdfdate desc
+    </select>
+</mapper>

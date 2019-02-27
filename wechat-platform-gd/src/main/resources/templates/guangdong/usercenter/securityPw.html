@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/usercenter/usercenter.css'" >
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/public/detail.css'" >
+<script type="text/javascript" th:src="${basePath}+'/assets/js/jquery.md5.js'"></script>
+<div th:include="guangdong/public/leftBar :: copy"></div>
+<div id="page">
+    <div class="mui-content">
+
+        <!--修改密码-->
+        <div class="modify breadth">
+            <form class="mui-input-group">
+                <div class="mui-input-row">
+                    <label>旧密码</label>
+                    <input id="oldpw" type="password" class="mui-input-clear" placeholder="请输入您的旧密码">
+                </div>
+                <div class="mui-input-row">
+                    <label>新密码</label>
+                    <input id="newpw1" type="password" class="mui-input-clear" placeholder="请输入您的新密码">
+                </div>
+                <div class="mui-input-row">
+                    <label>新密码</label>
+                    <input id="newpw2" type="password" class="mui-input-clear" placeholder="请重新输入您的新密码">
+                </div>
+            </form>
+        </div>
+        <!--修改密码-->
+
+        <nav class="mui-bar mui-bar-tab">
+            <div class="mui-tab-item">
+                <a class="goNext" href="javascript:void(0)" id="btn-1">确定</a>
+            </div>
+        </nav>
+</div>
+<script type="text/javascript" th:inline="javascript">
+    var userId = $("#temp_userId").val();
+
+    $().ready(function(){
+        goNext()
+    })
+
+    function goNext(){
+        mui(".mui-tab-item").on("tap","#btn-1",function() {
+            if (verification()) {
+                dataInit.ajax({
+                    api: [[${apiPath.setPassword}]],
+                    params: {
+                        userId: userId,
+                        passWord:$.md5($("#oldpw").val()),
+                        newPwdMd5:$.md5($("#newpw1").val())
+                    },
+                    fn: function (data) {
+                        //验证通过即可修改密码
+                        if (data.code == 102) {
+                            mui.toast(data.msg || "原始密码不正确");
+                        } else if(data.code == 101){
+                            mui.toast(data.msg || "修改密码失败");
+                        }else{
+                            mui.toast(data.msg || "修改密码成功");
+                        }
+                    }
+                })
+            }
+        });
+    }
+
+    function verification(){
+        var oldpw = $("#oldpw").val();
+        var newpw1 = $("#newpw1").val();
+        var newpw2 = $("#newpw2").val();
+
+        if(oldpw.length < 1){
+            mui.toast("请输入旧密码");
+            return false;
+        }else if(newpw1.length < 1 || newpw2.length < 1){
+            mui.toast("请输入新密码");
+            return false;
+        }
+
+        if(newpw1!=newpw2){
+            mui.toast("两次输入新密码不一致");
+            return false;
+        }else{
+            return true;
+        }
+
+    }
+
+</script>
+</body>
+</html>

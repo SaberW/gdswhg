@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<script th:src="${basePath}+'/assets/common/js/whg.maps.js'"></script>
+<div class="wrapper clearfix">
+    <div class="content">
+        <!--公共主头部开始-->
+        <div id="header" th:include="guangdong/public/header :: copy"></div>
+        <!--公共主头部结束-->
+        <div class="sys-crumbs">
+            <span><a href="../index">首页</a></span>
+            <i class="icon iconfont icon-enter"></i>
+            <span><a href="list">众筹资讯</a></span>
+            <i class="icon iconfont icon-enter"></i>
+            <span class="active" id="crumbs-title"></span>
+        </div>
+        <div class="sys-main-bottom">
+            <div class="main-cont clearfix" id="newDetail">
+                <!--<div class="noticeInfo-main">
+                    <h1>省文化志愿者总队举办厅系统文化志愿服务工作培训班</h1>
+                    <div class="otherInfo">
+                        <span class="adr">来源 :<span>团队部</span></span>
+                        <span class="key">关键字 :<span>文化志愿 培训</span></span>
+                        <span class="time">时间 :<span>2017.09.12</span></span>
+                    </div>
+                    <div class="info-main"><p style="text-indent: 2em;">为贯彻落实中宣部、中央文明办等7部门印发的《关于公共文化设施开展学雷锋志愿服务的实施意见》精神，大力推进文化志愿服务，提高我省文化志愿服务工作管理人员的综合素质和业务能力，广东省文化志愿者总队于9月1日下午在广东省文化馆小剧场举办了广东省文化厅系统文化志愿服务工作培训班。省文化厅党组成员、副厅长、省文化志愿者总队总队长刘启宇,省文化厅公共文化处副处长（主持工作）毛凌文以及来自厅系统各单位文化志愿者分队管理人员和工作人员，部分文化志愿者分队志愿者代表共110多人参加了培训。培训班由毛凌文副处长（主持工作）主持。</p><p style="text-indent: 2em;">培训班特邀请团中央青年志愿者工作部部长、中国青年志愿者协会副会长张朝晖，作了题为《中国志愿服务的历史、现状和发展》的专题讲座。张朝晖部长以丰富详实的志愿服务实例以及对政策理论的准确把握，对中国志愿服务的发展历程进行了阐述分析，对比了中国与国际志愿服务的差距与不足。通过对新时期志愿服务工作的要求与国际形势下志愿服务的发展趋势的分析介绍，给培训班的学员带来了新的思维和信息，并从实际工作的角度对做好文化志愿服务工作提出了建议：一是项目要做实，二是要立足本地实际，三是做大文化，四是充分利用新媒体、大数据。</p><p style="text-indent: 2em;">本次培训讲座内容丰富、事例详实，有效地促进文化志愿服务工作者开拓思路、提升组织管理能力，提升文化志愿服务的实践操作能力，受到了学员们的热烈欢迎。</p><p><br></p></div>
+                </div>-->
+            </div>
+        </div>
+    </div>
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong/public/footer :: copy"></div>
+<!--底部结束-->
+<script type="text/javascript" th:inline="javascript">
+    var itemId = dataInit.getUrlParam("id");
+    $(document).ready(function () {
+        dataInit.ajax({
+            api: [[${apiPath.infoldetail}]],
+            params: {
+                id:itemId
+            },
+            fn: showDetail
+        })
+    });
+
+    function showDetail(data) {
+        if(data.code == 0){
+            var model = data.data;
+            var clnfsource = model.clnfsource?model.clnfsource:'无';
+            var clnfkey = model.clnfkey?model.clnfkey:'无';
+            var _html = '<div class="noticeInfo-main">'+
+                '    <h1>'+model.clnftltle+'</h1>'+
+                '    <div class="otherInfo">'+
+                '        <span class="adr">来源 :<span>'+clnfsource+'</span></span>'+
+                '        <span class="key">关键字 :<span>'+clnfkey+'</span></span>'+
+                '        <span class="time">时间 :<span>'+moment(model.clnfopttime).format("YYYY-MM-DD")+'</span></span>'+
+                '    </div>'+
+                '    <div class="info-main">'+model.clnfdetail+'</div>'+
+                '</div>';
+            $("#newDetail").html(_html);
+            $("#crumbs-title").html(model.clnftltle);
+        }else {
+            rongDialog.init({ico : 2, type : 1, desc : data.msg});
+        }
+    }
+
+</script>
+</body>
+</html>

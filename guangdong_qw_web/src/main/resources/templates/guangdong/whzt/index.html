@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/style/whzt/whzt.css'">
+<script type="text/javascript" th:src="${basePath}+'/assets/js/public/sly.js'"></script>
+<div class="wrapper clearfix">
+    <div class="content">
+        <!--公共主头部开始-->
+        <div id="header" th:include="guangdong/public/header :: copy"></div>
+        <!--公共主头部结束-->
+        <!--主体开始-->
+            <!--通栏-->
+            <div class="banner" style="background-image: url('/assets/img/whzt_ysrc/banner.jpg')"></div>
+            <!--通栏-->
+
+            <!--导航栏-->
+            <div class="nav_m" th:include="guangdong/whzt/nav">
+                <!--<div class="nav_m-center w">
+                    <ul class="clearfix">
+                        <li><a href="javascript:void(0)" class="active">主页</a></li>
+                        <li><a th:href="${basePath}+'/whzt/zpList?id='+${param.id[0]}">作品库</a></li>
+                        <li><a th:href="${basePath}+'/whzt/rcList?id='+${param.id[0]}">艺术人才</a></li>
+                        <li><a th:href="${basePath}+'/whzt/winning?id='+${param.id[0]}">获奖作品</a></li>
+                        <li><a th:href="${basePath}+'/whzt/jtList?id='+${param.id[0]}">创作讲坛</a></li>
+                        <li><a th:href="${basePath}+'/whzt/history?id='+${param.id[0]}">历届情况</a></li>
+                    </ul>
+                </div>-->
+            </div>
+            <!--导航栏-->
+
+            <!--section1-->
+            <div class="section1">
+                <div class="content w">
+                    <h2><!--广东省群众音乐舞蹈花会--></h2>
+                    <div class="para"><!--
+                        <p>作为我省现代公共文化服务体系建设和公共文化服务的重要参与者、提供者，广东省文化馆始终坚持在省委、省政作为我省现代公共文化服务体系建设和公共文化服务的府和省文化厅的领导下，围绕党和政府的中心工作，以满足广东省文化馆始终坚持在省委、省政府和省文化厅的领导下，围绕党和政府的中心工作，以满足群众文化需求为立足点，以改善群众文化生活为目标，充分发挥省馆龙头示范作用</p>
+                        <p>花朝戏，民间小戏剧种。源於紫金县乡村的“神朝”祭祀形式，用客家方言演唱，流行于广东东部客种。源於紫金县乡村的“神朝”祭祀形式，用客家方言演唱，流行家话地区。</p>
+                    --></div>
+                    <div class="pic clearfix" style="display: none;">
+                        <div class="pic-l fl">
+                            <!--<img th:src="${basePath}+'/assets/img/img_demo/q4.jpg'">
+                            <img th:src="${basePath}+'/assets/img/img_demo/q4.jpg'">-->
+                        </div>
+                        <div class="pic-m fl">
+                            <img th:src="${basePath}+'/assets/img/img_demo/q5.jpg'">
+                        </div>
+                        <div class="pic-r fr">
+                            <!--<img th:src="${basePath}+'/assets/img/img_demo/q6.jpg'">
+                            <img th:src="${basePath}+'/assets/img/img_demo/q6.jpg'">-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--section1-->
+
+            <!--section2-->
+            <div class="section2">
+                <h2>专题资讯</h2>
+                <div class="zx w">
+                    <ul class="clearfix">
+                        <!--<li>
+                            <a href="#" target="_blank">
+                                <div class="information">
+                                    <p class="name">广东省第十四届美术书法摄影获奖作品详细信息</p>
+                                    <p class="introduction">正字戏，又称正音戏，用中州官话演唱。因当地称中州官话为“正字”或“正音”而得名。正字戏来源于南戏，明初由浙江传入福建、广东后，又吸收了各种声腔的因素而逐步形成独具特色的地方剧种。曾在潮州闽南流行，还到过香港和东南亚一带演出，后植根海陆丰。</p>
+                                    <p class="time">2017-09-20</p>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" target="_blank">
+                                <div class="information">
+                                    <p class="name">广东省第十四届美术书法摄影获奖作品详细信息</p>
+                                    <p class="introduction">正字戏，又称正音戏，用中州官话演唱。因当地称中州官话为“正字”或“正音”而得名。正字戏来源于南戏，明初由浙江传入福建、广东后，又吸收了各种声腔的因素而逐步形成独具特色的地方剧种。曾在潮州闽南流行，还到过香港和东南亚一带演出，后植根海陆丰。</p>
+                                    <p class="time">2017-09-20</p>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" target="_blank" class="ora">
+                                <div class="information">
+                                    <p class="name1">广东省第十四届美术书法摄影获奖作品详细信息</p>
+                                    <p class="introduction1">正字戏，又称正音戏，用中州官话演唱。因当地称中州官话为“正字”或“正音”而得名。正字戏来源于南戏，明初由浙江传入福建、广东后，又吸收了各种声腔的因素而逐步形成独具特色的地方剧种。曾在潮州闽南流行，还到过香港和东南亚一带演出，后植根海陆丰。</p>
+                                    <p class="time1">2017-09-20</p>
+                                </div>
+                            </a>
+                        </li>-->
+                    </ul>
+                    <!--分页开始 -->
+                    <div class="green-black" id="pagging"></div>
+                    <!--分页结束-->
+                </div>
+            </div>
+            <!--section2-->
+        <!--主体结束-->
+    </div>
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong/public/footer :: copy"></div>
+<!--底部结束-->
+<script type="text/javascript" th:inline="javascript">
+
+    $(function () {
+       MassInfoTool.init();
+    });
+
+    var MassInfoTool = {
+        batchid: [[${param.id[0]}]],
+        brandid: [[${param.brandid[0]}]],
+        bashPath: [[${basePath}]],
+        brandInfoUrl: [[${apiPath.brandinfo}]],
+        batchInfoUrl: [[${apiPath.batchinfo}]],
+        batchListUrl: [[${apiPath.batchlist}]],
+        batchZxlistUrl: [[${apiPath.batchzxlist}]],
+
+        init: function () {
+            var me = this;
+
+            me.loadBatchInfo();
+        },
+
+        loadBatchInfo: function(){
+            var me = this;
+
+            if ( !me.batchid || me.batchid == "" ){
+                //取专题的第一个届次
+                var params = {};
+                params.page = 1;
+                params.pageSize = 1;
+                params.cultid = $.cookie('cultid') || '';
+                params.brandid = me.brandid;
+
+                $.post(me.batchListUrl, params, function(data){
+
+                    if (data && data.rows && data.rows.length>0){
+                        var batch = data.rows[0];
+                        me.batchid = batch.id;
+
+                        me.loadZxlist();
+
+                        //取届次详细信息
+                        $.post(me.batchInfoUrl, {id: me.batchid}, function(data){
+                            if (data && data.data && data.data.brandid){
+                                me.loadBrandInfo(data.data.brandid);
+                                me.showBatchInfo(data);
+                            }
+                        }, "JSON");
+
+                    } else{
+                        rongDialog.init({ico: 2, type: 1, desc: '专题暂时还没有届次信息', nextFn:function(){
+                            //window.history.back();
+                            window.location.href = me.bashPath+'/whzt/recomment';
+                        }});
+                    }
+
+                }, "JSON");
+
+            }else{
+                //取届次详细信息
+                $.post(me.batchInfoUrl, {id: me.batchid}, function(data){
+                    if (data && data.data && data.data.brandid){
+                        me.loadBrandInfo(data.data.brandid);
+                        me.showBatchInfo(data);
+                    }
+                }, "JSON");
+
+                me.loadZxlist();
+            }
+        },
+
+        loadBrandInfo: function (brandid) {
+            var me = this;
+
+            //调用导航设置
+            ZtnavTool.setNavhref(me.brandid, me.batchid);
+
+            //取文化专题详细信息
+            $.post(me.brandInfoUrl, {id: brandid}, function(data){
+                if (data && data.data) {
+                    var imgPath = data.imgPath;
+                    var info = data.data;
+                    //$(".banner").css("background-image", "url("+imgPath+ info.bgimgurl+")");
+                    $(".banner").css({
+                        "background-image":"url("+imgPath+ info.bgimgurl+")",
+                        "background-position": "center"
+                    });
+                }
+            }, "JSON");
+        },
+
+        showBatchInfo: function(data) {
+            var me = this;
+            var info = data.data;
+            var imgPath = data.imgPath;
+
+            var tag = $(".section1 .content");
+            tag.find("h2").text(info.title);
+            tag.find(".para").html(info.summary);
+            /*tag.find(".pic .pic-l img").attr("src", imgPath+ dataInit.getSmallImage(info.imgurl));
+            tag.find(".pic .pic-m img").attr("src", imgPath+ dataInit.getBigImage(info.imgurl));
+            tag.find(".pic .pic-r img").attr("src", imgPath+ dataInit.getSmallImage(info.imgurl));*/
+            //tag.find(".pic .pic-l img").attr("src", imgPath+ dataInit.getImage(info.imgurl,300,200));
+            tag.find(".pic .pic-m img").attr("src", imgPath+ dataInit.getImage(info.imgurl,750,500));
+            //tag.find(".pic .pic-r img").attr("src", imgPath+ dataInit.getImage(info.imgurl,300,200));
+            tag.find(".pic").show();
+        },
+
+        zxliTemp: '<li>\
+            <a href="#" target="_blank">\
+                <div class="information">\
+                    <p class="name">广东省第十四届美术书法摄影获奖作品详细信息</p>\
+                    <p class="introduction">正字戏，又称正音戏，用中州官话演唱。因当地称中州官话为“正字”或“正音”而得名。正字戏来源于南戏，明初由浙江传入福建、广东后，又吸收了各种声腔的因素而逐步形成独具特色的地方剧种。曾在潮州闽南流行，还到过香港和东南亚一带演出，后植根海陆丰。</p>\
+                    <p class="time">2017-09-20</p>\
+                </div>\
+            </a>\
+            </li>',
+
+        loadZxlist: function(page, pageSize){
+            var me = this;
+            me.params = me.params || {};
+            me.params.page = page || 1;
+            me.params.pageSize = pageSize || 3;
+            me.params.id = me.batchid;
+
+            $.post(me.batchZxlistUrl, me.params, function(data){
+                var rowsUl = $(".section2 .zx ul");
+                rowsUl.empty();
+
+                if (!data || !data.rows || data.rows.length==0) {
+                    rowsUl.append("<div class='public-no-message'></div>");
+                    return;
+                }
+                var imgPath = data.imgPath;
+                var rows = data.rows;
+
+                for (var i in rows){
+                    var row = rows[i];
+                    var rowsLi = $(me.zxliTemp);
+                    rowsLi.find("p.name").text(row.clnftltle);
+                    rowsLi.find("p.introduction").text(row.clnfintroduce);
+                    rowsLi.find("p.time").text(moment(row.clnfopttime).format("YYYY-MM"));
+                    rowsLi.find("a").attr("href", me.bashPath+"/news/detail?id="+row.clnfid);
+
+                    rowsUl.append(rowsLi);
+                }
+
+                dataInit.pageInit("pagging", me.params.page, me.params.pageSize, data.total,
+                        function(page, pageSize){
+                            me.loadZxlist(page, pageSize)
+                        });
+            }, "JSON");
+        }
+    }
+
+</script>
+</body>
+</html>

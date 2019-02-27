@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/public/list.css'">
+<div th:include="guangdong/public/leftBar :: copy"></div>
+<div id="page">
+    <div class="mui-content">
+        <div class="niubility-search">
+            <div class="niubility-search-dd">
+                <input id="title" placeholder="搜索你感兴趣的培训" type="text">
+                <span onclick="niubilitySearch();">搜索</span>
+            </div>
+        </div>
+        <div id="category-cont"
+             class="category-cont mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+            <div class="mui-scroll">
+                <a href="javascript:void(0)" class="mui-control-item" data-index="c-1">区域<i></i></a>
+                <a href="javascript:void(0)" class="mui-control-item" data-index="c-2">艺术类型<i></i></a>
+            </div>
+        </div>
+        <div class="category-mask none">
+            <div class="category-group none" data-index="c-1">
+                <ul class="clearfix" id="areList">
+                    <!--<li class="active" data-txt="区域">全部</li>
+                    <li item-data="0">雨花区</li>
+                    <li item-data="1">天心区</li>
+                    <li item-data="2">开福区</li>
+                    <li item-data="3">岳麓区</li>
+                    <li item-data="4">芙蓉区</li>-->
+                </ul>
+            </div>
+            <div class="category-group none" data-index="c-2">
+                <ul class="clearfix" id="artList">
+                    <!--<li class="active" data-txt="艺术类型">全部</li>
+                    <li item-data="5">展览</li>
+                    <li item-data="6">讲座</li>
+                    <li item-data="7">演出</li>
+                    <li item-data="8">赛事活动</li>-->
+                </ul>
+            </div>
+        </div>
+        <!--下拉刷新容器-->
+        <div id="model-list-panel" class="mui-content mui-scroll-wrapper" style="top:89px;">
+            <div class="mui-scroll">
+                <!--数据列表-->
+                <div class="public-list-l-r">
+                    <ul id="model-list" class="clearfix">
+                       <!-- <li>
+                            <div class="cont">
+                                <div class="face">
+                                    <img th:src="${basePath}+'/assets/img/img_demo/q1.jpg'" alt="demo">
+                                </div>
+                                <h2>Promethues</h2>
+                                <p>音乐讲师</p>
+                                <p><a href="#">查看详情</a></p>
+                            </div>
+                        </li>
+
+                        <li>
+                            <div class="cont">
+                                <div class="face">
+                                    <img th:src="${basePath}+'/assets/img/img_demo/q2.jpg'" alt="demo">
+                                </div>
+                                <h2>Promethues</h2>
+                                <p>音乐讲师</p>
+                                <p><a href="#">查看详情</a></p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="cont">
+                                <div class="face">
+                                    <img th:src="${basePath}+'/assets/img/img_demo/q3.jpg'" alt="demo">
+                                </div>
+                                <h2>Promethues</h2>
+                                <p>音乐讲师</p>
+                                <p><a href="#">查看详情</a></p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="cont">
+                                <div class="face">
+                                    <img th:src="${basePath}+'/assets/img/img_demo/q4.jpg'" alt="demo">
+                                </div>
+                                <h2>Promethues</h2>
+                                <p>音乐讲师</p>
+                                <p><a href="#">查看详情</a></p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="cont">
+                                <div class="face">
+                                    <img th:src="${basePath}+'/assets/img/img_demo/q5.jpg'" alt="demo">
+                                </div>
+                                <h2>Promethues</h2>
+                                <p>音乐讲师</p>
+                                <p><a href="#">查看详情</a></p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="cont">
+                                <div class="face">
+                                    <img th:src="${basePath}+'/assets/img/img_demo/q6.jpg'" alt="demo">
+                                </div>
+                                <h2>Promethues</h2>
+                                <p>音乐讲师</p>
+                                <p><a href="#">查看详情</a></p>
+                            </div>
+                        </li>-->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" th:inline="javascript">
+    $().ready(function () {
+        dataInit.ajax({
+            api: [[${apiPath.actCate}]],
+            params: {
+                type: 1,//艺术分类
+                cultid: $.cookie('cultid')
+            },
+            fn: showYXClass
+        });
+        select.create(modelData);
+        dataInit.showAre($.cookie("city"),[[${apiPath.depts}]]);
+        modelData();
+    })
+
+    function modelData(page, size) {
+        var page = page || 1;
+        var size = size || 10;
+        var params = {
+            page:page,
+            pageSize:size,
+            arttype:$("#c-2").val(),
+            // cultid:$.cookie('cultid'),
+            // deptid: $("#deptid").val(), //区
+            // area: $("#area").val() || '', //区域
+            // city:  $("#city").val(), //$("#c-1").val(), //市
+            province: $("#province").val(), //省
+            title:$("#title").val()
+        }
+        if ($.cookie('cultid') && $.cookie('cultid')!='undefined'){
+            params.cultid = $.cookie('cultid');
+        }
+        if ($("#deptid").val() && $("#deptid").val()!='undefined'){
+            params.deptid = $("#deptid").val();
+        }
+        if ($("#area").val() && $("#area").val()!='undefined'){
+            params.area = $("#area").val();
+        }
+
+        dataInit.ajax({
+            api: [[${apiPath.teaList}]],
+            params: params,
+            forceUpdate: false,
+            fn: function (data) {
+                var params = {
+                    page: page,
+                    size: size,
+                    total: data.total
+                }
+                dataInit.htmlAdd(page, showModelHtml(data));
+                dataInit.pullUp(params, modelData);
+            }
+        })
+    }
+
+    function showModelHtml(data) {
+        var html = "";
+        if (data.code == 0 && data.rows.length > 0) {
+            for (var i in data.rows) {
+                var model = data.rows[i];
+                var img = data.imgPath + dataInit.getBigImage(model.teacherpic);
+                html += '<li>\
+                            <div class="cont">\
+                                <div class="face">\
+                                    <img src="'+img+'">\
+                                </div>\
+                                <h2>'+model.name+'</h2>\
+                                <p style="height: 21px;line-height: 21px">'+ (model.typname || model.teachertype) +'</p>\
+                                <p><a href="teachersInfo?id='+model.id+'">查看详情</a></p>\
+                            </div>\
+                        </li>';
+            }
+        } else {
+            html = "<div class='newbility-no-msg'></div>";
+        }
+        return html;
+    }
+
+    function showActClass(data) {
+        $("#regList").html("");
+        var region = data.rows;
+        var regList = $("#regList");
+        regList.append('<li class="active" item-data="" data-txt="活动类型">全部</li>');
+        for (var i in region) {
+            regList.append('<li item-data="' + region[i].id + '">' + region[i].name + '</li>');
+        }
+    }
+
+    function showYXClass(data) {
+        var artList = $("#artList");
+        artList.html("");
+        var arts = data.rows;
+        artList.append('<li class="active" item-data="" data-txt="艺术类型">全部</li>');
+        for (var i in arts) {
+            artList.append('<li item-data="' + arts[i].id + '">' + arts[i].name + '</li>');
+        }
+    }
+
+    function niubilitySearch() {
+        mui('#model-list-panel').pullRefresh().scrollTo(0,0,0);
+        mui('#model-list-panel').pullRefresh().refresh(true);
+        keywords = $.trim($("#title").val());
+        jQuery("#model-list").html("");
+        modelData();
+    }
+</script>
+</body>
+</html>

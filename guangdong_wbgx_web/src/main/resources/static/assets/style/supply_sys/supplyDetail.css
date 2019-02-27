@@ -1,0 +1,77 @@
+@charset "UTF-8";
+/* ==CONFIG:=========================================================
+  $__version:       1.0.0
+  $__author:        JackyZeng
+  $__help:          zrongs@vip.qq.com
+  $__website:       http://hn.creatoo.cn
+  -------------------------------------------------------------------*/
+.li-flex {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+.message-box-bg {
+  position: fixed;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  z-index: 999;
+  background: url(../../img/public/b1.png) repeat;
+}
+.message-box-bg .message-cont {
+  height: 280px;
+  width: 710px;
+  margin: 240px auto 0px auto;
+  background-color: #fff;
+  padding: 20px;
+}
+.message-box-bg .message-cont textarea {
+  width: 680px;
+  height: 200px;
+  border: 1px #ebebeb solid;
+  padding: 15px;
+}
+.message-box-bg .message-cont .message-btn {
+  margin-top: 10px;
+  text-align: right;
+}
+.message-box-bg .message-cont .message-btn .btn {
+  display: inline-block;
+  zoom: 1;
+  vertical-align: baseline;
+  outline: none;
+  overflow: visible;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  font-family: Microsoft YaHei, Arial, Helvetica, sans-serif;
+  line-height: 100%;
+  padding: 0.5em 2em 0.55em;
+  border-radius: 3px;
+  border: 1px solid #db1c4d;
+  color: #fff;
+  background-color: #db1c4d;
+  background-image: -webkit-linear-gradient(top, #db1c4d, #e21f4a);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#db1c4d), to(#e21f4a));
+  background-image: linear-gradient(top, #db1c4d, #e21f4a);
+}
+.message-box-bg .message-cont .message-btn .btn:hover {
+  background-color: #e21f4a;
+  background-image: -webkit-linear-gradient(top, #e21f4a, #db1c4d);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#e21f4a), to(#db1c4d));
+  background-image: linear-gradient(top, #e21f4a, #db1c4d);
+}
+.message-box-bg .msg-close {
+  background: url(../../img/public/msg-close.png) no-repeat;
+  width: 32px;
+  height: 60px;
+  margin: 0px auto;
+  cursor: pointer;
+}

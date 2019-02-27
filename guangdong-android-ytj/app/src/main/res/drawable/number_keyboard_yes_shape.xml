@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?><!-- 主要灰色的边框带有四个角圆角 -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/red_fa8" />
+
+    <corners android:radius="4dp"/>
+
+    <padding
+        android:bottom="1dp"
+        android:left="1dp"
+        android:right="1dp"
+        android:top="1dp" />
+
+</shape>

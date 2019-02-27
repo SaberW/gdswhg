@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/train/train.css'" >
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/public/list.css'" >
+<div th:include="guangdong/public/leftBar :: copy"></div>
+<div id="page">
+    <div class="mui-content">
+        <!--轮播图-->
+        <div class="carousel">
+            <div class="swiper-container minor-slider" id="slider-head">
+                <div class="swiper-wrapper" id="slider"></div>
+                <div class="swiper-pagination minor-slider-pagination"></div>
+            </div>
+        </div>
+        <!--轮播图-->
+
+        <!--小导航栏-->
+        <div class="micro-nav">
+            <div class="mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+                <div class="mui-scroll">
+                    <a class="mui-control-item" th:href="${basePath}+'/train/specialtyList?type=0'" >
+                        <div class="img">
+                            <img class="lazy" th:src="${basePath}+'/assets/img/public/micro-music@2x.png'">
+                        </div>
+                        <p>音乐</p>
+                    </a>
+                    <a class="mui-control-item" th:href="${basePath}+'/train/specialtyList?type=1'" >
+                        <div class="img">
+                            <img class="lazy" th:src="${basePath}+'/assets/img/public/micro-dance@2x.png'">
+                        </div>
+                        <p>舞蹈</p>
+                    </a>
+                    <a class="mui-control-item" th:href="${basePath}+'/train/specialtyList?type=2'" >
+                        <div class="img">
+                            <img class="lazy" th:src="${basePath}+'/assets/img/public/micro-art@2x.png'">
+                        </div>
+                        <p>美术</p>
+                    </a>
+                    <a class="mui-control-item" th:href="${basePath}+'/train/specialtyList?type=3'" >
+                        <div class="img">
+                            <img class="lazy" th:src="${basePath}+'/assets/img/public/micro-opera@2x.png'">
+                        </div>
+                        <p>戏剧</p>
+                    </a>
+                    <a class="mui-control-item" th:href="${basePath}+'/train/specialtyList?type=4'" >
+                        <div class="img">
+                            <img class="lazy" th:src="${basePath}+'/assets/img/public/micro-Quyi@2x.png'">
+                        </div>
+                        <p>曲艺</p>
+                    </a>
+                    <a class="mui-control-item" th:href="${basePath}+'/train/specialtyList?type=5'" >
+                        <div class="img">
+                            <img class="lazy" th:src="${basePath}+'/assets/img/public/micro-handwrite@2x.png'">
+                        </div>
+                        <p>书法</p>
+                    </a>
+                    <a class="mui-control-item" th:href="${basePath}+'/train/specialtyList?type=6'" >
+                        <div class="img">
+                            <img class="lazy" th:src="${basePath}+'/assets/img/public/micro-camera@2x.png'">
+                        </div>
+                        <p>摄影</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <!--小导航栏-->
+
+        <div class="micro-list">
+            <!--数据列表-->
+            <div class="public-list">
+                <ul id="model-list">
+                   <!-- <li>
+                        <a href="detail?id=2017110127436518">
+                            <div class="img">
+                                <img src="http://mpic.tiankong.com/180/6bd/1806bd709f952c8a9b87a332cb4e0d3b/640.jpg" alt="">
+                            </div>
+                            <div class="info">
+                                <div class="title">粤曲发烧友台上争相献技，韵味十足 ——2017广东粤曲私伙局大赛在顺德圆满落幕</div>
+                                <p>参考消息网11月15日报道 港媒称，当巴拿马总统胡安·卡洛斯·巴雷拉16日抵达北京目睹其新使馆的开放时，这将实现他10年的梦想。</p>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="detail?id=2017110150729841">
+                            <div class="img">
+                                <img src="http://mpic.tiankong.com/cdf/3c3/cdf3c397da5f234590145613d18d8247/404-2955.jpg" alt="">
+                            </div>
+                            <div class="info">
+                                <div class="title">粤曲发烧友台上争相献技，韵味十足 ——2017广东粤曲私伙局大赛在顺德圆满落幕</div>
+                                <p>参考消息网11月15日报道 港媒称，当巴拿马总统胡安·卡洛斯·巴雷拉16日抵达北京目睹其新使馆的开放时，这将实现他10年的梦想。</p>
+                            </div>
+                        </a>
+                    </li>-->
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script type="text/javascript" th:inline="javascript">
+    $(document).ready(function () {
+        modelData();
+        //加载轮播图
+        showSlider();
+    });
+
+    function modelData(page, size) {
+        var page = page || 1;
+        var size = size || 10;
+        var params = {
+            page:page,
+            pageSize:size,
+            cultid:$.cookie('cultid'),
+            province: $("#province").val(), //省
+            area: $("#area").val(), //区域
+            city: $("#c-1").val(), //市
+            etype:$("#c-2").val(),
+            name:$("#name").val()
+        }
+        dataInit.ajax({
+            api: [[${apiPath.indexTraMajorList}]],
+            params: params,
+            fn: function(data){
+                var params = {
+                    page: page,
+                    size: size,
+                    total: data.total
+                }
+                dataInit.htmlAdd(page, showModelHtml(data));
+                dataInit.pullUp(params, modelData);
+            }
+        })
+    }
+
+    function showModelHtml(data) {
+        var html = "";
+        if (data.code == 0 && data.rows.length > 0) {
+            for (var i in data.rows) {
+                var model = data.rows[i];
+                var img = data.imgPath + dataInit.getBigImage(model.image);
+                var desc = model.detail != ""?dataInit.removeHTMLTag(model.detail):"无";
+                html += '<li>\
+                            <a href="specialtyGroup?id='+model.id+'">\
+                                <div class="img">\
+                                    <img src="'+img+'" class="lazy">\
+                                </div>\
+                                <div class="info">\
+                                    <div class="title">'+model.name+'</div>\
+                                    <p class="text">适宜人群：<span>'+model.fitage+'</span></p>\
+                                    <p class="text">专业介绍：<span>'+desc+'</span></p>\
+                                </div>\
+                             </a>\
+                        </li>';
+            }
+        } else {
+            html = "<div class='newbility-no-msg'></div>";
+        }
+        return html;
+    }
+
+     function showSlider() {
+         dataInit.ajax({
+             api: [[${apiPath.showAdver}]],
+             params: {
+                 cultid: $.cookie('cultid'),
+                 type: 7,
+                 city: $.cookie('city'),
+             },
+             fn: function (data) {
+                 if (data.code == 0 && data.rows.length > 0) {
+                     var html = '';
+                     for (var i in data.rows) {
+                         var model = data.rows[i];
+                         var ModelUrl = model.url?model.url:'javascript:void(0)';
+                         var img = data.imgPath + model.picture ;// dataInit.getBigImage(model.picture);
+                         html += '    <div class="swiper-slide">' +
+                             ' <a href="'+ModelUrl+'"><img class="lazy" src="' +img+ '"></a>' +
+                             '    </div>';
+                     }
+                     $("#slider").html(html);
+                 }else {
+                     var imgPath = [[${basePath}]] + '/assets/img/public/dance.jpg';
+                     $("#slider").html('    <div class="swiper-slide">' +
+                         ' <a href="javascript:void(0)"><img class="lazy" src="' +imgPath+ '" alt=""></a>' +
+                         '    </div>');
+                 }
+                 var mySwiper = new Swiper ('#slider-head', {
+                     loop: true,
+                     autoplay: 5000,//可选选项，自动滑动
+                     // 如果需要分页器
+                     pagination: {
+                         el: '.swiper-pagination'
+                     }
+                 })
+             }
+         });
+     }
+</script>
+</body>
+</html>

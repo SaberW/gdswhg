@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/public/detail.css'" >
+<script th:src="${apiPath.statistics}" id="whgtongji"></script>
+<div th:include="guangdong/public/leftBar :: copy"></div>
+<div id="page">
+    <div class="mui-content">
+        <div class="wrapper-detail" id="act-detail">
+            <!--<div class="wrapper-detail-box">
+                <div class="img">
+                    <img id="image" class="lazy" src="http://183.131.126.132:8092/whgstatic/img/2017/201709/20170921/e7f2cf27ba3b41b680c1f10651db8800.jpg"/>
+                </div>
+                <div class="info">
+                    <div class="title">粤曲发烧友台上争相献技，韵味十足 ——2017广东粤曲私伙局大赛在顺德圆满落幕</div>
+                    <p>余票：500张</p>
+                    <p>时间：2017-11-3 - 2017-11-20</p>
+                    <div class="label">标签：<span>品牌活动</span></div>
+                </div>
+                <div class="address">地址：<span id="address">长沙市橘子洲头</span></div>
+                <a href="tel:15012345645"><div class="phone">电话：<span id="phone">130****1545</span></div></a>
+            </div>
+            <div class="wrapper-detail-box">
+                <div class="detail-box-text">
+                    剧情介绍：<br>
+                    　　1885年的伦敦，杰克医生因其父亲患有疾病，决定开始寻找其根源的研究，但因医院理事会全员的反对而告吹。律师厄特森为了安慰杰克，带他来到西区的酒吧，邂逅了舞女露西。无路可走的杰克把自己作为实验对象，却分裂出了双重人格，白天是善良正直的医生杰克，晚上则化身成邪恶的海德，对曾经反对他的理事会成员实施谋杀计划。他终日徘徊在善恶之间，被内心的负罪感和犯罪快感拉扯撕裂。同时，与出身高贵的未婚妻和底层舞女的情感纠葛也令他无所适从……
+                </div>
+            </div>-->
+            <div class="wrapper-detail-box">
+            <h2>相关资讯</h2>
+            <div class="detail-box-text"></div>
+            </div>
+        </div>
+        <div class="wrapper-detail" id="news-list-cont">
+            <div class="wrapper-detail-box">
+                <h2>相关资讯</h2>
+                <div class="news-list">
+                    <ul id="news-list">
+                        <li></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="wrapper-detail">
+            <div class="wrapper-detail-box">
+                <h2>相关资源</h2>
+                <div th:include="guangdong/resource/publicres :: copy" class="gather-nav-content" id="res-box" style="display: block"></div>
+            </div>
+        </div>
+    <nav class="mui-bar mui-bar-tab">
+        <div th:include="guangdong/public/collectionAndVoteup :: copy" class="zan-collection mui-tab-item"></div>
+        <div class="mui-tab-item"><a class="goNext" href="javascript:void(0)">loading...</a></div>
+    </nav>
+    <input type="hidden" id="temp_type" value="4">
+    <input type="hidden" id="toproject" value="WBGX">
+    <input type="hidden" id="commType">
+</div>
+<script type="text/javascript" th:inline="javascript">
+    var itemId = dataInit.getUrlParam('id');
+    var userid = $("#temp_userId").val();
+    var map_params = {};
+    $().ready(function(){
+        dataInit.ajax({
+            api: [[${apiPath.actdetail}]],
+            fn: showActivityDetail,
+            params: {actId: itemId,cultid:cultid}
+        });
+        dataInit.ajax({
+            api: [[${apiPath.actGLZX}]],
+            fn: actGLZX,
+            params: {entityid: itemId,cultid:cultid,clnftype:'2016111900000018'}
+        });
+    })
+    function showActivityDetail(data) {
+        if(data && data.code == 0){
+            if(data.data.actdetail.state!=6){
+                mui.toast(data.msg || '活动已经下架!');
+                return;
+            }
+
+            $("#act-detail").html('');
+            var model = data.data.actdetail;
+            var imgPath = data.imgPath + dataInit.getBigImage(model.imgurl);
+            //活动时间
+            var begin = moment(model.starttime).format('YYYY-MM-DD');
+            var end = moment(model.endtime).format('YYYY-MM-DD');
+            var time = begin + ' ~ ' + end;
+            if(begin==end){
+                time=begin;
+            }
+            //报名时间
+            var regBegin = moment(model.enterstrtime).format('YYYY-MM-DD HH:mm:ss');
+            var regEnd = moment(model.enterendtime).format('YYYY-MM-DD HH:mm:ss');
+            var regTime = regBegin + ' ~ ' + regEnd;
+            if(regBegin!=""&&regEnd!=""&&regBegin.substring(0,10)==regEnd.substring(0,10)){
+                regTime=regBegin+' ~ '+moment(model.enterendtime).format('HH:mm:ss');
+            }
+            map_params = {
+                latitude:model.actlat,
+                longitude:model.actlon,
+                name: model.address,
+                address: model.address
+            }
+            var ticketnum = data.data.ticketAllnum;
+            var ticketcut = data.data.ticketnum;
+            var currNum = ticketnum - ticketcut;
+            var liststate = data.data.liststate;
+            var ticket = '',activeTime = '';
+            if(liststate == 1){
+                $('.goNext').text('我要预订').addClass('just-see');
+                //ticket = '<p><i class="iconfont icon-barrage"></i> 余票：'+data.data.ticketnum+'张</p>';
+                ticket = '<p><i class="iconfont icon-barrage"></i> 票数：'+currNum+' / '+data.data.ticketAllnum+' 张</p>';
+                mui('body').on('tap','.goNext',function(){
+                    if(userid && userid!=undefined){
+                        dataInit.ajax({
+                            api:[[${apiPath.checkPreAct}]],
+                            fn:function (data) {
+                                if(data && data.code == 0){
+                                    window.location.href="step?id="+model.id;
+                                }else if (data.code==200){
+                                    mui.confirm(data.msg, '友情提示',['确定','取消'], function(e){
+                                        if (e.index==0){
+                                            window.location.href = [[${basePath}]] + '/usercenter/myusersecurityreal'
+                                        }
+                                    });
+                                }else {
+                                    mui.toast(data.msg || '数据加载失败');
+                                }
+                            },
+                            params:{
+                                actId: itemId,
+                                userId:userid
+                            }
+                        })
+                    }else {
+//                      mui.toast('请登录后操作');
+                        dataInit.setCache("toUrl",dataInit.encodeUrl());
+                        window.location.href = [[${basePath}]]+'/login';
+
+
+                    }
+                });
+            }else if(liststate == 2){
+                $('.goNext').text('已订完').addClass('complete');
+                activeTime = 'none';
+            }else if(liststate == 3){
+                $('.goNext').text('直接前往').addClass('just-see');
+                activeTime = 'none';
+            }else if(liststate == 4){
+                $('.goNext').text('活动已结束').addClass('complete');
+                activeTime = 'none';
+            }else{
+                $('.goNext').text('即将开始');
+            }
+            var tagHtml = "";
+            if(model.etag){
+                var tags = model.etag.split(',');
+                if(tags.length > 1){
+                    for(var j in tags){
+                        tagHtml+= "<span>"+tags[j]+"</span>";
+                    }
+                }else{
+                    tagHtml+= "<span>"+tags[0]+"</span>";
+                }
+                tagHtml = '<div class="label"><i class="iconfont icon-label"></i> 标签：'+tagHtml+'</div>';
+            }
+
+            var html2 = '\
+            asfsafs\
+            ';
+
+            var html = '\
+                <div class="wrapper-detail-box">\
+                    <div class="img">\
+                        <img class="lazy" src="'+imgPath+'"/>\
+                    </div>\
+                    <div class="info">\
+                        <div class="title">'+model.name+'<span id="visitCount"></span></div>'+ticket+'\
+                        <p><i class="iconfont icon-geren"></i> 主办单位：'+model.host+'</p>\
+                        <p class="'+activeTime+'"><i class="iconfont icon-time"></i> 报名时间：'+regTime+'</p>\
+                        <p><i class="iconfont icon-time"></i> 活动时间：'+time+'</p>'+tagHtml+'\
+                    </div>\
+                    <div class="address" id="_address"><i class="iconfont icon-coordinates"></i> 地址：<span>'+model.address+'</span></div>\
+                    <a href="tel:'+model.telephone+'"><div class="phone"><i class="iconfont icon-mobilephone"></i> 电话：<span>'+model.telephone+'</span></div></a>';
+
+            if(data.data.gatherid&&data.data.gatherid!=""){
+                html += '<a href="'+[[${basePath}]]+'/gather/actdetail?id=' + data.data.gatherid + '" ' +
+                    'style="float: right;width: 120px;margin:5px 10px 5px auto;padding: 5px 20px;text-align: center;border-radius: 3px;background: #1483e1;color: #fff;">' +
+                    '关联众筹' +
+                    '</a>';
+            }
+
+            //有直播
+            if(data.data.liveInfo.hasLive == '1'){
+                var btnCls = ''; var btnTxt = ''; var livelink = '';
+                var curt_state = data.data.liveInfo.state;
+                // 1-正在进行, 2-未开始， 3-已结束， 4-回看
+                switch (curt_state) {
+                    case '1':
+                        btnTxt = '进入直播';
+                        btnCls = 's-1';
+                        livelink = '<a href="../train/liveInfo?type=act&id='+model.id+'" class="liveNow-a"></a>';
+                        break;
+                    case '2':
+                        btnTxt = '直播未开始';
+                        btnCls = 's-3';
+                        break;
+                    case '3':
+                        btnTxt = '直播已结束';
+                        btnCls = 's-2';
+                        break;
+                    case '4':
+                        btnTxt = '查看回顾';
+                        btnCls = 's-4';
+                        livelink = '<a href="../train/liveInfo?type=act&id='+model.id+'" class="liveNow-a"></a>';
+                        break;
+                }
+                html += '\
+                <div class="wrapper-detail-box">\
+                    <h2>活动直播</h2>\
+                    <div class="detail-box-text">\
+                        <div class="train-table">\
+                            <ul>\
+                                <li>\
+                                '+livelink+'\
+                                <h3>'+data.data.liveInfo.title+'</h3>\
+                                <p>'+data.data.liveInfo.time+'<em class="'+btnCls+'">'+btnTxt+'</em></p></li>\
+                            </ul>\
+                        </div>\
+                    </div>\
+                </div>';
+            }
+
+
+            html+=  '</div><div class="wrapper-detail-box">'+
+                '<h2>活动详情</h2>'+
+                '<div class="detail-box-text">' +model.remark+
+                '</div>'+
+                '</div>';
+
+
+
+            $("#act-detail").html(html);
+            mui('body').on('tap','#_address',function () {
+                dataInit.menuMap(map_params)
+            })
+        }else {
+            mui.toast(data.msg || '数据加载失败');
+        }
+
+        getVisitSumCount4url(itemId, function(count){
+            $("#visitCount").text(' (访问量 '+count+')');
+        });
+    }
+    function actGLZX(data) {
+        if(data && data.code ==0){
+            if(data.data.length>0){
+                $("#news-list").html('');
+                var html = '';
+                data.data.forEach(function (value) {
+                    html+='<li><a href="../news/detail?id='+value.clnfid+'">'+value.clnftltle+'</a></li>'
+                })
+                $("#news-list").html(html);
+            }else {
+                $("#news-list-cont").hide();
+            }
+        }else {
+            $("#news-list-cont").hide();
+        }
+    }
+</script>
+</body>
+</html>

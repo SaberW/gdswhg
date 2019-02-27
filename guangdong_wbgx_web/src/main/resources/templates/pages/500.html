@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <link th:href="${basePath}+'/assets/style/error_.css'" rel="stylesheet">
+</head>
+<body>
+<img th:src="${basePath}+'/assets/img/public/err-500.png'" class="errImg">
+<div class="errMsg">服务器遇到错误，无法完成请求</div>
+<a class="back" th:href="${basePath}">返回首页</a>
+</body>
+</html>

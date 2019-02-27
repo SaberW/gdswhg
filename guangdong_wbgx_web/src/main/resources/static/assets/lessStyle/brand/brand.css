@@ -1,0 +1,380 @@
+@charset "UTF-8";
+/*---------------------------------------------------------------------
+	* Filename:         search.css
+	* Description:      search
+	* Version:          1.0.0 (2017-10-09)
+	* Website:          hn.sun3d.com
+	* Author:           JackyZeng (zrongs@vip.qq.com)
+---------------------------------------------------------------------*/
+/* ==CONFIG:=========================================================
+  $__version:       1.0.0
+  $__author:        JackyZeng
+  $__help:          zrongs@vip.qq.com
+  $__website:       http://hn.creatoo.cn
+  -------------------------------------------------------------------*/
+.li-flex {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+.brand-main {
+  width: 1200px;
+  margin: 73px auto 200px auto;
+}
+.brand-main ul li {
+  position: relative;
+  height: 460px;
+  margin-bottom: 40px;
+}
+.brand-main ul li a {
+  display: block;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  cursor: pointer;
+  z-index: 10;
+  background: url(../../../assets/img/public/none.png) repeat;
+}
+.brand-main ul li .img {
+  height: 460px;
+  width: 690px;
+  overflow: hidden;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  background-color: #eee;
+  float: left;
+}
+.brand-main ul li .img img {
+  height: 460px;
+  width: 690px;
+}
+.brand-main ul li .info-cont {
+  padding: 40px 60px;
+  z-index: 10;
+  position: absolute;
+  right: 0px;
+  top: 60px;
+  height: 260px;
+  width: 460px;
+  background-color: #fff;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  -webkit-box-shadow: 3px 10px 10px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 3px 10px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 3px 10px 10px rgba(0, 0, 0, 0.2);
+}
+.brand-main ul li .info-cont h2 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 24px;
+  color: #333333;
+  margin-bottom: 20px;
+}
+.brand-main ul li .info-cont p {
+  font-size: 16px;
+  color: #999999;
+  line-height: 200%;
+  max-height: 128px;
+  overflow: hidden;
+}
+.brand-main ul li .info-cont .btn-cont {
+  margin-top: 30px;
+}
+.brand-main ul li .info-cont .btn-cont .btn {
+  position: relative;
+  display: inline-block;
+  zoom: 1;
+  vertical-align: baseline;
+  outline: none;
+  overflow: visible;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  font-family: Microsoft YaHei, Arial, Helvetica, sans-serif;
+  line-height: 100%;
+  padding: 0.5em 2em 0.55em;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  border: 1px solid #cd0a1b;
+  color: #fff;
+  background-color: #cd0a1b;
+  background-image: -webkit-linear-gradient(top, #cd0a1b, #d70a15);
+  background-image: -moz-linear-gradient(top, #cd0a1b, #d70a15);
+  background-image: -o-linear-gradient(top, #cd0a1b, #d70a15);
+  background-image: -ms-linear-gradient(top, #cd0a1b, #d70a15);
+  background-image: linear-gradient(top, #cd0a1b, #d70a15);
+}
+.brand-main ul li .info-cont .btn-cont .btn:hover {
+  background-color: #d70a15;
+  background-image: -webkit-linear-gradient(top, #d70a15, #cd0a1b);
+  background-image: -moz-linear-gradient(top, #d70a15, #cd0a1b);
+  background-image: -o-linear-gradient(top, #d70a15, #cd0a1b);
+  background-image: -ms-linear-gradient(top, #d70a15, #cd0a1b);
+  background-image: linear-gradient(top, #d70a15, #cd0a1b);
+}
+.brand-main ul li .info-cont .btn-cont .btn i {
+  width: 20px;
+  height: 2px;
+  overflow: hidden;
+  background-color: #fff;
+  position: absolute;
+  right: 0px;
+  top: 15px;
+}
+.brand-main ul li .info-cont .btn-cont .icon-jiantou1 {
+  font-size: 70px;
+  color: #cd0a1b;
+}
+.brand-main ul li .info-cont a {
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0px;
+  top: 0px;
+}
+.brand-main ul .db .img {
+  float: right;
+}
+.brand-main ul .db .info-cont {
+  left: 0px;
+  right: auto;
+}
+.brand-dtail {
+  background: url(../../img/brand/brand-bg.jpg) repeat-x 50% 0 #fff;
+}
+.brand-dtail div.brand-content {
+  width: 1200px;
+  margin: 0 auto;
+  padding-top: 60px;
+}
+.brand-dtail div.brand-content div.brand-image {
+  width: 766px;
+  background: #fff;
+  margin: 0px auto;
+  overflow: hidden;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  -webkit-box-shadow: 5px 10px 20px rgba(0, 0, 0, 0.1);
+  -moz-box-shadow: 5px 10px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 5px 10px 20px rgba(0, 0, 0, 0.1);
+}
+.brand-dtail div.brand-content div.brand-image img {
+  width: 750px;
+  height: 550px;
+  display: block;
+  margin: 8px;
+}
+.brand-dtail div.brand-content div.brand-text {
+  margin-top: 50px;
+  padding-bottom: 30px;
+}
+.brand-dtail div.brand-content div.brand-text h1 {
+  font-size: 18px;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-bottom: 15px;
+}
+.brand-dtail div.brand-content div.brand-text div.text {
+  width: 1040px;
+  margin: 0 auto;
+  padding: 0 20px;
+  font-size: 14px;
+  line-height: 24px;
+  height: 72px;
+  overflow: hidden;
+  color: #999999;
+  position: relative;
+}
+.brand-dtail div.brand-content div.brand-text div.text > div {
+  width: 1000px;
+}
+.brand-dtail div.brand-content div.brand-text div.text div.scrollbar {
+  position: absolute;
+  right: 40px;
+  top: 5px;
+  width: 2px;
+  height: 62px;
+  background: #666666;
+  display: none;
+}
+.brand-dtail div.brand-content div.brand-text div.text div.scrollbar div.handle {
+  width: 6px;
+  background: #cd0a1b;
+  position: absolute;
+  right: -2px;
+  top: 0px;
+}
+.brand-demo {
+  width: 1200px;
+  margin: 0 auto;
+  padding: 80px 0;
+}
+.brand-demo .brand-activity {
+  margin-bottom: 80px;
+}
+.brand-demo .brand-activity div.brand-activity-title {
+  font-size: 16px;
+  text-align: center;
+}
+.brand-demo .brand-activity div.brand-act-list {
+  margin: 40px 0 0 0;
+}
+.brand-demo .brand-activity div.brand-act-list ul {
+  margin-right: -20px;
+}
+.brand-demo .brand-activity div.brand-act-list ul > li {
+  -webkit-transition: all 0.4s linear;
+  -moz-transition: all 0.4s linear;
+  -o-transition: all 0.4s linear;
+  -ms-transition: all 0.4s linear;
+  transition: all 0.4s linear;
+  width: 283px;
+  background: #fff;
+  float: left;
+  margin: 0px 20px 0px 0;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  border: solid 1px #eaeaea;
+  overflow: hidden;
+  position: relative;
+}
+.brand-demo .brand-activity div.brand-act-list ul > li div.img {
+  width: 283px;
+  height: 190px;
+  overflow: hidden;
+  position: relative;
+}
+.brand-demo .brand-activity div.brand-act-list ul > li div.img img {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.brand-demo .brand-activity div.brand-act-list ul > li div.detail {
+  padding: 15px 15px 10px;
+}
+.brand-demo .brand-activity div.brand-act-list ul > li div.detail h2 {
+  font-size: 16px;
+  line-height: 26px;
+  color: #333333;
+  margin: 0 0 5px 0;
+  height: 26px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.brand-demo .brand-activity div.brand-act-list ul > li div.detail p {
+  font-size: 14px;
+  color: #999999;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin: 0 0 0px 0;
+  max-height: 24px;
+  overflow: hidden;
+  line-height: 24px;
+}
+.brand-demo .brand-activity div.brand-act-list ul > li a {
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+}
+.brand-demo .brand-activity div.brand-act-list ul > li:hover {
+  -webkit-box-shadow: 5px 10px 20px rgba(0, 0, 0, 0.1);
+  -moz-box-shadow: 5px 10px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 5px 10px 20px rgba(0, 0, 0, 0.1);
+}
+.brand-demo .brand-resources div.brand-resources-title {
+  font-size: 16px;
+  text-align: center;
+}
+.brand-demo .brand-resources div.brand-resources-title span {
+  display: inline-block;
+  margin: 0 15px;
+  padding: 5px 15px;
+  overflow: hidden;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+.brand-demo .brand-resources div.brand-resources-title span.active {
+  background: #cd0a1b;
+  color: #fff;
+}
+.brand-demo .brand-resources div.brand-resources-list {
+  margin: 30px 0 100px 0;
+  /*ul>li:hover{
+        .box-shadow(5px,10px,20px,.1);
+      }*/
+}
+.brand-demo .brand-resources div.brand-resources-list ul {
+  margin-right: -30px;
+}
+.brand-demo .brand-resources div.brand-resources-list ul > li {
+  -webkit-transition: all 0.4s linear;
+  -moz-transition: all 0.4s linear;
+  -o-transition: all 0.4s linear;
+  -ms-transition: all 0.4s linear;
+  transition: all 0.4s linear;
+  width: 380px;
+  height: 300px;
+  float: left;
+  margin: 0px 30px 10px 0;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+}
+.brand-demo .brand-resources div.brand-resources-list ul > li div.img {
+  width: 380px;
+  height: 253px;
+  overflow: hidden;
+  position: relative;
+}
+.brand-demo .brand-resources div.brand-resources-list ul > li div.img img {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.brand-demo .brand-resources div.brand-resources-list ul > li div.detail {
+  padding: 10px 15px;
+}
+.brand-demo .brand-resources div.brand-resources-list ul > li div.detail h2 {
+  font-size: 16px;
+  line-height: 26px;
+  color: #333333;
+  text-align: center;
+  height: 26px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.brand-demo .brand-resources div.brand-resources-list ul > li a {
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+}

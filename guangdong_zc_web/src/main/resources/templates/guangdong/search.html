@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link th:href="${basePath}+'/assets/style/index/search.css'" rel="stylesheet">
+<div class="wrapper clearfix">
+    <div class="content">
+        <!--公共主头部开始-->
+        <div id="header" th:include="guangdong/public/header :: copy"></div>
+        <!--公共主头部结束-->
+        <div class="search-bg">
+            <div class="search-border">
+                <div class="search-cont search-mask">
+                    <input class="search-input" name="srchkey" id="srchkey" onkeydown="if(event.keyCode==13) searchList();" placeholder="搜索你喜欢的" maxlength="30">
+                    <button class="search-button" id="search-button"></button>
+                </div>
+            </div>
+        </div>
+        <div class="main-info-bg container none">
+            <div class="page-list search-info">
+                <h1>平台为您找到相关“<span id="key-word"></span>”结果约<span id="cut-num"></span>个</h1>
+                <ul>
+                    <!--<li><a href="#">讲座|中国神话之源《山海经》对中国文化发展的影响,<span>报名</span>开始</a><em>- 组织机构</em></li>
+                    <li><a href="#">海派小品 文脉虹口 | 第十场<span>报名</span>11月27日</a><em>- 组织机构</em></li>
+                    <li><a href="#">“真实虚构电影院”中国巡展-思南公馆站<span>报名</span></a><em>- 组织机构</em></li>
+                    <li><a href="#">回归“心”生活<span>报名</span> 传统文化主题活动</a><em>- 工作动态</em></li>
+                    <li><a href="#">讲座|中国神话之源《山海经》对中国文化发展的影响,<span>报名</span>开始</a><em>- 基层直击</em></li>
+                    <li><a href="#">海派小品 文脉虹口 | 第十场<span>报名</span>11月27日</a><em>- 工作动态</em></li>
+                    <li><a href="#">“真实虚构电影院”中国巡展-思南公馆站<span>报名</span></a><em>- 工作动态</em></li>
+                    <li><a href="#">回归“心”生活<span>报名</span> 传统文化主题活动</a><em>- 最新公告</em></li>
+                    <li><a href="#">讲座|中国神话之源《山海经》对中国文化发展的影响,<span>报名</span>开始</a><em>- 培训公告</em></li>
+                    <li><a href="#">海派小品 文脉虹口 | 第十场<span>报名</span>11月27日</a><em>- 培训资讯</em></li>
+                    <li><a href="#">“真实虚构电影院”中国巡展-思南公馆站<span>报名</span></a><em>- 活动资讯</em></li>
+                    <li><a href="#">回归“心”生活<span>报名</span> 传统文化主题活动</a><em>- 工作动态</em></li>-->
+                </ul>
+                <!--分页开始 -->
+                <div class="green-black" id="artPagging" style="margin-bottom: 40px"></div>
+                <!--分页结束-->
+            </div>
+        </div>
+        <div class="container none" id="searchResult">
+            <div class="page-list search-info">
+                <h1>很抱歉，没有找到与“<span id="key-word-2"></span>”相关的结果</h1>
+            </div>
+        </div>
+    </div>
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong/public/footer :: copy"></div>
+<!--底部结束-->
+
+<a class="to-top"></a>
+<script type="text/javascript" th:inline="javascript">
+    $("#search-button").on("click", function () {
+        var srchkey = $("#srchkey").val();
+        if (srchkey.length > 0) {
+            dataPage();
+        }
+    });
+    function searchList() {
+        $("#search-button").click();
+    }
+    function dataPage(page, rows) {
+        var params_page = page || 1;
+        var params_rows = rows || 12;
+        var params = {
+            index: params_page,
+            size: params_rows,
+            srchkey: $("#srchkey").val()
+        };
+        dataInit.ajax({
+            api: [[${apiPath.search}]],
+            params: params,
+            fn: function (data) {
+                showSearchList(data)
+                dataInit.pageInit('artPagging', params_page, params_rows, data.total, dataPage);
+            }
+        })
+    }
+
+    function showSearchList(data) {
+        var searchList = data.rows;
+        var srchkey = $("#srchkey").val();
+        var reger = new RegExp('(('+srchkey+')+)',"gm");
+        var i = 0;
+        var itemHtml = "";
+        //console.log(data);
+        var temp_href = [[${basePath}]];
+        if(searchList.length > 0){
+            $(".main-info-bg").show();
+            $("#searchResult").hide();
+            for (var i in searchList) {
+                var title =  searchList[i].title;
+                var type = searchList[i].type;
+                var itemId = searchList[i].id;
+                switch(type){
+                    //活动
+                    case "4":
+                        href = temp_href + "/hd/detail?id="+itemId;
+                        break;
+                    //场馆
+                    case "2":
+                        href = temp_href + "/cg/detail?id="+itemId;
+                        break;
+                    //活动室
+                    case "3":
+                        href = temp_href + "/cg/venueroom?id="+itemId;
+                        break;
+                }
+                title = title.replace(reger, '<span>$1</span>');
+                itemHtml += "<li><a href='"+href+"' target='_blank'>"+title+"</a><em>- "+searchList[i].srchtype+"</em></li>";
+                i++;
+            }
+            $(".search-info ul").html("");
+            $(".search-info ul").append(itemHtml);
+            $("#cut-num").html(searchList.length);
+            $("#key-word").html(srchkey);
+        }else {
+            $("#searchResult").show();
+            $(".main-info-bg").hide();
+            $("#key-word-2").html(srchkey);
+        }
+    }
+</script>
+</body>
+</html>

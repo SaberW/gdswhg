@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/public/detail.css'">
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/act/step.css'">
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/act/seat.css'">
+<link rel="stylesheet" th:href="${basePath}+'/assets/js/picker/css/mui.picker.css'">
+<script th:src="${basePath}+'/assets/js/seatOrder.js'" type="text/javascript"></script>
+<script th:src="${basePath}+'/assets/js/iscroll.js'" type="text/javascript"></script>
+<script th:src="${basePath}+'/assets/js/picker/js/mui.picker.min.js'" type="text/javascript"></script>
+<div th:include="guangdong/public/leftBar :: copy"></div>
+<div id="page">
+    <div class="mui-content">
+        <!-- Card Header -->
+        <!-- Card Body -->
+        <div class="mui-card no-corner">
+            <div class="mui-card-header wrapper-par">
+                <div class="left-wrapper">
+                    <img class="lazy" id="pageImg" width="120" height="80" src="">
+                </div>
+                <div class="right-wrapper">
+                    <div class="page-title" id="title"></div>
+                    <!--<div class="time"><i class="iconfont icon-time"></i><span id="time"></span></div>
+                    <div class="time address"><i class="iconfont icon-coordinates"></i><span id="district"></span></div>-->
+                </div>
+            </div>
+        </div>
+        <div class="mui-card no-corner step-table">
+            <div class="mui-card-content mui-input-group">
+                <div class="step-list mui-input-row">填写报名信息</div>
+                <div class="mui-input-row input-merge">
+                    <label>姓名</label>
+                    <input id="username" type="text" maxlength="20" class="mui-input-clear" placeholder="请输入姓名"
+                           data-input-clear="1"><span
+                        class="mui-icon mui-icon-clear mui-hidden"></span>
+                </div>
+
+                <div class="mui-input-row input-merge mui-table-view">
+                    <label>证件类型</label>
+                    <div class="mui-table-view-cell" id="idcardtype">
+                        <div class="mui-pull-left" style="height: 35px;line-height: 35px"></div>
+                    </div>
+                </div>
+
+                <div class="mui-input-row input-merge">
+                    <label>证件号码</label>
+                    <input type="text" id="caednumber" maxlength="18" class="mui-input-clear" placeholder="请输入证件号"
+                           data-input-clear="1"><span
+                        class="mui-icon mui-icon-clear mui-hidden"></span>
+                </div>
+                <div class="mui-input-row input-merge">
+                    <label>出生日期</label>
+                    <input type="text" id="birthday" name="birthday" class="mui-input-clear" placeholder="请输入出生日期"
+                           data-input-clear="1" readonly><span
+                        class="mui-icon mui-icon-clear mui-hidden"></span>
+                </div>
+                <div class="mui-input-row">
+                    <label>手机号码</label>
+                    <input id="txtMobile" type="tel" maxlength="11" class="mui-input-clear" placeholder="请输入手机号码"
+                           data-input-clear="1"><span
+                        class="mui-icon mui-icon-clear mui-hidden"></span>
+                </div>
+                <!-- Seat End -->
+                <div class="help-info">
+                    <label><p><input id="readmeck" value="yes" type="checkbox" checked>&nbsp;&nbsp;我已阅读并接受<a
+                            href="javascript:void(0)">《众筹须知》</a>相关条款</p></label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <nav class="mui-bar mui-bar-tab">
+        <div class="mui-tab-item"><a class="goNext" href="javascript:dealOrder()">下一步</a></div>
+    </nav>
+</div>
+<script type="text/javascript" th:inline="javascript">
+    var itemId = dataInit.getUrlParam('id'),
+        gatherid = dataInit.getUrlParam('gatherid'),
+        etype = dataInit.getUrlParam('etype'),
+        userid = $("#temp_userId").val(),
+        nickName = $("#temp_nickName").val(),
+        mobile = $("#temp_mobile").val(),
+        caednumber = $("#temp_idCard").val(),
+        idcardtype = $("#temp_idcardtype").val(),
+        birthday = $("#temp_birthday").val(),
+        zcApiUrl = '',
+        zcId= '';
+    //判断报名接口，etype==5为培训，etype==0为其他
+    if(etype == 0){
+        zcApiUrl = [[${apiPath.gatherApplyChecking}]];
+        zcId = itemId;
+    }else if(etype == 5) {
+        zcApiUrl = [[${apiPath.trainZcApplyChecking}]];
+        zcId = gatherid;
+    }
+    var modelDetail,
+        username,
+        phone;
+
+    function getMassage(){
+        if (etype == 5){
+            return '1、 众筹不是商品交易。支持者根据自己的需求选择、支持众筹项目，并获得发起人承诺的回报。 \
+\n2、因众筹人数不足、市场风险、法律风险等各种因素，众筹可能失败。众筹失败时，发起人将不会提供相应的文化服务。\
+\n3、由于紧急事件、突发气候变化等不可预测因素造成众筹活动无法开展，发起人有权终止众筹活动，且不承担任何法律和经济责任。\
+\n4、请支持者密切关注众筹进度，如众筹一旦成功，支持者即可获得参与资格（部分需要审核通过后才能参与），并请按照计划参与众筹。';
+        }
+        if (etype==0){
+            return '1、 众筹不是商品交易。支持者根据自己的需求选择、支持众筹项目，并获得发起人承诺的回报。 \
+\n2、因众筹人数不足、市场风险、法律风险等各种因素，众筹可能失败。众筹失败时，发起人将不会提供相应的文化服务。\
+\n3、由于紧急事件、突发气候变化等不可预测因素造成众筹活动无法开展，发起人有权终止众筹活动，且不承担任何法律和经济责任。\
+\n4、请支持者密切关注众筹进度，如众筹活动一旦成功，众筹发起人将依据相关说明开展众筹活动。';
+        }
+    }
+
+    $(document).ready(function () {
+        loadPage();
+        mui('.help-info').on('tap', 'label', function () {
+            if ($('#readmeck').is(':checked')) {
+                $('#readmeck').val('no');
+            } else {
+                $('#readmeck').val('yes');
+            }
+        })
+        mui('.help-info').on('tap', 'a', function () {
+            mui.alert(getMassage(), '众筹须知', '关闭', function(){});
+        })
+
+        mui('body').on('tap', '.goNext', function () {
+            dealOrder();
+        })
+        $("#caednumber").change(function () {
+            if (idcardtype && idcardtype == 2){
+                return;
+            }
+            if($("#caednumber").val()){
+                var age = birthdayInit($("#caednumber").val());
+                $("#birthday").val(age);
+            }
+        })
+        $("#caednumber").on('keyup',function () {
+            if (idcardtype && idcardtype == 2){
+                return;
+            }
+            if($("#caednumber").val()){
+                var age = birthdayInit($("#caednumber").val());
+                $("#birthday").val(age);
+            }
+        })
+        //表单返显
+        initIdcardtypeItem();
+        $('#idcardtype .mui-pull-left').text(idcardtype == '2'? '港澳台': '中国大陆');
+        if(nickName && nickName!=''){
+            $("#username").val(nickName);
+            $("#username").attr("readonly", 'readonly');
+        }
+        if(mobile && mobile!=''){
+            $("#txtMobile").val(mobile);
+            $("#txtMobile").attr("readonly", 'readonly');
+        }
+
+        if(caednumber){
+            $("#caednumber").val(caednumber);
+        }
+        if (idcardtype && "2" == idcardtype){
+            $("#birthday").val(birthday);
+        }else{
+            if (caednumber && caednumber.length>14){
+                $("#birthday").val(birthdayInit(caednumber));
+            }
+        }
+
+        if (caednumber!=''){
+            $("#caednumber").attr("readonly", 'readonly');
+            mui(".mui-table-view").off('tap',"#idcardtype");
+        }
+
+        var _birthday = $("#birthday").val();
+        if (_birthday && _birthday!=''){
+            $("#birthday").attr("readonly", 'readonly');
+        }
+
+    })
+
+    function initIdcardtypeItem(){
+        mui(".mui-table-view").on('tap',"#idcardtype",function () {
+            var picker = new mui.PopPicker();
+            picker.setData([{value: 1, text: '中国大陆'}, {value: 2, text: '港澳台'}]);
+            picker.show(function (selectItems) {
+                idcardtype = selectItems[0].value;
+                $('#idcardtype .mui-pull-left').text(selectItems[0].text);
+                if (idcardtype && idcardtype=='2'){
+                    $("input[name='birthday']").removeAttr("readonly");
+                }else{
+                    $("input[name='birthday']").attr("readonly", 'readonly');
+                }
+            });
+        })
+    }
+
+    function loadPage() {
+        dataInit.ajax({
+            api: [[${apiPath.zcProjectDetail}]],
+            fn: showActivityDetail,
+            params: {id: zcId}
+        });
+    }
+    function showActivityDetail(data) {
+        if(data.code == 0 && data){
+            var model = data.data;
+            modelDetail = model;
+            modelDetail['imgPath'] = data.imgPath;
+            $("#title").text(model.title);
+            $("#pageImg").attr("src", data.imgPath + dataInit.getSmallImage(model.imgurl));
+        }else {
+            mui.toast(data.msg || '数据加载失败');
+        }
+
+    }
+    function dealOrder() {
+        if (verification()) {
+            username = $('#username').val();
+            phone = $('#txtMobile').val();
+            var params = {
+                idcardtype:idcardtype,
+                crettype:idcardtype,
+                caedtype:idcardtype,
+                name:username,
+                caednumber:$("#caednumber").val(),
+                birthday:$("#birthday").val(),
+                phone:phone,
+                gatherid:zcId,
+                itemId:itemId,
+                id:itemId,
+                userId:userid,
+                userid:userid,
+                etype:etype
+            }
+            nextPage(params);
+        }
+    }
+
+    function verification() {
+        var reg = /^0?(13[0-9]|15[012356789]|17[013678]|18[0-9]|14[57])[0-9]{8}$/;
+        var regCardId = /^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X|x)$/;
+
+        if ($("#username").val().length < 2 || $("#username").val().length > 15) {
+            mui.toast("请输入正确的姓名");
+            return false;
+        } else if (!$("#caednumber").val() || $.trim($("#caednumber").val()) == ''){
+            mui.toast("请输入证件号码");
+            return false;
+        } else if (idcardtype != 2 && !regCardId.test(($("#caednumber").val()))) {
+            mui.toast("请输入正确的证件号码");
+            return false;
+        } else if (idcardtype == 2 && (!/^\d{4}-\d{2}-\d{2}$/.test($("#birthday").val())) ){
+            mui.toast("请输入正确的出生日期，格式如2000-01-01");
+            return false;
+        } else if (!reg.test(($("#txtMobile").val()))) {
+            mui.toast("请输入正确的手机号码");
+            return false;
+        } else if ($('#readmeck').val() == 'no') {
+            mui.toast("请接受《订票须知》条款");
+            return false;
+        }else {
+            return true;
+        }
+    }
+
+    function nextPage(paramOk) {
+        var paramOk = paramOk;
+        dataInit.ajax({
+            api: zcApiUrl,
+            fn:function (data) {
+                if(data.code == 0){
+                    dataInit.setCache('hint', paramOk);
+                    dataInit.setCache('modelDetail', modelDetail);
+                    window.location.href = 'gatherconfirm';
+                }else {
+                    mui.toast(data.msg || '数据加载失败');
+                }
+            },
+            params: paramOk
+        });
+    }
+    //生日自动生成
+    function birthdayInit(idCard){
+        var birthday = idCard;
+        birthday = birthday.substring(6,14);
+        birthday = birthday.substring(0,4)+"-"+birthday.substring(4,6)+"-"+birthday.substring(6);
+        return birthday;
+    }
+    //生日生成年龄
+    /*根据出生日期算出年龄*/
+    function jsGetAge(strBirthday){
+        var returnAge;
+        var strBirthdayArr=strBirthday.split("-");
+        var birthYear = strBirthdayArr[0];
+        var birthMonth = strBirthdayArr[1];
+        var birthDay = strBirthdayArr[2];
+
+        var d = new Date();
+        var nowYear = d.getFullYear();
+        var nowMonth = d.getMonth() + 1;
+        var nowDay = d.getDate();
+
+        if(nowYear == birthYear){
+            returnAge = 0;//同年 则为0岁
+        }
+        else{
+            var ageDiff = nowYear - birthYear ; //年之差
+            if(ageDiff > 0){
+                if(nowMonth == birthMonth) {
+                    var dayDiff = nowDay - birthDay;//日之差
+                    if(dayDiff < 0)
+                    {
+                        returnAge = ageDiff - 1;
+                    }
+                    else
+                    {
+                        returnAge = ageDiff ;
+                    }
+                }
+                else
+                {
+                    var monthDiff = nowMonth - birthMonth;//月之差
+                    if(monthDiff < 0)
+                    {
+                        returnAge = ageDiff - 1;
+                    }
+                    else
+                    {
+                        returnAge = ageDiff ;
+                    }
+                }
+            }
+            else
+            {
+                returnAge = -1;//返回-1 表示出生日期输入错误 晚于今天
+            }
+        }
+
+        return returnAge;//返回周岁年龄
+
+    }
+</script>
+</body>
+</html>

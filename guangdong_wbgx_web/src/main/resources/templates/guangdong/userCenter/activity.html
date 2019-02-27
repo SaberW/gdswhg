@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link th:href="${basePath}+'/assets/style/userCenter/userCenter.css'" rel="stylesheet">
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/jquery.qrcode.min.js'"></script>
+<div class="wrapper clearfix">
+    <div class="content">
+        <!--公共主头部开始-->
+        <div id="header" th:include="guangdong/public/header :: copy"></div>
+        <!--公共主头部结束-->
+        <div class="main main-boder clearfix">
+            <div class="leftPanel" th:include="guangdong/userCenter/left :: copy"></div>
+            <div class="rightPanel">
+                <ul class="commBtn clearfix">
+                    <li class="active"><a href="javascript:void(0)" data-type="1" >进行中</a></li>
+                    <li><a href="javascript:void(0)" data-type="2" >已结束</a></li>
+                </ul>
+                <div class="sysmsg none">
+                    <div class="ad"></div>
+                    <p>暂无您参与的活动报名信息</p>
+                </div>
+                <ul class="group clearfix">
+                    <!--<li class="item">
+                        <div class="orderCont clearfix">
+                            <div class="orderTime float-left">预定时间：<span>空</span></div>
+                        </div>
+                        <div class="infoCont">
+                            <h2><a href="#" target="_blank">空</a></h2>
+                            <p>地址 :<span>空</span></p>
+                            <p>手机 :<span>空</span></p>
+                            <p class="tickets">取票码 :<span>空</span></p>
+                            <p>座位号 :<span>空</span></p>
+                            <p class="time">活动时间 :<span>空</span></p>
+                            <div><a class="orderKick" href="javascript:void(0)">取消预订</a>
+                            </div>
+                        </div>
+                    </li>-->
+                </ul>
+                <!--分页开始 -->
+                <div class="green-black" id="artPagging" style="margin-bottom: 40px"></div>
+                <!--分页结束-->
+            </div>
+        </div>
+        <input type="hidden" id="type" value="1">
+    </div>
+        <div class="qr-wrapper" style="display: none">
+            <div>
+                <div class="qr-code">
+                    <div style="background-color:#fff;">
+                        <div style="line-height:40px; text-align: center; overflow: auto; margin-top:20px; padding-top:15px;">取票码 </div>
+                        <div class="qr-number" style="line-height:20px;margin-top:-5px;margin-bottom:20px; padding-bottom:20px; text-align: center; overflow: auto; font-weight:700; border-bottom:1px #ddd solid;"></div>
+                        <div class="qr-img" style="text-align:center"></div>
+                        <div style="text-align:center;margin-top:10px;padding-bottom:20px;">出示二维码进行验票</div>
+                    </div>
+                    <div class="close-qr" style="text-align: center" onclick="colseQr()">
+                        <img th:src="${basePath}+'/assets/img/public/msg-close.png'">
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong/public/footer :: copy"></div>
+<!--底部结束-->
+<!-- core public JavaScript -->
+<script type="text/javascript" th:inline="javascript">
+    $(document).ready(function () {
+        $('.commBtn li a').on('click',function(){
+            var type = $(this).attr("data-type");
+            $("#type").val(type);
+            $(this).parent('li').addClass("active").siblings().removeClass("active");
+            dataPage();
+        })
+        dataPage();
+    })
+    function dataPage(page,rows) {
+        var params_page = page || 1;
+        var params_rows = rows || 5;
+        var params = {
+            userId: [[${session.wbgx_sessUserKey.userId}]],
+            index:params_page,
+            size:params_rows,
+            type:$("#type").val() || 1
+        }
+        rongDialog.init({ico: 3, type: 1, desc: '', overTime: 8000});
+        dataInit.ajax({
+            api: [[${apiPath.myAct}]],
+            params: params,
+            fn: function(data){
+                rongDialog.closeMaskPanel();
+                var myActList = data.rows;
+                var sysTime = data.data.time;
+                showActList(myActList,sysTime);
+                dataInit.pageInit('artPagging', params_page, params_rows, data.total, dataPage);
+            }
+        })
+    }
+
+    function showActList(data,time){
+        var group = $('.group');
+        var type  = $("#type").val();
+        var sysTime = time;
+        group.html("");
+        if(data.length == 0){
+            $('.sysmsg').show();
+        }else{
+            $('.sysmsg').hide();
+            for(var i in data){
+                var lastTime = (data[i].playstarttime-sysTime)/1000/60/60;
+                var ordercreatetime = moment(data[i].ordercreatetime).format('YYYY-MM-DD HH:mm:ss');//订单生成时间
+                var ticketstatus = data[i].orderstate;
+                var orderisvalid = data[i].orderisvalid;
+                var status;
+                /*if(2 == orderisvalid){
+                    status = "预定失败" ;
+                }else{*/
+                    switch(ticketstatus)
+                    {
+                        case 1:
+                            status = "未取票";
+                            break;
+                        case 2:
+                            status = "已出票";
+                            break;
+                        case 3:
+                            status = "已取消";
+                            break;
+                        case 4:
+                            status = "已验票";
+                            break;
+                        default:
+                            status = "已失效"
+                    }/*
+                }*/
+                var activityid = data[i].activityid; //活动id
+                var itemId = data[i].id; //订单id
+                var name = data[i].name; //活动名称
+                var address = data[i].address; //活动地址
+                var orderphoneno = data[i].orderphoneno;  //取票手机号
+                var ordernumber = data[i].ordernumber; //取票码
+                var seatCode = data[i].seatCode; //取票状态
+                var actUrl = [[${basePath}]]+'/'+[[${cultsite}]]+"/hd/detail?id="; //活动详情页链接
+                var playDate = moment(data[i].playstarttime).format('YYYY-MM-DD');
+                var playstime = data[i].playstime;
+                var playetime = data[i].playetime;
+                var playetime = data[i].playetime;
+                var delBtn = "";
+                //状态为未取票时或活动开始时间离当前时间只剩24小时
+                if(ticketstatus == 1 && type == 1 && lastTime > 24){
+                    delBtn = "<div><a class=\"orderKick\"href=\"javascript:void(0)\" onclick=\"delOrder("+itemId+")\">取消预订</a></div>";
+                }
+                if(type == 2){
+                    delBtn = "<div><a class=\"orderKick\"href=\"javascript:void(0)\" onclick=\"delThis("+itemId+")\">删除订单</a></div>";
+                }else if(type == 1 && orderisvalid == 2){
+                    delBtn = "<div><a class=\"orderKick\"href=\"javascript:void(0)\" onclick=\"delThis("+itemId+")\">删除订单</a></div>";
+                }else if(type == 1 && ticketstatus == 3){
+                    delBtn = "<div><a class=\"orderKick\"href=\"javascript:void(0)\" onclick=\"delThis("+itemId+")\">删除订单</a></div>";
+                }
+                /*if(2 == orderisvalid){
+                    var li =
+                        "<li class=\"item\">" +
+                        "<div class=\"orderCont clearfix\">" +
+                        "<div class=\"orderTime float-left\">预定时间 ：<span>"+ordercreatetime+"</span></div><div class=\"orderType\">"+status+"</div></div>" +
+                        "<div class=\"infoCont\">" +
+                        "<h2>" +
+                        "<a href=\""+actUrl+activityid+"\"target=\"_blank\">"+name+"</a>" +
+                        "</h2>" +
+                        "<p>订单编号 : <span>"+address+"</span></p>" +
+                        "<p>地址 : <span>"+address+"</span></p>" +
+                        "<p>手机 : <span>"+orderphoneno+"</span></p>" +
+                        "<p class=\"tickets\">取票码 : <span>"+ordernumber+"</span></p>" +
+                        "<p style='display: none'>座位号 : <span>"+seatCode+"</span></p>" +
+                        "<p class=\"time\">活动时间 : <span>"+playDate+" "+playstime+"-"+playetime+"</span></p>"+
+                        "<p class=\"time\">失败原因 : <span>"+data[i].ordersummary+"</span></p>" + delBtn +
+                        "</div>" +
+                        "</li>";
+                    group.append(li);
+                }else {*/
+
+                var codehtml='';
+                    if(ticketstatus == 1||ticketstatus == 2) {
+                       // codehtml= '<div><a class=\"orderKick\"href=\"javascript:void(0)\" onclick="showCode(\'' + ordernumber + '\')">二维码</a></div>';
+                    }
+                    var li =
+                        "<li class=\"item\">" +
+                        "<div class=\"orderCont clearfix\">" +
+                        "<div class=\"orderTime float-left\">预定时间 ：<span>"+ordercreatetime+"</span></div><div class=\"orderType\">"+status+"</div></div>" +
+                        "<div class=\"infoCont\">" +
+                        "<h2>" +
+                        "<a href=\""+actUrl+activityid+"&type=1\"target=\"_blank\">"+name+"</a>" +
+                        "</h2>" +
+                        "<p>地址 : <span>"+address+"</span></p>" +
+                        "<p>手机 : <span>"+orderphoneno+"</span></p>" +
+                        "<p class=\"tickets\">取票码 : <span>"+ordernumber+"</span></p>" +
+                        "<p>座位号 : <span>"+seatCode+"</span></p>" +
+                        "<p class=\"time\">活动时间 : <span>"+playDate+" "+playstime+"-"+playetime+"</span></p>" +codehtml+ delBtn +
+                        "</div>";
+                        "</li>";
+                    group.append(li);
+               /* }*/
+            }
+        }
+    }
+    //删除订单
+    function delThis(id){
+        var orderId  = id;
+        rongDialog.init({
+            ico:2,
+            type:2,
+            desc:'您确定删除订单吗',
+            nextFn:function(){
+                dataInit.ajax({
+                    api:[[${apiPath.delAct}]],
+                    params:{
+                        orderId : id
+                    },
+                    fn:function(data){
+                        if(data.code == 0){
+                            rongDialog.init({
+                                ico : 1,
+                                type : 1,
+                                desc : "订单删除成功",
+                                nextFn : function(){
+                                    dataPage();
+                                }
+                            });
+                        }else{
+                            rongDialog.init({
+                                ico : 2,
+                                type : 1,
+                                desc : "订单删除失败"
+                            });
+                        }
+                    }
+                })
+            }
+        })
+    }
+    //取消订单
+    function delOrder(id){
+        var orderId  = id;
+        rongDialog.init({
+            ico : 2,  //1 感叹号  2 问号  3 叉叉
+            type : 2,
+            desc : '您确定取消预订吗？',
+            nextFn:function(){
+                dataInit.ajax({
+                    api: [[${apiPath.delOrder}]],
+                    params:{
+                        userId:[[${session.wbgx_sessUserKey.userId}]],
+                        itemId:orderId,
+                        type:1
+                    },
+                    fn:function(data){
+
+                        if(data.code == "0"){
+                            rongDialog.init({
+                                ico : 1, //1 勾  2 叉
+                                type : 1,
+                                desc : "活动取消成功",
+                                nextFn : function(){
+                                    dataPage();
+                                }
+                            });
+                        }else{
+                            rongDialog.init({
+                                ico : 2, //1 勾  2 叉
+                                type : 1,
+                                desc : data.msg || "活动取消失败"
+                            });
+                        }
+                    }
+
+                })
+            }
+        })
+    }
+
+    function showCode(number){
+        $(".qr-img").html('');
+        $(".qr-number").html('');
+        $(".qr-number").html(number);
+        $(".qr-img").qrcode({width: 160, height: 160, text:String(number)});
+        $(".qr-wrapper").show();
+    }
+    function colseQr(){
+        $(".qr-wrapper").hide();
+
+    }
+
+    function menuQr(txt, ticketStatus, ready) {
+        if (!ready)
+            return;
+        $('.qr-wrapper').fadeIn(250, function () {
+            $('.qr-wrapper').on('click', function () {
+                $(this).fadeOut(250, function () {
+                    $('.qr-wrapper').off('click');
+                });
+            });
+        });
+        $(".qr-code").remove();
+        $('.qr-wrapper > div').append('<div class="qr-code"></div>');
+        $(".qr-code").qrcode({render: "canvas", width: 200, height: 200, text: txt});
+    }
+
+</script>
+</body>
+</html>

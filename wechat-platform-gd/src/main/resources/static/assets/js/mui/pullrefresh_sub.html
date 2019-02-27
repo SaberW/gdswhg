@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Hello MUI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="stylesheet" href="../../css/public/plug.css">
+    <link rel="stylesheet" href="../../css/public/leftBar.css">
+    <link rel="stylesheet" href="css/mui.min.css">
+</head>
+
+<body>
+<nav id="menu" class="mm-menu mm-effect-slide-menu mm-pageshadow mm-offcanvas mm-hasnavbar-top mm-hasnavbar mm-hasnavbar-bottom mm-hassearch">
+    <div class="mm-search"><input placeholder="Search" type="text" autocomplete="off"></div>
+    <div class="mm-navbar mm-navbar-top mm-hasbtns"><a class="mm-prev mm-btn mm-hidden"></a><a class="mm-title">Menu</a><a
+            class="mm-next mm-btn mm-hidden"></a></div>
+    <div class="mm-panel mm-opened mm-current" id="mm-0">
+        <ul class="mm-listview mm-first mm-last">
+            <li><a href="#"><i class="iconfont icon-homepage"></i>首页</a></li>
+            <li><a href="#"><i class="iconfont icon-createtask"></i>资讯</a></li>
+            <li><a href="#"><i class="iconfont icon-praise"></i>品牌精选</a></li>
+            <li><a href="#"><i class="iconfont icon-select"></i>活动</a></li>
+            <li><a href="#"><i class="iconfont icon-manage"></i>场馆</a></li>
+            <li><a href="#"><i class="iconfont icon-group"></i>培训</a></li>
+            <li><a href="#"><i class="iconfont icon-browse"></i>众筹</a></li>
+            <li><a href="#"><i class="iconfont icon-flag"></i>非遗中心</a></li>
+          <!--  <li><a href="#"><i class="iconfont icon-barrage"></i>群文资源</a></li>-->
+            <li><a href="#"><i class="iconfont icon-addition"></i>文化联盟</a></li>
+            <li><a href="#"><i class="iconfont icon-setup"></i>个人中心</a></li>
+        </ul>
+    </div>
+</nav>
+<div id="page">
+    <div id="category-cont" class="category-cont mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+        <div class="mui-scroll">
+            <a class="mui-control-item" data-index="c-1">区域<i></i></a>
+            <a class="mui-control-item" data-index="c-2">艺术类型<i></i></a>
+            <a class="mui-control-item" data-index="c-3">活动类型<i></i></a>
+            <a class="mui-control-item" data-index="c-4">排序<i></i></a>
+        </div>
+    </div>
+    <div class="category-mask none">
+        <div class="category-group none" data-index="c-1">
+            <ul class="clearfix">
+                <li class="active" data-txt="区域">全部</li>
+                <li item-data="0">雨花区</li>
+                <li item-data="1">天心区</li>
+                <li item-data="2">开福区</li>
+                <li item-data="3">岳麓区</li>
+                <li item-data="4">芙蓉区</li>
+            </ul>
+        </div>
+        <div class="category-group none" data-index="c-2">
+            <ul class="clearfix">
+                <li class="active" data-txt="艺术类型">全部</li>
+                <li item-data="5">展览</li>
+                <li item-data="6">讲座</li>
+                <li item-data="7">演出</li>
+                <li item-data="8">赛事活动</li>
+            </ul>
+        </div>
+        <div class="category-group none" data-index="c-3">
+            <ul class="clearfix">
+                <li item-data="9" class="active" data-txt="活动类型">全部</li>
+                <li item-data="10">声乐</li>
+                <li item-data="11">舞蹈</li>
+                <li item-data="12">器乐</li>
+                <li item-data="13">戏剧</li>
+                <li item-data="14">曲艺</li>
+                <li item-data="15">书法</li>
+                <li item-data="16">美术</li>
+                <li item-data="17">摄影</li>
+                <li item-data="18">粤剧</li>
+                <li item-data="19">化妆</li>
+                <li item-data="20">太极拳</li>
+                <li item-data="21">健身操</li>
+                <li item-data="22">语言艺术</li>
+                <li item-data="23">剪纸</li>
+                <li item-data="24">其它</li>
+            </ul>
+        </div>
+        <div class="category-group none" data-index="c-4">
+            <ul class="clearfix">
+                <li item-data="25" class="active" data-txt="排序">智能排序</li>
+                <li item-data="26">即将结束</li>
+                <li item-data="27">即将开始</li>
+                <li item-data="28">热门推荐</li>
+            </ul>
+        </div>
+    </div>
+    <!--下拉刷新容器-->
+    <div id="model-list-panel" class="mui-content mui-scroll-wrapper" style="top:45px;">
+        <div class="mui-scroll">
+            <!--数据列表-->
+            <ul class="mui-table-view mui-table-view-chevron" id="model-list">
+
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script src="js/mui.min.js"></script>
+<script src="../jquery-3.2.1.min.js"></script>
+<script src="js/jquery.lazyload.js"></script>
+<script src="../newbility.js"></script>
+<script src="../newbility-select.js"></script>
+<script src="../newbility-leftbar.js"></script>
+<script>
+    $().ready(function () {
+        modelData();
+        dataInit.createLeftBar();
+        select.create();
+    })
+
+    function modelData(page, size) {
+        var page = page || 1;
+        var size = size || 10;
+        dataInit.ajax({
+            api: "http://tz.fm918.top/console/api/activity/actList",
+            params: {
+                index: page,
+                size: size
+            },
+            forceUpdate: true,
+            fn: function (data) {
+                var params = {
+                    page: page,
+                    size: size,
+                    total: data.data.pager.total
+                }
+                dataInit.htmlAdd(page, showModelHtml(data));
+                dataInit.pullUp(params, modelData);
+            }
+        })
+    }
+
+    function showModelHtml(data) {
+        var html = "";
+        for (var i in data.data.list) {
+            var model = data.data.list[i];
+            html += "<li class='mui-table-view-cell'><a class='mui-navigate-right'>" +
+                "<img width='50%' height='100' class='lazy' src ='http://183.131.126.132:8092/whgstatic" + model.imgurl + "'>" + i +
+                "</a></li>";
+        }
+        return html;
+    }
+
+</script>
+</body>
+
+</html>

@@ -1,0 +1,130 @@
+/*---------------------------------------------------------------------
+	* Filename:         search.css
+	* Description:      search
+	* Version:          1.0.0 (2017-10-09)
+	* Website:          hn.sun3d.com
+	* Author:           JackyZeng (zrongs@vip.qq.com)
+---------------------------------------------------------------------*/
+@charset "UTF-8";
+@import "../public/config";
+
+.digitalSearch{
+  position: relative;
+  width: 1200px;
+  margin: 0 auto;
+  .searchPosition {
+    position: absolute;
+    right: 20px;
+    bottom: -10px;
+    width: 230px;
+    height: 28px;
+    border: solid 1px @-border-color-2;
+    .border-radius(20px);
+    background: #fff;
+    overflow: hidden;
+    input{
+      border: none;
+      width: 175px;
+      padding: 0px 5px 0px 15px;
+      font-size: 13px;
+      vertical-align: text-top;
+      color: @-font-color-2;
+    }
+    i{
+      font-size: 21px;
+      line-height: 30px;
+      color: @-main-color;
+    }
+  }
+}
+
+/*列表*/
+.digital-list {
+  width: 1200px;
+  margin: 30px auto;
+  padding-top: 30px;
+  border-top: 1px solid @-border-color;
+  .digital-content-list {
+    width: 1200px;
+    margin-bottom: 75px;
+    ul{
+      margin-right: -54px;
+    }
+    ul>li{
+      .transition(all,0.4s);
+      width: 380px;
+      position: relative;
+      background: #fff;
+      float: left;
+      height: 425px;
+      margin: 0px 27px 27px 0;
+      .border-radius(3px);
+      border:solid 1px @-border-color-2;
+      overflow: hidden;
+      div.img{
+        width: 380px;
+        height: 255px;
+        overflow: hidden;
+        position: relative;
+        img{
+          width: 100%;
+          height: 100%;
+          display: block;
+        }
+      }
+      div.digital-detail{
+        padding: 15px 15px 10px;
+        h2{
+          font-size: 16px;
+          line-height: 26px;
+          color: @-font-color-1;
+          margin: 0 0 5px 0;
+          height: 26px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+        p{
+          font-size: 14px;
+          color: @-font-color-3;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          margin: 0 0 0px 0;
+          max-height: 24px;
+          overflow: hidden;
+          line-height: 24px;
+        }
+      }
+      .brief{
+        padding: 0 15px;
+        font-size: 14px;
+        color: @-font-color-1;
+        .text-line(3);
+        margin: 0;
+        max-height: 72px;
+        line-height: 24px;
+      }
+    }
+    ul>li:hover{
+      -webkit-box-shadow: 0px 2px 15px 0px rgba(7,17,27,0.2);
+      -moz-box-shadow: 0px 2px 15px 0px rgba(7,17,27,0.2);
+      box-shadow: 0px 2px 15px 0px rgba(7,17,27,0.2);
+    }
+  }
+}
+
+/*详情页*/
+.sys-main-info {
+  .info {
+    .digital-desc {
+      font-size: 14px;
+      line-height: 40px;
+      font-weight: normal;
+      .textFormat;
+      max-height: 40px;
+      color: #999;
+    }
+  }
+}
+
+

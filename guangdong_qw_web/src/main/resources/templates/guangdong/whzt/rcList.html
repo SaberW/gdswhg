@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/style/whzt/whzt.css'">
+<script type="text/javascript" th:src="${basePath}+'/assets/js/public/sly.js'"></script>
+<div class="wrapper clearfix">
+    <div class="content">
+        <!--公共主头部开始-->
+        <div id="header" th:include="guangdong/public/header :: copy"></div>
+        <!--公共主头部结束-->
+        <!--主体开始-->
+            <!--通栏-->
+            <div class="banner" style="background-image: url('/assets/img/whzt_ysrc/banner.jpg')"></div>
+            <!--通栏-->
+
+            <!--导航栏-->
+            <div class="nav_m" th:include="guangdong/whzt/nav">
+                <!--<div class="nav_m-center w">
+                    <ul class="clearfix">
+                        <li><a th:href="${basePath}+'/whzt/index?id='+${param.id[0]}">主页</a></li>
+                        <li><a th:href="${basePath}+'/whzt/zpList?id='+${param.id[0]}">作品库</a></li>
+                        <li><a href="javascript:void(0)" class="active">艺术人才</a></li>
+                        <li><a th:href="${basePath}+'/whzt/winning?id='+${param.id[0]}">获奖作品</a></li>
+                        <li><a th:href="${basePath}+'/whzt/jtList?id='+${param.id[0]}">创作讲坛</a></li>
+                        <li><a th:href="${basePath}+'/whzt/history?id='+${param.id[0]}">历届情况</a></li>
+                    </ul>
+                </div>-->
+            </div>
+            <!--导航栏-->
+
+            <!--part-1  艺术人才-->
+            <div class="part-1">
+                <h2>艺术人才</h2>
+                <div class="rc w">
+                    <ul class="clearfix">
+                        <!--<li>
+                            <a href="#" target="_blank">
+                                <div class="hp">    &lt;!&ndash;hp-头像&ndash;&gt;
+                                    <img th:src="${basePath}+'/assets/img/img_demo/q1.jpg'">
+                                </div>
+                                <div class="key">
+                                    <div class="name">赵志</div>
+                                    <div class="post">粤海艺术团团长</div>
+                                    <div class="introduction" id="demo">赵志刚师承尹派，有"越剧王子"美誉。唱腔上，徐（玉兰）、范（瑞娟）、尹（桂芳）、陆（锦花）各个流派都学，皆有所成，为各派宗师所赞许</div>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" target="_blank">
+                                <div class="hp">    &lt;!&ndash;hp-头像&ndash;&gt;
+                                    <img th:src="${basePath}+'/assets/img/img_demo/q1.jpg'">
+                                </div>
+                                <div class="key">
+                                    <div class="name">赵志</div>
+                                    <div class="post">粤海艺术团团长</div>
+                                    <div class="introduction">赵志刚师承尹派，有"越剧王子"美誉。唱腔上，徐（玉兰）、范（瑞娟）、尹（桂芳）、陆（锦花）各个流派都学，皆有所成，为各派宗师所赞许...</div>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" target="_blank">
+                                <div class="hp">    &lt;!&ndash;hp-头像&ndash;&gt;
+                                    <img th:src="${basePath}+'/assets/img/img_demo/q1.jpg'">
+                                </div>
+                                <div class="key">
+                                    <div class="name">赵志</div>
+                                    <div class="post">粤海艺术团团长</div>
+                                    <div class="introduction">赵志刚师承尹派，有"越剧王子"美誉。唱腔上，徐（玉兰）、范（瑞娟）、尹（桂芳）、陆（锦花）各个流派都学，皆有所成，为各派宗师所赞许...</div>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" target="_blank">
+                                <div class="hp">    &lt;!&ndash;hp-头像&ndash;&gt;
+                                    <img th:src="${basePath}+'/assets/img/img_demo/q1.jpg'">
+                                </div>
+                                <div class="key">
+                                    <div class="name">赵志</div>
+                                    <div class="post">粤海艺术团团长</div>
+                                    <div class="introduction">赵志刚师承尹派，有"越剧王子"美誉。唱腔上，徐（玉兰）、范（瑞娟）、尹（桂芳）、陆（锦花）各个流派都学，皆有所成，为各派宗师所赞许...</div>
+                                </div>
+                            </a>
+                        </li>-->
+                    </ul>
+                </div>
+                <div class="cl w  clearfix" id="rcPagging">
+                    <div class="line"></div>
+                    <div class="line change"></div>
+                    <div class="line"></div>
+                </div>
+            </div>
+            <!--part-1  艺术人才-->
+
+            <!--part-2  创作团队-->
+            <div class="part-2">
+                <h2>创作团队</h2>
+                <div class="cz w">
+                    <ul  class="clearfix">
+                        <!--<li>
+                            <a href="#" target="_blank"  class="ora">
+                                <div class="team">
+                                    <div class="name1">粤香梅花艺术团</div>
+                                    <div class="introduction1">赵志刚师承尹派，有"越剧王子"美誉。唱腔上，徐（玉兰）、范（瑞娟）、尹（桂芳）、陆（锦花）各个流派都学，皆有所成，为各派宗师所赞许...</div>
+                                </div>
+                                <div class="icon">
+                                    <img th:src="${basePath}+'/assets/img/whzt_ysrc/more.png'">
+                                </div>
+                            </a>
+                        </li>-->
+                        <!--<li>
+                            <a href="#" target="_blank">
+                                <div class="img">
+                                    <img th:src="${basePath}+'/assets/img/img_demo/q3.jpg'" alt="demo">
+                                </div>
+                                <div class="team">
+                                    <div class="name">粤香梅花艺术团</div>
+                                    <div class="introduction">赵志刚师承尹派，有"越剧王子"美誉。唱腔上，徐（玉兰）、范（瑞娟）、尹（桂芳）、陆（锦花）各个流派都学，皆有所成，为各派宗师所赞许...</div>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" target="_blank">
+                                <div class="img">
+                                    <img th:src="${basePath}+'/assets/img/img_demo/q3.jpg'" alt="demo">
+                                </div>
+                                <div class="team">
+                                    <div class="name">粤香梅花艺术团</div>
+                                    <div class="introduction">赵志刚师承尹派，有"越剧王子"美誉。唱腔上，徐（玉兰）、范（瑞娟）、尹（桂芳）、陆（锦花）各个流派都学，皆有所成，为各派宗师所赞许...</div>
+                                </div>
+                            </a>
+                        </li>-->
+                    </ul>
+                </div>
+                <div class="cl w  clearfix" id="tdPagging">
+                    <div class="line"></div>
+                    <div class="line change"></div>
+                    <div class="line"></div>
+                </div>
+            </div>
+            <!--part-2  创作团队-->
+
+        <!--主体结束-->
+    </div>
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong/public/footer :: copy"></div>
+<!--底部结束-->
+<script type="text/javascript" th:inline="javascript">
+    $(function () {
+        MassInfoTool.init();
+    });
+
+    var MassInfoTool = {
+        batchid: [[${param.id[0]}]],
+        brandid: [[${param.brandid[0]}]],
+
+        bashPath: [[${basePath}]],
+        brandInfoUrl: [[${apiPath.brandinfo}]],
+        batchInfoUrl: [[${apiPath.batchinfo}]],
+        batchRclistUrl: [[${apiPath.batchrclist}]],
+        batchTdlistUrl: [[${apiPath.batchtdlist}]],
+
+        init: function () {
+            var me = this;
+
+            //调用导航设置
+            ZtnavTool.setNavhref(me.brandid, me.batchid);
+
+            me.loadBatchInfo();
+            me.loadRcList();
+            me.loadTdList();
+
+            $(".part-2 ul").on("mouseover mouseout", "li", function(){
+                $(this).find("a:visible").hide().siblings().show();
+            })
+        },
+
+        loadBatchInfo: function(){
+            var me = this;
+            //取届次详细信息
+            $.post(me.batchInfoUrl, {id: me.batchid}, function(data){
+                if (data && data.data && data.data.brandid){
+                    me.loadBrandInfo(data.data.brandid);
+                }
+            }, "JSON");
+        },
+
+        loadBrandInfo: function (brandid) {
+            var me = this;
+
+            //取文化专题详细信息
+            $.post(me.brandInfoUrl, {id: brandid}, function(data){
+                if (data && data.data) {
+                    var imgPath = data.imgPath;
+                    var info = data.data;
+                    //$(".banner").css("background-image", "url("+imgPath+ info.bgimgurl+")");
+                    $(".banner").css({
+                        "background-image":"url("+imgPath+ info.bgimgurl+")",
+                        "background-position": "center"
+                    });
+                }
+            }, "JSON");
+        },
+
+        loadRcList: function(page, pageSize){
+            var me = this;
+            me.rcParams = me.rcParams || {};
+            me.rcParams.page = page || 1;
+            me.rcParams.pageSize = pageSize || 4;
+            me.rcParams.batchid = me.batchid;
+
+            $.post(me.batchRclistUrl, me.rcParams, function(data){
+                var rowsUl = $(".part-1 ul");
+                rowsUl.empty();
+
+                if (!data || !data.rows || data.rows.length==0) {
+                    rowsUl.append("<div class='public-no-message'></div>");
+                    return;
+                }
+                var imgPath = data.imgPath;
+                var rows = data.rows;
+
+                me.rcliTemp = me.srcLiTemp|| '<li>\
+                        <a href="#" target="_blank">\
+                            <div class="hp">    <!--hp-头像-->\
+                                <img >\
+                            </div>\
+                                <div class="key">\
+                                <div class="name">赵志</div>\
+                                <div class="post">粤海艺术团团长</div>\
+                                <div class="introduction"></div>\
+                            </div>\
+                        </a>\
+                    </li>';
+
+                for (var i in rows){
+                    var row = rows[i];
+                    var rowsLi = $(me.rcliTemp);
+                    rowsLi.find(".name").text(row.name);
+                    rowsLi.find(".post").text(row.job);
+                    rowsLi.find(".introduction").text(row.summary);
+                    //rowsLi.find(".hp img").attr("src", imgPath+ dataInit.getSmallImage(row.imgurl));
+                    rowsLi.find(".hp img").attr("src", imgPath+ dataInit.getImage(row.imgurl, 300, 200));
+
+                    rowsLi.find("a").attr("href", me.bashPath+"/ysrc/detail?id="+row.id);
+
+                    rowsUl.append(rowsLi);
+                }
+
+                me.pageIdxBut("#rcPagging", me.rcParams.page, me.rcParams.pageSize, data.total,
+                        function(page, pageSize){
+                            me.loadRcList(page, pageSize)
+                        });
+                /*dataInit.pageInit("pagging", me.rcParams.page, me.rcParams.pageSize, data.total,
+                        function(page, pageSize){
+                            me.loadRcList(page, pageSize)
+                        });*/
+            }, "JSON");
+        },
+
+        loadTdList: function(page, pageSize){
+            var me = this;
+            me.tdParams = me.tdParams || {};
+            me.tdParams.page = page || 1;
+            me.tdParams.pageSize = pageSize || 3;
+            me.tdParams.batchid = me.batchid;
+
+            $.post(me.batchTdlistUrl, me.tdParams, function(data){
+                var rowsUl = $(".part-2 ul");
+                rowsUl.empty();
+
+                if (!data || !data.rows || data.rows.length==0) {
+                    rowsUl.append("<div class='public-no-message'></div>");
+                    return;
+                }
+                var imgPath = data.imgPath;
+                var rows = data.rows;
+
+                me.tdliTemp = me.tdliTemp|| '<li>\
+                        <a href="#"  >\
+                            <div class="img">\
+                                <img  alt="">\
+                            </div>\
+                            <div class="team">\
+                                <div class="name"></div>\
+                                <div class="introduction"></div>\
+                            </div>\
+                        </a>\
+                        <a href="#" class="ora" style="display: none">\
+                            <div class="team">\
+                                <div class="name1">粤香梅花艺术团</div>\
+                                <div class="introduction1"></div>\
+                            </div>\
+                            <div class="icon">\
+                                <img >\
+                            </div>\
+                        </a>\
+                    </li>';
+
+                for (var i in rows){
+                    var row = rows[i];
+                    var rowsLi = $(me.tdliTemp);
+                    rowsLi.find(".name, .name1").text(row.name);
+                    rowsLi.find(".introduction, .introduction1").text(row.summary);
+                    rowsLi.find(".img img").attr("src", imgPath+ dataInit.getImage(row.imgurl, 750,500));
+                    rowsLi.find(".icon img").attr("src", me.bashPath+ '/assets/img/whzt_ysrc/more.png');
+
+                    rowsLi.find("a").attr("href", "javascript:void(0)");
+
+                    rowsUl.append(rowsLi);
+                }
+
+                me.pageIdxBut("#tdPagging", me.tdParams.page, me.tdParams.pageSize, data.total,
+                        function(page, pageSize){
+                            me.loadRcList(page, pageSize)
+                        });
+                /*dataInit.pageInit("pagging", me.rcParams.page, me.rcParams.pageSize, data.total,
+                 function(page, pageSize){
+                 me.loadRcList(page, pageSize)
+                 });*/
+            }, "JSON");
+        },
+
+        pageIdxBut: function(jq, page, pageSize, total, fn){
+            if (pageSize<1) pageSize = 1;
+            var sumPage = Math.ceil(total/pageSize);
+            var _jq = $(jq);
+            _jq.empty();
+
+            var i = 1;
+            var pbcount = sumPage;
+            if (pbcount>3){
+                if (page >= sumPage){
+                    pbcount = sumPage;
+                    i = page-2;
+                }else{
+                    pbcount = page==1?page+2: page+1;
+                    i = page==1? 1: page-1;
+                }
+            }
+
+            for(; i<=pbcount; i++){
+                var ppp = $('<div class="line"></div>');
+                if (i==page){
+                    ppp.addClass("change");
+                }else{
+                    ppp.off("click").on("click", {page: i, pageSize: pageSize}, function(e){
+                        if ($.isFunction(fn)){
+                            var data = e.data;
+                            fn.call(null, data.page, data.pageSize);
+                        }
+                    });
+                }
+                _jq.append(ppp);
+            }
+        }
+    }
+</script>
+</body>
+</html>

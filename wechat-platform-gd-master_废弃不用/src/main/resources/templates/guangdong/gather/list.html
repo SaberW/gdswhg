@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/public/list.css'">
+<div th:include="guangdong/public/leftBar :: copy"></div>
+<div id="page">
+    <div class="mui-content">
+        <div id="category-cont"
+             class="category-cont mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+            <div class="mui-scroll">
+                <a href="javascript:void(0)" class="mui-control-item" data-index="c-1">区域<i></i></a>
+                <a href="javascript:void(0)" class="mui-control-item" data-index="c-2">分类<i></i></a>
+                <a href="javascript:void(0)" class="mui-control-item" data-index="c-3">进度<i></i></a>
+            </div>
+        </div>
+        <div class="category-mask none">
+            <div class="category-group none" data-index="c-1">
+                <ul class="clearfix" id="areList">
+                </ul>
+            </div>
+            <div class="category-group none" data-index="c-2">
+                <ul class="clearfix" id="classList">
+                    <li class="active" item-data="" data-txt="分类">全部</li>
+                    <li item-data="4" data-txt="活动">活动</li>
+                    <li item-data="5" data-txt="培训">培训</li>
+                    <li item-data="0" data-txt="其他">其他</li>
+                </ul>
+            </div>
+            <div class="category-group none" data-index="c-3">
+                <ul class="clearfix">
+                    <li item-data="0" class="active" data-txt="进度">全部</li>
+                    <li item-data="1" data-txt="即将开始">即将开始</li>
+                    <li item-data="2" data-txt="进行中">进行中</li>
+                    <li item-data="3" data-txt="众筹结束">众筹结束</li>
+                    <li item-data="4" data-txt="众筹成功">众筹成功</li>
+                </ul>
+            </div>
+        </div>
+        <!--下拉刷新容器-->
+        <div id="model-list-panel" class="mui-scroll-wrapper" style="top:45px;">
+            <div class="mui-scroll">
+                <!--数据列表-->
+                <div class="public-list">
+                    <ul id="model-list">
+                        <!--<li>
+                            <a href="detail?id=2017110127436518">
+                                <div class="img">
+                                    <img src="http://183.131.126.132:8092/whgstatic/img/2017/201709/20170921/e7f2cf27ba3b41b680c1f10651db8800.jpg"
+                                         alt="">
+                                    <div class="gather-title">
+                                        <h2><span class="label">活动众筹</span>亲子陶艺大作战</h2>
+                                    </div>
+                                </div>
+                                <div class="gather-info">
+                                    <div class="gather-state">
+                                        <div class="zc-state">众筹中</div>
+                                        <span>200份</span>
+                                    </div>
+                                    <div class="gather-progress-bar">
+                                        <span data-progress-bar="66" style="width: 66%;"></span>
+                                    </div>
+                                    <div class="progress-table mui-clearfix">
+                                        <div class="progress-table-list">
+                                            <span>剩余20天</span>
+                                        </div>
+                                        <div class="progress-table-list">
+                                            <span>剩余80份</span>
+                                        </div>
+                                        <div class="progress-table-list">
+                                            <span>完成80%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>-->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" th:inline="javascript">
+    var keywords = dataInit.getCache('sgkeywords');
+    dataInit.resetCache('sgkeywords');
+    $().ready(function () {
+        select.create(modelData);
+        dataInit.showAre($.cookie("city"),[[${apiPath.depts}]]);
+        modelData();
+    })
+
+    function modelData(page, size) {
+        var page = page || 1;
+        var size = size || 10;
+        var params = {};
+        dataInit.ajax({
+            api: [[${apiPath.zcProjectList}]],
+            params: {
+                page: page,
+                pageSize: size,
+                cultid: $.cookie('cultid'),
+                content: keywords?keywords:'',
+                city: $("#city").val(), //市
+                area: $("#area").val(), //区
+                deptid: $("#deptid").val(), //服务站
+                province: $("#province").val(), //省
+                etype: $("#c-2").val(),
+                jd:$("#c-3").val()
+            },
+            forceUpdate: false,
+            fn: function (data) {
+                params = {
+                    page: page,
+                    size: size,
+                    total: data.total
+                }
+                dataInit.htmlAdd(page, showModelHtml(data));
+                dataInit.pullUp(params, modelData);
+            }
+        })
+    }
+
+    function showModelHtml(data) {
+        var html = "";
+        var __success = '众筹成功';
+        var __fail = '众筹失败';
+        var __underway = '众筹中';
+        var dataNow = data.data.now;
+        if (data.code == 0 && data.rows.length > 0) {
+            for (var i in data.rows) {
+                var model = data.rows[i];
+                var img = data.imgPath + dataInit.getBigImage(model.imgurl);
+                //判断众筹状态
+                var isOverdueSize = isOverdue(model.issuccess,model.timestart,model.timeend,dataNow);
+                var _zcState = '';
+                switch (isOverdueSize){
+                    case 0:
+                        _zcState = __fail;
+                        break;
+                    case 1:
+                        _zcState = __success;
+                        break;
+                    case 2:
+                        _zcState = __underway;
+                        break;
+                    case 3:
+                        _zcState = '未开始';
+                        break;
+                }
+                //获得众筹达成率
+                var _DCl = parseInt((model.orderCount/model.nummin)*100);
+                _DCl = _DCl>100?100:_DCl;
+                //获得众筹剩余份数
+                var _ZC_Max = model.numsum - model.orderCount;
+                _ZC_Max = _ZC_Max<0 ? 0 : _ZC_Max;
+                //获取剩余天数
+                var SY_Days = getDays(model.timeend,dataNow,model.timestart);
+                //判断众筹分类：4活动，5培训，0其他
+                var _href_detail = '',label = '';
+                if(model.etype == 4){
+                    _href_detail = 'actdetail?id='+model.id;
+                    label = '活动众筹';
+                }else if(model.etype == 5) {
+                    _href_detail = 'traindetail?id='+model.id;
+                    label = '培训众筹';
+                }else if(model.etype == 0){
+                    _href_detail = 'otherdetail?id='+model.id;
+                    label = '其他众筹';
+                }else {
+                    _href_detail = 'otherdetail?id='+model.id;
+                    label = '其他众筹';
+                }
+                html += '<li><a href="'+_href_detail+'">'+
+                    '<div class="img">'+
+                    '<img class="lazy" src="'+img+'">'+
+                    '<div class="gather-title">'+
+                    '<h2><span class="label">'+label+'</span>'+model.title+'</h2>'+
+                    '</div></div><div class="gather-info">'+
+                    '<div class="gather-state">'+
+                    '<div class="zc-state">'+_zcState+'</div>'+
+                    '<span>'+model.numsum+'份</span>'+
+                    '</div><div class="gather-progress-bar">'+
+                    '<span style="width: '+_DCl+'%;"></span>'+
+                    '</div><div class="progress-table mui-clearfix">'+
+                    '<div class="progress-table-list">'+
+                    '<span>'+SY_Days+'</span>'+
+                    '</div><div class="progress-table-list">'+
+                    '<span>剩余'+_ZC_Max+'份</span>'+
+                    '</div><div class="progress-table-list">'+
+                    '<span>完成'+_DCl+'%</span></div></div></div></a></li>';
+            }
+        } else {
+            html = '<div class="newbility-no-msg"></div>';
+        }
+        return html;
+    }
+    //判断众筹是否过期
+    function isOverdue(issuccess,timestart,timeend,dataNow) {
+        if(dataNow>timeend){
+            if(issuccess == 1){
+                return 1;//已成功
+            }else {
+                return 0;//已结束
+            }
+        }else if(dataNow<timeend && dataNow>timestart){
+            return 2;//众筹中
+        }else {
+            return 3;//未开始
+        }
+    }
+
+    //获取剩余天数
+    function getDays(timeend,_dataNow,timestart) {
+        if(_dataNow>timeend){
+            return '已结束';
+        }else if(_dataNow>timestart){
+            return '剩余 '+moment(timeend).fromNow(true);
+        }else {
+            return '未开始';
+        }
+    }
+</script>
+</body>
+</html>

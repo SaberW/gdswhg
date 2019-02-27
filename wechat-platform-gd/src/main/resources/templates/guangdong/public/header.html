@@ -1,0 +1,41 @@
+<div th:fragment="copy" xmlns:th="http://www.w3.org/1999/xhtml">
+    <input type="hidden" id="province" th:value="${apiPath.province}">
+    <input type="hidden" id="city" value="">
+    <input type="hidden" id="area" value="">
+    <input type="hidden" id="basePath" th:value="${basePath}">
+    <script type="text/javascript" th:inline="javascript">
+        var cultid = $.cookie('cultid');
+    </script>
+    <div th:if="${session.sessUserKey != null}">
+        <input type="hidden" id="temp_userId" th:value="${session.sessUserKey.userId}">
+        <input type="hidden" id="temp_nickName" th:value="${session.sessUserKey.nickName}">
+        <input type="hidden" id="temp_realName" th:value="${session.sessUserKey.realName}">
+        <input type="hidden" id="temp_mobile" th:value="${session.sessUserKey.mobile}">
+        <input type="hidden" id="temp_face" th:value="${session.sessUserKey.headimgurl}">
+        <input type="hidden" id="temp_idCard" th:value="${session.sessUserKey.idCard}">
+        <input type="hidden" id="temp_idcardtype" th:value="${session.sessUserKey.idcardtype}">
+        <input type="hidden" id="temp_birthday" th:value="${session.sessUserKey.birthday}">
+        <!--<script type="text/javascript" th:inline="javascript">
+            dataInit.ajax({
+                api: [[${apiPath.getUserDetail}]],
+                fn: setUserDetail,
+                params: {actId: [[${session.sessUserKey.userId}]]}
+            });
+            function  setUserDetail(data) {
+                if(data.code == 0){
+                    $("#temp_userId").val(data.data.userId);
+                    $("#temp_nickName").val(data.data.nickName);
+                    $("#temp_mobile").val(data.data.mobile);
+                    if(data.data.headimgurl){
+                        $("#temp_face").val(data.data.headimgurl);
+                    }
+                    $("#temp_idCard").val(data.data.idCard);
+                    $("#temp_idcardtype").val(data.data.idcardtype);
+                    $("#temp_birthday").val(data.data.birthday);
+                }
+            }
+        </script>-->
+    </div>
+
+
+</div>

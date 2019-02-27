@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<!--<head th:include="guangdong/public/resource :: copy"></head>-->
+<head>
+		<meta charset="UTF-8">
+		<title th:text="${title}"></title>
+		<meta name="keywords" th:content="${keywords}">
+		<meta name="description" th:content="${description}">
+		<meta name="robots" content="noindex, nofollow" />
+		
+		
+		
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=0.5, maximum-scale=0.5, minimum-scale=0.5, user-scalable=no" />
+		<!-- Set render engine for 360 browser -->
+		<meta name="renderer" content="webkit">
+		<!-- No Baidu Siteapp-->
+		<meta http-equiv="Cache-Control" content="no-siteapp" />
+		<link rel="icon" type="image/png" href="img/favicon.png">
+		<!-- Add to homescreen for Chrome on Android -->
+		<meta name="mobile-web-app-capable" content="yes">
+		<!-- Add to homescreen for Safari on iOS -->
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<meta name="apple-mobile-web-app-title" content="文化云" />
+		<!-- Tile icon for Win8 (144x144 + tile color) -->
+		<meta name="msapplication-TileColor" content="#0e90d2">
+		
+		
+		
+		<!--<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<meta name="full-screen" content="yes">
+		<meta name="viewport" content="initial-scale=1, width=device-width, maximum-scale=1, user-scalable=no">
+		<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0" />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="x5-fullscreen" content="true">-->
+		<link rel="stylesheet" th:href="${basePath}+'/assets/js/mui/css/mui.min.css'">
+		<link rel="stylesheet" th:href="${basePath}+'/assets/css/swiper.min.css'">
+		<link rel="stylesheet" th:href="${basePath}+'/assets/css/public/leftBar.css'">
+		<link rel="stylesheet" th:href="${basePath}+'/assets/css/public/plug.css'">
+		<script th:src="${basePath}+'/assets/js/jweixin-1.2.0.js'" type="text/javascript"></script>
+		<!--<script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>-->
+		<script th:src="${basePath}+'/assets/js/mui/js/mui.min.js'" type="text/javascript"></script>
+		<script th:src="${basePath}+'/assets/js/jquery-3.2.1.min.js'" type="text/javascript"></script>
+		<script th:src="${basePath}+'/assets/js/jquery.cookie.js'" type="text/javascript"></script>
+		<script th:src="${basePath}+'/assets/js/swiper.min.js'" type="text/javascript"></script>
+		<script th:src="${basePath}+'/assets/js/mui/js/jquery.lazyload.js'" type="text/javascript"></script>
+		<script th:src="${basePath}+'/assets/js/moment.min.js'" type="text/javascript"></script>
+		<script th:src="${basePath}+'/assets/js/newbility.js'" type="text/javascript"></script>
+		<script th:src="${basePath}+'/assets/js/newbility-gotop.js'" type="text/javascript"></script>
+		<script th:src="${basePath}+'/assets/js/newbility-select.js'" type="text/javascript"></script>
+		<script th:src="${basePath}+'/assets/js/newbility-leftbar.js'" type="text/javascript"></script>
+		<script th:src="${basePath}+'/assets/js/newbility-cont.js'" type="text/javascript"></script>
+		<script th:src="${basePath}+'/assets/js/newbility-fixednav.js'" type="text/javascript"></script>
+		<script th:src="${basePath}+'/assets/js/city.js'" type="text/javascript"></script>
+		<script th:src="${basePath}+'/assets/js/area.js'" type="text/javascript"></script>
+
+		<script th:src="${apiPath.statistics}" id="whgtongji"></script>
+        <script type="text/javascript">
+            var phoneWidth = parseInt(window.screen.width);
+            var phoneScale = phoneWidth / 750;
+            var ua = navigator.userAgent; //浏览器类型
+            if(/Android (\d+\.\d+)/.test(ua)) { //判断是否是安卓系统
+                var version = parseFloat(RegExp.$1); //安卓系统的版本号
+                if(version > 2.3) {
+                    document.write('<meta name="viewport" content="width=750,user-scalable=no, minimum-scale = ' + phoneScale + ', maximum-scale = ' + (phoneScale) + ', target-densitydpi=device-dpi">');
+                } else {
+                    document.write('<meta name="viewport" content="width=750,user-scalable=no, target-densitydpi=device-dpi">');
+                }
+            } else {
+                document.write('<meta name="viewport" content="width=750,user-scalable=no, target-densitydpi=device-dpi">');
+            }
+        </script>
+	</head>
+<body>
+<script type="text/javascript" src="http://int.dpool.sina.com.cn/iplookup/iplookup.php?format=js"></script>
+
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/index/index.css'" >
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/index/index_.css'" >
+<div th:include="guangdong/public/index_leftBar :: copy"></div>
+<div id="page">
+    <div class="mui-content">
+        <div class="index_header">
+            <div class="header-top mui-clearfix">
+                <div class="logo_">
+                    <img th:src="${basePath}+'/assets/img/newIndex/5logo3x.png'">
+                </div>
+                <div class="area">
+                    <a href="changecity" id="index_area"><i class="iconfont icon-unfold"></i></a>
+                </div>
+                <div class="search">
+                    <a href="search"><i class="iconfont icon-search"></i>搜点什么...</a>
+                </div>
+            </div>
+            <div class="header-main">
+                <ul class="navList mui-clearfix">
+                    <li><a th:href="${basePath}+'/news/list'">资讯</a></li>
+                    <li><a th:href="${basePath}+'/brand/list'">品牌</a></li>
+                    <li><a th:href="${basePath}+'/resource/index'">资源</a></li>
+                    <li><a th:href="${basePath}+'/union/index'">联盟</a></li>
+                </ul>
+                <img class="tt_img" th:src="${basePath}+'/assets/img/newIndex/wenHuaTouTiao.png'">
+                <div class="swiper-container" id="header-banner">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide">
+                            <img th:src="${basePath}+'/assets/img/newIndex/banner-test.png'">
+                        </div>
+                    </div>
+                </div>
+                <ul class="navList2 mui-clearfix">
+                    <li>
+                        <a th:href="${basePath}+'/act/list'">
+                            <img th:src="${basePath}+'/assets/img/newIndex/1x.png'">
+                        </a>
+                    </li>
+                    <li>
+                        <a th:href="${basePath}+'/train/index'">
+                            <img th:src="${basePath}+'/assets/img/newIndex/2x.png'">
+                        </a>
+                    </li>
+                    <li>
+                        <a th:href="${basePath}+'/venue/list'">
+                            <img th:src="${basePath}+'/assets/img/newIndex/3x.png'">
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="header-bottom title_item hd_title">
+                <div class="title">推 荐 活 动</div>
+                <div class="line"></div>
+                <div class="right"><a href="javascript:showActList()">换一批</a></div>
+                <img th:src="${basePath}+'/assets/img/newIndex/tw_2.png'">
+            </div>
+        </div>
+        <section class="section1">
+            <div class="swiper-container" id="hd-swiper">
+                <div class="swiper-wrapper">
+                    <!--<div class="swiper-slide">
+                        <img th:src="${basePath}+'/assets/img/newIndex/test-1.png'">
+                        <div class="msg_">
+                            <div class="title_">
+                                首届奥地利就是个
+                                <div class="right_">
+                                    <span class="surplus"><span class="red">19</span>/20 人</span>
+                                    <span class="collection"><i class="iconfont icon-like"></i>20</span>
+                                    <span class="likes"><i class="iconfont icon-praise"></i>20</span>
+                                </div>
+                            </div>
+                            <div>地点：但是发射点发</div>
+                            <div>时间：2018年3月3日 00:20-10:11</div>
+                        </div>
+                    </div>-->
+                </div>
+            </div>
+        </section>
+
+        <div class="title_item px_title">
+            <div class="title">热 门 培 训</div>
+            <div class="line"></div>
+            <div class="right"><a th:href="${basePath}+'/train/list'">更多</a></div>
+            <img th:src="${basePath}+'/assets/img/newIndex/pxyz.png'">
+        </div>
+        <section class="section2">
+            <ul class="px_list" id="pxList">
+                <!--<li class="mui-clearfix">
+                    <a href=""><img th:src="${basePath}+'/assets/img/newIndex/test-1.png'"></a>
+                    <div class="msg">
+                        <div class="title_">广东举办ADSL就开始大家</div>
+                        <div>地点：撒地方</div>
+                        <div>年龄：15-25岁</div>
+                        <div>时间：2018年5月29日 00:15-12:22</div>
+                        <div><span class="state disabled"> 报名结束 </span></div>
+                        <div class="right_">
+                            <span class="surplus"><span class="red">19</span>/20 人</span>
+                            <span class="collection"><i class="iconfont icon-like"></i>20</span>
+                            <span class="likes"><i class="iconfont icon-praise"></i>20</span>
+                        </div>
+                    </div>
+                </li>-->
+            </ul>
+        </section>
+
+        <div class="title_item ph_title">
+            <div class="title">排 行 指 数</div>
+            <div class="line"></div>
+            <div class="right">
+            	<a th:href="${basePath}+'/act/list'">更多</a>
+            </div>
+            <img th:src="${basePath}+'/assets/img/newIndex/tw_1.png'">
+        </div>
+        <section class="section3">
+            <ul class="ph_nav mui-clearfix" id="phNav">
+                
+                <!--<li onclick="showPHB(3)">最多收藏 <span></span></li>-->
+                
+                <li class="active" onclick="showPHB(1)">最新发布 <span></span></li>
+                <li onclick="showPHB(4)">最多点赞 <span></span></li>
+                <li onclick="showPHB(2)">最多参与 <span></span></li>
+                <!--<li><a th:href="${basePath}+'/act/list'">更多</a> <span></span></li>-->
+            </ul>
+            <ul class="ph_list mui-clearfix" id="phList">
+                <!--<li>
+                    <div>
+                        <a href=""><img th:src="${basePath}+'/assets/img/newIndex/test-1.png'"></a>
+                        <div class="title_">啊大噶但是水电</div>
+                        <div>时间：按等级很高</div>
+                        <div>地点：按等级很高</div>
+                        <div>
+                            <span class="state disabled"> 报名结束 </span>
+                            <div class="right_">
+                                <span class="surplus"><span class="red">19</span>/20 人</span>
+                                <span class="collection"><i class="iconfont icon-like"></i>20</span>
+                                <span class="likes"><i class="iconfont icon-praise"></i>20</span>
+                            </div>
+                        </div>
+                    </div>
+                </li>-->
+            </ul>
+        </section>
+
+        <div class="title_item cg_title">
+            <div class="title">热 门 场 馆</div>
+            <div class="line"></div>
+            <div class="right"><a th:href="${basePath}+'/venue/list'">更多</a></div>
+            <img th:src="${basePath}+'/assets/img/newIndex/jz_1.png'">
+            <img th:src="${basePath}+'/assets/img/newIndex/jz_2.png'">
+        </div>
+        <section class="section4">
+            <div class="swiper-container" id="cgSwiper">
+                <div class="swiper-wrapper">
+                    <!--<div class="swiper-slide">
+                        <div>
+                            <img th:src="${basePath}+'/assets/img/newIndex/test-1.png'">
+                            <div class="msg_">
+                                <div class="title_">首届奥地利就是个</div>
+                                <div>地点：但是发射点发</div>
+                                <div>
+                                    <span class="state disabled"> 立即预定 </span>
+                                    <div class="right_">
+                                        <span class="collection"><i class="iconfont icon-like"></i>20</span>
+                                        <span class="likes"><i class="iconfont icon-praise"></i>20</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>-->
+                </div>
+            </div>
+        </section>
+
+        <div class="title_item fg_title">
+            <div class="title">活 跃 分 馆</div>
+            <div class="line"></div>
+            <div class="right"><a th:href="${basePath}+'/union/index'">更多</a></div>
+            <img th:src="${basePath}+'/assets/img/newIndex/jz_3.png'">
+            <!--<img th:src="${basePath}+'/assets/img/newIndex/tt_bg.png'">-->
+        </div>
+        <section class="section5">
+            <div class="swiper-container" id="fgSwiper">
+                <div class="swiper-wrapper">
+                    <!--<div class="swiper-slide">
+                        <div>
+                            <a href=""><img th:src="${basePath}+'/assets/img/newIndex/test-1.png'"></a>
+                            <div class="msg_">
+                                <div class="title_">首届奥地利就是个</div>
+                                <div>但是发射点发</div>
+                                <div>
+                                    <a href="">详情></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>-->
+                </div>
+            </div>
+        </section>
+        
+    </div>
+</div>
+<script type="text/javascript" th:inline="javascript">
+    var cultid = $.cookie('cultid') || '', coocity = $.cookie('city') || '';
+    if (cultid == ''&&coocity=='') $("#activeFG").show();
+    var indexActPage = 0,total = 0;
+    $().ready(function () {
+        //轮播图
+        dataInit.ajax({
+            api: [[${apiPath.showAdver}]],
+            params: {
+                type: 5,
+                city: $.cookie('city'),
+                cultid: $.cookie('cultid')
+            },
+            fn: showSlider
+        });
+        //推荐活动
+        showActList();
+        //热门培训
+        dataInit.ajax({
+            api: [[${apiPath.pxList}]],//indexTraList
+            fn: indexTraList,
+            params: {
+                page:1,
+                pageSize:3,
+                cultid: $.cookie('cultid')
+            }
+        });
+        //排行指数
+        showPHB(1);
+        //排行榜NAV切换
+        $("#phNav").on("tap",'li',function () {
+            $(this).addClass("active").siblings().removeClass('active');
+        });
+        //热门场馆
+        dataInit.ajax({
+            api: [[${apiPath.indexList}]],//indexList
+            fn: indexList,
+            params: {
+                page:1,
+                pageSize:6,
+                cultid: $.cookie('cultid')
+            }
+        });
+        //活跃分馆
+        dataInit.ajax({
+            api: [[${apiPath.activeFG}]],//activeFG
+            fn: activeFG,
+            params: {
+                page:1,
+                pageSize:6,
+                cultid: $.cookie('cultid')
+            }
+        });
+        //显示城市
+        showCity();
+        randomNews();
+    });
+    //轮播图
+    function showSlider(data) {
+        if (data.code == 0 && data.rows.length > 0) {
+            var html = '';
+            $.each(data.rows,function (i, v) {
+                var url = v.url?v.url:'javascript:void(0)';
+                //var img = data.imgPath + dataInit.getBigImage(v.picture);
+                var img = data.imgPath + v.picture;
+                html+= '<div class="swiper-slide">' +
+                    '<a href="'+url+'"><img class="lazy" src="'+img+'"></a>' +
+                    '</div>';
+            });
+            $('#header-banner').find('.swiper-wrapper').html(html);
+            var mySwiper__ = new Swiper('#header-banner',{
+                //autoHeight: true,
+                autoplay : true,//可选选项，自动滑动
+                loop : true//可选选项，开启循环
+            })
+        }else {
+            //mui.toast(data.msg || '数据加载失败');
+            var imgPath = [[${basePath}]] + '/assets/img/public/dance.jpg';
+            $('#header-banner').find('.swiper-wrapper').html(
+                '<div class="swiper-slide">' +
+                '<a href="javascript:void(0)"><img class="lazy" src="' +imgPath+ '"></a>' +
+                '</div>'
+            );
+        }
+    }
+    // 推荐活动ajax
+    function showActList() {
+        if(total/3>indexActPage || indexActPage===0){
+            indexActPage++;
+            dataInit.ajax({
+                api: [[${apiPath.bannerActList}]],
+                fn: bannerActList, //推荐活动
+                params: {
+                    index: indexActPage,
+                    size: 6,
+                    iswechat:'true',
+                    cultid: $.cookie('cultid')
+                }
+            });
+        }else {
+            indexActPage = 1;
+            dataInit.ajax({
+                api: [[${apiPath.bannerActList}]],
+                fn: bannerActList, //推荐活动
+                params: {
+                    index: indexActPage,
+                    size: 6,
+                    cultid: $.cookie('cultid')
+                }
+            });
+        }
+    }
+    // 推荐活动 create
+    function bannerActList(data) {
+        if(data && data.code ==0){
+            total = data.total;
+            var html = '';
+            var arrayList = data.rows.sort(randomsort);
+            if(arrayList.length>0){
+                for(var i in data.rows){
+                    var model = data.rows[i];
+                    var img = data.imgPath + dataInit.getSmallImage(model.imgurl);
+                    var time = moment(model.starttime).format("YYYY-MM-DD") + ' 至 ' + moment(model.endtime).format("YYYY-MM-DD");
+                    var ticketnum = model.ticketnum;
+                    var errorImg =  [[${basePath}]]+'/assets/img/public/no-img.jpg';
+                    html+= '<div class="swiper-slide">' +
+                        '<a href="act/detail?id='+model.id+'"">' +
+                        '<img src="'+img+'" onerror="this.src=\''+errorImg+'\'"></a>' +
+                        '<a class="fixHrefBtn" href="act/detail?id='+model.id+'""></a>' +
+                        '<div class="msg_">' +
+                        '<div class="title_">' + model.name + '<div class="right_">' ;
+                       // '<span class="surplus"><span class="red">10</span>/100 人</span>' +
+                    html+= '<span class="surplus"><span class="red">'+ticketnum+'</span>/'+model.ticketAllnum+' 人</span>' +
+                        // '<span class="collection"><i class="iconfont icon-like"></i>'+model.shoucang+'</span>' +
+                        '<span class="likes"><i class="iconfont icon-praise"></i>'+model.dianzan+'</span>' +
+                        '</div>' +
+                        '</div>' +
+                        '<div>地点：'+model.address+'</div>' +
+                        '<div>时间：'+time+'</div>' +
+                        '</div>' +
+                        '</div>';
+                }
+                $("#hd-swiper").find('.swiper-wrapper').html(html);
+                var hdSwiper = new Swiper('#hd-swiper', {
+                    effect: 'coverflow',
+                    loop : true,
+                    grabCursor: true,
+                    centeredSlides: true,
+                    slidesPerView: 'auto',
+                    coverflowEffect: {
+                        rotate: 0,
+                        stretch: 0,
+                        depth: 0,
+                        modifier: 1,
+                        slideShadows : false
+                    },
+                    autoplay: true
+                });
+            }else{
+                $('.section1').hide();
+                $('.hd_title').hide();
+            }
+        }else {
+            mui.toast(data.msg || '数据加载失败');
+            $('.section1').hide();
+            $('.hd_title').hide();
+        }
+    }
+    //热门培训
+    function indexTraList(data) {
+        var html = "";
+        if (data.code == 0 && data.rows.length > 0) {
+            for (var i in data.rows) {
+                var model = data.rows[i];
+                var img = data.imgPath + dataInit.getBigImage(model.trainimg);
+                var startTime = moment(model.starttime).format('YYYY-MM-DD');
+                var endTime = moment(model.endtime).format('YYYY-MM-DD');
+                var time = startTime + ' 至 ' + endTime;
+                var age  = model.age;
+                var cutNum = model.maxnumber - model.enrolcount;
+                var people= model.enrolcount + '/' + model.maxnumber + '人';
+                if(cutNum <= 0){
+                    people = '已满';
+                }
+                if(age){
+                    age = age.split(',');
+                    age = age[0]+'-'+age[1]+'岁';
+                }else{
+                    age = '不限';
+                }
+                var state= '',state_cls;
+                if(data.data > model.enrollendtime ) {
+                    state = '报名结束';
+                    state_cls = 'disabled';
+                } else if (cutNum <= 0){
+                    state = '名额已满';
+                    state_cls = 'disabled';
+                }else{ //未报名
+                    if(model.enrollstarttime > data.data){
+                        state = '即将开始';
+                        state_cls = 'disabled';
+                    }else if(model.enrollstarttime < data.data && data.data < model.enrollendtime){
+                        state = model.enrolstate ? '已报名' : '立即报名';
+                        state_cls = model.enrolstate ? 'disabled' : '';
+                    }
+                }
+                /*html +='<a class="swiper-slide train-content" href="train/detail?id='+model.id+'">'+
+                    '    <div class="train-content-m">'+
+                    '        <div class="img">'+
+                    '            <img class="lazy" src="'+img+'">'+
+                    '        </div>'+
+                    '        <div class="info">'+
+                    '            <h2>'+model.title+'</h2>'+
+                    '            <p><span>地址：</span>'+model.address+'</p>'+
+                    '            <p><span>年龄段：</span>'+age+'</p>'+
+                    '            <p><span>人数：</span>'+people+'</p>'+
+                    '        </div>'+
+                    '        <div class="other">'+
+                    '            <span class="enlist '+state_cls+'">'+state+'</span>'+
+                    '            <span class="like"><i class="icon iconfont icon-praise"></i> '+model.shoucang+'</span>'+
+                    '            <span class="like"><i class="icon iconfont icon-like"></i> '+model.dianzan+'</span>'+
+                    '        </div>'+
+                    '    </div>'+
+                    '</a>';*/
+                var errorImg =  [[${basePath}]]+'/assets/img/public/no-img.jpg';
+                html+=' <li class="mui-clearfix">' +
+                    '<a href="train/detail?id='+ model.id +'">' +
+                    '<img src="'+img+'" onerror="this.src=\''+errorImg+'\'"></a>' +
+                    '<a class="fixHrefBtn" href="train/detail?id='+ model.id +'"></a>' +
+                    '<div class="msg">' +
+                    '<div class="title_">'+model.title+'</div>' +
+                    '<div>地点：'+ model.address +'</div>' +
+                    '<div>年龄：'+ age +'</div>' +
+                    '<div>时间：'+time+'</div>' +
+                    '<div><span class="state '+state_cls+'"> '+state+' </span>' +
+                    '<div class="right_">' +
+                    '<span class="surplus"><span class="red">'+model.enrolcount+'</span>/'+model.maxnumber+' 人</span>' +
+                    '<span class="likes"><i class="iconfont icon-praise"></i>'+model.dianzan+'</span>' +
+                    '</div>' +
+                    '</div>' +
+
+                    '</div>' +
+                    '</li>';
+            }
+            $("#pxList").html(html);
+        } else {
+            $(".section2").hide();
+            $(".px_title").hide();
+        }
+    }
+    //排行指数 ajax
+    function showPHB(sort) {
+        dataInit.ajax({
+            api: [[${apiPath.phbzs}]],
+            fn: phbzs,
+            params: {
+                index: 1,
+                size: 4,
+                iswechat:'true',
+                cultid: $.cookie('cultid'),
+                sort: sort
+            }
+        });
+    }
+    //排行指数 create
+    function phbzs(data) {
+        if(data && data.code ==0){
+            var html = '';
+            if(data.rows.length>0){
+                for(var i in data.rows){
+                    var model = data.rows[i];
+                    var img = data.imgPath + dataInit.getSmallImage(model.imgurl);
+                    var time = moment(model.starttime).format("YYYY-MM-DD") + ' 至 ' + moment(model.endtime).format("YYYY-MM-DD");
+                    var liststate = model.liststate,a_label;
+                    if (liststate == 1) {
+                        a_label = '<span class="state">立即预订</span>';
+                    } else if (liststate == 2) {
+                        a_label = '<span class="state disabled">已订完</span>';
+                    } else if (liststate == 3) {
+                        a_label = '<span class="state">直接前往</span>';
+                    } else if (liststate == 4) {
+                        a_label = '<span class="state disabled">活动已结束</span>';
+                    } else {
+                        a_label = '<span class="state disabled">即将开始</span>';
+                    }
+                    /*html += '<li>'+
+                        '    <div class="img">'+
+                        '        <img class="lazy" src="'+img+'" alt="'+model.name+'">'+
+                        '    </div>'+
+                        '    <div class="info">'+
+                        '        <h3>'+model.name+'</h3>'+
+                        '        <p>地址：'+model.address+'</p>'+
+                        '        <p>余票：'+ticketnum+'张</p>'+a_label+
+                        '        <div class="share">'+
+                        '            <span class="collection"><i class="iconfont icon-like"></i>'+model.shoucang+'</span>'+
+                        '            <span class="likes"><i class="iconfont icon-praise"></i>'+model.dianzan+'</span>'+
+                        '        </div>'+
+                        '    </div>'+
+                        '    <a href="act/detail?id='+model.id+'"></a>'+
+                        '</li>';*/
+                    var errorImg =  [[${basePath}]]+'/assets/img/public/no-img.jpg';
+                    html+= '<li>' +
+                        '<div>' +
+                        '<a href="act/detail?id='+model.id+'">' +
+                        '<img src="'+img+'" onerror="this.src=\''+errorImg+'\'"></a>' +
+                        '<a class="fixHrefBtn" href="act/detail?id='+model.id+'"></a>' +
+                        '<div class="title_">'+model.name+'</div>' +
+                        '<div>时间：'+time+'</div>' +
+                        '<div>地点：'+model.address+'</div>' +
+                        '<div>' +
+                        a_label +
+                        '<div class="right_">' +
+                        // '<span class="surplus"><span class="red">'+model.ticketnum+'</span>/'+model.ticketAllnum+'人 </span>' +
+                        '<span class="surplus">余票：<span class="red">'+model.ticketnum+'</span></span>' +
+                        // (model.ticketAllnum?'<span class="surplus"><span class="red">'+model.ticketnum+'</span>/'+model.ticketAllnum+'人 </span> ':'') +
+                        '<span class="likes"><i class="iconfont icon-praise"></i>'+model.dianzan+'</span>' +
+                        '</div>' +
+                        '</div>' +
+                        '</div>' +
+                        '</li>';
+                }
+                $("#phList").html(html);
+            }else {
+                $("#phList").html("<div class='newbility-no-msg2'></div>");
+            }
+        }else {
+            mui.toast(data.msg || '数据加载失败');
+            $("#phList").html("<div class='newbility-no-msg2'></div>");
+        }
+    }
+    //热门场馆
+    function indexList(data) {
+        var html = "";
+        if (data.code == 0 && data.rows.length > 0) {
+            for (var i in data.rows) {
+                var model = data.rows[i];
+                var img = data.imgPath + dataInit.getBigImage(model.imgurl);
+                var tag = "";
+                var tag_html = '';
+                if(model.tag){
+                    tag = model.tag.split(',');
+                    tag_html += "<div class='tag'>";
+                    for(var j in tag){
+                        tag_html += '<span>'+tag[j]+'</span>'
+                    }
+                    tag_html += "</div>";
+                }
+                var state_cls ,state;
+                if (model.openTimeNum > 0) {
+                    state_cls = 'disabled';
+                    state = '不可预订';
+                } else {
+                    state_cls = '';
+                    state = '立即预定';
+                }
+                /*html +='<a class="swiper-slide train-content" href="venue/detail?id='+model.id+'">'+
+                    '    <div class="train-content-m">'+
+                    '        <div class="img">'+
+                    '            <img class="lazy" src="'+img+'">'+
+                    '        </div>'+
+                    '        <div class="info">'+
+                    '            <h2>'+model.title+'</h2>'+
+                    '            <p><span>地址：</span>'+model.address+'</p>'+
+                    //                    '            <p><span>类型：</span>'+age+'</p>'+
+                    '        </div>'+
+                    '        <div class="other">'+
+                    '            <span class="enlist '+state_cls+'">'+state+'</span>'+
+                    '            <span class="like"><i class="icon iconfont icon-praise"></i> '+model.shoucang+'</span>'+
+                    '            <span class="like"><i class="icon iconfont icon-like"></i> '+model.dianzan+'</span>'+
+                    '        </div>'+
+                    '    </div>'+
+                    '</a>';*/
+                var errorImg =  [[${basePath}]]+'/assets/img/public/no-img.jpg';
+                html+= '<div class="swiper-slide">' +
+                    '<div>' +
+                    '<a href="venue/detail?id='+model.id+'">' +
+                    '<img src="'+img+'" onerror="this.src=\''+errorImg+'\'"></a>' +
+                    '<a class="fixHrefBtn" href="venue/detail?id='+model.id+'"></a>' +
+                    '<div class="msg_">' +
+                    '<div class="title_">'+model.title+'</div>' +
+                    '<div>地点：'+model.address+'</div>' +
+                    '<div>' +
+                    '<span class="state '+state_cls+'">'+state+'</span>' +
+                    '<div class="right_">' +
+                    '<span class="collection"><i class="iconfont icon-like"></i>'+model.shoucang+'</span> ' +
+                    '<span class="likes"><i class="iconfont icon-praise"></i>'+model.dianzan+'</span>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>';
+            }
+            $("#cgSwiper").find('.swiper-wrapper').html(html);
+            var cgSwiper = new Swiper('#cgSwiper', {
+                slidesPerView: 'auto'
+            });
+        } else {
+            html = "<div class='newbility-no-msg2'></div>";
+            $("#cgSwiper").html(html);
+        }
+    }
+    //活跃分馆
+    function activeFG(data) {
+        if(data.rows && data.rows.length>0){
+            $("#activeFG-list").html('');
+            var _html = '';
+            for(var i in data.rows){
+                var model = data.rows[i];
+                var img = data.imgPath + dataInit.getSmallImage(model.picture);
+                var href;
+
+                if(model.level==1){
+                    href = 'city(\''+model.id+'\',\''+model.city+'\',\'2\',\''+model.province+'\')';
+                }else if(model.level==2){
+                    href = 'city(\''+model.id+'\',\''+model.city+'\',\'4\',\''+model.city+'\')';
+                }else if(model.level==3){
+                    href = 'city(\''+model.id+'\',\''+model.city+'\',\'4\',\''+model.area+'\')';
+                }
+                var errorImg =  [[${basePath}]]+'/assets/img/public/no-img.jpg';
+                _html+= '<div class="swiper-slide">' +
+                    '<div>' +
+                    '<a href="javascript:'+href+'">' +
+                    '<img src="'+img+'" onerror="this.src=\''+errorImg+'\'"></a>' +
+                    '<a class="fixHrefBtn" href="javascript:'+href+'"></a>' +
+                    '<div class="msg_">' +
+                    '<div class="title_">'+model.name+'</div>' +
+                    '<div>'+model.address+'</div>' +
+                    '<div>' +
+                    '<a href="javascript:'+href+'">详情></a>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>';
+            }
+            $("#fgSwiper").find('.swiper-wrapper').html(_html);
+            var fgSwiper = new Swiper('#fgSwiper', {
+                slidesPerView: 'auto'
+            });
+        }else{
+            $(".fg_title").hide();
+            $(".section5").hide();
+        }
+    }
+
+    function city(id,city,type,siteName) {
+        //type: 1-全省站,2-省级馆,3-全市站,4-市级馆,5-区级馆
+        //siteName: type=1-全省站,type=2-广东省,type=3-xx市站, type=4-XX市,type=5-xx区
+        $.cookie('cultid', id, {path: "/", expires: 7});
+        $.cookie('city', city, {path: "/", expires: 7});
+        $.cookie('cultType', type, {path: "/", expires: 7});
+        $.cookie('siteName', siteName, {path: "/", expires: 7});
+        $(".site_bottom").hide();
+        $(".city_bottom").show();
+        window.location.replace('index?wechat=1123');// 附加参数 是为了能成功在 微信中多次跳转
+//        history.back(-1);
+    }
+    function showCity() {
+        var coocity = '';
+        var cultType = $.cookie('cultType');
+        if(typeof cultType != "undefined"){
+            var siteName = $.cookie('siteName');
+            coocity = siteName;
+        }else{
+            coocity = '全省站';
+        }
+        $("#index_area").html(coocity+'<i class="iconfont icon-unfold">');
+    }
+    function randomNews() {
+        dataInit.ajax({
+            api: [[${apiPath.infomationList}]],
+            fn: toutiao, //资讯
+            params: {
+                index: 1,
+                size: 10,
+                cultid: $.cookie('cultid'),
+                type: "2017092830756428" //头条
+            }
+        });
+    }
+    function toutiao(data) {
+        if(data && data.code ==0){
+            $("#news").html('');
+            var html = '';
+            if(data.rows.length>0){
+                var model = data.rows[0];
+                var basePath = [[${basePath}]];
+                var title = model.clnftltle;
+                if(title.length > 30){
+                    title=title.substring(0,30)+"...";
+                }
+                html ='<div class="news-con">'+
+                    '    <div class="news-logo">'+
+                    '        <img src="'+basePath+'/assets/img/index/toutiao@2x.png">'+
+                    '    </div>'+
+                    '    <div class="news-detail">'+
+                    '        <h2>'+title+'<em>'+model.area+'</em></h2>'+
+                    '    </div>'+
+                    '    <div class="enter2">'+
+                    '        <i class="iconfont icon-enter"></i>'+
+                    '    </div>'+
+                    '    <a href="news/detail?id='+model.clnfid+'"></a>'+
+                    '</div>';
+                $("#news").html(html);
+                $("#news").fadeIn();
+            }else {
+                $("#news").hide();
+            }
+        }
+        setInterval(function() {
+            if(data && data.code ==0){
+                $("#news").html('');
+                var html = '';
+                if(data.rows.length>0){
+                    var randomNewsId = Math.ceil(Math.random()*data.rows.length-1);
+                    var model = data.rows[randomNewsId];
+                    var basePath = [[${basePath}]];
+                    var title = model.clnftltle;
+                    if(title.length > 30){
+                        title=title.substring(0,30)+"...";
+                    }
+                    html ='<div class="news-con">'+
+                        '    <div class="news-logo">'+
+                        '        <img src="'+basePath+'/assets/img/index/toutiao@2x.png">'+
+                        '    </div>'+
+                        '    <div class="news-detail">'+
+                        '        <h2>'+title+'<em>'+model.area+'</em></h2>'+
+                        '    </div>'+
+                        '    <div class="enter2">'+
+                        '        <i class="iconfont icon-enter"></i>'+
+                        '    </div>'+
+                        '    <a href="news/detail?id='+model.clnfid+'"></a>'+
+                        '</div>';
+                    $("#news").html(html);
+                    $("#news").fadeIn();
+                }else {
+                    $("#news").hide();
+                }
+            }
+        },5000)
+    }
+    function randomsort() {
+        return Math.random()>.5 ? -1 : 1;
+        //用Math.random()函数生成0~1之间的随机数与0.5比较，返回-1或1
+    }
+</script>
+</body>
+</html>

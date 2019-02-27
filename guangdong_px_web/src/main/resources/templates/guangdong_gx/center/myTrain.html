@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong_gx/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/style/center/center.css'">
+<div class="wrapper clearfix">
+    <div class="content">
+        <!--公共主头部开始-->
+        <div id="header" th:include="guangdong_gx/public/header :: copy"></div>
+        <!--公共主头部结束-->
+        <!--主体开始-->
+        <div class="container res-center-bg">
+            <div class="sys-crumbs">
+                <span><a href="../res-gx/index">首页</a></span>
+                <i class="icon iconfont icon-enter"></i>
+                <span><a href="index">用户中心</a></span>
+                <i class="icon iconfont icon-enter"></i>
+                <span class="active" id="title">我的培训</span>
+            </div>
+            <div class="page-list">
+                <div class="center-nav">
+                    <ul class="clearfix">
+                        <li class="active" data-type="1">
+                            线下培训
+                        </li>
+                        <li data-type="2">
+                            在线课程
+                        </li>
+                    </ul>
+                </div>
+                <ul class="center-list" id="modelList" style="margin-right:0px;">
+
+                </ul>
+                <!--分页开始 -->
+                <div class="green-black" id="artPagging"></div>
+                <!--分页结束-->
+            </div>
+        </div>
+        <!--主体结束-->
+    </div>
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong_gx/public/footer :: copy"></div>
+<!--底部结束-->
+<a class="to-top"></a>
+<script type="text/javascript" th:inline="javascript">
+    var userId = $("#temp_userId").val();
+    var pageType = 1,trainType = 0;
+    var type = dataInit.getUrlParam('type');
+    if(type && type != 0){
+        $(".center-nav ul li:nth-child("+type+")").addClass("active").siblings().removeClass("active");
+        trainType = type - 1;
+    }
+    //程序初始化
+    $().ready(function(){
+        navChange();
+        dataPage();
+    })
+
+    //按钮切换
+    function navChange(){
+        $('.center-nav ul li').on('click',function(e){
+            $(this).addClass('active').siblings().removeClass('active');
+            pageType = $(this).attr('data-type');
+            if(pageType == 1){
+                trainType = 0;
+            }else{
+                trainType = 1;
+            }
+            dataPage();
+        })
+    }
+
+    //加载数据
+    function dataPage(page,rows) {
+        var params_page = page || 1;
+        var params_rows = rows || 12;
+        var params = {
+            page:params_page,
+            pageSize:rows,
+            userid:userId,
+            type:trainType,
+            cultid:$.cookie('cultid')
+        }
+        //调用接口
+        rongDialog.init({ico: 3, type: 1, desc: '', overTime: 8000});
+        dataInit.ajax({
+            api: [[${apiPath.mytraList}]],
+            params: params,
+            fn: function(data){
+                rongDialog.closeMaskPanel();
+                showModelList(data);
+                dataInit.pageInit('artPagging', params_page, params_rows, data.total, dataPage);
+            }
+        })
+    }
+
+    //生成HTML
+    function showModelList(data) {
+        var modelList = $("#modelList");
+        modelList.html("");
+        //console.log(data);
+        if (data.code == 0) {
+            if (data.rows.length > 0) {
+                for (var i in data.rows) {
+                    var model = data.rows[i];
+                    var img = data.imgPath + dataInit.getSmallImage(model.trainimg);
+                    var phone = model.phone ? model.phone : "";
+                    var state = model.state+"";
+                    var state_text;
+                    var statedesc = model.statedesc;
+                    var statedescCls = 'none',delCls = 'none',cancelCls = 'none';
+                    switch (state){
+                        case "1":
+                            state_text = "报名申请中";
+                            cancelCls = 'block';
+                            break;
+                        case "2":
+                            state_text = "取消报名";
+                            delCls = 'block';
+                            break;
+                        case "3":
+                            state_text = "审核失败";
+                            statedescCls = 'block';
+                            delCls = 'block';
+                            break;
+                        case "4":
+                            state_text = "等待面试";
+                            break;
+                        case "5":
+                            state_text = "面试不通过";
+                            statedescCls = 'block';
+                            delCls = 'block';
+                            break;
+                        case "6":
+                            state_text = "报名成功";
+                            break;
+                    }
+                    var _hrefUrl = '';
+                    if(trainType == 0){
+                        _hrefUrl = 'xxpx';
+                    }else {
+                        _hrefUrl = 'zxkc';
+                    }
+
+                    //报名结束培训结束后，不显示取消订单
+                    if (data.data.nowTime>model.enrollendtime || data.data.nowTime>model.endtime ){
+                        cancelCls = 'none';
+                    }
+
+                    // <div class="train-btn '+delCls+'" onclick="orderDel('+model.id+')">删除订单</div>
+                    modelList.append('\
+                    <li class="my-train-item">\
+                        <a href="../'+_hrefUrl+'/detail?id='+model.traid+'" target="_blank"></a>\
+                        <div class="train-btn '+cancelCls+'" onclick="orderCancel('+model.id+')">取消订单</div>\
+                        <h2>\
+                            报名时间：<span>'+moment(model.crttime).format("YYYY-MM-DD HH:mm:ss")+'</span>\
+                        <em>'+state_text+'</em>\
+                        </h2>\
+                        <div class="info-cont clearfix">\
+                            <div class="img">\
+                                <img src="'+img+'">\
+                            </div>\
+                            <div class="info">\
+                                <h3>'+model.title+'</h3>\
+                                <p class="_show">培训地址：<span>'+model.address+'</span></p>\
+                                <p class="_show">培训时间：<span>'+moment(model.starttime).format('YYYY-MM-DD')+' 至 '+moment(model.endtime).format('YYYY-MM-DD')+'</span></p>\
+                                <p class="_show">联系电话：<span>'+phone+'</span></p>\
+                                <p class="_show">订单号：<span>'+model.id+'</span></p>\
+                                <p class="msg '+statedescCls+'">失败原因：<span>'+(statedesc||"-")+'</span></p>\
+                            </div>\
+                        </div>\
+                    </li>');
+                    $("._show").each(function (i) {
+                        var aaa = $(this).find('span').text();
+                        if(!aaa || $.trim(aaa)=='' || $.trim(aaa)== 'undefined'){
+                            $(this).hide();
+                        }
+                    })
+
+                }
+            } else {
+                modelList.append("<div class='public-no-message'></div>");
+            }
+        } else {
+            rongDialog.init({ico: 2, type: 1, desc: data.msg});
+        }
+
+
+    }
+
+    //取消订单
+    function orderCancel(itemId){
+        rongDialog.init({type: 2, desc:"是否取消该订单", nextFn:function(){
+            dataInit.ajax({
+                api:[[${apiPath.offenroll}]],
+                params:{
+                    state:1,
+                    userId:userId,
+                    orderId:itemId
+                },
+                fn:function(data){
+                    if(data.code == 0){
+                        rongDialog.init({ico: 1, type: 1, desc:"订单取消成功", nextFn:function(){
+                            dataPage();
+                        }});
+                    }
+                }
+            })
+        }});
+    }
+
+    //删除订单
+    /*function orderDel(itemId){
+        rongDialog.init({type: 2, desc:"是否取消该订单", nextFn:function(){
+            dataInit.ajax({
+                api:[[${apiPath.offenroll}]],
+                params:{
+                    userId:userId,
+                    orderId:itemId
+                },
+                fn:function(data){
+                    if(data.code == 0){
+                        rongDialog.init({ico: 1, type: 1, desc:"订单删除成功", nextFn:function(){
+                            dataPage();
+                        }});
+                    }
+                }
+            })
+        }});
+    }*/
+
+
+</script>
+</body>
+</html>

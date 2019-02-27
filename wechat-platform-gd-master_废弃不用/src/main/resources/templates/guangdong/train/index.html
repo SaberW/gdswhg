@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/train/train.css'" >
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/public/list.css'" >
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/index/index.css'" >
+<div th:include="guangdong/public/leftBar :: copy"></div>
+<div id="page">
+    <div class="mui-content">
+
+        <div class="index-header" style="min-height: 55px; margin-bottom: 0;">
+            <div class="search-area-user mui-clearfix">
+                <a href="../changecity">
+                    <div class="area" id="index_area">
+                        <i class="iconfont icon-unfold"></i>
+                    </div>
+                </a>
+                <div class="search"><i class="iconfont icon-search"></i><a href="../search">搜点什么...</a></div>
+                <a href="../usercenter/index">
+                    <div class="user" th:if="${session.sessUserKey == null}">
+                        <img th:src="${basePath}+'/assets/img/public/face2.png'" alt="个人头像">
+                    </div>
+                    <div class="user"  th:if="${session.sessUserKey != null}">
+                        <img th:src="${session.sessUserKey.headimgurl} ? ${session.sessUserKey.headimgurl} : ${basePath}+'/assets/img/public/face2.png'" alt="个人头像">
+                        <em class="message-wx-2"></em>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <!--轮播图-->
+        <div class="carousel">
+            <div class="mui-slider">
+                <div class="swiper-container minor-slider" id="slider-head">
+                    <div class="swiper-wrapper" id="slider"></div>
+                    <div class="swiper-pagination minor-slider-pagination"></div>
+                </div>
+            </div>
+        </div>
+        <!--轮播图-->
+
+        <!--小专题-->
+        <div class="project">
+            <div class="theme mui-clearfix">
+                <ul>
+                    <li>
+                        <h2>线下培训</h2>
+                        <p>进入线下培训</p>
+                        <img th:src="${basePath}+'/assets/img/public/train-sign@2x.png'">
+                        <a th:href="${basePath}+'/train/list'"></a>
+                    </li>
+                    <li class="cl">
+                        <h2>在线课程</h2>
+                        <p>进入在线课程</p>
+                        <img th:src="${basePath}+'/assets/img/public/train-live@2x.png'">
+                        <a th:href="${basePath}+'/train/liveList'"></a>
+                    </li>
+                </ul>
+                <div class="nav-theme">
+                    <ul>
+                        <li style="width: 33%">
+                            <h3>微专业</h3>
+                            <img th:src="${basePath}+'/assets/img/public/train-micro@2x.png'">
+                            <a th:href="${basePath}+'/train/microIndex'"></a>
+                        </li>
+                        <li style="width: 34%">
+                            <h3>培训师资</h3>
+                            <img th:src="${basePath}+'/assets/img/public/train-teach@2x.png'">
+                            <a th:href="${basePath}+'/train/teachers'"></a>
+                        </li>
+                        <li style="width:33%">
+                            <h3>培训资源</h3>
+                            <img th:src="${basePath}+'/assets/img/public/train-resource@2x.png'">
+                            <a th:href="${basePath}+'/train/resourceList'"></a>
+                        </li>
+                        <!--<li class="cl" >
+                            <h3>培训指数</h3>
+                            <img th:src="${basePath}+'/assets/img/public/train-num@2x.png'">
+                            <a th:href="${basePath}+'/train/exponent'"></a>
+                        </li>-->
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!--小专题-->
+
+        <div class="hot">
+            <!--<img class="lazy" th:src="${basePath}+'/assets/img/public/title-tuijian@2x.png'">-->
+            热门推荐
+        </div>
+        <!--数据列表-->
+        <div class="public-list">
+            <ul id="model-list">
+                <!--<li>
+                    <a href="detail?id=2017110127436518">
+                    <div class="img">
+                        <div class="tag"><span>正在直播</span></div>
+                        <img src="http://mpic.tiankong.com/3e1/77c/3e177c363b5327c775efedc3b38f28cb/451-1509.jpg" alt="">
+                    </div>
+                    <div class="info">
+                        <div class="title">广东省第七届群众音乐舞蹈花会决赛即将在珠海开幕</div>
+                        <p>培训时间：2017-11-3 至 2017-11-20</p>
+                    </div>
+                    <div class="abstract">
+                        <div class="ticket">人数：18 / 20</div>
+                        <div class="other">
+                            &lt;!&ndash;<span class="comment"><i class="iconfont icon-message"></i>15</span>&ndash;&gt;
+                            <span class="zan"><i class="iconfont icon-praise"></i>20</span>
+                            <span class="favorite"><i class="iconfont icon-like"></i>25</span>
+                        </div>
+                    </div>
+                    </a>
+                </li>-->
+               <!-- <li>
+                    <a href="detail?id=2017110127436518">
+                    <div class="img">
+                        <div class="tag"><span>直播预告</span></div>
+                        <img src="http://mpic.tiankong.com/085/a3a/085a3a3f7c201bdd3be65697aff11cb0/640.jpg" alt="">
+                    </div>
+                    <div class="info">
+                        <div class="title">广东省第七届群众音乐舞蹈花会决赛即将在珠海开幕</div>
+                        <p>培训时间：2017-11-3 至 2017-11-20</p>
+                    </div>
+                    <div class="abstract">
+                        <div class="ticket">人数：18 / 20</div>
+                        <div class="other">
+                            &lt;!&ndash;<span class="comment"><i class="iconfont icon-message"></i>15</span>&ndash;&gt;
+                            <span class="zan"><i class="iconfont icon-praise"></i>20</span>
+                            <span class="favorite"><i class="iconfont icon-like"></i>25</span>
+                        </div>
+                    </div>
+                    </a>
+                </li>-->
+            </ul>
+        </div>
+
+    </div>
+</div>
+<script type="text/javascript" th:inline="javascript">
+    var userId = $("#temp_userId").val();
+    $(document).ready(function(){
+        modelData();
+        //加载轮播图
+        showSlider();
+        //显示城市
+        showCity();
+    });
+
+    function showCity() {
+        var coocity = '';
+        var cultType = $.cookie('cultType');
+        if(typeof cultType != "undefined"){
+            var siteName = $.cookie('siteName');
+            coocity = siteName;
+        }else{
+            coocity = '全省站';
+        }
+        $("#index_area").html(coocity+'<i class="iconfont icon-unfold">');
+    }
+
+    function modelData(page, size) {
+        var page = page || 1;
+        var size = size || 10;
+        var params = {
+            userid:userId,
+            cultid:$.cookie('cultid'),
+            city: $("#city").val(), //市
+            area: $("#area").val(), //区
+            deptid: $("#deptid").val(), //服务站
+            province: $("#province").val(), //省
+            arttype:$("#c-2").val(),
+            etype:$("#c-3").val(),
+            livestate: $("#c-4").val(),
+            sort:$("#c-5").val(),
+            page:page,
+            pageSize:size,
+        }
+        dataInit.ajax({
+            api: [[${apiPath.hotRecom}]],
+            params: params,
+            fn: function(data){
+                var params = {
+                    page: page,
+                    size: size,
+                    total: data.total
+                }
+                dataInit.htmlAdd(page, showModelHtml(data));
+                dataInit.pullUp(params, modelData);
+            }
+        })
+    }
+
+    function showModelHtml(data) {
+        var html = "";
+        if (data.code == 0 && data.rows.length > 0) {
+            for (var i in data.rows) {
+                var model = data.rows[i];
+                var img = data.imgPath + dataInit.getBigImage(model.trainimg);
+                var startTime = moment(model.starttime).format('YYYY-MM-DD');
+                var endTime = moment(model.endtime).format('YYYY-MM-DD');
+                var time = startTime + ' 至 ' + endTime;
+                var age  = model.age;
+                var cutNum = model.maxnumber - model.enrolnumber;
+                var people= model.enrolnumber + '/' + model.maxnumber + '人';
+                var address= !model.address ? '' :model.address;
+                var islive = model.islive;
+
+                if(cutNum <= 0){
+                    people = '已满';
+                }
+
+                if(age){
+                    age = age.split(',');
+                    age = age[0]+'-'+age[1]+'岁';
+                }else{
+                    age = '不限';
+                }
+                var state= '',state_cls;
+                if(data.data > model.enrollendtime ){
+                    state = '报名结束';
+                    state_cls = 's-4';
+                }else if(cutNum <= 0){
+                    state = '名额已满';
+                    state_cls = 's-4';
+                }else{ //未报名
+                    if(model.enrollstarttime > data.data){
+                        state = '即将开始';
+                        state_cls = 's-3';
+                    }else if(model.enrollstarttime < data.data && data.data < model.enrollendtime){
+                        state = model.enrolstate ? '已报名' : '立即报名';
+                        state_cls = model.enrolstate ? 's-4' : 's-1';
+                    }
+                }
+
+                var _href = 'detail?id='+model.id;
+                var _style_addr = '';
+                if (islive == 1){
+                    _href = 'liveDetail?id='+model.id;
+                    _style_addr = 'style="display:none"';
+                }
+
+                if (islive == 1 && model.mustsignup !=1){
+                    people = '不限';
+                    state = '';
+                }
+                html += '\
+                  <li>\
+                    <a href="'+_href+'">\
+                       <div class="img">\
+                          <img src="'+img+'" class="lazy">\
+                       </div>\
+                       <div class="info">\
+                          <div class="title">'+model.title+'</div>\
+                          <p  '+_style_addr+'><i class="iconfont icon-coordinates"></i> 地址：'+address+'</p>\
+                          <p><i class="iconfont icon-time"></i> 时间：'+time+'</p>\
+                          <p><i class="iconfont icon-group"></i> 人数：'+people+'</p>\
+                          <div class="state '+state_cls+'">'+state+'</div>\
+                       </div>\
+                       <div class="abstract">\
+                          <div class="ticket">年龄段：'+age+'</div>\
+                          <div class="other">\
+                            <span class="zan"><i class="iconfont icon-praise"></i>'+model.dianzan+'</span>\
+                            <span class="favorite"><i class="iconfont icon-like"></i>'+model.shoucang+'</span>\
+                          </div>\
+                       </div>\
+                    </a>\
+                 </li>';
+            }
+        } else {
+            html = "<div class='newbility-no-msg'></div>";
+        }
+        return html;
+    }
+
+    function showSlider(){
+        dataInit.ajax({
+            api: [[${apiPath.showAdver}]],
+            params: {
+                cultid: $.cookie('cultid'),
+                type: 6,
+                city: $.cookie('city'),
+
+            },
+            fn: function (data){
+                if( data.code == 0 && data.rows.length > 0){
+                    var html = '';
+                    for(var i in data.rows){
+                        var model = data.rows[i];
+                        var ModelUrl = model.url?model.url:'javascript:void(0)';
+                        var img = data.imgPath + model.picture;
+                        html += '    <div class="swiper-slide">' +
+                        ' <a href="'+ModelUrl+'"><img class="lazy" src="' +img+ '"></a>' +
+                        '    </div>';
+                    }
+                    $("#slider").html(html);
+                }else {
+                    //mui.toast(data.msg || '数据加载失败')
+                    var imgPath = [[${basePath}]] + '/assets/img/public/dance.jpg';
+                    $("#slider").html('    <div class="swiper-slide">' +
+                        ' <a href="javascript:void(0)"><img class="lazy" src="' +imgPath+ '" alt=""></a>' +
+                        '    </div>');
+                }
+                var mySwiper = new Swiper ('#slider-head',{
+                    loop: true,
+                    autoplay: 5000,
+                    pagination: {
+                        el: '.swiper-pagination'
+                    }
+                })
+            }
+        });
+    }
+
+</script>
+</body>
+</html>

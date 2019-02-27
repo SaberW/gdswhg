@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.creatoo.hn.mapper.WhgTraEnrolMapper">
+  <select id="getTraEnrolListByUserId" resultType="hashmap" parameterType="hashmap">
+    select t.*,t1.title,t1.address,t1.starttime,t1.id 'trainid',
+    (select min(starttime) FROM whg_tra_course where state=1 and traid= t1.id) as 'coursestarttime'
+    from whg_tra_enrol t, whg_tra t1 WHERE t.traid = t1.id
+    <if test="type == 1">
+      AND t1.endtime &gt;= NOW()
+    </if>
+    <if test="type == 0">
+      AND t1.endtime &lt;= NOW()
+    </if>
+    <if test="userid != null and userid != ''">
+      and t.userid = #{userid}
+    </if>
+    order by  t.crttime desc
+  </select>
+
+  <select id="selEnrolCount" resultType="int">
+    SELECT
+      count(*)
+    FROM
+    whg_tra t1 ,
+    whg_tra_enrol t2
+    WHERE
+    t1.id = t2.traid and
+    t1.endtime &gt; #{now}
+    and t2.state IN (1,4,6)
+    and t2.userid = #{userId}
+    AND t1.starttime &gt; #{beginYear}
+    AND t1.endtime &lt; #{endYear}
+  </select>
+
+
+ <select id="selQjEnrolCount" resultType="int">
+    SELECT
+    count(*)
+    FROM
+    whg_tra t1 ,
+    whg_tra_enrol t2
+    WHERE
+    t1.id = t2.traid
+    and t2.state IN (1,4,6)
+    and t2.userid = #{userId}
+    AND t1.starttime &gt; #{myDate}
+ </select>
+
+  <select id="selCount" resultType="int">
+      SELECT
+      count(*)
+      FROM
+      whg_tra_enrol e1,
+      whg_tra_course c1
+      WHERE
+      e1.traid = c1.traid
+      AND e1.userid = #{userid}
+      AND e1.state IN (1, 4, 6)
+      AND c1.starttime &gt; #{now}
+      AND ((#{starttime} &lt; c1.starttime AND c1.starttime  &lt; #{endtime} AND #{endtime} &lt; c1.endtime)
+      OR (c1.starttime &lt; #{starttime} AND #{starttime} &lt; c1.endtime AND c1.endtime &lt; #{endtime})
+      OR (#{starttime} <![CDATA[ >= ]]> c1.starttime AND #{endtime} <![CDATA[ <= ]]> c1.endtime)
+      OR (#{starttime} <![CDATA[ <= ]]> c1.starttime AND #{endtime} <![CDATA[ >= ]]> c1.endtime));
+  </select>
+
+  <select id="selCourseAndEnrol" resultType="hashmap">
+      SELECT
+          e.id 'enrolid',
+          e.userid,
+          c.*,
+          ec.sign
+      FROM
+          whg_tra_enrol e
+      INNER JOIN whg_tra_course c ON e.traid = c.traid
+      LEFT JOIN whg_tra_enrol_course ec ON c.id = ec.courseid AND ec.userid = #{userid}
+      WHERE
+          e.traid = #{traid}
+      AND e.userid = #{userid}
+  </select>
+</mapper>

@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<script th:src="${basePath}+'/assets/common/js/whg.maps.js'"></script>
+<script th:src="${basePath}+'/assets/js/public/sly.js'"></script>
+<script type="text/javascript">
+    $(function(){
+        $('a[href*=#],area[href*=#]').click(function() {
+            if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
+                var $target = $(this.hash);
+                $target = $target.length && $target || $('[name=' + this.hash.slice(1) + ']');
+                if ($target.length) {
+                    var targetOffset = $target.offset().top;
+                    $('html,body').animate({
+                            scrollTop: targetOffset
+                        },
+                        400);
+                    return false;
+                }
+            }
+        });
+    })
+</script>
+<div class="wrapper clearfix">
+    <div class="content">
+        <!--公共主头部开始-->
+        <div id="header" th:include="guangdong/public/header :: copy"></div>
+        <!--公共主头部结束-->
+        <div class="sys-crumbs">
+            <span><a href="../index">首页</a></span>
+            <i class="icon iconfont icon-enter"></i>
+            <span><a href="list">场馆</a></span>
+            <i class="icon iconfont icon-enter"></i>
+            <span class="active" id="title"></span>
+        </div>
+        <div class="sys-main-info">
+            <div class="img">
+                <img id="imgPath" src="../../assets/img/public/loading.png">
+            </div>
+            <div class="info">
+                <h1 class="_title">&nbsp;</h1>
+                <p class="tag-list" id="tag">
+                </p>
+                <!--<p class="desc">
+                    开放时间：<span>周一至周五 09:00至22:00</span>
+                </p>-->
+                <p class="desc">
+                    所属区域：<span id="area">&nbsp;</span>
+                </p>
+                <p class="desc">
+                    联系电话：<span id="phone">&nbsp;</span>
+                </p>
+                <p class="desc">
+                    场馆地址：<span id="address">&nbsp;</span>
+                </p>
+                <!--<p class="desc">
+                    场馆用途：<span class="tag">比赛</span><span class="tag">奥运会</span>
+                </p>-->
+                <div class="go-next" id="selectRoom"><a href="#show-room-list">选择活动室</a></div>
+                <div class="go-next-2"><a href="#show-venue-info">场馆详情</a></div>
+                <div class="other-cont clearfix">
+                    <div class="fav-vote-cont clearfix">
+                        <div class="sys-vote" title="点赞"><i class="icon iconfont icon-praise icon-praise_fill" id="good"></i><span>0</span></div>
+                        <div class="sys-fav" title="收藏"><i class="icon iconfont icon-collection icon-collection_fill" id="collection"></i><span>0</span></div>
+                    </div>
+                    <div class="sns-cont" title="分享">
+                        分享到
+                        <a href="javascript:void(0);" target="_blank" class="fxweix"><i class="icon iconfont icon-wechat"></i></a>
+                        <a href="javascript:void(0);" target="_blank" class="fxweibo"><i class="icon iconfont icon-xinlang"></i></a>
+                        <a href="javascript:void(0);" target="_blank" class="fxqq"><i class="icon iconfont icon-kongjian"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="sys-main-bottom">
+            <div class="main-cont clearfix">
+                <div class="left-cont">
+                    <div class="item-cont border-bottom" id="show-room-list">
+                        <div class="sys-main-title">
+                            <div class="title">查看活动室</div>
+                            <hr>
+                        </div>
+                        <div class="room-cont" id="room-cont">
+                            <div class="btn prev" title="上一个">
+                                <i class="icon iconfont icon-packup"></i>
+                            </div>
+                            <div class="btn next" title="下一个">
+                                <i class="icon iconfont icon-unfold"></i>
+                            </div>
+                            <div class="as-cont">
+                                <ul id="roomlist">
+                                    <!--<li>
+                                        <div class="img"><img src="../../assets/img/img_demo/v1.jpg"></div>
+                                        <div class="info-cont">
+                                            <h3>特殊服务室</h3>
+                                            <p>影片是一部动作盛宴，《杀破狼》的最大亮点是在于武打设计，饰演张督察的甄子丹是影片的核心人物之一，跆拳道黑带六段和深厚的武术功底在银幕上表现为力道十足、拳腿凌厉、中西结合的个人动作风格。洪金宝是功夫界一员被忽视的角色，他在此片中的表演也算上乘之作。甄子丹作为武术指导，更是为影片设计了别具创意的动作</p>
+                                            <div class="other-cont">
+                                                <i class="iconfont icon-mianji1" title="面积"></i>
+                                                <span>100㎡</span>
+                                                &nbsp;&nbsp;|&nbsp;&nbsp;
+                                                <i class="iconfont icon-group" title="人数"></i>
+                                                <span>60人</span>
+                                                <div class="room-btn only-see">查看详情</div>
+                                            </div>
+                                        </div>
+                                    </li>-->
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item-cont" id="show-venue-info">
+                        <div class="sys-main-title">
+                            <div class="title">场馆详情</div>
+                            <hr>
+                        </div>
+                        <div class="sys-detail-list">
+                            <div class="title">场馆简介</div>
+                            <div class="html-panel" id="summary"></div>
+                        </div>
+                        <div class="sys-detail-list">
+                            <div class="title">场馆描述</div>
+                            <div class="html-panel" id="description"></div>
+                        </div>
+                        <div class="sys-detail-list">
+                            <div class="title">设备描述</div>
+                            <div class="html-panel" id="facilitydesc"></div>
+                        </div>
+                        <div class="sys-detail-list">
+                            <div class="title">场馆地址</div>
+                            <div class="map-panel" id="maps_ven_target">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="right-cont">
+                    <div class="item-cont">
+                        <div class="sys-main-title">
+                            <div class="title">相关推荐</div>
+                            <hr>
+                        </div>
+                        <div class="recommend-cont">
+                            <ul id="Recommend">
+                                <!--<li>
+                                    <div class="img">
+                                        <a href="#">
+                                            <img src="../../assets/img/img_demo/demo2017b.jpg">
+                                        </a>
+                                    </div>
+                                    <p>
+                                        <a href="#">不过话说text-ellipsis是一个特殊的样式</a>
+                                    </p>
+                                </li>-->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div th:include="guangdong/public/fav :: copy"></div>
+        <div th:include="guangdong/public/voteup :: copy"></div>
+        <input type="hidden" id="temp_type" value="2">
+        <input type="hidden" id="commType">
+    </div>
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong/public/footer :: copy"></div>
+<!--底部结束-->
+<a class="to-top"></a>
+<script th:src="${basePath}+'/assets/js/field/fieldOrder.js'"></script>
+<script type="text/javascript" th:inline="javascript">
+    var itemId = dataInit.getUrlParam('id');
+    $(document).ready(function () {
+        dataInit.ajax({
+            api: [[${apiPath.venueDetail}]],
+            fn: showVenueDetail,
+            params: {itemId: itemId}
+        });
+        dataInit.ajax({
+            api: [[${apiPath.recommendVenList}]],
+            fn: recommendList,
+            params: {exVenid: itemId}
+        });
+    })
+    var latitude = 	'39.915177',longitude = '116.403887',venueAddress,model,roomLength;
+    function showVenueDetail(data) {
+        if(data && data.code == 0){
+            model = data.data;
+            var phone = model.phone;
+            var address = model.address;
+            var title = model.title;
+            var area = model.area;
+            var type = model.tag;
+            var summary = model.intro;
+            var description = model.description;
+            var facilitydesc = model.facilitydesc;
+            var imgPath = data.imgPath + dataInit.getBigImage(model.image);
+            //调分享接口
+            dataInit.share(title,imgPath);
+            $('#summary').html(summary);
+            $('#description').html(description);
+            $('#facilitydesc').html(facilitydesc);
+            $('#phone').text(phone);
+            $('#address').text(address);
+            $('#area').text(area);
+            $('#type').text(type);
+            $('#title,._title').text(title);
+            $('#imgPath').attr('src',imgPath);
+
+            var tag = [];
+            if (model.tag && model.tag!='') {
+                tag = model.tag.split(",");
+            }
+            var tagHtml = "";
+            for(var j in tag){
+                tagHtml+='<span>'+tag[j]+'</span>';
+            }
+            $("#tag").html(tagHtml);
+            //活动室列表
+            var roomlist = data.data.roomList;
+            if(roomlist && roomlist.length){
+                for (var i in roomlist) {
+                    var imgPathR = data.imgPath + dataInit.getBigImage(roomlist[i].image);
+                    var Rtitle = roomlist[i].title;
+                    var RoomButton = '';
+                    if(roomlist[i].openTimeNum > 0){
+                        RoomButton = '<div class="room-btn">立即预订</div>';
+                    }else {
+                        RoomButton = '<div class="room-btn only-see">查看详情</div>';
+                    }
+                    $("#roomlist").append(
+                        '<li>'+
+                        '<div class="img"><img src="'+imgPathR+'"></div>'+
+                        '<div class="info-cont">'+
+                        '<h3>'+Rtitle+'</h3>'+
+                        '<p>'+roomlist[i].summary+'</p>'+
+                        '<div class="other-cont">'+
+                        '<i class="iconfont icon-mianji1" title="面积"></i>'+
+                        '<span>&nbsp;&nbsp;'+roomlist[i].area+'㎡</span>'+
+                        '&nbsp;&nbsp;|&nbsp;&nbsp;'+
+                        '<i class="iconfont icon-group" title="人数"></i>'+
+                        '<span>&nbsp;&nbsp;'+roomlist[i].sizepeople+'人</span>'+
+                        '<a href="venueroom?id='+roomlist[i].itemId+'">'+RoomButton+'</a>'+
+                        '</div>'+
+                        '</div>'+
+                        '</li>'
+                    );
+                }
+            }else {
+                $("#show-room-list").hide();
+                $("#selectRoom").hide();
+            }
+            if(roomlist.length>3){
+                $(".as-cont").sly({
+                    itemNav: "centered",
+                    horizontal: 0,
+                    dragContent: 1,
+                    scrollBy: 1,
+                    elasticBounds: 1,
+                    prev:'.prev',
+                    next:'.next'
+                });
+            }else if(roomlist.length<3&&roomlist.length==2){
+                $(".as-cont").css('height','310px');
+                $(".room-cont").css('height','315px');
+            }else if(roomlist.length<3&&roomlist.length==1){
+                $(".as-cont").css('height','150px');
+                $(".room-cont").css('height','155px');
+            }
+
+            //获取经纬度
+            if(model.latitude)
+                latitude = model.latitude;
+            if(model.longitude)
+                longitude = model.longitude;
+            venueAddress = model.title;
+            WhgMap.showMap('maps_ven_target', venueAddress, longitude, latitude);
+        }else {
+            rongDialog.init({
+                ico : 2, //1 勾  2 叉
+                type : 1,
+                desc : data.msg
+            });
+        }
+
+    }
+
+    function recommendList(data) {
+        //推荐列表
+        var tjvenlist = data.rows;
+        $("#Recommend").empty();
+        if(tjvenlist && tjvenlist.length){
+            var i_length = tjvenlist.length>3 ? 3 : tjvenlist.length;
+            for (var i=0;i<i_length;i++) {
+                var imgPathT = data.imgPath + dataInit.getBigImage(tjvenlist[i].imgurl);
+//                var endTime = moment(tjvenlist[i].statemdfdate).format('YYYY-MM-DD');
+                if(tjvenlist[i].id != itemId){
+                    $("#Recommend").append(
+                        '<li>'+
+                        '<div class="img">'+
+                        '<a href="detail?id='+tjvenlist[i].id+'">'+
+                        '<img src="'+imgPathT+'">'+
+                        '</a>'+
+                        '</div>'+
+                        '<p>'+
+                        '<a href="detail?id='+tjvenlist[i].id+'">'+tjvenlist[i].title+'</a>'+
+                        '</p>'+
+                        '</li>'
+                    );
+                }
+            }
+        }else {
+            $("#Recommend").append('<div class="public-no-message-detail"></div>');
+        }
+    }
+</script>
+</body>
+</html>

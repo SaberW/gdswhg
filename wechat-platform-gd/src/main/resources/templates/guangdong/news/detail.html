@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/news/news.css'">
+<script th:src="${apiPath.statistics}" id="whgtongji"></script>
+<div th:include="guangdong/public/leftBar :: copy"></div>
+<div id="page">
+    <div class="mui-content">
+        <div class="news-detail">
+            <!--<h2>资讯标题很长</h2>
+            <div class="abstract mui-clearfix">
+                <div class="source">来源：广东省文化馆</div>
+                <div class="time">2017-11-8</div>
+            </div>
+            <div class="key">关键词：广东省文化馆</div>
+            <div class="newsdetail-text">
+                Once upon a time we swore not to say goodbye
+                曾有一时 我们共同发誓永不分离
+                Something got a hold of us and we changed
+                然而天意弄人 随后我们就改变了心思
+                And then you sat alone in pride and I sat at home and cried
+                直至如今 你踌躇于所谓的尊严 而我只留坐在家里默默哭泣
+            </div>-->
+        </div>
+        <div class="download_box" id="file-list-div"></div>
+    </div>
+</div>
+<script type="text/javascript" th:inline="javascript">
+    var id = dataInit.getUrlParam('id');
+    $().ready(function () {
+        dataInit.ajax({
+            api: [[${apiPath.infoldetail}]],
+            params: {
+                id:id
+            },
+            fn: showDetail
+        })
+    })
+    function showDetail(data) {
+        $('.news-detail').html('');
+        var model = data.data;
+        var clnfsource = model.clnfsource?model.clnfsource:'佚名';
+        var time = moment(model.clnfcrttime).format('YYYY-MM-DD');
+        var keywords = '';
+        if(model.clnfkey){
+            keywords = '<div class="key" style="display: none">关键词：'+model.clnfkey+'</div>';
+        }
+        var html = '<h2>'+model.clnftltle+'</h2>'+
+            '<div class="abstract mui-clearfix">'+
+            '    <div class="source">来源：'+clnfsource+' &nbsp;  &nbsp; <span id="visit_Count"></span></div>'+
+            '    <div class="time">时间：'+time+'</div>'+
+            '</div>'+keywords+
+            '<div class="newsdetail-text">'+model.clnfdetail+'</div>';
+        $('.news-detail').html(html);
+
+
+        var files = $("#file-list-div");
+        if (data.rows && $.isArray(data.rows) && data.rows.length){
+            var a = '<h4>资源下载</h4>';
+            for (var i in data.rows){
+                var row = data.rows[i];
+                var fileurl = data.imgPath + row.uplink;
+                a += '<a href="'+fileurl+'">'+row.upname+'<i class="iconfont icon-xiazai"></i></a>'
+            }
+            files.append(a);
+        }
+        // 访问量
+        getVisitSumCount4url(id, function(count){
+            $("#visit_Count").text('访问量:'+count);
+        });
+    }
+</script>
+</body>
+</html>

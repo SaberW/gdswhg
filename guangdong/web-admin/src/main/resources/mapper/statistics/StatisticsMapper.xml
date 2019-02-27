@@ -1,0 +1,392 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.creatoo.hn.mapper.statistics.StatisticsMapper">
+
+    <!-- 查询PV|UV|IP等-[START] -->
+    <select id="selectSYS_PV_UV_IP" parameterType="java.util.HashMap" resultType="hashmap">
+        select 'PV' as srchKey, count(t1.visit_count) as srchVal from whg_visit_data t1 where t1.visit_date = date_format(current_timestamp,'%Y-%m-%d')
+        UNION
+        select 'UV' as srchKey, count(t1.visit_user) as srchVal from (select t1.visit_user from whg_visit_data t1 where t1.visit_date = date_format(current_timestamp,'%Y-%m-%d') GROUP BY t1.visit_user) t1
+        UNION
+        select 'IP' as srchKey, count(t1.visit_ip) as srchVal from (select t1.visit_ip from whg_visit_data t1 where t1.visit_date = date_format(current_timestamp,'%Y-%m-%d') GROUP BY t1.visit_ip) t1
+        UNION
+        select 'USERS' as srchKey, count(t1.id) as srchVal from wh_user t1
+        UNION
+        select 'REL_USERS' as srchKey, count(t1.id) as srchVal from wh_user t1 where t1.isrealname = 1
+        UNION
+        select 'ACTS' as srchKey, count(t1.id) as srchVal from whg_act_activity t1 where t1.state = 6
+        UNION
+        select 'TRAS' as srchKey, count(t1.id) as srchVal from whg_tra t1 where t1.state = 6
+        UNION
+        select 'VENS' as srchKey, count(t1.id) as srchVal from whg_ven t1 where t1.state = 6
+        UNION
+        select 'PV_PC' as srchKey, count(t1.visit_count) as srchVal from whg_visit_data t1 where t1.visit_date = date_format(current_timestamp,'%Y-%m-%d') and t1.visit_type = 1
+        UNION
+        select 'PV_WX' as srchKey, count(t1.visit_count) as srchVal from whg_visit_data t1 where t1.visit_date = date_format(current_timestamp,'%Y-%m-%d') and t1.visit_type = 2
+        UNION
+        select 'USERS_WX' as srchKey, count(t1.id) as srchVal from whg_usr_weixin t1
+    </select>
+    <!-- 查询PV|UV|IP等-[END  ] -->
+
+
+    <!-- 查询某年用户新增数据 -->
+    <select id="selectYearAddUser" parameterType="java.util.HashMap" resultType="hashmap">
+        select '1月' as srchKey, count(t1.id) as srchVal from wh_user t1 where date_format(t1.registtime,'%Y-%m') = concat(#{year}, '-01')
+        UNION
+        select '2月' as srchKey, count(t1.id) as srchVal from wh_user t1 where date_format(t1.registtime,'%Y-%m') = concat(#{year}, '-02')
+        UNION
+        select '3月' as srchKey, count(t1.id) as srchVal from wh_user t1 where date_format(t1.registtime,'%Y-%m') = concat(#{year}, '-03')
+        UNION
+        select '4月' as srchKey, count(t1.id) as srchVal from wh_user t1 where date_format(t1.registtime,'%Y-%m') = concat(#{year}, '-04')
+        UNION
+        select '5月' as srchKey, count(t1.id) as srchVal from wh_user t1 where date_format(t1.registtime,'%Y-%m') = concat(#{year}, '-05')
+        UNION
+        select '6月' as srchKey, count(t1.id) as srchVal from wh_user t1 where date_format(t1.registtime,'%Y-%m') = concat(#{year}, '-06')
+        UNION
+        select '7月' as srchKey, count(t1.id) as srchVal from wh_user t1 where date_format(t1.registtime,'%Y-%m') = concat(#{year}, '-07')
+        UNION
+        select '8月' as srchKey, count(t1.id) as srchVal from wh_user t1 where date_format(t1.registtime,'%Y-%m') = concat(#{year}, '-08')
+        UNION
+        select '9月' as srchKey, count(t1.id) as srchVal from wh_user t1 where date_format(t1.registtime,'%Y-%m') = concat(#{year}, '-09')
+        UNION
+        select '10月' as srchKey, count(t1.id) as srchVal from wh_user t1 where date_format(t1.registtime,'%Y-%m') = concat(#{year}, '-10')
+        UNION
+        select '11月' as srchKey, count(t1.id) as srchVal from wh_user t1 where date_format(t1.registtime,'%Y-%m') = concat(#{year}, '-11')
+        UNION
+        select '12月' as srchKey, count(t1.id) as srchVal from wh_user t1 where date_format(t1.registtime,'%Y-%m') = concat(#{year}, '-12')
+    </select>
+    <!-- 查询某年用户新增数据-[END  ] -->
+
+    <!-- 查询某月用户新增数据 -->
+    <select id="selectMonthAddUser" parameterType="java.util.HashMap" resultType="hashmap">
+        select '1日' as srchKey, count(t1.id) as srchVal from wh_user t1 where date_format(t1.registtime,'%Y-%m-%d') = concat(#{month}, '-01')
+        UNION
+        select '2日' as srchKey, count(t1.id) as srchVal from wh_user t1 where date_format(t1.registtime,'%Y-%m-%d') = concat(#{month}, '-02')
+        UNION
+        select '3日' as srchKey, count(t1.id) as srchVal from wh_user t1 where date_format(t1.registtime,'%Y-%m-%d') = concat(#{month}, '-03')
+        UNION
+        select '4日' as srchKey, count(t1.id) as srchVal from wh_user t1 where date_format(t1.registtime,'%Y-%m-%d') = concat(#{month}, '-04')
+        UNION
+        select '5日' as srchKey, count(t1.id) as srchVal from wh_user t1 where date_format(t1.registtime,'%Y-%m-%d') = concat(#{month}, '-05')
+        UNION
+        select '6日' as srchKey, count(t1.id) as srchVal from wh_user t1 where date_format(t1.registtime,'%Y-%m-%d') = concat(#{month}, '-06')
+        UNION
+        select '7日' as srchKey, count(t1.id) as srchVal from wh_user t1 where date_format(t1.registtime,'%Y-%m-%d') = concat(#{month}, '-07')
+        UNION
+        select '8日' as srchKey, count(t1.id) as srchVal from wh_user t1 where date_format(t1.registtime,'%Y-%m-%d') = concat(#{month}, '-08')
+        UNION
+        select '9日' as srchKey, count(t1.id) as srchVal from wh_user t1 where date_format(t1.registtime,'%Y-%m-%d') = concat(#{month}, '-09')
+        UNION
+        select '10日' as srchKey, count(t1.id) as srchVal from wh_user t1 where date_format(t1.registtime,'%Y-%m-%d') = concat(#{month}, '-10')
+        UNION
+        select '11日' as srchKey, count(t1.id) as srchVal from wh_user t1 where date_format(t1.registtime,'%Y-%m-%d') = concat(#{month}, '-11')
+        UNION
+        select '12日' as srchKey, count(t1.id) as srchVal from wh_user t1 where date_format(t1.registtime,'%Y-%m-%d') = concat(#{month}, '-12')
+        UNION
+        select '13日' as srchKey, count(t1.id) as srchVal from wh_user t1 where date_format(t1.registtime,'%Y-%m-%d') = concat(#{month}, '-13')
+        UNION
+        select '14日' as srchKey, count(t1.id) as srchVal from wh_user t1 where date_format(t1.registtime,'%Y-%m-%d') = concat(#{month}, '-14')
+        UNION
+        select '15日' as srchKey, count(t1.id) as srchVal from wh_user t1 where date_format(t1.registtime,'%Y-%m-%d') = concat(#{month}, '-15')
+        UNION
+        select '16日' as srchKey, count(t1.id) as srchVal from wh_user t1 where date_format(t1.registtime,'%Y-%m-%d') = concat(#{month}, '-16')
+        UNION
+        select '17日' as srchKey, count(t1.id) as srchVal from wh_user t1 where date_format(t1.registtime,'%Y-%m-%d') = concat(#{month}, '-17')
+        UNION
+        select '18日' as srchKey, count(t1.id) as srchVal from wh_user t1 where date_format(t1.registtime,'%Y-%m-%d') = concat(#{month}, '-18')
+        UNION
+        select '19日' as srchKey, count(t1.id) as srchVal from wh_user t1 where date_format(t1.registtime,'%Y-%m-%d') = concat(#{month}, '-19')
+        UNION
+        select '20日' as srchKey, count(t1.id) as srchVal from wh_user t1 where date_format(t1.registtime,'%Y-%m-%d') = concat(#{month}, '-20')
+        UNION
+        select '21日' as srchKey, count(t1.id) as srchVal from wh_user t1 where date_format(t1.registtime,'%Y-%m-%d') = concat(#{month}, '-21')
+        UNION
+        select '22日' as srchKey, count(t1.id) as srchVal from wh_user t1 where date_format(t1.registtime,'%Y-%m-%d') = concat(#{month}, '-22')
+        UNION
+        select '23日' as srchKey, count(t1.id) as srchVal from wh_user t1 where date_format(t1.registtime,'%Y-%m-%d') = concat(#{month}, '-23')
+        UNION
+        select '24日' as srchKey, count(t1.id) as srchVal from wh_user t1 where date_format(t1.registtime,'%Y-%m-%d') = concat(#{month}, '-24')
+        UNION
+        select '25日' as srchKey, count(t1.id) as srchVal from wh_user t1 where date_format(t1.registtime,'%Y-%m-%d') = concat(#{month}, '-25')
+        UNION
+        select '26日' as srchKey, count(t1.id) as srchVal from wh_user t1 where date_format(t1.registtime,'%Y-%m-%d') = concat(#{month}, '-26')
+        UNION
+        select '27日' as srchKey, count(t1.id) as srchVal from wh_user t1 where date_format(t1.registtime,'%Y-%m-%d') = concat(#{month}, '-27')
+        UNION
+        select '28日' as srchKey, count(t1.id) as srchVal from wh_user t1 where date_format(t1.registtime,'%Y-%m-%d') = concat(#{month}, '-28')
+        <if test="maxDays !=null and maxDays == '29'">
+            UNION
+            select '29日' as srchKey, count(t1.id) as srchVal from wh_user t1 where date_format(t1.registtime,'%Y-%m-%d') = concat(#{month}, '-29')
+        </if>
+        <if test="maxDays !=null and maxDays == '30'">
+            UNION
+            select '29日' as srchKey, count(t1.id) as srchVal from wh_user t1 where date_format(t1.registtime,'%Y-%m-%d') = concat(#{month}, '-29')
+            UNION
+            select '30日' as srchKey, count(t1.id) as srchVal from wh_user t1 where date_format(t1.registtime,'%Y-%m-%d') = concat(#{month}, '-30')
+        </if>
+        <if test="maxDays !=null and maxDays == '31'">
+        UNION
+        select '29日' as srchKey, count(t1.id) as srchVal from wh_user t1 where date_format(t1.registtime,'%Y-%m-%d') = concat(#{month}, '-29')
+        UNION
+        select '30日' as srchKey, count(t1.id) as srchVal from wh_user t1 where date_format(t1.registtime,'%Y-%m-%d') = concat(#{month}, '-30')
+        UNION
+        select '31日' as srchKey, count(t1.id) as srchVal from wh_user t1 where date_format(t1.registtime,'%Y-%m-%d') = concat(#{month}, '-31')
+        </if>
+    </select>
+    <!-- 查询某月用户新增数据-[END  ] -->
+
+
+    <!--按类型查询活动室发布数量-->
+    <select id="selectRepCount4RoomType" resultType="hashmap">
+        select count(vr.id) as repcount, vr.etype , yt.name
+        from whg_ven_room vr RIGHT JOIN whg_ywi_type yt on vr.etype = yt.id
+        where yt.type='3' and vr.state = 6 and vr.delstate =0
+        GROUP BY yt.id
+    </select>
+
+    <!--按区域查询活动室发布数量-->
+    <select id="selectRepCount4RoomArea" resultType="hashmap">
+        select count(vr.id) as repcount, yt.name
+        from whg_ven_room vr RIGHT JOIN whg_ven v on vr.venid = v.id
+        RIGHT JOIN whg_ywi_type yt on v.area = yt.id
+        where yt.type='6' and vr.state = 6 and vr.delstate =0
+        GROUP BY yt.id
+    </select>
+
+    <!--查询年的月份活动室发布数量，参数示例 2017-01-01 00:00:00 - 2018-01-01 00:00:00-->
+    <select id="selectRepCount4RoomYear" resultType="hashmap">
+        select MONTH(vr.statemdfdate) repmonth, count(vr.id) repcount
+        FROM whg_ven_room vr
+        where vr.state = 6 and vr.delstate = 0
+        <if test="beginYear != null">
+            and vr.statemdfdate &gt;= #{beginYear}
+        </if>
+        <if test="endYear != null">
+            and vr.statemdfdate &lt; #{endYear}
+        </if>
+        group by repmonth
+    </select>
+
+    <!--查询活动室访问top10-->
+    <select id="selectRepCount4RoomTop10" resultType="hashmap">
+        select sum(d.visit_count) sumcount, d.visit_eid id, vr.title title,
+        (select sum(d1.visit_count) from whg_visit_data d1 where d1.visit_eid = d.visit_eid and d1.visit_etype =4 and d1.visit_type = 1) pccount,
+        (select sum(d2.visit_count) from whg_visit_data d2 where d2.visit_eid = d.visit_eid and d2.visit_etype =4 and d2.visit_type = 2) wxcount
+        from whg_visit_data d INNER JOIN whg_ven_room vr on d.visit_eid = vr.id
+        where d.visit_etype =4
+        GROUP BY d.visit_eid
+        ORDER BY sumcount desc
+        LIMIT 10
+    </select>
+
+    <!--查询活动室开放时间-->
+    <select id="selectRepTime4RoomOpen" resultType="hashmap">
+        SELECT SUM(vrt.timelong) allminute, vr.id id, vr.title title,
+        (select sum(vrt1.timelong) from whg_ven_room_time vrt1 where vrt1.roomid = vrt.roomid and vrt1.state=1) openminute
+        FROM whg_ven_room_time vrt RIGHT JOIN whg_ven_room vr on vrt.roomid = vr.id
+        WHERE vr.state=6 and vr.delstate=0
+        <if test="title!=null and title !=''">
+            and vr.title like "%"#{title}"%"
+        </if>
+        GROUP BY vr.id
+        order by allminute desc, openminute desc
+    </select>
+
+    <!--查询活动室使用时间-->
+    <select id="selectRepTime4RoomOrder" resultType="hashmap">
+        SELECT SUM(vrt.timelong) allminute, vr.id id, vr.title title,
+        (select sum(vrt1.timelong) from whg_ven_room_time vrt1 where vrt1.roomid = vrt.roomid and vrt1.state=1) openminute,
+        (select sum(vro.timelong) from whg_ven_room_order vro where vro.roomid= vrt.roomid and vro.state=3) ordernimute
+        FROM whg_ven_room_time vrt RIGHT JOIN whg_ven_room vr on vrt.roomid = vr.id
+        WHERE vr.state=6 and vr.delstate=0
+        <if test="title!=null and title !=''">
+            and vr.title like "%"#{title}"%"
+        </if>
+        GROUP BY vr.id
+        order by ordernimute desc, openminute desc
+    </select>
+
+    <!--查询指定到起始月的活动室预订短信发送 参数示例 2017-06-01 00:00:00 - 2017-07-01 00:00:00-->
+    <select id="selectRepSmsCount4Room" resultType="hashmap">
+        SELECT room.title title,
+        (select count(sms1.sl_id) from whg_ywi_sms_rel sms1 where sms1.sl_relid = sms.sl_relid ) ydcount
+        FROM whg_ywi_sms sm INNER JOIN whg_ywi_sms_rel sms on sm.id = sms.sl_id
+        INNER JOIN whg_ven_room room on sms.sl_relid = room.id
+        where sms.sl_reltype=3
+        <if test="beginMonth != null">
+            and sm.senddate &gt;= #{beginMonth}
+        </if>
+        <if test="endMonth != null">
+            and sm.senddate &lt; #{endMonth}
+        </if>
+        GROUP BY sms.sl_relid
+    </select>
+
+    <!--查询指定到起始月的培训预订短信发送 参数示例 2017-06-01 00:00:00 - 2017-07-01 00:00:00-->
+    <select id="selectRepSmsCount4Tra" resultType="hashmap">
+        SELECT tra.title title,
+        (select count(sms1.sl_id) from whg_ywi_sms_rel sms1 where sms1.sl_relid = sms.sl_relid ) ydcount
+        FROM whg_ywi_sms sm INNER JOIN whg_ywi_sms_rel sms on sm.id = sms.sl_id
+        INNER JOIN whg_tra tra on sms.sl_relid = tra.id
+        where sms.sl_reltype=2
+        <if test="beginMonth != null">
+            and sm.senddate &gt;= #{beginMonth}
+        </if>
+        <if test="endMonth != null">
+            and sm.senddate &lt; #{endMonth}
+        </if>
+        GROUP BY sms.sl_relid
+    </select>
+
+    <!--查询指定到起始月的活动预订短信发送 参数示例 2017-06-01 00:00:00 - 2017-07-01 00:00:00-->
+    <select id="selectRepSmsCount4Act" resultType="hashmap">
+        SELECT act.name title,
+        (select count(sms1.sl_id) from whg_ywi_sms_rel sms1 where sms1.sl_relid = sms.sl_relid ) ydcount
+        FROM whg_ywi_sms sm INNER JOIN whg_ywi_sms_rel sms on sm.id = sms.sl_id
+        INNER JOIN whg_act_activity act on sms.sl_relid = act.id
+        where sms.sl_reltype=1
+        <if test="beginMonth != null">
+            and sm.senddate &gt;= #{beginMonth}
+        </if>
+        <if test="endMonth != null">
+            and sm.senddate &lt; #{endMonth}
+        </if>
+        GROUP BY sms.sl_relid
+    </select>
+
+
+    <!--查询资讯访问信息 参数示例 2017-06-01 00:00:00 - 2017-07-01 00:00:00-->
+    <select id="selectRepZxCount" resultType="hashmap">
+        select sum(d.visit_count) sumcount, d.visit_eid id, zx.clnftltle title,
+        (select sum(d1.visit_count) from whg_visit_data d1 where d1.visit_eid = d.visit_eid and d1.visit_etype =5 and d1.visit_type = 1) pccount,
+        (select sum(d2.visit_count) from whg_visit_data d2 where d2.visit_eid = d.visit_eid and d2.visit_etype =5 and d2.visit_type = 2) wxcount
+        from whg_visit_data d INNER JOIN wh_zx_colinfo zx on d.visit_eid = zx.clnfid
+        where d.visit_etype =5
+        <if test="beginMonth != null">
+            and d.visit_date &gt;= #{beginMonth}
+        </if>
+        <if test="endMonth != null">
+            and d.visit_date &lt; #{endMonth}
+        </if>
+        GROUP BY d.visit_eid
+        order by sumcount desc
+    </select>
+
+
+
+    <!-- 查询活跃用户占比-[START]-->
+    <select id="selectActiveUser" parameterType="java.util.HashMap" resultType="hashmap">
+        select 'PC_ACTIVE_USERS' as srchKey, count(*) as srchVal from (select t2.userid from whg_rep_login t2 where t2.devtype=0 and t2.logintime BETWEEN #{startDate} and current_timestamp group by t2.userid ) t
+        UNION
+        select 'WX_ACTIVE_USERS' as srchKey, count(*) as srchVal from (select t2.userid from whg_rep_login t2 where t2.devtype=1 and t2.logintime BETWEEN #{startDate} and current_timestamp group by t2.userid ) t
+        UNION
+        select 'USERS_WX' as srchKey, count(t1.id) as srchVal from whg_usr_weixin t1
+        UNION
+        select 'USERS' as srchKey, count(t1.id) as srchVal from wh_user t1
+    </select>
+    <!-- 查询活跃用户占比-[END  ]-->
+
+
+
+    <!-- 查询某年的用户粘度-[START]-->
+    <select id="selectActiveUserForYear" parameterType="java.util.HashMap" resultType="hashmap">
+        select '1月' as srchKey, count(*) as srchVal from (select * from whg_rep_login t2 where date_format(t2.logintime,'%Y-%m') = concat(#{year}, '-01') group by t2.userid) t
+        UNION
+        select '2月' as srchKey, count(*) as srchVal from (select * from whg_rep_login t2 where date_format(t2.logintime,'%Y-%m') = concat(#{year}, '-02') group by t2.userid) t
+        UNION
+        select '3月' as srchKey, count(*) as srchVal from (select * from whg_rep_login t2 where date_format(t2.logintime,'%Y-%m') = concat(#{year}, '-03') group by t2.userid) t
+        UNION
+        select '4月' as srchKey, count(*) as srchVal from (select * from whg_rep_login t2 where date_format(t2.logintime,'%Y-%m') = concat(#{year}, '-04') group by t2.userid) t
+        UNION
+        select '5月' as srchKey, count(*) as srchVal from (select * from whg_rep_login t2 where date_format(t2.logintime,'%Y-%m') = concat(#{year}, '-05') group by t2.userid) t
+        UNION
+        select '6月' as srchKey, count(*) as srchVal from (select * from whg_rep_login t2 where date_format(t2.logintime,'%Y-%m') = concat(#{year}, '-06') group by t2.userid) t
+        UNION
+        select '7月' as srchKey, count(*) as srchVal from (select * from whg_rep_login t2 where date_format(t2.logintime,'%Y-%m') = concat('2017', '-07') group by t2.userid) t
+        UNION
+        select '8月' as srchKey, count(*) as srchVal from (select * from whg_rep_login t2 where date_format(t2.logintime,'%Y-%m') = concat(#{year}, '-08') group by t2.userid) t
+        UNION
+        select '9月' as srchKey, count(*) as srchVal from (select * from whg_rep_login t2 where date_format(t2.logintime,'%Y-%m') = concat(#{year}, '-09') group by t2.userid) t
+        UNION
+        select '10月' as srchKey, count(*) as srchVal from (select * from whg_rep_login t2 where date_format(t2.logintime,'%Y-%m') = concat(#{year}, '-10') group by t2.userid) t
+        UNION
+        select '11月' as srchKey, count(*) as srchVal from (select * from whg_rep_login t2 where date_format(t2.logintime,'%Y-%m') = concat(#{year}, '-11') group by t2.userid) t
+        UNION
+        select '12月' as srchKey, count(*) as srchVal from (select * from whg_rep_login t2 where date_format(t2.logintime,'%Y-%m') = concat(#{year}, '-12') group by t2.userid) t
+
+    </select>
+    <!-- 查询某年的用户粘度-[END  ]-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- 用户参与活动趋势-[START]-->
+    <select id="selectUserJoinAct" parameterType="java.util.HashMap" resultType="hashmap">
+        select '1月' as srchKey, count(*) as srchVal from (select t1.userid from whg_act_order t1 where date_format(t1.ordercreatetime,'%Y-%m') = concat('2017', '-01') group by t1.userid) t
+        UNION
+        select '2月' as srchKey, count(*) as srchVal from (select t1.userid from whg_act_order t1 where date_format(t1.ordercreatetime,'%Y-%m') = concat('2017', '-02') group by t1.userid) t
+        UNION
+        select '3月' as srchKey, count(*) as srchVal from (select t1.userid from whg_act_order t1 where date_format(t1.ordercreatetime,'%Y-%m') = concat('2017', '-03') group by t1.userid) t
+        UNION
+        select '4月' as srchKey, count(*) as srchVal from (select t1.userid from whg_act_order t1 where date_format(t1.ordercreatetime,'%Y-%m') = concat('2017', '-04') group by t1.userid) t
+        UNION
+        select '5月' as srchKey, count(*) as srchVal from (select t1.userid from whg_act_order t1 where date_format(t1.ordercreatetime,'%Y-%m') = concat('2017', '-05') group by t1.userid) t
+        UNION
+        select '6月' as srchKey, count(*) as srchVal from (select t1.userid from whg_act_order t1 where date_format(t1.ordercreatetime,'%Y-%m') = concat('2017', '-06') group by t1.userid) t
+        UNION
+        select '7月' as srchKey, count(*) as srchVal from (select t1.userid from whg_act_order t1 where date_format(t1.ordercreatetime,'%Y-%m') = concat('2017', '-07') group by t1.userid) t
+        UNION
+        select '8月' as srchKey, count(*) as srchVal from (select t1.userid from whg_act_order t1 where date_format(t1.ordercreatetime,'%Y-%m') = concat('2017', '-08') group by t1.userid) t
+        UNION
+        select '9月' as srchKey, count(*) as srchVal from (select t1.userid from whg_act_order t1 where date_format(t1.ordercreatetime,'%Y-%m') = concat('2017', '-09') group by t1.userid) t
+        UNION
+        select '10月' as srchKey, count(*) as srchVal from (select t1.userid from whg_act_order t1 where date_format(t1.ordercreatetime,'%Y-%m') = concat('2017', '-10') group by t1.userid) t
+        UNION
+        select '11月' as srchKey, count(*) as srchVal from (select t1.userid from whg_act_order t1 where date_format(t1.ordercreatetime,'%Y-%m') = concat('2017', '-11') group by t1.userid) t
+        UNION
+        select '12月' as srchKey, count(*) as srchVal from (select t1.userid from whg_act_order t1 where date_format(t1.ordercreatetime,'%Y-%m') = concat('2017', '-12') group by t1.userid) t
+
+    </select>
+    <!-- 用户参与活动趋势-[END  ]-->
+
+
+
+    <!-- 用户参与活动趋势-[START]-->
+    <select id="selectUserJoinTra" parameterType="java.util.HashMap" resultType="hashmap">
+        select '1月' as srchKey, count(*) as srchVal from (select t1.userid from whg_tra_enrol t1 where date_format(t1.crttime,'%Y-%m') = concat('2017', '-01') group by t1.userid) t
+        UNION
+        select '2月' as srchKey, count(*) as srchVal from (select t1.userid from whg_tra_enrol t1 where date_format(t1.crttime,'%Y-%m') = concat('2017', '-02') group by t1.userid) t
+        UNION
+        select '3月' as srchKey, count(*) as srchVal from (select t1.userid from whg_tra_enrol t1 where date_format(t1.crttime,'%Y-%m') = concat('2017', '-03') group by t1.userid) t
+        UNION
+        select '4月' as srchKey, count(*) as srchVal from (select t1.userid from whg_tra_enrol t1 where date_format(t1.crttime,'%Y-%m') = concat('2017', '-04') group by t1.userid) t
+        UNION
+        select '5月' as srchKey, count(*) as srchVal from (select t1.userid from whg_tra_enrol t1 where date_format(t1.crttime,'%Y-%m') = concat('2017', '-05') group by t1.userid) t
+        UNION
+        select '6月' as srchKey, count(*) as srchVal from (select t1.userid from whg_tra_enrol t1 where date_format(t1.crttime,'%Y-%m') = concat('2017', '-06') group by t1.userid) t
+        UNION
+        select '7月' as srchKey, count(*) as srchVal from (select t1.userid from whg_tra_enrol t1 where date_format(t1.crttime,'%Y-%m') = concat('2017', '-07') group by t1.userid) t
+        UNION
+        select '8月' as srchKey, count(*) as srchVal from (select t1.userid from whg_tra_enrol t1 where date_format(t1.crttime,'%Y-%m') = concat('2017', '-08') group by t1.userid) t
+        UNION
+        select '9月' as srchKey, count(*) as srchVal from (select t1.userid from whg_tra_enrol t1 where date_format(t1.crttime,'%Y-%m') = concat('2017', '-09') group by t1.userid) t
+        UNION
+        select '10月' as srchKey, count(*) as srchVal from (select t1.userid from whg_tra_enrol t1 where date_format(t1.crttime,'%Y-%m') = concat('2017', '-10') group by t1.userid) t
+        UNION
+        select '11月' as srchKey, count(*) as srchVal from (select t1.userid from whg_tra_enrol t1 where date_format(t1.crttime,'%Y-%m') = concat('2017', '-11') group by t1.userid) t
+        UNION
+        select '12月' as srchKey, count(*) as srchVal from (select t1.userid from whg_tra_enrol t1 where date_format(t1.crttime,'%Y-%m') = concat('2017', '-12') group by t1.userid) t
+
+    </select>
+    <!-- 用户参与活动趋势-[END  ]-->
+
+</mapper>

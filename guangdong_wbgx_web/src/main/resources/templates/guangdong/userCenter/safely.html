@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link th:href="${basePath}+'/assets/style/userCenter/userCenter.css'" rel="stylesheet">
+<div class="wrapper clearfix">
+    <div class="content">
+        <!--公共主头部开始-->
+        <div id="header" th:include="guangdong/public/header :: copy"></div>
+        <!--公共主头部结束-->
+        <div class="main main-boder clearfix">
+            <div class="leftPanel" th:include="guangdong/userCenter/left :: copy"></div>
+            <div class="rightPanel">
+                <ul class="commBtn clearfix">
+                    <li class="active">安全设置</li>
+                </ul>
+                <div class="safe-row safe-row-1 clearfix">
+                    <a href="safely/pwd"></a>
+                    <div class="ico"></div>
+                    <div class="safeTt">设置登录密码</div>
+                    <div class="safeState">已设置</div>
+                    <div class="setUp"></div>
+                </div>
+                <div class="safe-row safe-row-2 clearfix">
+                    <a href="safely/phone"></a>
+                    <div class="ico"></div>
+                    <div class="safeTt">绑定手机</div>
+                    <div class="safeState">已绑定</div>
+                    <div class="setUp"></div>
+                </div>
+                <!--<div class="safe-row safe-row-3 clearfix">
+                    <a href="safely/email"></a>
+                    <div class="ico err"></div>
+                    <div class="safeTt">绑定邮箱</div>
+                    <div class="safeState">未绑定</div>
+                    <div class="setUp"></div>
+                </div>-->
+                <div class="safe-row safe-row-4 clearfix">
+                    <a href="safely/real"></a>
+                    <div class="ico"></div>
+                    <div class="safeTt">实名认证</div>
+                    <div class="safeState">未认证</div>
+                    <div class="setUp"></div>
+                </div>
+            </div>
+        </div>
+        <div class="md-overlay"></div>
+    </div>
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong/public/footer :: copy"></div>
+<!--底部结束-->
+<!-- core public JavaScript -->
+<script type="text/javascript" th:inline="javascript">
+    $().ready(function(){
+        dataInit.ajax({
+            api:[[${apiPath.getUserInfo}]],
+            params:{
+                userId:[[${session.wbgx_sessUserKey.userId}]]
+            },
+            fn:function(data){
+               if(data.code == 0){
+                   //0-待完善; 1-已认证;  2-认证失败; 3-提交审核中
+                    if(data.data.authState == 0){
+                        $('.safe-row-4 .ico').addClass("err");
+                        $('.safe-row-4 .safeState').html("未认证");
+                    }else if(data.data.authState == 3){
+                        $('.safe-row-4 .ico').addClass("err");
+                        $('.safe-row-4 .safeState').html("审核中");
+                    }else if(data.data.authState == 2) {
+                        $('.safe-row-4 .ico').addClass("err");
+                        $('.safe-row-4 .safeState').html("审核失败");
+                    }else if(data.data.authState == 1) {
+                        $('.safe-row-4 .safeState').html("已认证");
+                    }
+                    //是否设置了密码
+                   if(data.data.pwd == 'no'){
+                       $('.safe-row-1 .ico').addClass("err");
+                       $('.safe-row-1 .safeState').html("未设置");
+                   }
+                   //是否绑定的手机
+                   if(data.data.mobile == ''){
+                       $('.safe-row-2 .ico').addClass("err");
+                       $('.safe-row-2 .safeState').html("未绑定");
+                   }
+               }else{
+                   rongDialog.init({
+                       ico : 2,
+                       type : 1,
+                       desc : data.msg || "数据加载失败"
+                   });
+               }
+            }
+        })
+    })
+</script>
+</body>
+</html>

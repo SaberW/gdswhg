@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/public/list.css'">
+<style>
+    .info:after{
+        display: none;
+    }
+</style>
+<div th:include="guangdong/public/leftBar :: copy"></div>
+<div id="page">
+    <div class="mui-content">
+        <div class="niubility-search">
+            <div class="niubility-search-dd">
+                <input id="title" placeholder="搜索你感兴趣的数字展馆" type="text">
+                <span onclick="niubilitySearch();">搜索</span>
+            </div>
+        </div>
+        <div id="category-cont"
+             class="category-cont mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+            <div class="mui-scroll">
+                <a href="javascript:void(0)" class="mui-control-item" data-index="c-1">区域<i></i></a>
+                <a href="javascript:void(0)" class="mui-control-item" data-index="c-2">艺术类型<i></i></a>
+            </div>
+        </div>
+        <div class="category-mask none">
+            <div class="category-group none" data-index="c-1">
+                <ul class="clearfix" id="areList">
+                </ul>
+            </div>
+            <div class="category-group none" data-index="c-2">
+                <ul class="clearfix" id="artList">
+                </ul>
+            </div>
+        </div>
+        <!--下拉刷新容器-->
+        <div id="model-list-panel" class="mui-scroll-wrapper" style="top:89px;">
+            <div class="mui-scroll">
+                <!--数据列表-->
+                <div class="public-list">
+                    <ul id="model-list">
+                        <!--<li>
+                            <a href="detail?id=2017110127436518">
+                                <div class="img">
+                                    <img src="http://183.131.126.132:8092/whgstatic/img/2017/201709/20170921/e7f2cf27ba3b41b680c1f10651db8800.jpg" alt="">
+                                </div>
+                                <div class="info">
+                                    <div class="title">广东省第七届群众音乐舞蹈花会决赛即将在珠海开幕</div>
+                                    <p>地址：广州市天河区</p>
+                                    <p>时间：2017-11-3 - 2017-11-20</p>
+                                    <p>人数：0/50人</p>
+                                    <div class="state">报名结束</div>
+                                </div>
+                                <div class="abstract">
+                                    <div class="ticket">余票：50张</div>
+                                    <div class="other">
+                                        &lt;!&ndash;<span class="comment"><i class="iconfont icon-message"></i>15</span>&ndash;&gt;
+                                        <span class="zan"><i class="iconfont icon-praise"></i>20</span>
+                                        <span class="favorite"><i class="iconfont icon-like"></i>25</span>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="detail?id=2017110150729841">
+                                <div class="img">
+                                    <img src="http://183.131.126.132:8092/whgstatic/img/2017/201709/20170921/a768d33e5359460e910de9c08ce4425d.jpg" alt="">
+                                </div>
+                                <div class="info">
+                                    <div class="title">粤曲发烧友台上争相献技，韵味十足 ——2017广东粤曲私伙局大赛在顺德圆满落幕</div>
+                                    <p>地址：广州市天河区</p>
+                                    <p>时间：2017-11-3 - 2017-11-20</p>
+                                    <p>人数：0/50人</p>
+                                    <div class="state">报名结束</div>
+                                </div>
+                                <div class="abstract">
+                                    <div class="ticket">余票：50张</div>
+                                    <div class="other">
+                                        &lt;!&ndash;<span class="comment"><i class="iconfont icon-message"></i>15</span>&ndash;&gt;
+                                        <span class="zan"><i class="iconfont icon-praise"></i>20</span>
+                                        <span class="favorite"><i class="iconfont icon-like"></i>25</span>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>-->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" th:inline="javascript">
+    var keywords = dataInit.getCache('sgkeywords');
+    dataInit.resetCache('sgkeywords');
+    $().ready(function () {
+        dataInit.ajax({
+            api: [[${apiPath.actCate}]],
+            params: {
+                type: 1,//艺术分类
+                cultid: $.cookie('cultid')
+            },
+            fn: showYXClass
+        });
+        select.create(modelData);
+        dataInit.showAre($.cookie("city"),[[${apiPath.depts}]]);
+        modelData();
+    })
+
+    function modelData(page, size) {
+        var page = page || 1;
+        var size = size || 10;
+        var artType = $('#artList').find('li.active').attr('item-data');
+        dataInit.ajax({
+            api: [[${apiPath.digitalList}]],
+            params: {
+                index: page,
+                size: size,
+                cultid: $.cookie('cultid'),
+                city: $("#city").val(), //市
+                area: $("#area").val(), //区
+                deptid: $("#deptid").val(), //服务站
+                province: $("#province").val(), //省
+                keywords: keywords,
+                arttype: artType
+            },
+            forceUpdate: false,
+            fn: function (data) {
+                var params = {
+                    page: page,
+                    size: size,
+                    total: data.total
+                };
+                dataInit.htmlAdd(page, showModelHtml(data));
+                dataInit.pullUp(params, modelData);
+            }
+        })
+    }
+
+    function showModelHtml(data) {
+        var html = "";
+
+        if (data.code == 0 && data.rows.length > 0) {
+            for (var i in data.rows) {
+                var model = data.rows[i];
+                var img = data.imgPath + dataInit.getBigImage(model.imgurl);
+                var times = moment(model.crtdate).format('YYYY-MM-DD');
+                html += '<li>' +
+                    '<a href="detail?id=' + model.id + '">' +
+                    '<div class="img">' +
+                    '<img class="lazy" src="' + img + '">' +
+                    '</div>' +
+                    '<div class="info">' +
+                    '<div class="title">' + model.title + '</div>' +
+                    '<p style="padding: 0;">时间：'+ times +'</p>'+
+                    '<p style="padding: 0;">主办：'+ model.host +'</p>'+
+                    '</div>' +
+                    '</a>' +
+                    '</li>';
+            }
+        } else {
+            html = "<div class='newbility-no-msg'></div>";
+        }
+        return html;
+    }
+
+    function showYXClass(data) {
+        var artList = $("#artList");
+        artList.html("");
+        var arts = data.rows;
+        artList.append('<li class="active" item-data="" data-txt="艺术类型">全部</li>');
+        for (var i in arts) {
+            artList.append('<li item-data="' + arts[i].id + '">' + arts[i].name + '</li>');
+        }
+    }
+
+    function niubilitySearch() {
+        mui('#model-list-panel').pullRefresh().scrollTo(0,0,0);
+        mui('#model-list-panel').pullRefresh().refresh(true);
+        keywords = $.trim($("#title").val());
+        $("#model-list").html("");
+        modelData();
+    }
+</script>
+</body>
+</html>

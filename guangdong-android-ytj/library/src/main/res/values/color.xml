@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="title_bar_color">#ED781F</color>
+
+    <color name="yellow_ed">#ED781F</color>
+    <color name="yellow_e9">#E95506</color>
+    <color name="white">#ffffff</color>
+
+    <color name="error_color">#d86674</color>
+    <color name="info_color">#4A90E2</color>
+    <color name="success_color">#7BAFB0</color>
+    <color name="warning_color">#E95506</color>
+    <color name="toast_text_color">#ffffff</color>
+</resources>

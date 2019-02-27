@@ -1,0 +1,627 @@
+<header th:fragment="copy" xmlns:th="http://www.w3.org/1999/xhtml">
+    <!--轮播广告开始-->
+    <div class="index-banner swiper-container">
+        <div class="swiper-wrapper" id="showBigLbt">
+
+        </div>
+        <div class="swiper-pagination rectangle-page clearfix"></div>
+        <div class="swiper-button-next swiper-arrowL"></div>
+        <div class="swiper-button-prev swiper-arrowR"></div>
+    </div>
+
+    <!--文化头条-->
+    <div class="index-news part">
+        <div class="index-title clearfix">
+            <img th:src="${basePath}+'/assets/img/index/wenHuaTouTiao.png'" class="title-picL">
+            <img th:src="${basePath}+'/assets/img/index/wenHuaTouTiao-1.png'" class="title-picR">
+            <h1 class="home_title">
+                <span>文化头条</span>
+            </h1>
+            <a th:href="${basePath}+'/'+${cultsite}+'/zx/list'" class="more" target="_blank">
+                更多
+            </a>
+        </div>
+        <div class="index-content clearfix">
+            <div class="index-content-l">
+                <div class="news-row clearfix" id="ttList"></div>
+            </div>
+            <div class="index-content-r">
+                <div class="swiper-container news-carsol">
+                    <div class="img"  id="ttList2">
+                        <div id="ttmain">
+                            <!--<div class="swiper-slide">
+                                <a href="#" target="_blank"><img th:src="${basePath}+'/assets/img/index/1.jpg'"></a>
+                                <div class="news_info_index">
+                                    <h2 class="news-title">文化馆头条资讯文化馆头条资讯文化馆头条资讯</h2>
+                                </div>
+                            </div>
+                            <div class="swiper-slide">
+                                <a href="#" target="_blank"><img th:src="${basePath}+'/assets/img/index/1.jpg'"></a>
+                                <div class="news_info_index">
+                                    <h2 class="news-title">文化馆头条资讯文化馆头条资讯文化馆头条资讯</h2>
+                                </div>
+                            </div>-->
+                        </div>
+                    </div>
+                    <div class="swiper-button-next swiper-arrowL-paiHang"></div>
+                    <div class="swiper-button-prev swiper-arrowR-paiHang"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--文化头条-->
+
+    <!--活动指数-->
+    <div class="index-news part">
+        <div class="index-title clearfix">
+            <img th:src="${basePath}+'/assets/img/index/paiHangZhiShu.png'" class="title-picL" style="height: 80px;">
+            <img th:src="${basePath}+'/assets/img/index/paiHangZhiShu-1.png'" class="title-picR" style="left: 300px; right:auto;">
+            <h1 class="home_title">
+                <span>活动指数</span>
+            </h1>
+            <a th:href="${basePath}+'/'+${cultsite}+'/hd/list'" class="more" target="_blank">
+                更多
+            </a>
+        </div>
+        <div class="index-content clearfix" >
+            <div class="index-content-l">
+                <div class="content-nav" id="hot-top">
+                    <ul>
+                        <li class="active" onclick="showPHB(1)"><a href="javascript:void(0)">最新发布</a></li>
+                        <li onclick="showPHB(4)"><a href="javascript:void(0)">热门点赞</a></li>
+                        <li onclick="showPHB(3)"><a href="javascript:void(0)">热门收藏</a></li>
+                        <li onclick="showPHB(2)"><a href="javascript:void(0)">最多参与</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="right-picture clearfix" id="rank-banner">
+                <!--<div class="pic_title_show pic_big">-->
+                <!--<img th:src="${basePath}+'/assets/img/index/eg4.png'">-->
+                <!--<div class="addTag"></div>-->
+                <!--<h2>第六届全国农民艺术节开幕式</h2>-->
+                <!--</div>-->
+                <!--<div class="pic_title_show" style="margin-bottom: 20px;">-->
+                <!--<img th:src="${basePath}+'/assets/img/index/eg3.png'">-->
+                <!--<div class="addTag"></div>-->
+                <!--<h2>第六届全国农民艺术节开幕式</h2>-->
+                <!--</div>-->
+                <!--<div class="pic_title_show">-->
+                <!--<img th:src="${basePath}+'/assets/img/index/eg2.png'">-->
+                <!--<div class="addTag"></div>-->
+                <!--<h2>第六届全国农民艺术节开幕式</h2>-->
+                <!--</div>-->
+            </div>
+        </div>
+    </div>
+    <!--活动指数-->
+
+    <!--培训驿站开始-->
+    <div class="main-wrapper-sanqi" id="main-wrapper-train">
+        <div class="main-wrapper-branch-sanqi">
+            <div class="index-title clearfix">
+                <img th:src="${basePath}+'/assets/img/index/pxyz.png'" class="title-picL" style="height: 80px;">
+                <!--<img th:src="${basePath}+'/assets/img/index/jianzhu.png'" class="title-picR">-->
+                <h1 class="home_title">
+                    <span>培训驿站</span>
+                </h1>
+                <div class="menus">
+                    <a th:href="${rootUrl}+'gdpxweb/'+${cultsite}+'/xxpx/list'" target="_blank" >线下培训</a>/
+                    <a th:href="${rootUrl}+'gdpxweb/'+${cultsite}+'/zxkc/list'" target="_blank">在线课程</a>/
+                    <a th:href="${rootUrl}+'gdpxweb/'+${cultsite}+'/pxzy/list'" target="_blank">培训资源</a>
+                </div>
+                <a th:href="${rootUrl}+'gdpxweb/'+${cultsite}+'/xxpx/list'" class="more" target="_blank">
+                    更多
+                </a>
+            </div>
+            <div class="main-wrapper-list-pxyz">
+                <ul class="clearfix" id="TrainActive">
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!--热门场馆开始-->
+    <div class="changguan">
+        <div class="main-wrapper-sanqi" id="main-wrapper-venue">
+            <div class="main-wrapper-branch-sanqi">
+                <!--<div class="main-title-sanqi">
+                    <div class="main-title-sanqi-text main-title-sanqi-text-venue">热门场馆</div>
+                    <a th:href="${basePath}+'/'+${cultsite}+'/cg/list'">更多</a>
+                </div>-->
+                <div class="index-title clearfix">
+                    <img th:src="${basePath}+'/assets/img/index/remencg.png'" class="title-picL" style="height: 80px;">
+                    <img th:src="${basePath}+'/assets/img/index/jianzhu.png'" class="title-picR" style="height: 80px;bottom: 0">
+                    <h1 class="home_title">
+                        <span>热门场馆</span>
+                    </h1>
+                    <a th:href="${basePath}+'/'+${cultsite}+'/cg/list'" class="more" target="_blank">
+                        更多
+                    </a>
+                </div>
+
+                <div class="main-wrapper-list-venue swiper-container">
+                    <ul class="swiper-wrapper clearfix" id="venueActive">
+                    </ul>
+                </div>
+                <div class="arrows">
+                    <div class="branch-left branch-left-venue">
+                        <!--<img th:src="${basePath}+'/assets/img/index/zuojiantou.png'">-->
+                        &lt;
+                    </div>
+                    <div class="branch-right branch-right-venue">
+                        <!--<img th:src="${basePath}+'/assets/img/index/youjiantou.png'">-->
+                        &gt;
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--活跃分馆开始-->
+    <div class="main-wrapper-sanqi" id="main-wrapper-branch">
+        <div class="main-wrapper-branch-sanqi">
+            <!--<div class="main-title-sanqi">
+                <div class="main-title-sanqi-text">活跃分馆</div>
+                <a th:href="${basePath}+'/'+${cultsite}+'/union/list'">更多</a>
+            </div>-->
+            <div class="index-title clearfix">
+                <img th:src="${basePath}+'/assets/img/index/huoyuefenguan.png'" class="title-picL" style="height: 50px;">
+                <img th:src="${basePath}+'/assets/img/index/jianzhu.png'" class="title-picR" style="height: 80px;bottom: 0;">
+                <h1 class="home_title">
+                    <span>活跃分馆</span>
+                </h1>
+                <a th:href="${basePath}+'/'+${cultsite}+'/union/list'" class="more" target="_blank">
+                    更多
+                </a>
+            </div>
+            <div class="main-wrapper-list-sanqi main-wrapper-list-sanqi-fenguan swiper-container">
+                <ul class="swiper-wrapper clearfix" id="activeFG">
+                </ul>
+            </div>
+            <div class="arrows">
+                <div class="branch-left branch-left-fenguan" style="top: 180px;">
+                    <!--<img th:src="${basePath}+'/assets/img/index/zuojiantou.png'">-->
+                    &lt;
+                </div>
+                <div class="branch-right branch-right-fenguan" style="top: 180px;">
+                    <!--<img th:src="${basePath}+'/assets/img/index/youjiantou.png'">-->
+                    &gt;
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--活跃分馆结束-->
+    <script type="text/javascript" th:inline="javascript">
+        /*轮播广告结束*/
+        //首页大轮播，调用swiper函数
+
+        function MainBanner(data) {
+            var mySwiper = new Swiper('.index-banner', {
+                direction: "horizontal",
+                autoplay: 5000,
+                loop: true,
+                pagination: '.rectangle-page',
+                paginationClickable: true,
+                nextButton: '.swiper-arrowL', //下一页
+                prevButton: '.swiper-arrowR', //上一页
+                autoplayDisableOnInteraction: true
+            });
+            $('.swiper-arrowL').on('click', function () {
+                mySwiper.swipePrev();
+            });
+            $('.swiper-arrowR').on('click', function () {
+                mySwiper.swipeNext();
+            });
+            if (data.rows.length && data.code == 0) {
+                for (var i = 0; i < data.rows.length; i++) {
+                    if (data.rows[i].url && data.rows[i].url != "") {
+                        /*$("#showBigLbt").append(
+                            '<a target="_blank" href="' + data.rows[i].url + '"  class="swiper-slide">' +
+                            '<img src="' + data.imgPath + data.rows[i].picture + '" alt="">'+
+                            '</a>'
+                        );*/
+                        mySwiper.appendSlide(
+                                '<a target="_blank" href="' + data.rows[i].url + '">' +
+                                '<img src="' + data.imgPath + data.rows[i].picture + '">'+
+                                '</a>'
+                        );
+                    } else {
+                        /*$("#showBigLbt").append(
+                            '<a href="javascript:void(0)"  class="swiper-slide">' +
+                            '<img src="' + data.imgPath + data.rows[i].picture + '" alt="">'+
+                            '</a>'
+                        );*/
+                        mySwiper.appendSlide(
+                                '<a href="javascript:void(0)">' +
+                                '<img src="' + data.imgPath + data.rows[i].picture + '">'+
+                                '</a>'
+                        );
+                    }
+                }
+            } else {
+                var Banner_basePath = [[${basePath}]] + '/assets/img/index/main_banner.jpg';
+                mySwiper.appendSlide(
+                        '<a href="javascript:void(0)">' +
+                        '<img src="' + Banner_basePath + '">'+
+                        '</a>'
+                );
+                /*$("#showBigLbt").append(
+                    '<a href="javascript:void(0)"  class="swiper-slide" style="background:url(' + Banner_basePath + ') no-repeat 50% 50%">' +
+                    '</a>'
+                )*/
+                /*var mySwiper = new Swiper('.index-banner', {
+                    direction: "horizontal",
+                    autoplay: 5000,
+                    loop: true,
+                    pagination: '.rectangle-page',
+                    paginationClickable: true,
+                    nextButton: '.swiper-arrowL', //下一页
+                    prevButton: '.swiper-arrowR', //上一页
+                    autoplayDisableOnInteraction: true
+                });
+                $('.swiper-arrowL').on('click', function () {
+                    mySwiper.swipePrev();
+                })
+                $('.swiper-arrowR').on('click', function () {
+                    mySwiper.swipeNext();
+                })*/
+            }
+        }
+
+        $('.rectangle-page').on('click', 'span', function () {
+            $(this).addClass('active').siblings().removeClass('active');
+        });
+
+        var PHB = [];
+
+        function showMainIndex() {
+
+            $("#hot-top ul li").click(function () {
+                $(this).addClass("active").siblings().removeClass("active");
+            })
+
+            $("#GxMainIndex").show();
+            dataInit.ajax({
+                api: [[${apiPath.showAdver}]],
+                fn: MainBanner, //首页轮播图数据
+                params: {
+                    type: 1,
+                    city: $.cookie('city'),
+                    cultid: $.cookie('cultid')
+                }
+            });
+            dataInit.ajax({
+                api: [[${apiPath.infomationList}]],
+                fn: toutiao, //资讯
+                params: {
+                    index: 1,
+                    size: 6,
+                    type: "2017092830756428" //头条
+                }
+            });
+            dataInit.ajax({
+                api: [[${apiPath.infomationList}]],
+                fn: dongtai, //资讯
+                params: {
+                    index: 1,
+                    size: 10,
+                    type: "2017092818523079" //动态
+                }
+            });
+            dataInit.ajax({
+                api: [[${apiPath.bannerActList}]],
+                fn: bannerActList, //推荐活动
+                params: {
+                    index: 1,
+                    size: 4
+                }
+            });
+            dataInit.ajax({
+                api: [[${apiPath.venueIndexList}]],
+                fn: venueIndexList, //热门场馆
+                params: {
+                    page: 1,
+                    pageSize: 4
+                }
+            });
+            dataInit.ajax({
+                api: [[${apiPath.activeFG}]],
+                fn: activeFG, //活跃分馆
+                params: {
+                    index: 1,
+                    size: 8
+                }
+            });
+            dataInit.ajax({
+                api: [[${apiPath.TrainIndexList}]],
+                fn: showTrainList, //热门培训
+                params: {
+                    page: 1,
+                    pageSize: 3
+                }
+            });
+            //排行榜数据
+            showPHB(1);
+        }
+
+        function showPHB(sort) {
+            dataInit.ajax({
+                api: [[${apiPath.phbzs}]],
+                fn: function(res){
+                    phbzs(res,sort)
+                }, //排行榜
+                params: {
+                    index: 1,
+                    size: 3,
+                    sort: sort
+                }
+            });
+        }
+
+
+        function toutiao(data) {
+            if (data.rows) {
+                var html = '';
+                for (var i = 0; i < data.rows.length; i++) {
+                    var model = data.rows[i];
+                    var tt = model.clnftltle.length > 25 ? model.clnftltle.substring(0, 25) + '...' : model.clnftltle;
+                    var line = '<a href="' + [[${basePath}]] + '/' + [[${cultsite}]] + '/zx/detail?id=' + model.clnfid + '" target="_blank" class="clearfix">' +
+                        '<div class="row-num row-num-' + (i + 1) + '"></div>' +
+                        '<div class="row-news clearfix">' +
+                        '<h3 class="vertical-h3">' + tt + '</h3>' +
+                        '<span class="vertical-doc">' + moment(model.clnfcrttime).format('YYYY-MM-DD') + '</span>' +
+                        '</div>' +
+                        '</a>';
+                    html = html + line;
+                }
+                if (data.rows.length > 0) {
+                    $("#ttList").html(html);
+                } else {
+                    $("#main-wrapper-toutiao").hide();
+                }
+            }
+        }
+
+        function dongtai(data) {
+            if (data.rows) {
+                var _html = '';
+                var _imgPath = data.imgPath;
+                for (var i = 0; i < data.rows.length; i++) {
+                    var model = data.rows[i];
+                    if(model.clnfpic){
+                        var _img = _imgPath + model.clnfpic
+                        _html += '<div class="swiper-slide">'+
+                            '<a href="' + [[${basePath}]] + '/' + [[${cultsite}]] + '/zx/detail?id=' + model.clnfid + '" target="_blank"><img src="'+_img+'"></a>'+
+                            '<div class="news_info_index">'+
+                            '<h2 class="news-title">'+model.clnftltle+'</h2>'+
+                            '</div>'+
+                            '</div>'
+                    }
+                }
+                if (data.rows.length > 0) {
+                    $("#ttmain").html(_html);
+                    $('#ttList2').sly({
+                        itemNav: "forceCentered",
+                        cycleBy: 'items',
+                        prev: ".swiper-arrowL-paiHang",
+                        next: ".swiper-arrowR-paiHang",
+                        horizontal: 1
+                    });
+                } else {
+                    $('#ttmain').hide();
+                }
+            }
+        }
+
+        function bannerActList(data) {
+            if (data.rows && data.code == 0) {
+                var html = '';
+                for (var i = 0; i < data.rows.length; i++) {
+                    var model = data.rows[i];
+                    var imgPath = data.imgPath + dataInit.getBigImage(model.imgurl);
+                    var actUrl = [[${basePath}]] + '/' + [[${cultsite}]] + '/hd/detail?id=' + model.id;
+                    var line = '<li>' +
+                        '    <div class="img">' +
+                        '        <a href="' + actUrl + '" target="_blank">' +
+                        '            <img src="' + imgPath + '">' +
+                        '        </a>' +
+                        '    </div>' +
+                        '    <div class="detail">' +
+                        '        <div class="title">' + model.name + '</div>' +
+                        '        <p><span class="tt">地点：</span><span>' + model.address + '</span></p>' +
+                        '        <p><span class="tt">时间：</span><span>' + moment(model.starttime).format('YYYY-MM-DD') + '</span></p>' +
+                        '        <p><span class="tt">简介：</span><span>' + model.actsummary + '</span>' +
+                        '        </p>' +
+                        '    </div>' +
+                        '    <a class="loom-detail" href="' + actUrl + '" target="_blank">查看详情<i class="iconfont icon-enter"></i></a>' +
+                        '</li>';
+                    html = html + line;
+                }
+                if (data.rows.length > 0) {
+                    $("#HdList").html(html);
+                } else {
+                    $("#main-wrapper-act").hide();
+                }
+            } else {
+                rongDialog.init({ico: 2, type: 1, desc: data.msg || "未知错误"});
+            }
+        }
+
+        function phbzs(data,sort) {
+            $("#rank-banner").html('');
+            if (data.rows && data.code == 0) {
+                var _html = '';
+                PHB = data.rows;
+                for (var i in data.rows) {
+                    var model = data.rows[i];
+                    var _basePath = [[${basePath}]] + '/' + [[${cultsite}]] + '/hd/detail?id=' + model.id;
+                    var RankImgPath = data.imgPath + dataInit.getBigImage(model.imgurl);
+                    var name = model.name.length > 15 ? model.name.substring(0,15)+"..." : model.name;
+                    var _css = i == 0 ? "pic_big" : "";
+                    var _tagB = i == 0 ? "addTagBig" : "";
+                    var _mb = i == 1 ? "style='margin-bottom: 20px'" : "";
+                    var _tagS = i == 1 ? "addTagSmall" : "";
+                    var _tagSS = i == 2 ? "addTagSmall" : "";
+                    _html += '<div class="pic_title_show '+_css+'" '+_mb+'>'+
+                        '        <a href="'+_basePath+'" target="_blank">'+
+                                    '<img src="'+RankImgPath+'">'+
+                                '</a>'+
+                                '<div class="addTag-'+sort+' '+_tagB+' '+_tagS+' '+_tagSS+'"></div>'+
+                                '<h2>'+name+'</h2>'+
+                              '</div>'
+                }
+                $("#rank-banner").html(_html);
+            }else {
+                rongDialog.init({ico: 2, type: 1, desc: data.msg || "未知错误"});
+            }
+        }
+
+        function showDetail() {
+            setTimeout(function () {
+                var RankId = $("#RankList li.active").index();
+                RankId = RankId == -1 ? 0 : RankId;
+                var _basePath = [[${basePath}]] + '/' + [[${cultsite}]] + '/hd/detail?id=' + PHB[RankId].id;
+                var _html = '<div class="title"><a href="' + _basePath + '" target="_blank">' + PHB[RankId].name + '</a></div>' +
+                    '<span class="line"></span>' +
+                    '<p><span class="tt">地点：</span><span>' + PHB[RankId].address + '</span></p>' +
+                    '<p><span class="tt">时间：</span><span>' + moment(PHB[RankId].starttime).format("YYYY-MM-DD") + '</span></p>' +
+                    '<p><span class="tt">简介：</span><span>' + PHB[RankId].actsummary + '</span></p>' +
+                    '<a href="' + _basePath + '" class="liaojie-detail" target="_blank">了解详情 ></a>';
+                $("#RankDetail").html(_html);
+            }, 200)
+        }
+
+        function venueIndexList(data) {
+            if (data.rows && data.code == 0) {
+                $("#venueActive").html('');
+                var _html = '';
+                for (var i in data.rows) {
+                    var model = data.rows[i];
+                    var imgPath = data.imgPath + dataInit.getBigImage(model.imgurl);
+                    var VenueBasePath = [[${basePath}]] + '/' + [[${cultsite}]] + '/cg/detail?id=' + model.id;
+                    _html += '<li class="swiper-slide clearfix">' +
+                        '<div class="img">' +
+                        '<img src="' + imgPath + '">' +
+                        '</div>' +
+                        '<div class="detail">' +
+                        '<h2>' + model.title + '</h2>' +
+                        '<p>' + model.summary + '</p>' +
+                        '</div>' +
+                        '<a href="' + VenueBasePath + '"></a>' +
+                        '</li>';
+                }
+
+
+                if (data.rows.length > 0) {
+                    $("#venueActive").html(_html);
+                    var mySwiperVenue = new Swiper('.main-wrapper-list-venue', {
+                        direction: "horizontal",
+                        loop: true,
+                        slidesPerView: 3
+                        // nextButton: '.branch-left-venue', //下一页
+                        // prevButton: '.branch-right-venue' //上一页
+                    });
+                    $('.branch-left-venue').on('click', function () {
+                        mySwiperVenue.swipePrev();
+                    })
+                    $('.branch-right-venue').on('click', function () {
+                        mySwiperVenue.swipeNext();
+                    })
+                } else {
+                    $("#main-wrapper-venue").hide();
+                }
+            }
+        }
+
+        function showTrainList(data) {
+            if (data.rows && data.code == 0) {
+                $("#TrainActive").html('');
+                var _html = '';
+                for (var i in data.rows) {
+                    var model = data.rows[i];
+                    var imgPath = data.imgPath + dataInit.getBigImage(model.trainimg);
+                    var startTime = moment(model.starttime).format('YYYY-MM-DD');
+                    var endTime = moment(model.endtime).format('YYYY-MM-DD');
+                    var time = startTime + ' 至 ' + endTime;
+                    var TrainBasePath = [[${rootUrl}]] + 'gdpxweb/' + [[${cultsite}]] + '/xxpx/detail?id=' + model.id;
+                    var age = model.age;
+                    if (age) {
+                        age = age.split(',');
+                        age = age[0] + '-' + age[1] + '岁';
+                    } else {
+                        age = '不限';
+                    }
+                    _html += '<li class="clearfix">' +
+                        '<div class="img">' +
+                        '<img src="' + imgPath + '">' +
+                        '</div>' +
+                        '<div class="showTag"></div>' +
+                        '<div class="detail">' +
+                        '<h2>' + model.title + '</h2>' +
+                        '<p>培训时间：' + time + '</p>' +
+                        '<div class="line"></div>' +
+                        '<p>年龄段：' + age + '</p>' +
+                        '<p>地点：' + model.address + '</p>' +
+                        '<a href="'+TrainBasePath+'" target="_blank">详情 ></a>' +
+                        '</div>' +
+                        '</li>';
+                }
+
+                if (data.rows.length > 0) {
+                    $("#TrainActive").html(_html);
+                } else {
+                    $("#main-wrapper-train").hide();
+                }
+            }
+        }
+
+        function doChangeCity(cultid) {
+            city(cultid);//站点切换
+        }
+
+        function activeFG(data) {
+            if (data.rows && data.code == 0) {
+                $("#activeFG").html('');
+                var _html = '';
+                for (var i in data.rows) {
+                    var model = data.rows[i]
+                    var imgPath = data.imgPath + dataInit.getBigImage(model.picture);
+                    var VenueBasePath = [[${basePath}]] + '/' + [[${cultsite}]] + '/cg/detail?id=' + model.id;
+                    _html += '<li class="swiper-slide clearfix" onclick=doChangeCity("' + model.id + '")>' +
+                        '<div class="img">' +
+                        '<img src="' + imgPath + '">' +
+                        '</div>' +
+                        '<div class="title">' + model.name + '</div>' +
+                        '<div class="detail" style="padding: 0;">' +
+                        '<p>资讯<span>' + (model.ainfoCount < 10 ? '0'+model.ainfoCount : model.ainfoCount) + '</span></p>' +
+                        '<p>场馆<span>' + (model.avenCount <10 ? '0'+model.avenCount: model.avenCount) + '</span></p>' +
+                        '<p>活动<span>' + (model.activityCount < 10 ? '0'+model.activityCount: model.activityCount) + '</span></p>' +
+                        '</div>' +
+                        '<a href="javascript:void(0)"></a>' +
+                        '</li>';
+                }
+
+
+                if (data.rows.length > 0) {
+                    $("#activeFG").html(_html);
+                    var mySwiperfenguan = new Swiper('.main-wrapper-list-sanqi-fenguan', {
+                        direction: "horizontal",
+                        loop: true,
+                        slidesPerView: 4,
+                        offsetPxAfter: 100
+                    });
+                    $('.branch-left-fenguan').on('click', function () {
+                        mySwiperfenguan.swipePrev();
+                    })
+                    $('.branch-right-fenguan').on('click', function () {
+                        mySwiperfenguan.swipeNext();
+                    })
+                } else {
+                    $("#main-wrapper-venue").hide();
+                }
+            }
+        }
+
+    </script>
+
+</header>

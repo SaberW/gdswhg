@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.creatoo.hn.dao.mapper.api.ApiActivityOrderMapper">
+
+	<!-- 根据场次查询已选座位-->
+	<select id="findSeat4EventId" resultType="hashmap">
+		select o.id as orderId ,
+		t.seatid ,o.eventid,
+		s.seatcolumn,s.seatrow
+		from whg_act_order o
+		LEFT JOIN whg_act_ticket t on o.id = t.orderid
+		LEFT JOIN whg_act_seat s on t.seatid = s.id
+		where   o.orderisvalid = 1 and o.ticketstatus!=3
+		<if test="userId != null and userId != ''">
+			and o.userid = #{userId}
+		</if>
+		<if test="eventId != null and eventId != ''">
+			and o.eventid = #{eventId}
+		</if>
+		<if test="actId != null and actId != ''">
+			and o.activityid = #{actId}
+		</if>
+		<if test="sellticket == 3">
+			and t.seatid is not NULL
+			GROUP BY t.seatid
+		</if>
+
+	</select>
+
+
+	<!-- 获取过期的用户订单 -->
+	<select id="getUserActOrderTimeOut" resultType="hashmap">
+		SELECT
+		wao.id AS id,
+		wao.activityid AS activityid,
+		wao.userid AS userid,
+		wao.ordernumber AS ordernumber,
+		wao.ordersms AS ordersms,
+		wao.ordersmstime AS ordersmstime,
+		wao.ordersmsstate AS ordersmsstate,
+		wao.ordername AS ordername,
+		wao.orderphoneno AS orderphoneno,
+		wao.ordersummary AS ordersummary,
+		wao.orderisvalid AS orderisvalid,
+		wao.ordercreatetime AS ordercreatetime,
+		wao.eventid AS eventid,
+		wao.ticketstatus AS orderstate,
+		wao.ticketcode AS ticketcode,
+		wao.printtickettimes AS printtickettimes,
+		waa.name AS name,
+		waa.address AS address,
+		waa.imgurl AS imgurl,
+		wat.playstarttime AS playstarttime,
+		wat.playendtime AS playendtime,
+		wat.playdate as playdate,
+		wat.playstime as playstime,
+		wat.playetime as playetime
+		FROM whg_act_order wao,whg_act_time wat,whg_act waa
+		<where>
+			wao.eventid = wat.id AND
+			wao.activityid = waa.id AND
+			wao.userid = #{userid} AND
+			wat.playstarttime &lt; now()
+		</where>
+		order by wao.ordercreatetime desc
+	</select>
+
+	<!-- 获取未过期的用户订单 -->
+	<select id="getUserActOrderNotTimeOut" resultType="hashmap">
+		SELECT
+		wao.id AS id,
+		wao.activityid AS activityid,
+		wao.userid AS userid,
+		wao.ordernumber AS ordernumber,
+		wao.ordersms AS ordersms,
+		wao.ordersmstime AS ordersmstime,
+		wao.ordersmsstate AS ordersmsstate,
+		wao.ordername AS ordername,
+		wao.orderphoneno AS orderphoneno,
+		wao.ordersummary AS ordersummary,
+		wao.orderisvalid AS orderisvalid,
+		wao.ordercreatetime AS ordercreatetime,
+		wao.eventid AS eventid,
+		wao.ticketstatus AS orderstate,
+		wao.ticketcode AS ticketcode,
+		wao.printtickettimes AS printtickettimes,
+		waa.name AS name,
+		waa.address AS address,
+		waa.imgurl AS imgurl,
+		wat.playstarttime AS playstarttime,
+		wat.playendtime AS playendtime,
+		wat.playdate as playdate,
+		wat.playstime as playstime,
+		wat.playetime as playetime
+		FROM whg_act_order wao,whg_act_time wat,whg_act waa
+		<where>
+			wao.eventid = wat.id AND
+			wao.activityid = waa.id AND
+			wao.userid = #{userid} AND
+			wat.playstarttime &gt; now()
+		</where>
+		order by wao.ordercreatetime desc
+	</select>
+
+	<!-- 获取未过期的用户订单 -->
+	<select id="getUserActOrderAll" resultType="hashmap">
+		SELECT
+		wao.id AS id,
+		wao.activityid AS activityid,
+		wao.userid AS userid,
+		wao.ordernumber AS ordernumber,
+		wao.ordersms AS ordersms,
+		wao.ordersmstime AS ordersmstime,
+		wao.ordersmsstate AS ordersmsstate,
+		wao.ordername AS ordername,
+		wao.orderphoneno AS orderphoneno,
+		wao.ordersummary AS ordersummary,
+		wao.orderisvalid AS orderisvalid,
+		wao.ordercreatetime AS ordercreatetime,
+		wao.eventid AS eventid,
+		wao.ticketstatus AS orderstate,
+		wao.ticketcode AS ticketcode,
+		wao.printtickettimes AS printtickettimes,
+		waa.name AS name,
+		waa.address AS address,
+		waa.imgurl AS imgurl,
+		wat.playstarttime AS playstarttime,
+		wat.playendtime AS playendtime,
+		wat.playdate as playdate,
+		wat.playstime as playstime,
+		wat.playetime as playetime
+		FROM whg_act_order wao,whg_act_time wat,whg_act waa
+		<where>
+			wao.eventid = wat.id AND
+			wao.activityid = waa.id AND
+			wao.userid = #{userid}
+		</where>
+		order by wao.ordercreatetime desc
+	</select>
+
+
+
+</mapper>

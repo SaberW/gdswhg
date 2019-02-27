@@ -1,0 +1,44 @@
+<resources>
+    <string name="app_name">广东文化馆联盟</string>
+
+    <string name="ticket_code">取票码取票</string>
+    <string name="ticket_qrcode">二维码取票</string>
+    <string name="input_code">请输入取票码</string>
+    <string name="ticket_code_remark">1、微信登录广东数字文化馆联盟。\n2、点击个人中心，选择我的活动，选择当前活动。\n3、点击参与本次活动的取票码，输入取票码。</string>
+    <string name="ticket_function">取票流程</string>
+    <string name="ticket_qrcode_option_remark">请将微信中订单二维码放到二维码识别器上扫描！</string>
+    <string name="ticket_qrcode_result">倒计时已过期或操作错误，请点击开始后，重新扫二维码取票</string>
+    <string name="ticket_click_start">点击开始</string>
+    <string name="ticket_qrcode_remark">1、微信登录广东数字文化馆联盟。\n2、点击个人中心，选择我的活动，选择当前活动。\n3、点击参与本次活动的取票码，出示二维码进行检票。</string>
+    <string name="ticket_printing">取票码验证成功，票据打印中. . .</string>
+    <string name="ticket_print_success">请在右下方取票口取走您的票据!</string>
+    <string name="ticket_input_check_fail">非常抱歉，您输入的二维码有误或者已失效!请核对后再试！</string>
+    <string name="ticket_scan_check_fail">非常抱歉，您出示的二维码有误或者已失效!请核对后再试！</string>
+    <string name="ticket_check_fail_remark">如您核对无误后仍无法验证成功，您可以和前台服务人员联系或拨打：020-87612126</string>
+    <string name="ticket_back">返回重新输入</string>
+    <string name="ticket_print_fail_msg">非常抱歉，无法打印!</string>
+    <string name="ticket_print_fail_remark">造成无法打印票据的原因可能有一下几点：\n1、纸张不足导致无法打印；\n2、因与服务器通讯发生故障，导致无法打印。\n\n您可以与前台服务人员联系或拨打设备故障热线：020-87612126 解决问题</string>
+
+    <string name="sign_title">培  训  签  到</string>
+    <string name="sign_option">请将二代身份证放到身份证识别处!</string>
+    <string name="sign_remark">1、请持本人身份证签到，如忘带身份证或丢失等问题，请与培训老师沟通。\n2、培训开始前30分钟开始签到，培训结束后不能签到。</string>
+    <string name="sign_tips">温馨提示</string>
+    <string name="sign_result_remark">倒计时已过期或操作错误，请点击开始后， 重新刷身份证签到</string>
+    <string name="sign_fail_msg">非常抱歉，未找到您现在需要签到的培 训课程！请核对后再试！</string>
+    <string name="sign_fail_remark">培训开始前30分钟开始签到，培训结束后不能签到,如您核对无误后仍无法签到成功，您可以与前台 服务人员联系或拨打：020-87612126！</string>
+
+
+    <string name="ticket_back_home">返回主页</string>
+    <string name="confirm">确  认</string>
+    <string name="cancel">取消</string>
+    <string name="delete">删除</string>
+
+    <string name="home">首页</string>
+    <string name="top">置顶</string>
+    <string name="back">返回</string>
+
+
+
+    <string name="rationale_location_contacts">要允许广州文化馆联盟定位吗</string>
+
+</resources>

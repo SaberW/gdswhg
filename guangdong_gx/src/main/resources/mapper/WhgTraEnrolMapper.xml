@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.creatoo.hn.dao.mapper.WhgTraEnrolMapper">
+
+  <select id="selCourseAndEnrol" resultType="hashmap">
+      SELECT
+      v.*,
+      t.id 'tid',
+      c.id 'cid',
+      e.id 'eid',
+      e.realname,
+      e.contactphone,
+      e.crttime
+      FROM
+      whg_traleave v,
+      whg_tra_course c,
+      whg_tra t,
+      whg_tra_enrol e
+      WHERE
+      v.traid = t.id
+      AND v.courseid = c.id
+      AND v.userid = e.userid
+      AND v.traid = e.traid
+      <if test="traid != null and traid != ''">
+          AND v.traid = #{traid}
+      </if>
+      <if test="courseid != null and courseid != ''">
+          AND v.courseid = #{courseid}
+      </if>
+      <if test="realname != null and realname != ''">
+          AND e.realname LIKE "%"#{realname}"%"
+      </if>
+      <if test="state != null">
+          AND v.state = #{state}
+      </if>
+      <if test="cultids != null">
+          AND t.cultid IN
+          <foreach collection="cultids" item="item" open="(" close=")" separator=",">
+              #{item}
+          </foreach>
+      </if>
+
+      <if test="deptids!= null">
+          AND t.deptid IN
+          <foreach item="item" index="index" collection="deptids" open="(" separator="," close=")">
+              #{item}
+          </foreach>
+      </if>
+
+      <if test="biz!=null and biz !=''">
+          AND t.biz = #{biz}
+      </if>
+      <if test="islive!=null and islive !=''">
+          AND t.islive = #{islive}
+      </if>
+
+      order by v.crtdate, e.crttime DESC
+       <!--SELECT
+          e.id 'enrolid',
+          e.userid,
+          e.realname,
+          e.crttime,
+          e.contactphone,
+          c.*,
+          ec.sign,
+          v1.state 'vstate'
+      FROM
+          whg_tra_enrol e
+      INNER JOIN whg_tra_course c ON e.traid = c.traid AND c.state = 1
+      LEFT JOIN whg_tra_enrol_course ec ON c.id = ec.courseid AND ec.userid = e.userid
+      LEFT JOIN whg_traleave v1 ON c.id = v1.courseid AND v1.userid = e.userid
+          <if test="state != null and state != ''">
+              AND v1.state = #{state}
+          </if>
+      WHERE
+          e.state = 6
+          <if test="traid != null and traid != ''">
+              AND e.traid = #{traid}
+          </if>
+          <if test="courseid != null and courseid != ''">
+              AND c.id = #{courseid}
+          </if>
+
+      order by v1.crtdate, e.crttime DESC-->
+  </select>
+
+
+    <select id="t_srchTra4Leave" resultType="hashmap">
+        SELECT
+        v.*,
+        t.id 'tid',
+        c.id 'cid',
+        e.id 'eid',
+        e.realname,
+        e.contactphone,
+        e.crttime
+        FROM
+        whg_traleave v,
+        whg_tra_course c,
+        whg_tra t,
+        whg_tra_enrol e
+        WHERE
+        v.traid = t.id
+        AND v.courseid = c.id
+        AND v.userid = e.userid
+        AND v.traid = e.traid
+        GROUP BY t.id
+        order by v.crtdate, e.crttime DESC
+
+    </select>
+
+
+    <select id="t_srchOne4Courseid" resultType="hashmap">
+
+
+        SELECT
+        e.id 'enrolid',
+        e.userid,
+        e.realname,
+        e.crttime,
+        e.contactphone,
+        c.*,
+        ec.sign,
+        v1.state 'vstate'
+        FROM
+        whg_tra_enrol e
+        INNER JOIN whg_tra_course c ON e.traid = c.traid AND c.state = 1
+        LEFT JOIN whg_tra_enrol_course ec ON c.id = ec.courseid AND ec.userid = e.userid
+        LEFT JOIN whg_traleave v1 ON c.id = v1.courseid AND v1.userid = e.userid
+        WHERE
+        e.traid = #{traid} AND c.id = #{courseid} AND e.state = 6
+        order by e.crttime DESC
+    </select>
+
+
+    <select id="t_srchUserTraList4p" resultType="hashmap">
+
+        SELECT * from whg_user usr where isrealname=1
+        <if test="traid!=null and traid !=''">
+            and usr.id not in (
+            SELECT u.id from whg_tra_enrol e,whg_user u where e.userid=u.id
+            AND e.traid = #{traid}
+            )
+        </if>
+        <if test="emap!=null and emap.name!=null and emap.name !=''">
+            AND usr.name like "%"#{emap.name}"%"
+        </if>
+        <if test="emap!=null and emap.nickName!=null and emap.nickName !=''">
+            AND usr.nickName like "%"#{emap.nickName}"%"
+        </if>
+        <if test="emap!=null and emap.phone!=null and emap.phone !=''">
+            AND usr.phone like "%"#{emap.phone}"%"
+        </if>
+    </select>
+
+
+    <select id="srchListOrders" resultType="hashmap">
+        SELECT xxx.*
+          ,wtra.isbasicclass isbasicclass
+          ,wtra.title traTitle
+          ,wtra.state traState
+          ,wtra.delstate traDelstate
+          ,wtra.biz traBiz
+        FROM whg_tra_enrol xxx, whg_tra wtra
+        WHERE xxx.traid = wtra.id and wtra.islive = 0
+
+        <if test="traid !=null and traind!=''">
+            AND xxx.traid = #{traid}
+        </if>
+
+        <if test="cultids != null">
+            AND wtra.cultid in
+            <foreach collection="cultids" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="cultid != null and cultid !=''">
+            AND wtra.cultid = #{cultid}
+        </if>
+        <if test="deptids != null">
+            AND wtra.deptid in
+            <foreach collection="deptids" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="deptid != null and deptid !=''">
+            AND wtra.deptid = #{deptid}
+        </if>
+
+        <if test="biz!=null and biz!=''">
+            AND wtra.biz = #{biz}
+        </if>
+
+        <if test="isbasicclass!=null">
+            AND wtra.isbasicclass = #{isbasicclass}
+        </if>
+
+        <if test="states != null">
+            AND xxx.state in
+            <foreach collection="states" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="state != null and state != ''">
+            AND xxx.state = #{state}
+        </if>
+
+        <if test="contactphone != null and contactphone!=''">
+            AND xxx.contactphone LIKE "%"#{contactphone}"%"
+        </if>
+
+        <choose>
+            <when test="sort != null">
+                ORDER BY xxx.${sort}
+                <if test="order!=null"> ${order} </if>
+            </when>
+            <otherwise>
+                ORDER BY wtra.publishdate DESC, xxx.crttime DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="selectOrdersCount" resultType="int">
+        SELECT COUNT(0)
+        FROM whg_tra_enrol xxx, whg_tra wtra
+        WHERE xxx.traid = wtra.id
+
+        <if test="traid !=null and traind!=''">
+            AND xxx.traid = #{traid}
+        </if>
+
+        <if test="cultids != null">
+            AND wtra.cultid in
+            <foreach collection="cultids" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="cultid != null and cultid !=''">
+            AND wtra.cultid = #{cultid}
+        </if>
+        <if test="deptids != null">
+            AND wtra.deptid in
+            <foreach collection="deptids" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="deptid != null and deptid !=''">
+            AND wtra.deptid = #{deptid}
+        </if>
+
+        <if test="biz!=null and biz!=''">
+            AND wtra.biz = #{biz}
+        </if>
+
+        <if test="states != null">
+            AND xxx.state in
+            <foreach collection="states" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+</mapper>

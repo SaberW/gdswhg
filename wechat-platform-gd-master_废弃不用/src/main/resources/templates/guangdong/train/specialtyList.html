@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/public/list.css'">
+<div th:include="guangdong/public/leftBar :: copy"></div>
+<div id="page">
+    <div class="mui-content">
+        <div id="category-cont"
+             class="category-cont mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+            <div class="mui-scroll">
+                <a href="javascript:void(0)" class="mui-control-item" data-index="c-1">区域<i></i></a>
+                <a href="javascript:void(0)" class="mui-control-item" data-index="c-2">分类<i></i></a>
+            </div>
+        </div>
+        <div class="category-mask none">
+            <div class="category-group none" data-index="c-1">
+                <ul class="clearfix" id="areList">
+                    <!--<li class="active" data-txt="区域">全部</li>
+                    <li item-data="0">雨花区</li>
+                    <li item-data="1">天心区</li>
+                    <li item-data="2">开福区</li>
+                    <li item-data="3">岳麓区</li>
+                    <li item-data="4">芙蓉区</li>-->
+                </ul>
+            </div>
+            <div class="category-group none" data-index="c-2">
+                <ul class="clearfix" id="ysList">
+                        <li item-data="" class="active" data-txt="分类">全部</li>
+                        <li item-data="0">音乐</li>
+                        <li item-data="1">舞蹈</li>
+                        <li item-data="2">美术</li>
+                        <li item-data="3">戏剧</li>
+                        <li item-data="4">曲艺</li>
+                        <li item-data="5">书法</li>
+                        <li item-data="6">摄影</li>
+                </ul>
+            </div>
+        </div>
+        <!--下拉刷新容器-->
+        <div id="model-list-panel" class="mui-content mui-scroll-wrapper" style="top:45px;">
+            <div class="mui-scroll">
+                <!--数据列表-->
+                <div class="public-list">
+                    <ul id="model-list">
+                        <!--<li>-->
+                            <!--<a href="detail?id=2017110127436518">-->
+                                <!--<div class="img">-->
+                                    <!--<img src="http://183.131.126.132:8092/whgstatic/img/2017/201709/20170921/e7f2cf27ba3b41b680c1f10651db8800.jpg" alt="">-->
+                                <!--</div>-->
+                                <!--<div class="info">-->
+                                    <!--<div class="title">粤曲发烧友台上争相献技，韵味十足 ——2017广东粤曲私伙局大赛在顺德圆满落幕</div>-->
+                                    <!--<p>参考消息网11月15日报道 港媒称，当巴拿马总统胡安·卡洛斯·巴雷拉16日抵达北京目睹其新使馆的开放时，这将实现他10年的梦想。</p>-->
+                                <!--</div>-->
+                                <!--</div>-->
+                            <!--</a>-->
+                        <!--</li>-->
+                        <!--<li>-->
+                            <!--<a href="detail?id=2017110150729841">-->
+                                <!--<div class="img">-->
+                                    <!--<img src="http://183.131.126.132:8092/whgstatic/img/2017/201709/20170921/a768d33e5359460e910de9c08ce4425d.jpg" alt="">-->
+                                <!--</div>-->
+                                <!--<div class="info">-->
+                                    <!--<div class="title">粤曲发烧友台上争相献技，韵味十足 ——2017广东粤曲私伙局大赛在顺德圆满落幕</div>-->
+                                    <!--<p>参考消息网11月15日报道 港媒称，当巴拿马总统胡安·卡洛斯·巴雷拉16日抵达北京目睹其新使馆的开放时，这将实现他10年的梦想。</p>-->
+                                <!--</div>-->
+                            <!--</a>-->
+                        <!--</li>-->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" th:inline="javascript">
+    var id = dataInit.getUrlParam('type'),typeText = '全部';
+    switch (Number(id)){
+        case 0:
+            typeText = '音乐';
+            break;
+        case 1:
+            typeText = '舞蹈';
+            break;
+        case 2:
+            typeText = '美术';
+            break;
+        case 3:
+            typeText = '戏剧';
+            break;
+        case 4:
+            typeText = '曲艺';
+            break;
+        case 5:
+            typeText = '书法';
+            break;
+        case 6:
+            typeText = '摄影';
+            break;
+        default :
+            typeText = '全部';
+            break;
+    }
+    $().ready(function () {
+        select.create(modelData);
+        dataInit.showAre($.cookie("city"),[[${apiPath.depts}]]);
+        setTimeout(function () {
+            $("#c-2").val(id);
+            $(".mui-control-item[data-index='c-2']").html(typeText + '<i></i>');
+            modelData();
+        },200)
+    })
+
+    function modelData(page, size) {
+        var page = page || 1;
+        var size = size || 10;
+        var params = {
+            page:page,
+            pageSize:size,
+            cultid:$.cookie('cultid'),
+            city: $("#city").val(), //市
+            area: $("#area").val(), //区
+            deptid: $("#deptid").val(), //服务站
+            province: $("#province").val(), //省
+            etype:$("#c-2").val()
+        }
+        dataInit.ajax({
+            api: [[${apiPath.indexTraMajorList}]],
+            params: params,
+            fn: function(data){
+                var params = {
+                    page: page,
+                    size: size,
+                    total: data.total
+                }
+                dataInit.htmlAdd(page, showModelHtml(data));
+                dataInit.pullUp(params, modelData);
+            }
+        })
+    }
+
+    function showModelHtml(data) {
+        var html = "";
+        if (data.code == 0 && data.rows.length > 0) {
+            for (var i in data.rows) {
+                var model = data.rows[i];
+                var img = data.imgPath + dataInit.getBigImage(model.image);
+                var desc = model.detail != ""?dataInit.removeHTMLTag(model.detail):"无";
+                html += '<li>\
+                            <a href="specialtyGroup?id='+model.id+'">\
+                                <div class="img">\
+                                    <img src="'+img+'" class="lazy">\
+                                </div>\
+                                <div class="info">\
+                                    <div class="title">'+model.name+'</div>\
+                                    <p class="text">适宜人群：<span>'+model.fitage+'</span></p>\
+                                    <p class="text">专业介绍：<span>'+desc+'</span></p>\
+                                </div>\
+                             </a>\
+                        </li>';
+            }
+        } else {
+            html = "<div class='newbility-no-msg'></div>";
+        }
+        return html;
+    }
+</script>
+</body>
+</html>

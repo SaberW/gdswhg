@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link th:href="${basePath}+'/assets/style/userCenter/userCenter.css'" rel="stylesheet">
+<div class="wrapper clearfix">
+    <div class="content">
+        <!--公共主头部开始-->
+        <div id="header" th:include="guangdong/public/header :: copy"></div>
+        <!--公共主头部结束-->
+        <div class="main main-boder clearfix">
+            <div class="leftPanel" th:include="guangdong/userCenter/left :: copy"></div>
+            <div class="rightPanel">
+                <ul class="commBtn clearfix">
+                    <select class="selectType" id="selectType">
+                        <option value="4" selected="selected">活动</option>
+                        <option value="2">场馆</option>
+                        <option value="3">活动室</option>
+                    </select>
+                    <li class="active"><a href="javascript:void(0)">我的收藏</a></li>
+                    <!--<li><a href="javascript:void(0)">课程</a></li>-->
+                    <!--<li><a href="javascript:void(0)" data-type="2">场馆</a></li>-->
+                    <!--<li><a href="javascript:void(0)" data-type="3">活动室</a></li>-->
+                    <!--<li><a href="javascript:void(0)" data-type="5">培训</a></li>-->
+                </ul>
+                <input type="hidden" id="type">
+                <div class="sysmsg">
+                    <div class="ad"></div>
+                    <p>暂无收藏</p>
+                </div>
+                <ul class="group clearfix">
+
+                </ul>
+                <!--分页开始 -->
+                <div class="green-black" id="artPagging" style="margin-bottom: 40px"></div>
+                <!--分页结束-->
+            </div>
+        </div>
+    </div>
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong/public/footer :: copy"></div>
+<!--底部结束-->
+<!-- core public JavaScript -->
+<script type="text/javascript" th:inline="javascript">
+    $(document).ready(function () {
+        $('#selectType').on('change', function () {
+            var m = $(this);
+            $("#type").val(m.find("option:selected").val());
+            dataPage();
+        })
+        dataPage();
+    })
+    function dataPage(page,rows) {
+        var params_page = page || 1;
+        var params_rows = rows || 5;
+        var params = {
+            userId: [[${session.wbgx_sessUserKey.userId}]],
+            page:params_page,
+            pageSize:params_rows,
+            type:$("#type").val() || "4"
+        }
+        rongDialog.init({ico: 3, type: 1, desc: '', overTime: 8000});
+        dataInit.ajax({
+            api: [[${apiPath.myFavorite}]],
+            params: params,
+            fn: function(data){
+                rongDialog.closeMaskPanel();
+                if(data.code == 0){
+                    showFavoriteList(data,params.type);
+                    dataInit.pageInit('artPagging', params_page, params_rows, data.total, dataPage);
+                }else {
+                    rongDialog.init({
+                        ico: 2, //1 勾  2 叉
+                        type: 1,
+                        desc: data.msg || "获取数据失败"
+                    });
+                }
+            }
+        })
+    }
+
+    function showFavoriteList(data,t) {
+        var group = $('.group');
+        var model = data.rows;
+        var type =t;
+        group.html("");
+        if (model.length == 0) {
+            $('.sysmsg').show();
+        } else {
+            $('.sysmsg').hide();
+            var html = '';
+            for (var i in model) {
+                var favoriteTitle = '';
+                var detailUrl = '';
+                if(type == 4){
+                    favoriteTitle = model[i].name;
+                    detailUrl = [[${basePath}]]+'/'+[[${cultsite}]]+'/hd/detail?id='+model[i].id;
+                }
+                if(type == 2){
+                    favoriteTitle = model[i].name;
+                    detailUrl = [[${basePath}]]+'/'+[[${cultsite}]]+'/cg/detail?id='+model[i].id;
+                }
+                if (type == 3){
+                    favoriteTitle = model[i].name;
+                    detailUrl = [[${basePath}]]+'/'+[[${cultsite}]]+'/cg/venueroom?id='+model[i].id;
+                }
+                var favoriteTime = moment(model[i].cmdate).format("YYYY-MM-DD HH:mm:ss");
+
+                html +=
+                    '<li class="item">'+
+                    '<a class="trash" href="javascript:deleteFavorite('+model[i].cmid+','+type+')"></a>'+
+                    '<div class="orderCont clearfix">'+
+                    '<div class="orderTime float-left">收藏时间：<span>'+favoriteTime+'</span></div>'+
+                    '</div>'+
+                    '<div class="msgInfoCont">'+
+                    '<h2><a href="'+detailUrl+'" target="_blank">'+favoriteTitle+'</a></h2>'+
+                    '</div>'+
+                    '</li>';
+            }
+            group.html(html);
+        }
+    }
+    function deleteFavorite(id,type) {
+        var orderId = id;
+        rongDialog.init({
+            ico: 2,  //1 感叹号  2 问号  3 叉叉
+            type: 2,
+            desc: '您确定删除收藏吗？',
+            nextFn: function () {
+                dataInit.ajax({
+                    api: [[${apiPath.deleteCollect}]],
+                    params: {
+                        userId: [[${session.wbgx_sessUserKey.userId}]],
+                        cmid: orderId
+                    },
+                    fn: function (data) {
+                        //console.log(data);
+                        if (data.code == "0") {
+                            rongDialog.init({
+                                ico: 1, //1 勾  2 叉
+                                type: 1,
+                                desc: "删除收藏成功",
+                                nextFn: function () {
+                                    dataPage();
+                                }
+                            });
+                        } else {
+                            rongDialog.init({
+                                ico: 2, //1 勾  2 叉
+                                type: 1,
+                                desc: data.msg || "删除收藏失败"
+                            });
+                        }
+                    }
+
+                })
+            }
+        })
+    }
+</script>
+</body>
+</html>

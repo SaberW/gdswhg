@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.creatoo.hn.dao.mapper.api.ApiInsCollectionMapper">
+
+    <!--内部供需收藏查询-->
+    <select id="selectCollections" resultType="hashmap">
+        select
+        (case
+            when xxx.cmreftyp = '2' then (select summary FROM whg_supply_ven where id = xxx.cmrefid )
+            when xxx.cmreftyp = '3' then (select summary FROM whg_supply_room where id = xxx.cmrefid )
+            when xxx.cmreftyp = '4' then (select actsummary FROM whg_act where id = xxx.cmrefid )
+            when xxx.cmreftyp = '5' then (select coursedesc FROM whg_supply_tra where id = xxx.cmrefid )
+            when xxx.cmreftyp = '20' then (select description FROM whg_goods where id = xxx.cmrefid )
+            when xxx.cmreftyp = '21' then (select showdesc FROM whg_show_goods where id = xxx.cmrefid )
+            when xxx.cmreftyp = '23' then (select exhdesc FROM whg_show_exh where id = xxx.cmrefid )
+            when xxx.cmreftyp = '25' then (select summary FROM whg_personnel where id = xxx.cmrefid )
+            when xxx.cmreftyp = '26' then (select content FROM whg_supply where id = xxx.cmrefid )
+            else ''
+        end) content,
+
+        (case
+        <!--
+            WHEN xxx.cmreftyp = '26' THEN (select pscity from whg_supply where id = xxx.cmrefid )
+            when xxx.cmreftyp in ('3','4','5','20','21','23','25') then (select pscity from whg_fk_project where fkid = xxx.cmrefid and protype = 'NBGX' GROUP BY fkid)
+		    else ''
+		    -->
+        when xxx.cmreftyp = '3' then (select pscity FROM whg_supply_room where id = xxx.cmrefid )
+        when xxx.cmreftyp = '5' then (select pscity FROM whg_supply_tra where id = xxx.cmrefid )
+        when xxx.cmreftyp = '20' then (select pscity FROM whg_goods where id = xxx.cmrefid )
+        when xxx.cmreftyp = '21' then (select pscity FROM whg_show_goods where id = xxx.cmrefid )
+        when xxx.cmreftyp = '23' then (select pscity FROM whg_show_exh where id = xxx.cmrefid )
+        when xxx.cmreftyp = '25' then (select pscity FROM whg_personnel where id = xxx.cmrefid )
+        when xxx.cmreftyp = '26' then (select pscity FROM whg_supply where id = xxx.cmrefid )
+        else ''
+        end) region,
+
+        u.contact, u.account,
+        xxx.*
+        from whg_collection xxx, whg_sys_user u
+        where xxx.cmopttyp = 0 and xxx.cmuid = u.id
+        and xxx.systype = #{systype}
+        and xxx.cmuid = #{userId}
+
+        order by xxx.cmdate desc
+    </select>
+
+</mapper>

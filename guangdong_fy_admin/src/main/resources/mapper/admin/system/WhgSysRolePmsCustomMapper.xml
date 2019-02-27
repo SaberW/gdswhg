@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.creatoo.hn.dao.mapper.WhgSysRolePmsMapper">
+
+	<!-- 批量插入权限表 -->
+	<insert id="batchInsert" parameterType="java.util.List">
+		INSERT INTO whg_sys_role_pms (id, crtdate, crtuser, state, statemdfdate, statemdfuser, delstate, roleid, pmsstr)
+		VALUES
+		<foreach collection="list" item="item" index="index" separator="," >
+			(#{item.id}, #{item.crtdate}, #{item.crtuser}, #{item.state}, #{item.statemdfdate}, #{item.statemdfuser}, #{item.delstate}, #{item.roleid}, #{item.pmsstr})
+		</foreach>
+	</insert>
+
+
+
+</mapper>

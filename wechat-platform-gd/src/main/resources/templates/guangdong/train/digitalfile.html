@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/brand/brand.css'" >
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/resource/resdetail.css'" >
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/public/detail.css'" >
+<script th:src="${basePath}+'/assets/js/mui.zoom.js'" type="text/javascript"></script>
+<script th:src="${basePath}+'/assets/js/mui.previewimage.js'" type="text/javascript"></script>
+<script th:src="${apiPath.statistics}" id="whgtongji"></script>
+<div th:include="guangdong/public/leftBar :: copy"></div>
+<div id="page">
+    <div class="mui-content">
+        <div class="image-info mui-clearfix">
+            <!--<img src="" alt="">
+            <div class="title"></div>-->
+        </div>
+    </div>
+    <nav class="mui-bar mui-bar-tab">
+        <div th:include="guangdong/public/collectionAndVoteup :: copy" class="zan-collection mui-tab-item"></div>
+        <div class="mui-tab-item"><a class="goNext" href="javascript:void(0)">点击下载</a></div>
+    </nav>
+    <input type="hidden" id="temp_type" value="32">
+    <input type="hidden" id="commType">
+    <input type="hidden" id="toproject" value="ZXPX">
+</div>
+<script type="text/javascript" th:inline="javascript">
+    var itemId = dataInit.getUrlParam("id");
+    var userId = $('#temp_userId').val();
+    $(document).ready(function (){
+        dataInit.ajax({
+            api:[[${apiPath.traDescDetail}]],
+            params:{
+                userId: userId,
+                id:itemId
+            },
+            fn:function(data){
+                createModelHtml(data);
+            }
+        })
+        if(dataInit.isWeixin()){
+            var mask = mui.createMask();
+            mui(".mui-tab-item").on('tap','.goNext',function () {
+                mask.show();
+                $(".mui-backdrop").css({'z-index':'1000'})
+            })
+            mui("body").on('tap','.mui-backdrop',function () {
+                mask.close();
+            })
+        }else {
+            mui(".mui-tab-item").on('tap','.goNext',function () {
+                window.location.href = this.href;
+            })
+        }
+    })
+
+    function createModelHtml(data) {
+        $('.image-info').html('');
+        var model = data.data;
+        var filePath = 'javascript:void(0)';
+        //var imgPath = [[${basePath}]]+'/assets/img/gather/music.jpg';
+        var imgPath = [[${basePath}]] + dataInit.getFileTypeIcon(model.enturl, '/assets/img/gather/xiazai.jpg');
+        if(model.enturl){
+            filePath = model.enturl.indexOf('http') >= 0 ? model.enturl : data.imgPath + model.enturl;
+        }
+        var drscfromstyle = model.drscfrom && model.drscfrom!=''?'': 'style="display:none"';
+        var infostyle = model.drscintro && model.drscintro!=''?'': 'style="display:none"';
+        $('.image-info').html('<img src="'+imgPath+'" alt="'+model.drsctitle+'">'+
+            '<div class="title">'+model.drsctitle+
+            '<span id="visitCount"></span><span '+drscfromstyle+'>来源：'+model.drscfrom+'</span></div>' +
+            '<h2 '+infostyle+'>资源简介</h2>' +
+            '<div class="info" '+infostyle+'>'+model.drscintro+'</div>');
+        $('.goNext').attr('href',filePath)
+
+        getVisitSumCount4url(itemId, function(count){
+            $("#visitCount").text(' (访问量 '+count+')');
+        });
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link th:href="${basePath}+'/assets/style/venue/fieldOrder.css'" rel="stylesheet">
+<div class="wrapper clearfix">
+    <div class="content">
+        <!--公共主头部开始-->
+        <div id="header" th:include="guangdong/public/header :: copy"></div>
+        <!--公共主头部结束-->
+        <div class="main-info-bg bg-color">
+            <div id="act_baoming_step1" class="container-wrapper">
+                <ul class="crumbs crumbs-2 clearfix">
+                    <li class="step-1">1. 填写基本信息<em class="arrow"></em></li>
+                    <li class="step-2">2. 预订人信息<em class="arrow"></em></li>
+                    <li class="step-3">3. 确认订单<em class="arrow"></em></li>
+                    <li class="step-4 last">4. 完成预定<em class="arrow"></em></li>
+                </ul>
+                <div class="order-msg">
+                    <span class="msg-title">活动室信息</span>
+                </div>
+                <div class="order-content clearfix">
+                    <div class="order-img">
+                        <img class="imgPath" th:src="${basePath}+'/assets/img/public/loading.png'" width="249" height="170">
+                    </div>
+                    <div class="order-detail">
+                        <h1 class="title"></h1>
+                        <p><i class="iconfont icon-coordinates"></i>地址：<span class="address"></span></p>
+                        <p><i class="iconfont icon-dianhua"></i>固定电话 :<span id="telephone"></span></p>
+                        <p><i class="iconfont icon-group"></i>可容纳人数 :<span id="sizepeople"></span></p>
+                        <p><i class="iconfont icon-mianji1"></i>面积 :<span id="sizearea"></span></p>
+                    </div>
+                </div>
+                <div class="dialog-signUP-content clearfix">
+                    <div class="order-msg">
+                        <span class="msg-title">预订人信息</span>
+                    </div>
+                    <form>
+                        <div class="form-list">
+                            <p class="clearfix">为了能顺利使用场地，请确保您的手机号码无误</p>
+                            <p class="clearfix"><span class="hd">预定人：</span><input type="text" placeholder="请输入预订人昵称" id="username"><span class="color"></span></p>
+                            <p class="clearfix"><span class="hd">手机号码：</span><input type="text" maxlength="11" placeholder="请输入手机号码" id="userPhone"><span class="color"></span></p>
+                            <p class="clearfix">
+                                <span class="hd">预定场次：</span>
+                                <span class="text" class="orderChangCi"></span>
+                            </p>
+                            <p class="clearfix"><span class="hd">预订用途：</span>
+                                <textarea class="purpose" id="userpurpose" maxlength="200" name="purpose" placeholder="请输入预订用途"></textarea>
+                                <span class="color"></span>
+                            </p>
+                            <!--<p class="clearfix"><span class="hd">验证码：</span><input type="text" id="checkCode" name="checkCode"  placeholder="验证码" class="yz-code"><img th:src="${basePath}+'/pictureCheckCode'" id="CreateCheckCode" onclick="myReload()" width="88" height="34">-->
+                        </div>
+                    </form>
+                    <div class="explain">
+                        <div class="explain-desc">
+                            <h3>场地使用须知</h3>
+                            <!--<p>1、订票成功后，活动开始当日请提前入场，避免拥堵；</p>
+                            <p>2、如需退票，请在活动开始前办理相关手续；</p>
+                            <p>3、每场活动票数有限，退票后再次预订可能遇到票已售完，无法订票的情况，由用户自行负责；</p>
+                            <p>4、如累计超过2次订票却没有到场参加活动者，将取消本年度购票资格；</p>
+                            <p>5、如遇非人为可控因素或重大天气等影响，导致活动无法举办，举办方有权利延后或取消活动，并以短信和站内信形式告知订票人办理相关手续；</p>
+                            <p>6、活动最终解释权归举办方。</p>-->
+                            <p>1、预定订单提交审核之后，请及时与场地管理人员联系；</p >
+                            <p>2、预订成功后，开始当日请提前入场，避免拥堵；</p >
+                            <p>3、如遇非人为可控因素或重大天气等影响，导致预订无法进行，举办方有权利延后或取消预订，并以短信和站内信形式告知预订人办理相关手续；</p >
+                            <p>4、最终解释权归举办方。</p >
+                        </div>
+                    </div>
+                </div>
+                <div class="submit clearfix">
+                    <div class="jf-checbox" id="checkbox1">
+                        <div class="checbox1">
+                            <input type="checkbox" value="1" id="checkboxOneInput">
+                            <label for="checkboxOneInput"><i class="selectx"></i></label>
+                        </div>
+                        <a href="javascript:void(0)">我已阅读并接受订票须知相关条款</a>
+                    </div>
+                    <a href="javascript:void(0);" id="submit-order" class="submit-order">提交订单</a>
+                </div>
+            </div>
+            <div id="act_baoming_step2" class="container-wrapper" style="display: none">
+                <ul class="crumbs crumbs-3 clearfix">
+                    <li class="step-1">1. 填写基本信息<em class="arrow"></em></li>
+                    <li class="step-2">2. 预订人信息<em class="arrow"></em></li>
+                    <li class="step-3">3. 确认订单<em class="arrow"></em></li>
+                    <li class="step-4 last">4. 完成预定<em class="arrow"></em></li>
+                </ul>
+                <div class="order-msg">
+                    <span class="msg-title">确认订单信息</span>
+                    <a href="javascript:returnBack();" class="return">返回上一级修改信息</a>
+                </div>
+                <div class="order-content clearfix">
+                    <div class="order-img">
+                        <img class="imgPath" th:src="${basePath}+'/assets/img/public/loading.png'" width="249" height="170">
+                    </div>
+                    <div class="order-detail">
+                        <h1 class="title"></h1>
+                        <p><i class="iconfont icon-coordinates"></i>地址：<span class="address"></span></p>
+                        <p><i class="iconfont icon-geren"></i>预订人：<span id="reserve"></span></p>
+                        <p><i class="iconfont icon-mobilephone"></i>联系方式：<span id="reservePhone"></span></p>
+                        <p><i class="iconfont icon-barrage"></i>预定场次：<span class="orderChangCi"></span></p>
+                    </div>
+                </div>
+                <a href="javascript:void(0)" onclick="confirmOrder()" class="submit" id="submit">确认订单</a>
+            </div>
+            <div id="act_baoming_step3" class="container-wrapper" style="display: none">
+                <ul class="crumbs crumbs-4 clearfix">
+                    <li class="step-1">1. 填写基本信息<em class="arrow"></em></li>
+                    <li class="step-2">2. 预订人信息<em class="arrow"></em></li>
+                    <li class="step-3">3. 确认订单<em class="arrow"></em></li>
+                    <li class="step-4 last">4. 完成预定<em class="arrow"></em></li>
+                </ul>
+                <div class="order-msg">
+                    <span class="msg-title">完成预定</span>
+                    <a th:href="${basePath}+'/'+${cultsite}+'/center/venue'" class="return">查看订单</a>
+                </div>
+                <div class="order-content clearfix">
+                    <div class="complete-order">
+                        <img th:src="${basePath}+'/assets/img/activity/complete-order.png'" width="61" height="61">
+                    </div>
+                    <div class="compltet-order-msg">
+                        <p>恭喜您，您已申请预订 <em class="title"></em></p>
+                        <span>请等待工作人员的确认！</span>
+                    </div>
+                </div>
+                <a href="javascript:void(0)" class="submit" id="returnRoom">返回查看活动室</a>
+            </div>
+        </div>
+        <!--底部开始-->
+    </div>
+</div>
+<div class="footer-container" id="footer" th:include="guangdong/public/footer :: copy"></div>
+<!--底部结束-->
+<a class="to-top"></a>
+<script th:src="${basePath}+'/assets/js/plugins/roll/jquery.sly.min.js'"></script>
+<script th:src="${basePath}+'/assets/js/field/fieldOrder.js'"></script>
+<script type="text/javascript" th:inline="javascript">
+    var roomtimeid = dataInit.getUrlParam('roomtimeid');
+    var roomId = dataInit.getUrlParam('roomId');
+    var venueId = dataInit.getUrlParam('venueId');
+    var timeday = dataInit.getUrlParam('timeday');
+    var timestart = dataInit.getUrlParam('timestart');
+    var userId = $("#temp_userId").val();
+    var userName = $("#temp_nickName").val();
+    var userPhone = $("#temp_mobile").val();
+    var name,userOrderPhone,purpose,flag = true;
+    $(".orderChangCi").text(timeday+" "+timestart);
+    $("#username").val(userName);
+    $("#userPhone").val(userPhone);
+    if (userPhone && userPhone!=''){ //获取到手机号的时候，手机输入项为只读
+        $("#userPhone").prop("readonly","readonly");
+    }
+    if (userName && userName!=''){  //获取到用户名的时候，预订人项为只读
+        $("#username").prop("readonly","readonly");
+    }
+
+    $("#returnRoom").attr("href","venueroom?id="+roomId+"&type=7");
+    $(document).ready(function () {
+        dataInit.ajax({
+            api: [[${apiPath.roomdetail}]],
+            fn: showRoomDetail,
+            params: {id: roomId,userId:userId}
+        });
+        $("#checkbox1").on("click",function(){
+            var Ischecbox = $(this).find("input[type=checkbox]");
+            if(Ischecbox.attr('checked')) {
+                Ischecbox.attr("checked", false);
+                $("#submit-order").removeClass("red");
+                $("#submit-order").removeAttr("onclick");
+                $(this).find("label").hide();
+            }else {
+                Ischecbox.attr("checked", true);
+                $("#submit-order").addClass("red");
+                $("#submit-order").attr("onclick","submitOrder()");
+                $(this).find("label").show();
+            }
+        })
+
+    })
+    function submitOrder() {
+
+        if(showDivStep2()){
+            $("#act_baoming_step1").hide();
+            $("#act_baoming_step2").show();
+            $("#act_baoming_step3").hide();
+            $('#reserve').text(name);
+            $('#reservePhone').text(userOrderPhone);
+        }
+
+        /*var checkCode=$("#checkCode").val();
+
+        if (checkCode == '' ) {
+            return rongDialog.init({ico : 2, type : 1, desc : "操作失败,验证码不能为空!"});
+        }
+        $.ajax({
+            url: [[${basePath}]]+"/check/checkCode",
+            data:{"checkCode":checkCode},
+            type: "post",
+            async : true,
+            dataType: 'json',
+            success: function (data) {
+                if(data=="0"){
+                    return rongDialog.init({ico : 2, type : 1, desc : "验证码有误!"});
+                }else{
+                    if(showDivStep2()){
+                        $("#act_baoming_step1").hide();
+                        $("#act_baoming_step2").show();
+                        $("#act_baoming_step3").hide();
+                        $('#reserve').text(name);
+                        $('#reservePhone').text(userOrderPhone);
+                    }
+                }
+            }
+        })*/
+    }
+
+    function confirmOrder() {
+        dataInit.ajax({
+            api: [[${apiPath.venueOrderCheck}]],
+            fn: nextPage,
+            params: {roomTimeId: roomtimeid,userId:userId}
+        });
+    }
+    function showRoomDetail(data) {
+        var RoomList = data.data;
+        var title = RoomList.title;
+//        var phone = data.data.whgVen.phone;
+        var address = RoomList.address + RoomList.location;
+        var sizearea = RoomList.sizearea+'㎡';
+        var sizepeople = RoomList.sizepeople+'人';
+        //var imgPath = [[${imgPath}]] + dataInit.getBigImage(RoomList.imgurl);
+        var imgPath = data.imgPath + dataInit.getBigImage(RoomList.imgurl);
+
+        $('.title').text(title);
+//        $('#phone').text(phone);
+        $('.address').text(address);
+        $('#telephone').text(RoomList.telephone);
+        $('#sizearea').text(sizearea);
+        $('#sizepeople').text(sizepeople);
+        $('.imgPath').attr('src',imgPath);
+    }
+    function nextPage(data) {
+        if(data.code == 0 ){
+            if(flag){
+                flag = false;
+                dataInit.ajax({
+                 api: [[${apiPath.orderApply}]],
+                 fn: function (data) {
+                 if(data.code == 0){
+                 rongDialog.init({ico : 1, type : 1, desc : '活动室预定申请成功！'});
+                 $("#act_baoming_step1").hide();
+                 $("#act_baoming_step2").hide();
+                 $("#act_baoming_step3").show();
+                 }else {
+                 flag = true;
+                 rongDialog.init({ico : 2, type : 1, desc : data.msg+'！'});
+                 }
+                 },
+                 params: {
+                     roomTimeId: roomtimeid,
+                     userId:userId,
+                     username:name,
+                     phone:userOrderPhone,
+                     purpose:purpose}
+                 });
+            }
+        }else {
+            flag = true;
+            rongDialog.init({ico : 2, type : 1, desc : data.msg+'！'});
+        }
+    }
+
+    /*
+     * 返回上一级
+     */
+    function returnBack(){
+        $("#act_baoming_step1").show();
+        $("#act_baoming_step2").hide();
+        $("#act_baoming_step3").hide();
+    }
+
+    function showDivStep2() {
+        var userphome = $('#userPhone');
+        var username = $('#username');
+        var userpurpose = $('#userpurpose');
+
+        userphome.next("span").text('');
+        username.next("span").text('');
+        userpurpose.next("span").text('');
+
+        var viald = true;
+        var focusTarget = null;
+
+        name = username.val();
+        name = $.trim(name);
+        if (!name){
+            username.next("span").text("* 预定人为必填");
+            focusTarget = focusTarget? focusTarget: username;
+            viald = false;
+        }
+        if (name.length>20){
+            username.next("span").text("* 预定人长度不能大于20个字符");
+            focusTarget = focusTarget? focusTarget: username;
+            viald = false;
+        }
+
+        var phome = userphome.val();
+        phome = $.trim(phome);
+        userOrderPhone = $.trim(phome);
+        if (!phome){
+            userphome.next("span").text("* 手机号码为必填");
+            focusTarget = focusTarget? focusTarget: userphome;
+            viald = false;
+        }
+        if (!/^1[3-8]+\d{9}$/.test(phome)){
+            userphome.next("span").text("* 请输入11位数字的手机号码");
+            focusTarget = focusTarget? focusTarget: userphome;
+            viald = false;
+        }
+
+        purpose = userpurpose.val();
+        if (purpose.length>200){
+            userpurpose.next("span").text("* 预定用途长度不能大于200个字符");
+            focusTarget = focusTarget? focusTarget: userpurpose;
+            viald = false;
+        }
+
+
+        if (!viald){
+            focusTarget.focus();
+        }else{
+            userphome.val(phome);
+            username.val(name);
+        }
+        return viald;
+    }
+
+    /*function myReload() {
+        document.getElementById("CreateCheckCode").src =
+            document.getElementById("CreateCheckCode").src+ "?nocache=" + new Date().getTime();
+    }*/
+</script>
+</body>
+</html>

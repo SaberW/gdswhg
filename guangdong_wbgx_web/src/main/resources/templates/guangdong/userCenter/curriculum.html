@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link th:href="${basePath}+'/assets/style/userCenter/userCenter.css'" rel="stylesheet">
+<div class="wrapper clearfix">
+    <div class="content">
+        <!--公共主头部开始-->
+        <div id="header" th:include="guangdong/public/header :: copy"></div>
+        <!--公共主头部结束-->
+        <div class="main main-boder clearfix">
+            <div class="leftPanel" th:include="guangdong/userCenter/left :: copy"></div>
+            <div class="rightPanel">
+                <ul class="commBtn clearfix">
+                    <li class="active"><a href="javascript:void(0)" data-type="1">进行中</a></li>
+                    <li><a href="javascript:void(0)" data-type="2">已结束</a></li>
+                </ul>
+                <div class="sysmsg">
+                    <div class="ad"></div>
+                    <p>暂无您参与的课程报名信息</p>
+                </div>
+                <ul class="group clearfix">
+                    <!--<li class="item">
+                        <div class="orderCont clearfix">
+                            &lt;!&ndash;<div class="orderNum">活动号 : <span>2016102200000222</span></div>&ndash;&gt;
+                            <div class="orderTime float-left">预定时间：<span>2016-09-29 18:40</span></div>
+                        </div>
+                        <div class="msgInfoCont">
+                            <h2><a href="javascript:void(0)" target="_blank">实名制多个讲师提高班</a>
+                            </h2>
+                            <p>培训地址 :<span class="address">长沙绿地中央广场5栋</span></p>
+                            <p>开课日期 :<span class="starttime">2017-04-29 00:00:00</span></p>
+                            <p>订单号:<span class="orderid">2017041300000028</span></p>
+                            <a class="docancel orderKick js__p_orderKick_start" href="javascript:void(0)" style="display: none">取消报名</a>
+                        </div>
+                    </li>-->
+                </ul>
+                <!--分页开始 -->
+                <div class="green-black" id="artPagging" style="margin-bottom: 40px"></div>
+                <!--分页结束-->
+            </div>
+        </div>
+        <input type="hidden" id="type" value="1">
+    </div>
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong/public/footer :: copy"></div>
+<!--底部结束-->
+<!-- core public JavaScript -->
+<script type="text/javascript" th:inline="javascript">
+    $(document).ready(function () {
+        $('.commBtn li a').on('click', function () {
+            var type = $(this).attr("data-type");
+            $("#type").val(type);
+            $(this).parent('li').addClass("active").siblings().removeClass("active");
+            dataPage();
+        })
+        dataPage();
+    })
+    function dataPage(page, rows) {
+        var params_page = page || 1;
+        var params_rows = rows || 5;
+        var params = {
+            userId: [[${session.wbgx_sessUserKey.userId}]],
+            index: params_page,
+            size: params_rows,
+            sdate: $("#type").val() || 1
+        }
+        //console.log(params)
+        dataInit.ajax({
+            api: [[${apiPath.getMyTraEnrol}]],
+            params: params,
+            fn: function (data) {
+                //console.log(data);
+                var myActList = data.rows;
+                showActList(myActList);
+                dataInit.pageInit('artPagging', params_page, params_rows, data.total, dataPage);
+            }
+        })
+    }
+
+    function showActList(data) {
+        var group = $('.group');
+        var type = $("#type").val() || 1;
+        group.html("");
+        if (data.length == 0) {
+            $('.sysmsg').show();
+        } else {
+            $('.sysmsg').hide();
+            for (var i in data) {
+                var ordercreatetime = moment(data[i].crttime).format('YYYY-MM-DD HH:mm:ss');//订单生成时间
+                var crttime = moment(data[i].starttime).format('YYYY-MM-DD HH:mm:ss');//开课时间
+                var ticketstatus = data[i].state;//'状态.1-报名申请中;2-取消报名;3-审核失败;4-等待面试;5-面试不通过; 6-报名成功.',
+                var status='',statedesc=data[i].statedesc,fail = '';
+                switch (ticketstatus) {
+                    case 1:
+                        status = "报名申请中";
+                        break;
+                    case 2:
+                        status = "取消报名";
+                        break;
+                    case 3:
+                        status = "审核失败";
+                        fail = '';
+                        statedesc = data[i].statedesc;
+                        break;
+                    case 4:
+                        status = "等待面试";
+                        break;
+                    case 5:
+                        status = "面试不通过";
+                        break;
+                    case 6:
+                        status = "报名成功";
+                        break;
+                    case 7:
+                        status = "报名失败";
+                        break;
+                    default:
+                        status = "已取消"
+                }
+                var activityid = data[i].traid; //活动id
+                var itemId = data[i].orderid; //订单id
+                var name = data[i].title; //活动名称
+                var address = data[i].address; //活动地址
+                var delBtn = "";
+                //状态为未取票时或活动开始时间离当前时间只剩48小时
+                if (data[i].state == 1 && type == 1) {
+                    delBtn = "<div><a class=\"orderKick\"href=\"javascript:void(0)\" onclick=\"delOrder(" + itemId + ")\">取消预订</a></div>";
+                }
+                if (type == 2 && ticketstatus ==2) {
+                    delBtn = "<div><a class=\"orderKick\"href=\"javascript:void(0)\" onclick=\"delThis(" + itemId + ")\">删除订单</a></div>";
+                }
+                if(7 == ticketstatus){
+                    var li =
+                        '<li class="item">'+
+                        '<div class="orderCont clearfix">'+
+                        '<div class="orderType">'+status+'</div>'+
+                        '<div class="orderTime float-left">预定时间：<span>'+ordercreatetime+'</span></div>'+
+                        '</div>'+
+                        '<div class="msgInfoCont">'+
+                        '<h2><a href="/px/detail?id='+activityid+'" target="_blank">'+name+'</a></h2>'+
+                        '<p>培训地址：<span class="address">'+address+'</span></p>'+
+                        '<p>开课日期：<span class="starttime">'+crttime+'</span></p>'+
+                        '<p class="tickets">订单号：<span>'+itemId+'</span></p>'+
+                        '<p class="ordersummary '+fail+'">失败原因：<span>'+statedesc+'</span></p>'+delBtn+
+                        '</div>'+
+                        '</li>';
+                    group.append(li);
+                }else {
+                    var li =
+                        '<li class="item">'+
+                        '<div class="orderCont clearfix">'+
+                        '<div class="orderType">'+status+'</div>'+
+                        '<div class="orderTime float-left">预定时间：<span>'+ordercreatetime+'</span></div>'+
+                        '</div>'+
+                        '<div class="msgInfoCont">'+
+                        '<h2><a href="/px/detail?id='+activityid+'" target="_blank">'+name+'</a></h2>'+
+                        '<p>培训地址：<span class="address">'+address+'</span></p>'+
+                        '<p>开课日期：<span class="starttime">'+crttime+'</span></p>'+
+                        '<p class="tickets">订单号：<span>'+itemId+'</span></p>'+
+                        '<p class="ordersummary none">失败原因：<span>'+statedesc+'</span></p>'+delBtn+
+                        '</div>'+
+                        '</li>';
+                    group.append(li);
+                }
+
+            }
+        }
+    }
+    //删除订单
+    function delThis(id) {
+        var orderId = id;
+        rongDialog.init({
+            ico: 2,
+            type: 2,
+            desc: '您确定删除订单吗',
+            nextFn: function () {
+                dataInit.ajax({
+                    api: [[${apiPath.delAct}]],
+                    params: {
+                        orderId: id
+                    },
+                    fn: function (data) {
+                        if (data.code == 0) {
+                            rongDialog.init({
+                                ico: 1,
+                                type: 1,
+                                desc: "订单删除成功",
+                                nextFn: function () {
+                                    dataPage();
+                                }
+                            });
+                        } else {
+                            rongDialog.init({
+                                ico: 2,
+                                type: 1,
+                                desc: "订单删除失败"
+                            });
+                        }
+                    }
+                })
+            }
+        })
+    }
+    //取消订单
+    function delOrder(id) {
+        var orderId = id;
+        rongDialog.init({
+            ico: 2,  //1 感叹号  2 问号  3 叉叉
+            type: 2,
+            desc: '您确定取消预订吗？',
+            nextFn: function () {
+                dataInit.ajax({
+                    api: [[${apiPath.cancelTraEnrol}]],
+                    params: {
+                        userId: [[${session.wbgx_sessUserKey.userId}]],
+                        orderId: orderId,
+                        type: 1
+                    },
+                    fn: function (data) {
+                        //console.log(data);
+                        if (data.code == "0") {
+                            rongDialog.init({
+                                ico: 1, //1 勾  2 叉
+                                type: 1,
+                                desc: "培训取消成功",
+                                nextFn: function () {
+                                    dataPage();
+                                }
+                            });
+                        } else {
+                            rongDialog.init({
+                                ico: 2, //1 勾  2 叉
+                                type: 1,
+                                desc: data.msg || "培训取消失败"
+                            });
+                        }
+                    }
+
+                })
+            }
+        })
+    }
+</script>
+</body>
+</html>

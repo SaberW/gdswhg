@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="public/resource :: copy"></head>
+<body>
+<link th:href="${basePath}+'/assets/css/activity/baoming.css'" rel="stylesheet">
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/rong.validate.js'"></script>
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/rong.message.js'"></script>
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugins/laydate.dev.min.js'"></script>
+<style>
+    .crumbs li {
+        width: 480px;
+    }
+</style>
+<div class="wrapper clearfix">
+    <!--公共主头部开始-->
+    <div id="header" th:include="public/header :: copy"></div>
+    <!--公共主头部结束-->
+    <div id="act_baoming_step1" class="main-info-bg bg-color">
+        <ul class="crumbs crumbs-1 clearfix">
+            <li class="step-1">1. 填写培训报名资料<em class="arrow"></em></li>
+            <li class="step-2 last">2. 等待管理员审核<em class="arrow"></em></li>
+        </ul>
+        <form id="trainForm" method="post">
+            <div class="main train-main container-wrapper" style="padding-top:30px;">
+                <dl class="clearfix">
+                    <dt>培训项目：</dt>
+                    <dd class="demoName"></dd>
+                </dl>
+                <dl class="clearfix">
+                    <dt>姓名：</dt>
+                    <dd><input type="text" name="name" id="name" value="" placeholder="请输入真实姓名" maxlength="10" required><em class="msg"></em></dd>
+                </dl>
+                <dl class="clearfix">
+                    <dt>证件号：</dt>
+                    <dd><input type="text" id="idCard" name="idCard" value="" placeholder="请输入身份证号码" maxlength="18" required><em class="msg"></em></dd>
+                </dl>
+                <dl class="clearfix">
+                    <dt>出生年月日：</dt>
+                    <dd>
+                        <input type="text" id="birthday" name="birthday" placeholder="请选择出生年月日" value="" style="border:1px #fff solid; font-size:14px;" readonly required>
+                        <em class="msg"></em>
+                    </dd>
+                </dl>
+                <dl class="clearfix">
+                    <dt>性别：</dt>
+                    <dd>
+                        <label><input type="radio" name="sex" value="1" checked="checked" class="ckbox" id="man">男</label>
+                        <label><input type="radio" name="sex" value="2" class="ckbox" id="women">女</label>
+                    </dd>
+                </dl>
+                <!--<dl class="clearfix">
+                    <dt>证件类型：</dt>
+                    <dd>
+                        <label><input type="radio" name="cardType" checked="" class="ckbox cardType" value="0">身份证</label>
+                        <label><input type="radio" name="cardType" class="ckbox cardType" value="1">其它有效证件(大陆境外)</label>
+                        <script>
+                            $('.cardType').click(function(){
+                                /*$('#cardId2017').attr({regexp:"(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)"});*/
+                                if($(this).val()==0){
+                                    $('#cardId2017').attr({
+                                        regexp:/(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/,
+                                        placeholder:"请输入身份证号码"
+                                    });
+
+                                }else{
+                                    $('#cardId2017').removeAttr("regexp");
+                                    $('#cardId2017').attr({
+                                        placeholder:"请输入证件号"
+                                    })
+                                }
+                            });
+                        </script>
+                    </dd>
+                </dl>-->
+
+                <dl class="clearfix">
+                    <dt>手机联系电话：</dt>
+                    <dd><input type="text" name="mobile" id="mobile"  value="" placeholder="请输入手机号码" maxlength="11" ><em class="msg"></em></dd>
+                </dl>
+                <button class="none" id="submit" type="submit">ok</button>
+                <div class="goNext"><a class="submit" href="javascript:void(0)" id="submitDiv">确认订单</a></div>
+            </div>
+        </form>
+    </div>
+    <div id="act_baoming_step2" class="main-info-bg bg-color none">
+        <ul class="crumbs crumbs-2 clearfix">
+            <li class="step-1">1. 填写培训报名资料<em class="arrow"></em></li>
+            <li class="step-2 last">2. 等待管理员审核<em class="arrow"></em></li>
+        </ul>
+
+        <div class="container-wrapper">
+            <div class="order-msg">
+                <span class="msg-title">完成报名</span>
+                <a th:href="${basePath}+'/center/train'" class="return">查看培训</a>
+            </div>
+            <div class="order-content clearfix">
+                <div class="complete-order">
+                    <img src="../../assets/img/activity/complete-order.png" width="61" height="61">
+                </div>
+                <div class="compltet-order-msg">
+                    <p>恭喜您，<em class="title"></em></p>
+                    <span>已报名申请成功 ！</span>
+                </div>
+            </div>
+            <a href="javascript:void(0)" onclick="history.go(-1)" class="submit" id="returnDetail">返回培训详情</a>
+
+        </div>
+    </div>
+    <input type="hidden" id="isrealname">
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong/public/footer :: copy"></div>
+<!--底部结束-->
+<a class="to-top"></a>
+<script type="text/javascript" th:inline="javascript">
+    var id = dataInit.getUrlParam("id");
+    var userId = $("#temp_userId").val();
+    var userName = $("#temp_nickName").val();
+    var userPhone = $("#temp_mobile").val();
+    $().ready(function(){
+     //   findTraEnrol();
+        trainInfo();
+        $("#idCard").keyup(function(){
+            var idCard = $(this).val();
+            var birthday = birthdayInit(idCard);
+            $("#birthday").val(birthday);
+        })
+        $("#idCard").focusout(function(){
+            var idCard = $(this).val();
+            var birthday = birthdayInit(idCard);
+            $("#birthday").val(birthday);
+        })
+        //手机格式
+        $.validator.addMethod("phoneType", function (value) {
+            var reg = /^0?(13[0-9]|15[012356789]|17[013678]|18[0-9]|14[57])[0-9]{8}$/;
+            return reg.test(value);
+        }, '请输入正确的手机号码');
+        //身份证格式
+        $.validator.addMethod("userCode", function (value) {
+            var reg = /^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X|x)$/;
+            return reg.test(value);
+        }, '请输入正确的身份证号码');
+        $("#trainForm").validate({
+            errorElement: "em",
+            rules: {
+                mobile: "phoneType",
+                idCard: "userCode"
+            },
+            messages: {
+                mobile: {
+                    required: "请输入您的手机号码"
+                },
+                idCard:{
+                    required:"请输入您的身份证号码"
+                },
+                birthday:{
+                    required:"请选择您的出生日期"
+                },
+                name:{
+                    required:"请填写您的真实姓名"
+                }
+            },
+            submitHandler: function () {
+                var params = {};
+                var temp_list = $("#trainForm [name]").serializeArray();
+                for (var i in temp_list) {
+                    params[temp_list[i].name] = temp_list[i].value;
+                }
+                params["userId"] = userId;
+                params["itemId"] = id;
+                params["name"] = $("#name").val();
+                params["birthday"] = $("#birthday").val();
+                params["idCard"] = $("#idCard").val();
+                params["mobile"] = $("#mobile").val();
+
+                $("#submit").remove();
+                dataInit.ajax({
+                    api:[[${apiPath.traSign}]],
+                    params : params,
+                    fn:function(data){
+                        //console.log(data);
+                        if(data.code == "0"){
+                            rongDialog.init({
+                                ico: 1,
+                                type: 1,
+                                desc: "提交成功，请耐心等待审核",
+                                nextFn:function(){
+                                    $("#act_baoming_step1").hide();
+                                    $("#act_baoming_step2").show();
+                                }
+                            });
+                        }else{
+                            rongDialog.init({
+                                ico: 2,
+                                type: 1,
+                                desc: data.errormsg || "培训提交失败"
+                            });
+                        }
+                    }
+                });
+
+            }
+        });
+
+        $("#submitDiv").on('click',function(){
+            $("#submit").click();
+        })
+
+    })
+    //培训详情页状态信息
+    function trainInfo(){
+        var params = {
+            itemId:id,
+            userId:userId
+        };
+        dataInit.ajax({
+            api:[[${apiPath.traDetail}]],
+            params: params,
+            fn:function(data){
+                    $(".demoName").html(data.data.title);
+                /*    $(".title").html(data.data.whgTra.title);
+                    $("#isrealname").val(data.data.whgTra.isrealname);
+                    isrealname();*/
+            }
+        })
+    }
+    //是否需要实名
+  /*  function isrealname(){
+        var isrealname = $("#isrealname").val();
+        if( isrealname == 1 ){
+            dataInit.ajax({
+                api: [[${apiPath.getUserInfo}]],
+                params: {
+                    userId: userId
+                },
+                fn: function (data) {
+                    if(data.success === 0){
+                        //实名认证完成
+                        if(data.data.isrealname == 1){
+                            var name = data.data.name;
+                            var idCard = data.data.idcard;
+                            var mobile = data.data.phone;
+                            var sex  = data.data.sex;
+                            var birthday = birthdayInit(idCard);
+                            $("#name").val(name).attr({"readonly":"readonly","disabled":"true"});
+                            $("#idCard").val(idCard).attr({"readonly":"readonly","disabled":"true"});
+                            $("#mobile").val(mobile).attr({"readonly":"readonly","disabled":"true"});
+                            $("#birthday").val(birthday).attr({"readonly":"readonly","disabled":"true"});
+                            if(sex == "1"){
+                                $("#man").attr("checked","checked")
+                                $("#women").parent("label").remove();
+                            }else{
+                                $("#women").attr("checked","checked")
+                                $("#man").parent("label").remove();
+                            }
+                        }else{//未实名
+                            rongDialog.init({
+                                ico: 2,
+                                type: 1,
+                                desc: "尚未实名认证",
+                                nextFn:function(){
+                                    window.location.href=[[${basePath}]]+"/center/safely/real";
+                                }
+                            });
+                        }
+                    }else{
+                        rongDialog.init({
+                            ico: 2,
+                            type: 1,
+                            desc: "加载实名认证出错"
+                        });
+                    }
+                }
+            })
+        }else{
+            dataInit.ajax({
+                api: [[${apiPath.getUserInfo}]],
+                params: {
+                    userId: userId
+                },
+                fn: function (data) {
+                    if(data.success === 0 && data.data.isrealname == 1){
+                            var name = data.data.name;
+                            var idCard = data.data.idcard;
+                            var mobile = data.data.phone;
+                            var sex  = data.data.sex;
+                            var birthday = idCard;
+                            birthday = birthday.substring(6,14);
+                            birthday = birthday.substring(0,4)+"-"+birthday.substring(4,6)+"-"+birthday.substring(6);
+                            $("#name").val(name);
+                            $("#idCard").val(idCard);
+                            $("#mobile").val(mobile);
+                            $("#birthday").val(birthday);
+                    }
+                }
+            })
+            $("#mobile").val($("#temp_mobile").val()).attr({"readonly":"readonly","disabled":"true"});
+        }
+    }*/
+
+    //验证是否已经报名
+  /*  function findTraEnrol(){
+        var params = {
+            traId : id,
+            userId : userId
+        }
+        dataInit.ajax({
+            api:[[${apiPath.findTraEnrol}]],
+            params:params,
+            fn:function(data){
+                if(data.data){
+                    rongDialog.init({
+                        ico: 2,
+                        type: 1,
+                        desc: "不能重复报名",
+                        nextFn:function(){
+                            window.location.href=[[${basePath}]]+"/px/detail?id="+id
+                        }
+                    });
+                }else{
+                    trainInfo();
+                }
+            }
+        })
+    }*/
+    //生日自动生成
+    function birthdayInit(idCard){
+        var birthday = idCard;
+        birthday = birthday.substring(6,14);
+        birthday = birthday.substring(0,4)+"-"+birthday.substring(4,6)+"-"+birthday.substring(6);
+        return birthday;
+    }
+</script>
+</body>
+</html>

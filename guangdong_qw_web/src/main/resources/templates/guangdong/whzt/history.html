@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/style/whzt/whzt.css'">
+<script type="text/javascript" th:src="${basePath}+'/assets/js/public/sly.js'"></script>
+<div class="wrapper clearfix">
+    <div class="content">
+        <!--公共主头部开始-->
+        <div id="header" th:include="guangdong/public/header :: copy"></div>
+        <!--公共主头部结束-->
+        <!--主体开始-->
+            <!--通栏-->
+            <div class="banner" style="background-image: url('/assets/img/whzt_ysrc/banner.jpg');display: none;"></div>
+            <!--通栏-->
+            <!--导航栏-->
+            <div class="nav_m" th:include="guangdong/whzt/nav">
+                <!--<div class="nav_m-center w">
+                    <ul class="clearfix">
+                        <li><a th:href="${basePath}+'/whzt/index?id='+${param.id[0]}">主页</a></li>
+                        <li><a th:href="${basePath}+'/whzt/zpList?id='+${param.id[0]}">作品库</a></li>
+                        <li><a th:href="${basePath}+'/whzt/rcList?id='+${param.id[0]}">艺术人才</a></li>
+                        <li><a th:href="${basePath}+'/whzt/winning?id='+${param.id[0]}">获奖作品</a></li>
+                        <li><a th:href="${basePath}+'/whzt/jtList?id='+${param.id[0]}">创作讲坛</a></li>
+                        <li><a href="javascript:void(0)" class="active">历届情况</a></li>
+                    </ul>
+                </div>-->
+            </div>
+            <!--导航栏-->
+            <!--历届情况-->
+            <div class="previous">
+                <div class="per-list w">
+                    <!--<div class="section">
+                        <div class="txt">
+                            <div class="txt-m">
+                                <h3>广东省第三届艺术花会</h3>
+                                <p>广东省文化馆活动区：位于天河区广州大道中1229号广东省文化馆综合楼，主要以艺术培训为主，活动区主要设置有舞蹈室排练厅、合唱排练厅、琴房、古筝课室、戏剧排练厅、美术书法教室、电子阅览室、多媒体培训会议厅等活动区广东省文化馆活动区：位于天河区广州大道中1229号广东省文化馆综合楼，主要以艺术培训为主，活动区主要设置有舞蹈室排练厅、合唱排练厅、琴房、古筝课室、戏剧排练厅、美术书法教室、电子阅览室、多媒体培训会议厅等活动区</p>
+                                <button>了解详情</button>
+                            </div>
+                        </div>
+                        <div class="pic">
+                            <img th:src="${basePath}+'/assets/img/img_demo/dance.jpg'">
+                            <div class="pic-tag">
+                                <p><span>30</span><br/>2017-07</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="section">
+                        <div class="pic">
+                            <img th:src="${basePath}+'/assets/img/img_demo/dance.jpg'">
+                            <div class="pic-tag1">
+                                <p><span>30</span><br/>2017-07</p>
+                            </div>
+                        </div>
+                        <div class="txt">
+                            <div class="txt-m">
+                                <h3>广东省第三届艺术花会</h3>
+                                <p>广东省文化馆活动区：位于天河区广州大道中1229号广东省文化馆综合楼，主要以艺术培训为主，活动区主要设置有舞蹈室排练厅、合唱排练厅、琴房、古筝课室、戏剧排练厅、美术书法教室、电子阅览室、多媒体培训会议厅等活动区广东省文化馆活动区：位于天河区广州大道中1229号广东省文化馆综合楼，主要以艺术培训为主，活动区主要设置有舞蹈室排练厅、合唱排练厅、琴房、古筝课室、戏剧排练厅、美术书法教室、电子阅览室、多媒体培训会议厅等活动区</p>
+                                <button>了解详情</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="section">
+                        <div class="txt">
+                            <div class="txt-m">
+                                <h3>广东省第三届艺术花会</h3>
+                                <p>广东省文化馆活动区：位于天河区广州大道中1229号广东省文化馆综合楼，主要以艺术培训为主，活动区主要设置有舞蹈室排练厅、合唱排练厅、琴房、古筝课室、戏剧排练厅、美术书法教室、电子阅览室、多媒体培训会议厅等活动区广东省文化馆活动区：位于天河区广州大道中1229号广东省文化馆综合楼，主要以艺术培训为主，活动区主要设置有舞蹈室排练厅、合唱排练厅、琴房、古筝课室、戏剧排练厅、美术书法教室、电子阅览室、多媒体培训会议厅等活动区</p>
+                                <button>了解详情</button>
+                            </div>
+                        </div>
+                        <div class="pic">
+                            <img th:src="${basePath}+'/assets/img/img_demo/dance.jpg'">
+                            <div class="pic-tag">
+                                <p><span>30</span><br/>2017-07</p>
+                            </div>
+                        </div>
+                    </div>-->
+                </div>
+
+                <!--分页开始 -->
+                <div class="green-black" id="pagging" style="margin-top: -40px;"></div>
+                <!--分页结束-->
+            </div>
+
+            <!--历届情况-->
+
+        <!--主体结束-->
+    </div>
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong/public/footer :: copy"></div>
+<!--底部结束-->
+<script type="text/javascript" th:inline="javascript">
+
+    $(function(){
+        MassInfoTool.init();
+    });
+
+    var MassInfoTool = {
+        batchid: [[${param.id[0]}]],
+        brandid: [[${param.brandid[0]}]],
+        bashPath: [[${basePath}]],
+        brandInfoUrl: [[${apiPath.brandinfo}]],
+        batchListUrl: [[${apiPath.batchlist}]],
+
+        init: function(){
+            var me = this;
+
+            //调用导航设置
+            ZtnavTool.setNavhref(me.brandid, me.batchid);
+
+            //取文化专题详细信息
+            $.post(me.brandInfoUrl, {id: me.brandid}, function(data){
+                me.appendBrandInfo(data);
+            }, "JSON");
+
+            me.loadBatchs();
+        },
+
+        appendBrandInfo: function (data) {
+            var me = this;
+
+            if (!data || !data.data) {
+                $(".banner").show();
+                return;
+            }
+            var imgPath = data.imgPath;
+            var info = data.data;
+
+            $(".banner").css("background-image", "url("+imgPath+ info.bgimgurl+")");
+            $(".banner").show();
+        },
+        
+        loadBatchs: function (page, pageSize) {
+            var me = this;
+
+            me.params = me.params || {};
+            me.params.page = page || me.params.page || 1;
+            me.params.pageSize = pageSize || me.params.pageSize || 3;
+            me.params.cultid = $.cookie('cultid') || '';
+            me.params.brandid  = me.brandid;
+
+            $.post(me.batchListUrl, me.params, function(data){
+                me.appendBatchList(data);
+                dataInit.pageInit("pagging", me.params.page, me.params.pageSize, data.total, function(page, pageSize){me.loadBatchs(page,pageSize)});
+            }, "JSON");
+        },
+
+        appendBatchList: function (data) {
+            var me = this;
+
+            var rowsDiv = $(".per-list");
+            rowsDiv.empty();
+            if (!data || !data.rows || data.rows.length==0) {
+                rowsDiv.append("<div class='public-no-message'></div>");
+                return;
+            }
+
+            var rowdiv = '<div class="section"></div>'
+            , rowtxtdiv = '<div class="txt">\
+                    <div class="txt-m">\
+                        <h3></h3>\
+                        <p></p>\
+                        <button>了解详情</button>\
+                    </div>\
+                </div>'
+            , rowpicdiv = '<div class="pic">\
+                    <img >\
+                    <div class="pic-tag">\
+                        <p><span>30</span><br/>2017-07</p>\
+                    </div>\
+                </div>';
+
+            var rows = data.rows;
+            var imgPath = data.imgPath;
+            for(var i=0; i<rows.length; i++){
+                var row = rows[i];
+
+                var txt = $(rowtxtdiv);
+                var pic = $(rowpicdiv);
+                var rowx = $(rowdiv);
+
+                txt.find("h3").text(row.title);
+                txt.find("p").text( row.summary );
+                txt.find("button").on("click", {row: row}, function(e){
+                    var row = e.data.row;
+                    window.location.href = me.bashPath+"/whzt/index?id="+row.id+"&brandid="+row.brandid;
+                });
+
+                pic.find("img").attr("src", imgPath+ dataInit.getImage(row.imgurl, 750,500));
+                pic.find(".pic-tag p").html('<span>'+moment(row.batdate).format("DD")+'</span><br/>'+moment(row.batdate).format("YYYY-MM"));
+
+
+                rowx.append(pic);
+                if (i%2 == 0){
+                    rowx.prepend(txt);
+                }else{
+                    rowx.append(txt);
+                    pic.find(".pic-tag").removeClass("pic-tag").addClass("pic-tag1");
+                }
+
+                rowsDiv.append(rowx);
+            }
+        }
+    };
+
+</script>
+</body>
+</html>

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/public/detail.css'" >
+<link rel="stylesheet" href="https://g.alicdn.com/de/prismplayer/2.1.0/skins/default/aliplayer-min.css" />
+<script type="text/javascript" src="https://g.alicdn.com/de/prismplayer/2.1.0/aliplayer-min.js"></script>
+<div th:include="guangdong/public/leftBar :: copy"></div>
+<div id="page">
+    <div class="mui-content">
+        <div class="wrapper-detail">
+            <div id="liveContainer"></div>
+            <div class="wrapper-detail-box">
+                <div class="info">
+                    <div class="title" style="margin-bottom:0px;" id="title">Loading...</div>
+                </div>
+            </div>
+            <div class="wrapper-detail-box">
+                <h2>课程表</h2>
+                <div class="detail-box-text">
+                    <div class="train-table">
+                        <ul id="courses">
+                            <!--<li>
+                                <h3>课程1-广东省群众广场排舞教学-南方欢乐</h3>
+                                <p>2017-11-11 10:20 <em class="s-1">直播中</em></p>
+                            </li>
+                            <li>
+                                <h3>课程2-广东省群众广场排舞教学-南方欢乐</h3>
+                                <p>2017-11-11 10:20 <em class="s-2">精彩回顾</em></p>
+                            </li>
+                            <li>
+                                <h3>课程3-广东省群众广场排舞教学-南方欢乐</h3>
+                                <p>2017-11-11 10:20 <em class="s-2">精彩回顾</em></p>
+                            </li>-->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" th:inline="javascript">
+    var userId = $("#temp_userId").val();
+    var itemId = dataInit.getUrlParam('id');
+    var basePath = [[${basePath}]];
+    $().ready(function(){
+        dataInit.ajax({
+            api: [[${apiPath.traliveInfo}]],
+            params: {
+                id:itemId,
+                userId:userId
+            },
+            fn: createModelHtml
+        });
+    })
+
+    function createModelHtml(data) {
+        if(data.code == 0) {
+            var model = data.data;
+            var title = model.title;
+            $('#title').text(title);
+
+            var canSee = model.canSee;
+            //不能观看, 跳转到在线课程详情
+            if(!canSee){
+                window.location.href = basePath + '/liveDetail?id='+model.traid;
+            }
+            //视频插放器处理
+            var liveUrl = model.liveUrl;
+            var backUrl = model.backUrl;
+
+            //listState 0-未开始, 1-正在直播, 2-已结束
+            var listState = model.listState;
+            if(listState == 0){
+                $('#liveState').text('未开始');
+            }else if(listState == 1){
+                $('#liveState').text('正在直播');
+            }else if(listState == 2){
+                if(typeof(backUrl) != 'undefined' && backUrl.length > 10){
+                    $('#liveState').text('精彩回顾');
+                }else{
+                    $('#liveState').text('已结束');
+                }
+            }
+            var starttime = moment(model.starttime).format('YYYY-MM-DD HH:mm');
+            var endtime = moment(model.endtime).format('YYYY-MM-DD HH:mm');
+            $('#livestarttime').text(starttime);
+            showLive(listState, liveUrl, backUrl, starttime, endtime);
+
+            //调分享接口
+            var trainimg = data.imgPath+model.trainimg;
+
+
+            //课程列表
+            var courses = model.courses || [];
+            var courses_html = '';
+            for(var i=0; i<courses.length; i++){
+                var row = courses[i];
+                var title = row.title+"（第"+(i+1)+"课）";
+                var listState = row.listState;
+                var listStateTxt = '', liCls='';
+                if(listState == 0){
+                    listStateTxt = '未开始';
+                    liCls = 's-3';
+                }else if(listState == 1){
+                    listStateTxt = '正在直播';
+                    liCls = 's-1';
+                }else if(listState == 2){
+                    listStateTxt = '已结束';
+                    liCls = 's-2';
+                }
+                var starttime = moment(row.starttime).format('YYYY-MM-DD HH:mm');
+                courses_html += '<li>\
+                                    <h3>'+title+'</h3>\
+                                    <p>'+starttime+' <em class="'+liCls+'">'+listStateTxt+'</em></p>\
+                                 </li>';
+            }
+            $('#courses').html(courses_html);
+        }
+    }
+
+    /**
+     * 根据状态显示视频
+     * @param listState 0-未开始, 1-正在直播, 2-已结束
+     * @param liveUrl 直播地址
+     * @param backUrl 回放地址
+     */
+    function showLive(listState, liveUrl, backUrl, starttime, endtime){
+        var liveContainer = $('#liveContainer');
+
+        //插放器地址
+        var sourceUrl = false;
+        var isLive = false;
+        if(listState == 0){//显示未开始图片
+            var html = ''+
+                '<div class="live-not-started">'+
+                '        <i class="icon iconfont icon-xinhaota1"></i>'+
+                '        <h2>直播尚未开始</h2>'+
+                '        <p>直播时间：<span>'+starttime+'</span></p>'+
+                '</div>';
+            liveContainer.append(html);
+        }else if(listState == 2){//视频回放
+            if(typeof(backUrl) != 'undefined' && backUrl.length > 10){
+                sourceUrl = backUrl;
+            }else{
+                var html = ''+
+                    '<div class="live-not-started">'+
+                    '        <i class="icon iconfont icon-xinhaota1"></i>'+
+                    '        <h2>直播已结束</h2>'+
+                    '        <p>结束时间：<span>'+endtime+'</span></p>'+
+                    '</div>';
+                liveContainer.append(html);
+            }
+        }else if(listState == 1 ){//视频直播
+            sourceUrl = liveUrl;
+            isLive = true;
+        }
+        //插放视频
+        //alert(sourceUrl);
+        if(sourceUrl){
+            sourceUrl = sourceUrl.replace(/.flv/,".m3u8");
+            liveContainer.append('<div id="J_prismPlayer" class="prism-player"></div>');
+            window.player = new Aliplayer({
+                id: 'J_prismPlayer',
+                autoplay: true,
+                playsinline:true,
+                isLive:isLive,
+                source:sourceUrl,
+                useH5Prism:true,
+                x5_type:'h5', //声明启用同层H5播放器，支持的值：h5
+                width: "100%",       // 播放器宽度
+                height: "280px",
+                controlBarVisibility: 'always'
+            });
+        }
+    }
+
+</script>
+</body>
+</html>

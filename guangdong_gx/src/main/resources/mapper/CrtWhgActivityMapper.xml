@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.creatoo.hn.dao.mapper.CrtWhgActivityMapper">
+
+<!-- 活动后台管理列表 查询 -->
+    <select id="srchListActivity" resultType="hashmap">
+        SELECT t.*,cult.name as cultname
+        FROM whg_act t,whg_sys_cult cult
+        WHERE t.cultid=cult.id AND t.biz is null
+
+        <if test="name != null and name != ''">
+            AND t.name like "%"#{name}"%"
+        </if>
+
+        <if test="state != null">
+            AND t.state = #{state}
+        </if>
+        <if test="crtuser != null">
+            AND t.crtuser = #{crtuser}
+        </if>
+        <if test="cultlevels!= null">
+            AND cult.level IN
+            <foreach collection="cultlevels" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="cultname != null">
+            AND (cult.province = #{cultname} or cult.city = #{cultname} or cult.area = #{cultname})
+        </if>
+        <if test="cultids != null">
+            AND t.cultid IN
+            <foreach collection="cultids" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+
+        <if test="deptids!= null">
+            AND t.deptid IN
+            <foreach item="item" index="index" collection="deptids" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+
+        <if test="states != null">
+            AND t.state IN
+            <foreach item="item" index="index" collection="states" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="relList != null">
+           AND t.id IN 
+            <foreach item="item" index="index" collection="relList" open="(" separator="," close=")">
+                #{item.relid}
+            </foreach>
+        </if>
+        <if test="delstate != null">
+        	AND t.delstate = #{delstate}
+        </if>
+        <if test="delstate == null">
+        	AND t.delstate = 0 
+        </if>
+        ORDER BY t.crtdate DESC
+    </select>
+
+    <!--记入黑名单查找活动订单: 1.指定次没有验票 2.黑名单更改时间之后 3.当前时间之前-->
+    <select id="selectOrder4BlackListCheck" resultType="hashmap">
+        SELECT * from
+        (
+        SELECT actorder.id as orderid,
+        acttime.playendtime as endtime,
+        u.id as userid,
+        u.phone as phone,
+        ubl.id as blid,
+        ubl.jointime as jointime,
+        ubl.updatetime as updatetime,
+        ubl.state as blstate
+        from whg_act_order actorder
+        INNER JOIN whg_act_time acttime on acttime.id=actorder.eventid
+        INNER JOIN whg_act act on actorder.activityid=act.id
+        INNER JOIN whg_user u on actorder.userid = u.id
+        LEFT JOIN whg_usr_blacklist ubl on u.id = ubl.userid
+        where act.state=6
+        <if test="actType != null and actType == 'ZC'">
+            AND act.biz ='ZC'
+        </if>
+        <if test="actType != null and actType == 'HD'">
+            AND act.biz is NULL
+        </if>
+        and actorder.ticketstatus in (1,2)
+        and actorder.delstate = 0
+        and (ubl.updatetime is null or acttime.playendtime > ubl.updatetime)
+        and (ubl.updatetime is null or acttime.playendtime > ubl.jointime)
+        and acttime.playendtime &lt; #{now}
+        group by actorder.id
+        )as tempview
+        WHERE 1 = 1
+        GROUP BY tempview.userid
+        HAVING count(tempview.orderid) >= #{checkNumber}
+        and tempview.userid not in (
+          select userid from whg_usr_blacklist where userid = tempview.userid
+          and (state = 1 or (state=0 and updatetime is not NULL) )
+        )
+    </select>
+
+
+    <!--记入黑名单查找取消活动订单-->
+    <select id="selectOrder5BlackListCheck" resultType="hashmap">
+        SELECT * from
+        (
+        SELECT actorder.id as orderid,
+        u.id as userid,
+        u.phone as phone,
+        ubl.id as blid,
+        ubl.jointime as jointime,
+        ubl.updatetime as updatetime,
+        ubl.state as blstate
+        from whg_act_order actorder
+        INNER JOIN whg_user u on actorder.userid = u.id
+        INNER JOIN whg_act act on actorder.activityid=act.id
+        LEFT JOIN whg_usr_blacklist ubl on u.id = ubl.userid
+        where act.state=6
+        <if test="actType != null and actType == 'ZC'">
+            AND act.biz ='ZC'
+        </if>
+        <if test="actType != null and actType == 'HD'">
+            AND act.biz is NULL
+        </if>
+        and actorder.ticketstatus in (3)
+        and actorder.delstate = 0
+        and (ubl.jointime is null or actorder.ordercreatetime>ubl.jointime)
+        and (ubl.updatetime is null or actorder.ordercreatetime>ubl.updatetime)
+        group by actorder.id
+        )as tempview
+        WHERE 1 = 1
+        GROUP BY tempview.userid
+        HAVING count(tempview.orderid) >= #{checkNumber}
+        and tempview.userid not in (
+          select userid from whg_usr_blacklist where userid = tempview.userid
+          and (state = 1 or (state=0 and updatetime is not NULL) )
+        )
+    </select>
+
+    <select id="getActOrderForBackManager" resultType="hashmap">
+        SELECT
+          wao.id AS id,
+          wao.ordernumber AS ordernumber,
+          waa.name AS actname,
+          wao.activityid as activityid,
+          wao.ordername AS ordername,
+          wao.orderphoneno AS orderphoneno,
+          wao.ordersmsstate AS ordersmsstate,
+          wao.ordercreatetime AS ordercreatetime,
+          wao.orderisvalid AS orderisvalid,
+          waa.endtime as endtime,
+          waa.starttime as starttime,
+          wao.ticketstatus AS ticketstatus,
+        CONCAT(date_format(wat.playstarttime,'%Y-%m-%d %H:%m'),'-',playetime) AS tickettime,
+          wat.playdate AS playdate,
+          wat.playstime AS playstime,
+          wat.playetime AS playetime,
+          wat.playstarttime AS playstarttime,
+         (SELECT COUNT(ticket.id) FROM whg_act_ticket ticket  WHERE ticket.orderid = wao.id) as ticketCount,
+          curdate() as nowDate
+        FROM whg_act_order wao,whg_act waa,whg_act_time wat
+        <where>
+            wao.activityid = waa.id and wao.eventid=wat.id
+            <if test="activityId!= null and activityId != ''">
+                AND wao.activityid = #{activityId}
+            </if>
+            <if test="name != null and name != ''">
+                AND waa.name like "%"#{name}"%"
+            </if>
+            <if test="orderphoneno != null and orderphoneno != ''">
+                AND wao.orderphoneno like "%"#{orderphoneno}"%"
+            </if>
+            <if test="ticketstatus != null and ticketstatus != ''">
+                AND wao.ticketstatus = #{ticketstatus}
+            </if>
+        </where>
+        ORDER BY wao.ordercreatetime DESC
+    </select>
+
+    <select id="queryActList" resultType="hashmap">
+        SELECT
+        waa.id AS id,
+        waa.name AS name,
+        date_format(waa.crtdate,'%Y-%m-%d %H:%m:%s') AS crtdate,
+        waa.imgurl AS imgurl,
+        waa.sellticket AS sellticket,
+        waa.ticketnum AS ticketnum,
+        waa.actsummary AS actsummary,
+        waa.starttime as starttime,
+        waa.endtime as endtime,
+        waa.acturl,
+        waa.enterstrtime as enterstrtime,
+        waa.enterendtime as enterendtime,
+        cult.name as cultidname,
+        waa.address,
+        (SELECT COUNT(wc.cmid) FROM whg_collection wc WHERE wc.cmrefid = waa.id  AND wc.cmopttyp = 2) as dianzan,
+        (SELECT COUNT(wc.cmid) FROM whg_collection wc WHERE wc.cmrefid = waa.id  AND wc.cmopttyp = 0) as shoucang
+        FROM whg_act waa,whg_sys_cult cult
+        <where>
+            cult.id = waa.cultid AND
+            waa.state = 6 AND
+            waa.delstate = 0 AND
+            waa.biz is null
+            <if test="etype != null and etype != ''.toString()">
+                AND waa.etype LIKE concat('%',#{etype},'%')
+            </if>
+            <if test="cultids!=null">
+                AND waa.cultid IN
+                <foreach item="item" index="index" collection="cultids" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="deptids!=null">
+                AND waa.deptid IN
+                <foreach item="item" index="index" collection="deptids" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="name != null and name != ''.toString()">
+                AND waa.name LIKE concat('%',#{name},'%')
+            </if>
+            <if test="areaid != null and areaid != ''.toString()">
+                AND waa.areaid = #{areaid}
+            </if>
+            <if test="province != null and province != ''.toString()">
+                AND waa.province = #{province}
+            </if>
+            <if test="city != null and city != ''.toString()">
+                AND waa.city = #{city}
+            </if>
+            <if test="isbigbanner != null">
+                AND waa.isbigbanner = #{isbigbanner}
+            </if>
+            <if test="isrecommend != null">
+                AND waa.isrecommend = #{isrecommend}
+            </if>
+            <if test="area != null">
+                AND waa.areaid = #{area}
+            </if>
+            <if test="sdate != null and sdate == 1">
+                AND waa.starttime &gt; now()
+            </if>
+            <if test="sdate != null and sdate == 2">
+                AND waa.starttime &lt; now()
+                AND waa.endtime &gt; now()
+            </if>
+            <if test="sdate != null and sdate == 3">
+                AND waa.endtime &lt; now()
+            </if>
+            <if test="sdate != null and sdate == 4">
+                AND waa.isrecommend = 1
+            </if>
+            <if test="sort != null and sort == 2">
+                AND waa.enterstrtime > now()
+            </if>
+            <if test="arttype !=null and arttype!=''.toString()">
+                and waa.arttype like "%"#{arttype}"%"
+            </if>
+        </where>
+
+        <if test="sort != null and sort == 1">
+            <choose>
+                <when test="allprovince!=null">
+                    ORDER BY waa.toprovince DESC, waa.isrecommend desc ,waa.publishdate DESC
+                </when>
+                <when test="allcity!=null">
+                    ORDER BY waa.tocity DESC, waa.isrecommend desc ,waa.publishdate DESC
+                </when>
+                <otherwise>
+                    ORDER BY waa.isrecommend desc ,waa.publishdate DESC
+                </otherwise>
+            </choose>
+        </if>
+        <if test="sort != null and sort == 2">
+            AND waa.enterstrtime > now()
+
+            <choose>
+                <when test="allprovince!=null">
+                    ORDER BY waa.toprovince DESC, waa.publishdate DESC
+                </when>
+                <when test="allcity!=null">
+                    ORDER BY waa.tocity DESC, waa.publishdate DESC
+                </when>
+                <otherwise>
+                    ORDER BY waa.publishdate DESC
+                </otherwise>
+            </choose>
+        </if>
+        <if test="sort != null and sort == 3">
+            <choose>
+                <when test="allprovince!=null">
+                    ORDER BY waa.toprovince DESC, waa.publishdate DESC
+                </when>
+                <when test="allcity!=null">
+                    ORDER BY waa.tocity DESC, waa.publishdate DESC
+                </when>
+                <otherwise>
+                    ORDER BY waa.publishdate DESC
+                </otherwise>
+            </choose>
+        </if>
+    </select>
+
+    <select id="queryActPhbList" resultType="hashmap">
+
+        SELECT
+        waa.id AS id,
+        waa.name AS name,
+        date_format(waa.crtdate,'%Y-%m-%d %H:%m:%s') AS crtdate,
+        waa.imgurl AS imgurl,
+        waa.sellticket AS sellticket,
+        waa.ticketnum AS ticketnum,
+        waa.actsummary AS actsummary,
+        waa.starttime as starttime,
+        waa.endtime as endtime,
+        waa.enterstrtime as enterstrtime,
+        waa.enterendtime as enterendtime,
+        waa.address,
+        (SELECT COUNT(wc.cmid) FROM whg_collection wc WHERE wc.cmrefid = waa.id  AND wc.cmopttyp = 2) as dianzan,
+        (SELECT COUNT(wao.id) FROM whg_act_order wao WHERE wao.activityid = waa.id  AND wao.orderisvalid = 1 AND wao.ticketstatus!=3) as dingdan,
+        (SELECT COUNT(wc.cmid) FROM whg_collection wc WHERE wc.cmrefid = waa.id  AND wc.cmopttyp = 0) as shoucang
+        FROM whg_act waa
+        <where>
+            waa.state = 6 AND
+            waa.delstate = 0 AND
+            waa.biz is null
+            <if test="param.name != null">
+                AND waa.name LIKE concat('%',#{param.name},'%')
+            </if>
+            <if test="param.areaid != null">
+                AND waa.areaid = #{param.areaid}
+            </if>
+            <if test="param.cultids!=null">
+                AND waa.cultid IN
+                <foreach item="item" index="index" collection="param.cultids" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="param.deptids!=null">
+                AND waa.deptid IN
+                <foreach item="item" index="index" collection="param.deptids" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="param.province != null">
+                AND waa.province = #{param.province}
+            </if>
+            <if test="param.city != null">
+                AND waa.city = #{param.city}
+            </if>
+            <if test="param.isbigbanner != null">
+                AND waa.isbigbanner = #{param.isbigbanner}
+            </if>
+            <if test="param.area != null">
+                AND waa.areaid = #{param.area}
+            </if>
+        </where>
+        <if test="param.sort != null and param.sort == 1">
+            ORDER BY waa.publishdate DESC
+        </if>
+        <if test="param.sort != null and param.sort == 2">
+            ORDER BY dingdan DESC
+        </if>
+        <if test="param.sort != null and param.sort == 3">
+            ORDER BY shoucang DESC
+        </if>
+        <if test="param.sort != null and param.sort == 4">
+            ORDER BY dianzan DESC
+        </if>
+
+    </select>
+
+
+    <select id="checkTwoActTimes" resultType="hashmap">
+        SELECT * FROM whg_act_time acttime
+        <where>
+            1=1
+            <if test="eventid != null and eventid != ''">
+                AND acttime.id != #{eventid}
+            </if>
+            <if test="playdate != null and playdate != ''.toString()">
+                AND date_format(acttime.playdate,'%Y-%m-%d') = #{playdate}
+            </if>
+            <if test="actid != null and actid != ''.toString()">
+                AND acttime.actid = #{actid}
+            </if>
+            <if test="playstarttime != null and playendtime != null">
+                AND (
+                (date_format(acttime.playstarttime,'%Y-%m-%d %H:%m') &lt;= #{playstarttime} AND
+                date_format(acttime.playendtime,'%Y-%m-%d %H:%m') &gt;= #{playstarttime}) OR
+                (date_format(acttime.playstarttime,'%Y-%m-%d %H:%m') &lt;= #{playendtime} AND
+                date_format(acttime.playendtime,'%Y-%m-%d %H:%m') &gt;= #{playendtime}) OR
+                (date_format(acttime.playstarttime,'%Y-%m-%d %H:%m') >= #{playstarttime} AND
+                date_format(acttime.playendtime,'%Y-%m-%d %H:%m') &lt;=#{playendtime})
+                )
+            </if>
+        </where>
+        ORDER BY acttime.playstarttime desc
+    </select>
+
+    <select id="getActTimes" resultType="hashmap">
+        SELECT * FROM whg_act_time
+        <where>
+            1=1
+            <if test="actid != null and actid != ''.toString()">
+                AND actid = #{actid}
+            </if>
+        </where>
+        GROUP BY playstime
+        ORDER BY playdate desc
+    </select>
+</mapper>

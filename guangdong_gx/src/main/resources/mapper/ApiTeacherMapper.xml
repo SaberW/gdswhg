@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.creatoo.hn.dao.mapper.api.ApiTeacherMapper">
+
+    <select id="selectTeaList4page" resultType="hashmap">
+        SELECT
+            *
+        FROM
+            whg_tra_teacher t
+        WHERE
+            t.state = 6
+        <if test="cultid != null">
+            AND t.cultid IN
+            <foreach item="item" index="index" collection="cultid" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="deptid != null">
+            AND t.deptid IN
+            <foreach item="item" index="index" collection="deptid" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="arttype!=null and arttype!=''.toString()"> AND t.arttype LIKE "%"#{arttype}"%" </if>
+        <if test="province!=null and province!=''.toString()"> AND t.province = #{province} </if>
+        <if test="city!=null and city!=''.toString()"> AND t.city = #{city} </if>
+        <if test="area!=null and area!=''.toString()"> AND t.area = #{area} </if>
+        <if test="title!=null and title!=''.toString()">  AND t.name like "%"#{title}"%" </if>
+
+        <choose>
+            <when test="allprovince!=null">
+                ORDER BY t.toprovince DESC, t.statemdfdate DESC
+            </when>
+            <when test="allcity!=null">
+                ORDER BY t.tocity DESC, t.statemdfdate DESC
+            </when>
+            <otherwise>
+                order by t.statemdfdate DESC
+            </otherwise>
+        </choose>
+    </select>
+</mapper>

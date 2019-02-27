@@ -1,0 +1,537 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.creatoo.hn.dao.mapper.api.ApiTraMapper">
+
+    <select id="selCount" resultType="int">
+        SELECT
+        count(*)
+        FROM
+        whg_tra_enrol e1,
+        whg_tra_course c1
+        WHERE
+        e1.traid = c1.traid
+        AND e1.userid = #{userid}
+        AND e1.state IN (1, 4, 6)
+        AND c1.starttime &gt; #{now}
+        AND ((#{starttime} &lt; c1.starttime AND c1.starttime  &lt; #{endtime} AND #{endtime} &lt; c1.endtime)
+        OR (c1.starttime &lt; #{starttime} AND #{starttime} &lt; c1.endtime AND c1.endtime &lt; #{endtime})
+        OR (#{starttime} <![CDATA[ >= ]]> c1.starttime AND #{endtime} <![CDATA[ <= ]]> c1.endtime)
+        OR (#{starttime} <![CDATA[ <= ]]> c1.starttime AND #{endtime} <![CDATA[ >= ]]> c1.endtime));
+    </select>
+
+    <select id="selTraById" resultType="hashmap">
+        SELECT
+            <if test="userid!=null and userid!=''.toString()">
+                (SELECT COUNT(*) from whg_tra_enrol e WHERE e.userid = #{userid}  AND e.traid = t.id AND e.state in (1,4,6)) enrolstate,
+            </if>
+            t.id as itemId,
+            t.title,
+            t.notice,
+            t.age,
+            t.teachername,
+            t.coursedesc as intro,
+            t.teacherdesc,
+            t.outline,
+            t.trainimg as image,
+            t.phone,
+            t.isrealname,
+            t.address,
+            t.isbasicclass,
+            t.longitude,
+            t.latitude,
+            t.enrollstarttime as applyBegin,
+            t.enrollendtime as applyEnd,
+            t.starttime as trainingBegin,
+            t.endtime as trainingEnd,
+            t.maxnumber as maxApplyNum,
+            t.etag as tag,
+            (SELECT COUNT(*) from whg_tra_enrol e WHERE e.traid = t.id  AND e.state in (1,4,6)) enrolcount,
+            t.groupid as groupid,
+            t.host as host,
+            t.cultid as cultid,
+            t.state,
+            t.delstate
+        FROM
+            whg_tra t
+        WHERE
+            t.state = 6 AND t.delstate = 0 and t.id = #{id}
+    </select>
+
+
+    <select id="getTraEnrolListByUserId" resultType="hashmap" parameterType="hashmap">
+        SELECT
+        t.*,
+        t1.title,
+        t1.address,
+        t1.starttime,
+        t1.id 'trainid'
+        FROM whg_tra_enrol t ,whg_tra t1
+        <where>
+            t.traid = t1.id AND t.biz='PT'
+            <if test="sdate != null and sdate == 1">
+                AND t1.starttime <![CDATA[>=]]> NOW()
+            </if>
+            <if test="sdate != null and sdate == 2">
+                AND t1.endtime <![CDATA[<=]]> NOW()
+            </if>
+            <if test="userid != null and userid != ''">
+                AND t.userid = #{userid}
+            </if>
+        </where>
+        order by  t.crttime desc
+    </select>
+
+    <select id="selTraList" resultType="hashmap">
+        SELECT
+            t.*,
+            (SELECT COUNT(*) from whg_tra_enrol e WHERE e.traid = t.id AND e.state in (1,4,6)) enrolCount,
+            (SELECT yt.name from whg_ywi_type yt WHERE yt.id = t.etype) 'typename'
+        FROM
+            whg_tra t
+        WHERE
+            t.state = 6 AND t.delstate = 0
+
+        <if test="cultid!=null">
+            AND t.cultid IN
+            <foreach item="item" index="index" collection="cultid" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="arttype != null">
+            AND t.arttype LIKE "%"#{arttype}"%"
+        </if>
+        <if test="type != null">
+            AND t.etype = #{type}
+        </if>
+        <if test="title != null">
+            AND t.title LIKE "%"#{title}"%"
+        </if>
+        <if test="sort != null">
+            <if test="sort == 1">
+                AND t.starttime &gt; #{now}
+            </if>
+            <if test="sort == 2">
+                AND t.starttime &lt; #{now}
+                AND t.endtime &gt; #{now}
+            </if>
+            <if test="sort == 3">
+                AND t.endtime &lt; #{now}
+            </if>
+        </if>
+        ORDER BY
+            statemdfdate DESC
+    </select>
+
+
+    <select id="selInsTraList" resultType="hashmap">
+        SELECT
+        t.*,
+        cult.name as cultidname
+        FROM
+        whg_supply_tra t, whg_sys_cult cult
+        WHERE
+        t.state = 6 AND cult.id= t.cultid
+        <if test="cultid != null">
+            AND t.cultid IN
+            <foreach item="item" index="index" collection="cultid" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+            <if test="arttype != null and arttype!=''.toString()">
+                AND t.arttype LIKE "%"#{arttype}"%"
+            </if>
+            <if test="type != null and type!=''.toString()">
+                AND t.etype = #{type}
+            </if>
+        </if>
+        <if test="cultid == null ">
+
+            <if test="arttype != null and arttype!=''.toString()">
+                AND t.arttype LIKE "%"#{arttype}"%"
+            </if>
+            <if test="type != null and type!=''.toString()">
+                AND t.etype LIKE "%"#{type}"%"
+            </if>
+        </if>
+        <if test="deptid != null">
+            AND t.deptid IN
+            <foreach item="item" index="index" collection="deptid" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+
+        <if test="title != null and title!=''.toString()">
+            AND t.title LIKE "%"#{title}"%"
+        </if>
+        <if test="province != null and province!=''.toString()">
+            AND t.province = #{province}
+        </if>
+        <if test="city != null and city!=''.toString()">
+            AND t.city = #{city}
+        </if>
+        <if test="area != null and area!=''.toString()">
+            AND t.area = #{area}
+        </if>
+        <if test="psprovince!=null and psprovince!=''.toString()">
+            and t.psprovince = #{psprovince}
+        </if>
+        <if test="pscity!=null and pscity!=''.toString()">
+            and t.pscity LIKE "%"#{pscity}"%"
+        </if>
+        ORDER BY
+        statemdfdate DESC
+    </select>
+
+    <select id="selectOneTra" resultType="hashmap">
+        SELECT
+        t.*,
+        cult.name as cultname,
+        wt.name as typename
+        FROM
+        whg_supply_tra t,whg_sys_cult cult,whg_ywi_type wt
+        WHERE
+        t.state = 6 AND t.etype = wt.id AND cult.id = t.cultid AND t.id = #{id}
+
+    </select>
+
+    <select id="selectTrainRecommend" resultType="hashmap">
+        select t.*
+        from whg_supply_tra t
+        where t.state = 6
+        <if test="cultid!=null">
+            AND t.cultid IN
+            <foreach item="item" index="index" collection="cultid" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="traid!=null and traid!=''.toString">
+            and t.id != #{traid}
+        </if>
+
+        order by t.statemdfdate DESC
+    </select>
+
+    <select id="selindexTraList" resultType="hashmap">
+        select t.*, (SELECT COUNT(*) from whg_tra_enrol e WHERE e.traid = t.id  AND e.state in (1,4,6)) enrolcount
+        from whg_tra t
+        where t.state = 6 and t.delstate=0 and t.islive=0 and t.biz ='PT'
+        <if test="cultid!=null">
+            AND t.cultid IN
+            <foreach item="item" index="index" collection="cultid" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        order by t.recommend desc, t.statemdfdate DESC
+    </select>
+
+
+    <select id="selindexTraliveList" resultType="hashmap">
+        select t.*
+        from whg_tra t
+        where t.state = 6 and t.delstate=0 and t.islive=1
+        <if test="cultid!=null">
+            AND t.cultid IN
+            <foreach item="item" index="index" collection="cultid" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        order by t.recommend desc, t.statemdfdate DESC
+    </select>
+
+
+
+    <select id="selectTraList4page" resultType="hashmap">
+        select t.*,
+        <if test="userid!=null and userid!=''.toString()">
+            (SELECT COUNT(*) from whg_tra_enrol e WHERE e.userid = #{userid}  AND e.traid = t.id AND e.state in (1,4,6)) enrolstate,
+        </if>
+        (SELECT COUNT(*) from whg_tra_enrol e WHERE e.traid = t.id  AND e.state in (1,4,6)) enrolcount
+        ,(SELECT COUNT(wc.cmid) FROM whg_collection wc WHERE wc.cmrefid = t.id  AND wc.cmopttyp = 2) as dianzan,
+        (SELECT COUNT(wc.cmid) FROM whg_collection wc WHERE wc.cmrefid = t.id  AND wc.cmopttyp = 0) as shoucang
+        from whg_tra t
+        where t.state = 6 and t.delstate=0 and t.islive=0 and t.biz ='PT'
+        <if test="cultid!=null">
+            AND t.cultid  IN
+            <foreach item="item" index="index" collection="cultid" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+            <if test="arttype!=null and arttype!=''.toString()">
+             AND t.arttype LIKE "%"#{arttype}"%"
+            </if>
+            <if test="etype!=null and etype!=''.toString()">
+             AND t.etype = #{etype}
+            </if>
+        </if>
+        <if test="deptid != null">
+            AND t.deptid  IN
+            <foreach item="item" index="index" collection="deptid" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="cultid == null">
+            <if test="arttype!=null and arttype!=''.toString()"> AND t.arttype LIKE "%"#{arttype}"%" </if>
+            <if test="etype!=null and etype!=''.toString()"> AND t.etype LIKE "%"#{etype}"%" </if>
+        </if>
+
+        <if test="province!=null and province!=''.toString()"> AND t.province = #{province} </if>
+        <if test="city!=null and city!=''.toString()"> AND t.city = #{city} </if>
+        <if test="area!=null and area!=''.toString()"> AND t.area = #{area} </if>
+        <if test="title!=null and title!=''.toString()">  AND t.title like "%"#{title}"%" </if>
+
+        <if test="sort!=null and sort == 1">
+          AND t.enrollstarttime > #{now}
+
+            <choose>
+                <when test="allprovince!=null">
+                    ORDER BY t.toprovince DESC, t.recommend desc, t.statemdfdate desc
+                </when>
+                <when test="allcity!=null">
+                    ORDER BY t.tocity DESC, t.recommend desc, t.statemdfdate desc
+                </when>
+                <otherwise>
+                    order by t.recommend desc, t.statemdfdate desc
+                </otherwise>
+            </choose>
+        </if>
+        <if test="sort!=null and sort == 2">
+            <choose>
+                <when test="allprovince!=null">
+                    ORDER BY t.toprovince DESC, t.statemdfdate DESC
+                </when>
+                <when test="allcity!=null">
+                    ORDER BY t.tocity DESC, t.statemdfdate DESC
+                </when>
+                <otherwise>
+                    order by t.statemdfdate DESC
+                </otherwise>
+            </choose>
+        </if>
+        <if test="sort==null or sort == 0">
+            <choose>
+                <when test="allprovince!=null">
+                    ORDER BY t.toprovince DESC, t.recommend desc, t.statemdfdate desc
+                </when>
+                <when test="allcity!=null">
+                    ORDER BY t.tocity DESC, t.recommend desc, t.statemdfdate desc
+                </when>
+                <otherwise>
+                    order by t.recommend desc, t.statemdfdate desc
+                </otherwise>
+            </choose>
+        </if>
+    </select>
+
+
+    <select id="selEnrolPerson" resultType="hashmap">
+       select * FROM whg_tra_enrol e1,whg_user u1 WHERE e1.traid = #{id} AND e1.userid = u1.id AND e1.state = 6
+    </select>
+
+
+    <select id="selTraEnrol4Userid" resultType="hashmap">
+        SELECT
+           *
+        FROM whg_tra_enrol t ,whg_tra t1
+        <where>
+            t.traid = t1.id AND t1.biz='PT'
+
+                AND t1.islive = #{type}
+
+            <if test="userid != null and userid != ''">
+                AND t.userid = #{userid}
+            </if>
+
+        </where>
+        order by  t.crttime desc
+    </select>
+
+
+    <select id="selTraCourseByUserid" resultType="hashmap">
+        SELECT whg_tra.id as traid,whg_tra_enrol.id as enrolid,whg_tra_course.id as courseid
+        from whg_tra,whg_tra_enrol,whg_tra_course where whg_tra.id = whg_tra_enrol.traid and
+        whg_tra_course.traid=whg_tra.id
+        and whg_tra.state=6 AND whg_tra.biz='PT' AND whg_tra.islive='0' AND whg_tra_enrol.state=6
+        <if test="usernumber != null and usernumber != ''">
+            AND whg_tra_enrol.cardno = #{usernumber}
+        </if>
+        <if test="startTime != null and endTime != null">
+            AND ( (whg_tra_course.starttime &gt; #{startTime} and whg_tra_course.starttime &lt; #{endTime}) or
+            (whg_tra_course.endtime &gt; #{startTime} and whg_tra_course.starttime &lt; #{startTime} ) )
+        </if>
+        ORDER By whg_tra_course.starttime
+    </select>
+
+
+
+    <select id="selNowKecheng" resultType="hashmap">
+          SELECT
+                c.*,
+                t.id 'tid',
+                t.endtime 'tendtime',
+                t.starttime 'tstarttime',
+                t.title 'traTitle',
+                t.islive,
+                v1.state 'vstate'
+            FROM
+        (whg_tra_course c,
+                whg_tra t,
+                whg_tra_enrol e)
+            LEFT JOIN
+                whg_traleave v1 ON c.id = v1.courseid AND v1.userid = e.userid
+            WHERE
+                e.traid = t.id
+                AND e.state = 6
+                AND c.state = 1
+                AND t.state = 6
+                AND t.id = c.traid
+                AND e.userid = #{userid}
+                AND t.biz = "PT"
+                AND c.starttime &gt; #{now}
+          ORDER BY c.starttime asc
+    </select>
+
+
+
+    <select id="selAllKecheng" resultType="hashmap">
+        SELECT
+          t.*,
+          e.id 'enrolid'
+        FROM
+          whg_tra t,
+          whg_tra_enrol e
+        WHERE
+          e.traid = t.id
+
+        AND e.state = 6
+        AND t.state = 6
+        AND t.delstate = 0
+        AND e.userid = #{userid}
+        AND t.biz = "PT"
+        ORDER BY t.starttime asc
+    </select>
+
+
+
+    <select id="selKecheng4Tid" resultType="hashmap">
+        SELECT
+        c.*,
+        t.id 'tid',
+        t.title 'traTitle',
+        t.islive,
+        v1.state 'vstate',
+        (select count(*) from whg_tra_course tc where tc.traid=t.id and tc.starttime &lt; CURRENT_TIMESTAMP and tc.endtime &gt; CURRENT_TIMESTAMP) as liveing,
+        (SELECT TIMESTAMPDIFF(SECOND,'1970-1-1 8:0:0',CURRENT_TIMESTAMP) -  TIMESTAMPDIFF(SECOND,'1970-1-1 8:0:0',tc.endtime) FROM whg_tra_course tc WHERE tc.traid = t.id ORDER BY tc.endtime DESC LIMIT 0, 1) as isover,
+        tec.sign
+        FROM
+       (whg_tra_course c,
+        whg_tra t)
+         LEFT JOIN
+                whg_traleave v1 ON c.id = v1.courseid AND v1.userid = #{userid}
+         LEFT JOIN
+                whg_tra_enrol_course tec ON tec.courseid = c.id AND tec.userid = #{userid}
+        WHERE
+        t.id = c.traid
+        AND t.id = #{traid}
+
+        AND t.biz = "PT"
+        ORDER BY c.starttime asc
+    </select>
+
+
+    <select id="selInClass" resultType="hashmap">
+        SELECT
+        c.*,
+        t.title
+        FROM
+        whg_tra_course c,
+        whg_tra t,
+        whg_tra_enrol e
+        WHERE
+        e.traid = t.id
+        AND e.state = 6
+
+        AND t.id = c.traid
+        AND e.userid = #{userid}
+        AND t.biz = "PT"
+        AND c.starttime &lt; #{now}
+        AND c.endtime &gt; #{now}
+
+        ORDER BY c.starttime asc
+    </select>
+
+
+    <select id="t_getWxKeCheng" resultType="hashmap">
+        SELECT
+        c.*,
+        (select count(*) from whg_tra_course tc where tc.traid=t.id AND t.islive = 1 and tc.starttime &lt; CURRENT_TIMESTAMP and tc.endtime &gt; CURRENT_TIMESTAMP) as liveing,
+        (SELECT TIMESTAMPDIFF(SECOND,'1970-1-1 8:0:0',CURRENT_TIMESTAMP) -  TIMESTAMPDIFF(SECOND,'1970-1-1 8:0:0',tc.endtime) FROM whg_tra_course tc WHERE tc.traid = t.id AND t.islive = 1 ORDER BY tc.endtime DESC LIMIT 0, 1) as isover,
+        t.id 'tid',
+        t.address,
+        t.islive,
+        t.longitude,
+        t.latitude,
+        e.id 'enrolid',
+        t.endtime 'tendtime',
+        t.starttime 'tstarttime',
+        t.title 'ttitle',
+        v1.state 'vstate',
+        tec.sign
+        FROM
+        (whg_tra_course c,
+        whg_tra t,
+        whg_tra_enrol e)
+        LEFT JOIN
+        whg_traleave v1 ON c.id = v1.courseid AND v1.userid = e.userid
+        LEFT JOIN
+        whg_tra_enrol_course tec ON tec.courseid = c.id AND tec.userid = #{userid}
+        WHERE
+
+        e.traid = t.id
+        AND e.state = 6
+
+
+        AND t.id = c.traid
+        AND e.userid = #{userid}
+        AND t.biz = "PT"
+        AND c.endtime &gt; #{now}
+
+        ORDER BY c.starttime asc
+    </select>
+
+    <select id="t_hotRecommend" resultType="hashmap">
+        select
+        t1.*,
+        (select count(*) from whg_tra_course tc where tc.traid=t1.id and tc.starttime &lt; CURRENT_TIMESTAMP and tc.endtime &gt; CURRENT_TIMESTAMP) as liveing,
+        (SELECT TIMESTAMPDIFF(SECOND,'1970-1-1 8:0:0',CURRENT_TIMESTAMP) -  TIMESTAMPDIFF(SECOND,'1970-1-1 8:0:0',tc.endtime) FROM whg_tra_course tc WHERE tc.traid = t1.id ORDER BY tc.endtime DESC LIMIT 0, 1) as isover,
+        (select starttime from whg_tra_course tc where tc.traid = t1.id and tc.starttime > CURRENT_TIMESTAMP order by tc.starttime desc LIMIT 0,1) as livestime,
+        (select count(*) from whg_collection tc where tc.cmrefid = t1.id and tc.cmopttyp in (0,2)) as hots
+        ,(select count(*) from whg_tra_enrol tc where tc.traid =t1.id and tc.state in (1,4,6)) as enrolnumber
+        ,(select count(*) from whg_collection tc where tc.cmrefid = t1.id and tc.cmopttyp in (0)) as sctimes
+        ,(select count(*) from whg_collection tc where tc.cmrefid = t1.id and tc.cmopttyp in (2)) as dztimes,
+        (SELECT COUNT(wc.cmid) FROM whg_collection wc WHERE wc.cmrefid = t1.id  AND wc.cmopttyp = 2) as dianzan,
+        (SELECT COUNT(wc.cmid) FROM whg_collection wc WHERE wc.cmrefid = t1.id  AND wc.cmopttyp = 0) as shoucang
+        from whg_tra t1
+        where
+        t1.biz = 'PT'
+        and t1.state = 6 and t1.delstate=0
+        <if test="cultid != null ">
+            AND t1.cultid IN
+            <foreach item="item" index="index" collection="cultid" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+            <if test="arttype != null and arttype != ''">and t1.arttype  LIKE "%"#{arttype}"%"</if>
+            <if test="tratype != null and tratype != ''">and t1.etype = #{tratype}</if>
+        </if>
+        <if test="deptid != null ">
+            AND t1.deptid IN
+            <foreach item="item" index="index" collection="deptid" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="province != null and province != ''">and t1.province = #{province}</if>
+        <if test="city != null and city != ''">and t1.city = #{city}</if>
+        <if test="area != null and area != ''">and t1.area = #{area}</if>
+        <if test="title != null and title != ''">and t1.title LIKE "%"#{title}"%"</if>
+        order by t1.recommend desc, t1.statemdfdate desc
+
+    </select>
+
+</mapper>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/brand/brand.css'" >
+<div th:include="guangdong/public/leftBar :: copy"></div>
+<div id="page">
+    <div class="mui-content">
+        <div id="category-cont"
+             class="category-cont mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+            <div class="mui-scroll">
+                <a href="javascript:void(0)" class="mui-control-item" data-index="c-1">区域<i></i></a>
+                <a href="javascript:void(0)" class="mui-control-item" data-index="c-2">品牌类型<i></i></a>
+            </div>
+        </div>
+        <div class="category-mask none">
+            <div class="category-group none" data-index="c-1">
+                <ul class="clearfix" id="areList">
+                    <!--<li class="active" data-txt="区域">全部</li>
+                    <li item-data="0">雨花区</li>
+                    <li item-data="1">天心区</li>
+                    <li item-data="2">开福区</li>
+                    <li item-data="3">岳麓区</li>
+                    <li item-data="4">芙蓉区</li>-->
+                </ul>
+            </div>
+            <div class="category-group none" data-index="c-2">
+                <ul class="clearfix" id="artList">
+                    <li class="active" item-data="" data-txt="艺术类型">全部</li>
+                    <li item-data="0">省级</li>
+                    <li item-data="1">市级</li>
+                    <li item-data="2">县（区）级</li>
+                </ul>
+            </div>
+        </div>
+        <div id="model-list-panel" class="mui-content mui-scroll-wrapper" style="top:45px;">
+            <div class="mui-scroll">
+                <div class="pic-list" id="model-list">
+                    <!--精选品牌-->
+                   <!-- <div class="brand">
+                        <div class="img">
+                            <p>品牌名称</p>
+                            <a href="#">
+                                <img class="lazy" src="http://mpic.tiankong.com/bbd/0e1/bbd0e1190ec0ae9e134732eeb4e4135e/640.jpg">
+                            </a>
+                        </div>
+                    </div>-->
+                    <!--精选品牌-->
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" th:inline="javascript">
+    $(document).ready(function (){
+        dataInit.showAre($.cookie("city"),[[${apiPath.depts}]]);;
+        select.create(modelData);
+        modelData();
+    })
+
+    function modelData(page, size){
+        var page = page || 1;
+        var size = size || 10;
+        var params ={};
+        //ajax请求
+        dataInit.ajax({
+            api: [[${apiPath.pplist}]],
+            params: {
+                index: page,
+                size: size,
+                pptype: $("#c-2").val(), //品牌类型
+                city: $("#city").val(), //市
+                area: $("#area").val(), //区
+                deptid: $("#deptid").val(), //服务站
+                province: $("#province").val(), //省
+                cultid: $.cookie("cultid")
+            },
+            forceUpdate: false,
+            fn: function (data) {
+                var params = {
+                    page: page,
+                    size: size,
+                    total: data.total
+                }
+                dataInit.htmlAdd(page, showBrandSelect(data));
+                dataInit.pullUp(params, modelData);
+            }
+        })
+    }
+
+    function showBrandSelect(data) {
+        var html = "";
+        if (data.code == 0 && data.rows.length > 0) {
+            for (var i in data.rows) {
+                var model = data.rows[i];
+                var img = data.imgPath + dataInit.getBigImage(model.picture);
+                html +='<div class="brand">'+
+                '<div class="img">'+
+                '<p>'+model.name+'</p>'+
+                '<img class="lazy" src="'+img+'">'+
+                '<a href="detail?id='+model.id+'"></a>' +
+                '</div>' +
+                '</div>';
+            }
+        } else {
+            html = '<div class="newbility-no-msg"></div>';
+        }
+        return html;
+    }
+</script>
+</body>
+</html>

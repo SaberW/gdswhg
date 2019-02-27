@@ -1,0 +1,636 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.creatoo.hn.dao.mapper.admin.TongjiMapper">
+	<!-- 活动排行 -->
+	<select id="hdph" resultType="hashmap">
+		SELECT id,name,tickettotal,ticketorder, ticketvalid,ratebook,rateseat,cultid,deptid,
+		(SELECT ta.name FROM whg_sys_cult ta WHERE ta.id=t.cultid) cultname,(SELECT ta.name FROM whg_sys_dept ta WHERE ta.id=t.deptid) deptname
+		FROM (
+		SELECT t.id, t.name,t.cultid,t.deptid, t.tickettotal, t.ticketorder, t.ticketvalid
+		,COALESCE(ROUND(t.ticketorder / t.tickettotal * 100,2), 0.00)as ratebook
+		,COALESCE(ROUND(t.ticketvalid / t.tickettotal * 100,2), 0.00)as rateseat
+		FROM (
+			SELECT
+				t1.id
+				,t1.name
+				,t1.cultid
+				,t1.deptid
+				,(SELECT COALESCE(SUM(ta.seats),0) FROM whg_act_time ta WHERE ta.actid=t1.id AND ta.state = 1) as tickettotal
+				,(SELECT COUNT(ta.id) FROM whg_act_order ta, whg_act_ticket tb WHERE ta.activityid=t1.id and ta.id = tb.orderid and ta.orderisvalid = 1) as ticketorder
+				,(SELECT COUNT(ta.id) FROM whg_act_order ta, whg_act_ticket tb WHERE ta.activityid=t1.id and ta.id = tb.orderid and ta.orderisvalid = 1 and tb.ticketstatus=1) as ticketvalid
+			FROM whg_act t1
+			WHERE t1.state = 6 and t1.delstate = 0 AND t1.biz IS NULL
+			<if test="cultid != null and cultid != ''.toString()">
+				and t1.cultid = #{cultid}
+			</if>
+			<if test="province != null and province != ''.toString()">
+				and t1.cultid in (SELECT t.id FROM whg_sys_cult t WHERE t.state=6 and t.delstate=0
+				and t.province=#{province}
+				<if test="city != null and city != ''.toString()">
+					and t.city = #{city}
+				</if>
+				<if test="area != null and area != ''.toString()">
+					and t.area = #{area}
+				</if>
+				)
+			</if>
+			<if test="name != null and name != ''.toString()">
+				and t1.name like #{name}
+			</if>
+			<if test="timeScope != null and timeScope =='1'.toString()">
+				and (date_format(t1.starttime,'%Y-%m')=date_format(now(),'%Y-%m') or date_format(t1.endtime,'%Y-%m')=date_format(now(),'%Y-%m'))
+			</if>
+			<if test="timeScope != null and timeScope =='2'.toString()">
+				and (date_format(t1.starttime,'%Y')=date_format(now(),'%Y') or date_format(t1.endtime,'%Y')=date_format(now(),'%Y'))
+			</if>
+			<if test="timeScope != null and timeScope =='3'.toString()">
+				<![CDATA[
+				and ((t1.starttime  >=  STR_TO_DATE(#{stime}, '%Y-%m-%d') and t1.starttime < STR_TO_DATE(#{etime}, '%Y-%m-%d')) or (t1.endtime >= STR_TO_DATE(#{stime}, '%Y-%m-%d') and t1.endtime < STR_TO_DATE(#{etime}, '%Y-%m-%d')))
+				]]>
+			</if>
+		) t
+		) t
+		<choose>
+			<when test="sort != null and sort != ''.toString()">
+				ORDER BY ${sort}<if test="order != null and order != ''.toString()"> ${order}</if>
+			</when>
+			<otherwise>
+				ORDER BY ratebook desc, rateseat desc
+			</otherwise>
+		</choose>
+	</select>
+
+	<!-- 培训排行 -->
+	<select id="pxph" resultType="hashmap">
+		SELECT * FROM (
+		SELECT
+		t.*,
+		COALESCE(ROUND(t.ticketorder / t.tickettotal * 100,2), 0.00) as ratebook,
+		COALESCE(ROUND(t.ticketvalid / t.ticketvalidtotal * 100,2), 0.00) as ratesign
+		FROM (
+		SELECT
+		t1.id,
+		t1.title,
+		t1.cultid,
+		t1.deptid,
+		(SELECT ta.name FROM whg_sys_cult ta WHERE ta.id=t1.cultid) as cultname,
+		(SELECT ta.name FROM whg_sys_dept ta WHERE ta.id=t1.deptid) as deptname,
+		(t1.basicenrollnumber) as tickettotal,
+		(SELECT COUNT(0) FROM whg_tra_enrol ta WHERE ta.state=6 and ta.traid=t1.id) as ticketorder,
+		(SELECT COUNT(0) FROM whg_tra_enrol ta, whg_tra_enrol_course tb WHERE ta.state=6 and ta.id=tb.enrolid and tb.traid=t1.id and tb.sign = 1) as ticketvalid,
+        (SELECT COALESCE(count(0)*t1.basicenrollnumber, 0) FROM whg_tra_course ta WHERE ta.state=1 and ta.delstate=0 and ta.traid=t1.id) as ticketvalidtotal,
+		(SELECT COUNT(0) FROM whg_collection ta WHERE ta.cmrefid=t1.id) as likes
+
+		FROM whg_tra t1
+		WHERE t1.state=6 AND t1.delstate=0 AND t1.biz = 'PT'
+		<if test="cultid != null and cultid != ''.toString()">
+			and t1.cultid = #{cultid}
+		</if>
+		<if test="province != null and province != ''.toString()">
+			and t1.cultid in (SELECT t.id FROM whg_sys_cult t WHERE t.state=6 and t.delstate=0
+			and t.province=#{province}
+			<if test="city != null and city != ''.toString()">
+				and t.city = #{city}
+			</if>
+			<if test="area != null and area != ''.toString()">
+				and t.area = #{area}
+			</if>
+			)
+		</if>
+		<if test="name != null and name != ''.toString()">
+			and t1.title like #{name}
+		</if>
+
+		<if test="timeScope != null and timeScope =='1'.toString()">
+			and (date_format(t1.starttime,'%Y-%m')=date_format(now(),'%Y-%m') or date_format(t1.endtime,'%Y-%m')=date_format(now(),'%Y-%m'))
+		</if>
+		<if test="timeScope != null and timeScope =='2'.toString()">
+			and (date_format(t1.starttime,'%Y')=date_format(now(),'%Y') or date_format(t1.endtime,'%Y')=date_format(now(),'%Y'))
+		</if>
+		<if test="timeScope != null and timeScope =='3'.toString()">
+			<![CDATA[
+				and ((t1.starttime  >=  STR_TO_DATE(#{stime}, '%Y-%m-%d') and t1.starttime < STR_TO_DATE(#{etime}, '%Y-%m-%d')) or (t1.endtime >= STR_TO_DATE(#{stime}, '%Y-%m-%d') and t1.endtime < STR_TO_DATE(#{etime}, '%Y-%m-%d')))
+				]]>
+		</if>
+		) t ) t
+		<choose>
+			<when test="sort != null and sort != ''.toString()">
+				ORDER BY ${sort}<if test="order != null and order != ''.toString()"> ${order}</if>
+			</when>
+			<otherwise>
+				ORDER BY ratebook desc, ratesign desc
+			</otherwise>
+		</choose>
+	</select>
+
+	<!-- 站点活动 -->
+	<select id="zdhd" resultType="hashmap">
+		SELECT * FROM (
+			SELECT id, name, acts, COALESCE(tickettotal,0) as tickettotal, COALESCE(ticketorder,0) as ticketorder, COALESCE(ticketvalid,0) as ticketvalid,
+				COALESCE(ROUND(t.ticketorder / t.tickettotal * 100,2), 0.00) as ratebook,
+				COALESCE(ROUND(t.ticketvalid / t.tickettotal * 100,2), 0.00) as rateseat
+			FROM (
+				SELECT
+				t1.id,
+				t1.name,
+				(
+					SELECT count(0) FROM whg_act ta WHERE ta.state=6 AND ta.delstate=0 AND ta.biz IS NULL AND ta.cultid=t1.id
+					<if test="timeScope != null and timeScope =='1'.toString()">
+						and (date_format(ta.starttime,'%Y-%m')=date_format(now(),'%Y-%m') or date_format(ta.endtime,'%Y-%m')=date_format(now(),'%Y-%m'))
+					</if>
+					<if test="timeScope != null and timeScope =='2'.toString()">
+						and (date_format(ta.starttime,'%Y')=date_format(now(),'%Y') or date_format(ta.endtime,'%Y')=date_format(now(),'%Y'))
+					</if>
+					<if test="timeScope != null and timeScope =='3'.toString()">
+						<![CDATA[
+							and ((ta.starttime  >=  STR_TO_DATE(#{stime}, '%Y-%m-%d') and ta.starttime < STR_TO_DATE(#{etime}, '%Y-%m-%d')) or (ta.endtime >= STR_TO_DATE(#{stime}, '%Y-%m-%d') and ta.endtime < STR_TO_DATE(#{etime}, '%Y-%m-%d')))
+						]]>
+					</if>
+				) as acts,
+				(
+					SELECT SUM((SELECT SUM(ta.seats) FROM whg_act_time ta WHERE ta.actid=t.id AND ta.state = 1))
+					FROM whg_act t WHERE t.state = 6 AND t.delstate = 0 AND t.biz IS NULL AND t.cultid = t1.id
+					<if test="timeScope != null and timeScope =='1'.toString()">
+						and (date_format(t.starttime,'%Y-%m')=date_format(now(),'%Y-%m') or date_format(t.endtime,'%Y-%m')=date_format(now(),'%Y-%m'))
+					</if>
+					<if test="timeScope != null and timeScope =='2'.toString()">
+						and (date_format(t.starttime,'%Y')=date_format(now(),'%Y') or date_format(t.endtime,'%Y')=date_format(now(),'%Y'))
+					</if>
+					<if test="timeScope != null and timeScope =='3'.toString()">
+						<![CDATA[
+							and ((t.starttime  >=  STR_TO_DATE(#{stime}, '%Y-%m-%d') and t.starttime < STR_TO_DATE(#{etime}, '%Y-%m-%d')) or (t.endtime >= STR_TO_DATE(#{stime}, '%Y-%m-%d') and t.endtime < STR_TO_DATE(#{etime}, '%Y-%m-%d')))
+						]]>
+					</if>
+				) as tickettotal,
+				(
+					SELECT SUM((SELECT COUNT(ta.id) FROM whg_act_order ta, whg_act_ticket tb WHERE ta.activityid=t.id and ta.id = tb.orderid and ta.orderisvalid = 1))
+					FROM whg_act t WHERE t.state = 6 AND t.delstate = 0 AND t.biz IS NULL AND t.cultid = t1.id
+					<if test="timeScope != null and timeScope =='1'.toString()">
+						and (date_format(t.starttime,'%Y-%m')=date_format(now(),'%Y-%m') or date_format(t.endtime,'%Y-%m')=date_format(now(),'%Y-%m'))
+					</if>
+					<if test="timeScope != null and timeScope =='2'.toString()">
+						and (date_format(t.starttime,'%Y')=date_format(now(),'%Y') or date_format(t.endtime,'%Y')=date_format(now(),'%Y'))
+					</if>
+					<if test="timeScope != null and timeScope =='3'.toString()">
+						<![CDATA[
+							and ((t.starttime  >=  STR_TO_DATE(#{stime}, '%Y-%m-%d') and t.starttime < STR_TO_DATE(#{etime}, '%Y-%m-%d')) or (t.endtime >= STR_TO_DATE(#{stime}, '%Y-%m-%d') and t.endtime < STR_TO_DATE(#{etime}, '%Y-%m-%d')))
+						]]>
+					</if>
+				) as ticketorder,
+				(
+					SELECT SUM((SELECT COUNT(ta.id) FROM whg_act_order ta, whg_act_ticket tb WHERE ta.activityid=t.id and ta.id = tb.orderid and ta.orderisvalid = 1 and tb.ticketstatus=1))
+					FROM whg_act t WHERE t.state = 6 AND t.delstate = 0 AND t.biz IS NULL AND t.cultid = t1.id
+					<if test="timeScope != null and timeScope =='1'.toString()">
+						and (date_format(t.starttime,'%Y-%m')=date_format(now(),'%Y-%m') or date_format(t.endtime,'%Y-%m')=date_format(now(),'%Y-%m'))
+					</if>
+					<if test="timeScope != null and timeScope =='2'.toString()">
+						and (date_format(t.starttime,'%Y')=date_format(now(),'%Y') or date_format(t.endtime,'%Y')=date_format(now(),'%Y'))
+					</if>
+					<if test="timeScope != null and timeScope =='3'.toString()">
+						<![CDATA[
+							and ((t.starttime  >=  STR_TO_DATE(#{stime}, '%Y-%m-%d') and t.starttime < STR_TO_DATE(#{etime}, '%Y-%m-%d')) or (t.endtime >= STR_TO_DATE(#{stime}, '%Y-%m-%d') and t.endtime < STR_TO_DATE(#{etime}, '%Y-%m-%d')))
+						]]>
+					</if>
+				) as ticketvalid
+				FROM whg_sys_cult t1
+				WHERE t1.state=6 AND t1.delstate=0
+					<if test="cultid != null and cultid != ''.toString()">
+						AND t1.id = #{cultid}
+					</if>
+					<if test="province != null and province != ''.toString()">
+						AND t1.province = #{province}
+						<if test="city != null and city != ''.toString()">
+							AND t1.city = #{city}
+						</if>
+						<if test="area != null and area != ''.toString()">
+							AND t1.area = #{area}
+						</if>
+					</if>
+					<if test="name != null and name != ''.toString()">
+						AND t1.name like #{name}
+					</if>
+					<if test="level != null and level != ''.toString()">
+						AND t1.level = #{level}
+					</if>
+			) t
+		) t
+		<choose>
+			<when test="sort != null and sort != ''.toString()">
+				ORDER BY ${sort}<if test="order != null and order != ''.toString()"> ${order}</if>
+			</when>
+			<otherwise>
+				ORDER BY ratebook desc, rateseat desc
+			</otherwise>
+		</choose>
+	</select>
+
+	<!-- 站点培训 -->
+	<select id="zdpx" resultType="hashmap">
+		SELECT * FROM (
+			SELECT id, name, acts, COALESCE(tickettotal,0) as tickettotal, COALESCE(ticketorder,0) as ticketorder, COALESCE(ticketvalid,0) as ticketvalid,
+                COALESCE(ticketvalidtotal,0) as ticketvalidtotal,
+				COALESCE(ROUND(t.ticketorder / t.tickettotal * 100,2), 0.00) as ratebook,
+				COALESCE(ROUND(t.ticketvalid / t.ticketvalidtotal * 100,2), 0.00) as rateseat
+			FROM (
+				SELECT
+					t1.id,
+					t1.name,
+					(
+						SELECT count(0) FROM whg_tra ta WHERE ta.state=6 AND ta.delstate=0 AND ta.biz = 'PT' AND ta.cultid=t1.id
+						<if test="timeScope != null and timeScope =='1'.toString()">
+							and (date_format(ta.starttime,'%Y-%m')=date_format(now(),'%Y-%m') or date_format(ta.endtime,'%Y-%m')=date_format(now(),'%Y-%m'))
+						</if>
+						<if test="timeScope != null and timeScope =='2'.toString()">
+							and (date_format(ta.starttime,'%Y')=date_format(now(),'%Y') or date_format(ta.endtime,'%Y')=date_format(now(),'%Y'))
+						</if>
+						<if test="timeScope != null and timeScope =='3'.toString()">
+							<![CDATA[
+								and ((ta.starttime  >=  STR_TO_DATE(#{stime}, '%Y-%m-%d') and ta.starttime < STR_TO_DATE(#{etime}, '%Y-%m-%d')) or (ta.endtime >= STR_TO_DATE(#{stime}, '%Y-%m-%d') and ta.endtime < STR_TO_DATE(#{etime}, '%Y-%m-%d')))
+							]]>
+						</if>
+					) as acts,
+					(
+						SELECT SUM(t.basicenrollnumber)
+						FROM whg_tra t WHERE t.state=6 AND t.delstate=0 AND t.biz = 'PT' AND t.cultid=t1.id
+						<if test="timeScope != null and timeScope =='1'.toString()">
+							and (date_format(t.starttime,'%Y-%m')=date_format(now(),'%Y-%m') or date_format(t.endtime,'%Y-%m')=date_format(now(),'%Y-%m'))
+						</if>
+						<if test="timeScope != null and timeScope =='2'.toString()">
+							and (date_format(t.starttime,'%Y')=date_format(now(),'%Y') or date_format(t.endtime,'%Y')=date_format(now(),'%Y'))
+						</if>
+						<if test="timeScope != null and timeScope =='3'.toString()">
+							<![CDATA[
+								and ((t.starttime  >=  STR_TO_DATE(#{stime}, '%Y-%m-%d') and t.starttime < STR_TO_DATE(#{etime}, '%Y-%m-%d')) or (t.endtime >= STR_TO_DATE(#{stime}, '%Y-%m-%d') and t.endtime < STR_TO_DATE(#{etime}, '%Y-%m-%d')))
+							]]>
+						</if>
+					) as tickettotal,
+					(
+						SELECT SUM((SELECT COUNT(0) FROM whg_tra_enrol ta WHERE ta.state=6 and ta.traid=t.id))
+						FROM whg_tra t WHERE t.state=6 and t.delstate=0 AND t.biz = 'PT' AND t.cultid = t1.id
+						<if test="timeScope != null and timeScope =='1'.toString()">
+							and (date_format(t.starttime,'%Y-%m')=date_format(now(),'%Y-%m') or date_format(t.endtime,'%Y-%m')=date_format(now(),'%Y-%m'))
+						</if>
+						<if test="timeScope != null and timeScope =='2'.toString()">
+							and (date_format(t.starttime,'%Y')=date_format(now(),'%Y') or date_format(t.endtime,'%Y')=date_format(now(),'%Y'))
+						</if>
+						<if test="timeScope != null and timeScope =='3'.toString()">
+							<![CDATA[
+								and ((t.starttime  >=  STR_TO_DATE(#{stime}, '%Y-%m-%d') and t.starttime < STR_TO_DATE(#{etime}, '%Y-%m-%d')) or (t.endtime >= STR_TO_DATE(#{stime}, '%Y-%m-%d') and t.endtime < STR_TO_DATE(#{etime}, '%Y-%m-%d')))
+							]]>
+						</if>
+					) as ticketorder,
+					(
+						SELECT SUM((SELECT COUNT(0) FROM whg_tra_enrol ta, whg_tra_enrol_course tb WHERE ta.state=6 and ta.id=tb.enrolid and tb.traid=t.id and tb.sign = 1))
+						FROM whg_tra t WHERE t.state=6 and t.delstate=0 AND t.biz = 'PT' AND t.cultid = t1.id
+						<if test="timeScope != null and timeScope =='1'.toString()">
+							and (date_format(t.starttime,'%Y-%m')=date_format(now(),'%Y-%m') or date_format(t.endtime,'%Y-%m')=date_format(now(),'%Y-%m'))
+						</if>
+						<if test="timeScope != null and timeScope =='2'.toString()">
+							and (date_format(t.starttime,'%Y')=date_format(now(),'%Y') or date_format(t.endtime,'%Y')=date_format(now(),'%Y'))
+						</if>
+						<if test="timeScope != null and timeScope =='3'.toString()">
+							<![CDATA[
+								and ((t.starttime  >=  STR_TO_DATE(#{stime}, '%Y-%m-%d') and t.starttime < STR_TO_DATE(#{etime}, '%Y-%m-%d')) or (t.endtime >= STR_TO_DATE(#{stime}, '%Y-%m-%d') and t.endtime < STR_TO_DATE(#{etime}, '%Y-%m-%d')))
+							]]>
+						</if>
+					) as ticketvalid,
+                    (
+                        SELECT SUM((SELECT count(0)*t.basicenrollnumber FROM whg_tra_course ta WHERE ta.state=1 and ta.delstate=0 and ta.traid=t.id))
+                        FROM whg_tra t WHERE t.state=6 and t.delstate=0 AND t.biz = 'PT' AND t.cultid = t1.id
+                        <if test="timeScope != null and timeScope =='1'.toString()">
+                            and (date_format(t.starttime,'%Y-%m')=date_format(now(),'%Y-%m') or date_format(t.endtime,'%Y-%m')=date_format(now(),'%Y-%m'))
+                        </if>
+                        <if test="timeScope != null and timeScope =='2'.toString()">
+                            and (date_format(t.starttime,'%Y')=date_format(now(),'%Y') or date_format(t.endtime,'%Y')=date_format(now(),'%Y'))
+                        </if>
+                        <if test="timeScope != null and timeScope =='3'.toString()">
+                            <![CDATA[
+                                and ((t.starttime  >=  STR_TO_DATE(#{stime}, '%Y-%m-%d') and t.starttime < STR_TO_DATE(#{etime}, '%Y-%m-%d')) or (t.endtime >= STR_TO_DATE(#{stime}, '%Y-%m-%d') and t.endtime < STR_TO_DATE(#{etime}, '%Y-%m-%d')))
+                            ]]>
+                        </if>
+                    ) as ticketvalidtotal
+				FROM whg_sys_cult t1
+				WHERE t1.state=6 AND t1.delstate=0
+					<if test="cultid != null and cultid != ''.toString()">
+						AND t1.id = #{cultid}
+					</if>
+					<if test="province != null and province != ''.toString()">
+						AND t1.province = #{province}
+						<if test="city != null and city != ''.toString()">
+							AND t1.city = #{city}
+						</if>
+						<if test="area != null and area != ''.toString()">
+							AND t1.area = #{area}
+						</if>
+					</if>
+					<if test="name != null and name != ''.toString()">
+						AND t1.name like #{name}
+					</if>
+					<if test="level != null and level != ''.toString()">
+						AND t1.level = #{level}
+					</if>
+			) t
+		) t
+		<choose>
+			<when test="sort != null and sort != ''.toString()">
+				ORDER BY ${sort}<if test="order != null and order != ''.toString()"> ${order}</if>
+			</when>
+			<otherwise>
+				ORDER BY ratebook desc, rateseat desc
+			</otherwise>
+		</choose>
+	</select>
+
+	<!-- 站点场馆 -->
+	<select id="zdcg" resultType="hashmap">
+		SELECT * FROM (
+			SELECT id, name, vens, rooms, sizearea, timelong,booknumbs,booktimes,
+					COALESCE(ROUND(booktimes / timelong * 100,2), 0.00) as ratebook
+			FROM (
+				SELECT
+					t1.id,
+					t1.name,
+					(
+						SELECT COALESCE(COUNT(0),0) FROM whg_ven t WHERE t.state=6 AND t.delstate=0 AND t.cultid=t1.id
+						<if test="timeScope != null and timeScope =='1'.toString()">
+							<![CDATA[ AND t.publishdate <= last_day(NOW()) ]]>
+						</if>
+						<if test="timeScope != null and timeScope =='2'.toString()">
+							<![CDATA[ AND t.publishdate <= STR_TO_DATE(CONCAT(DATE_FORMAT(NOW(),'%Y'), '-12-31'), '%Y-%m-%d') ]]>
+						</if>
+						<if test="timeScope != null and timeScope =='3'.toString()">
+							<![CDATA[ AND t.publishdate < STR_TO_DATE(#{etime}, '%Y-%m-%d') ]]>
+						</if>
+					) as vens,
+					(
+						SELECT COALESCE(COUNT(0),0) FROM whg_ven_room t, whg_ven ta WHERE t.state=6 and t.delstate=0 AND t.venid=ta.id AND ta.cultid=t1.id
+						<if test="timeScope != null and timeScope =='1'.toString()">
+							<![CDATA[ AND t.publishdate <= last_day(NOW()) ]]>
+						</if>
+						<if test="timeScope != null and timeScope =='2'.toString()">
+							<![CDATA[ AND t.publishdate <= STR_TO_DATE(CONCAT(DATE_FORMAT(NOW(),'%Y'), '-12-31'), '%Y-%m-%d') ]]>
+						</if>
+						<if test="timeScope != null and timeScope =='3'.toString()">
+							<![CDATA[ AND t.publishdate < STR_TO_DATE(#{etime}, '%Y-%m-%d') ]]>
+						</if>
+					) as rooms,
+					(
+						SELECT COALESCE(ROUND(SUM(t.sizearea),2), 0.00) FROM (
+							SELECT ta.cultid, tb.id, tb.sizearea
+							FROM whg_ven ta, whg_ven_room tb, whg_ven_room_time tc
+							WHERE ta.id=tb.venid AND tb.id=tc.roomid AND ta.state=6 AND ta.delstate=0 AND tb.state=6 AND tb.delstate=0 AND tc.state=1
+								<if test="timeScope != null and timeScope =='1'.toString()">
+									AND date_format(tc.timeday,'%Y-%m')=date_format(now(),'%Y-%m')
+								</if>
+								<if test="timeScope != null and timeScope =='2'.toString()">
+									AND date_format(tc.timeday,'%Y')=date_format(now(),'%Y')
+								</if>
+								<if test="timeScope != null and timeScope =='3'.toString()">
+									<![CDATA[ AND tc.timeday >= STR_TO_DATE(#{stime}, '%Y-%m-%d') AND tc.timeday < STR_TO_DATE(#{etime}, '%Y-%m-%d')]]>
+								</if>
+							GROUP BY ta.cultid, tb.id, tb.sizearea
+						) t WHERE t.cultid=t1.id
+					) as sizearea,
+					(
+						SELECT COALESCE(SUM(tc.timelong),0)
+						FROM whg_ven ta, whg_ven_room tb, whg_ven_room_time tc
+						WHERE ta.id=tb.venid and tb.id=tc.roomid AND ta.state=6 AND ta.delstate=0 AND tb.state=6 AND tb.delstate=0 and tc.state=1 AND ta.cultid=t1.id
+						<if test="timeScope != null and timeScope =='1'.toString()">
+							AND date_format(tc.timeday,'%Y-%m')=date_format(now(),'%Y-%m')
+						</if>
+						<if test="timeScope != null and timeScope =='2'.toString()">
+							AND date_format(tc.timeday,'%Y')=date_format(now(),'%Y')
+						</if>
+						<if test="timeScope != null and timeScope =='3'.toString()">
+							<![CDATA[ AND tc.timeday >= STR_TO_DATE(#{stime}, '%Y-%m-%d') AND tc.timeday < STR_TO_DATE(#{etime}, '%Y-%m-%d')]]>
+						</if>
+					) as timelong,
+					(
+						SELECT COALESCE(count(tc.ordercontact), 0)
+						FROM whg_ven ta, whg_ven_room tb, whg_ven_room_order tc
+						WHERE ta.id=tb.venid and tb.id=tc.roomid and tc.state=3 AND ta.cultid=t1.id
+						<if test="timeScope != null and timeScope =='1'.toString()">
+							AND date_format(tc.timeday,'%Y-%m')=date_format(now(),'%Y-%m')
+						</if>
+						<if test="timeScope != null and timeScope =='2'.toString()">
+							AND date_format(tc.timeday,'%Y')=date_format(now(),'%Y')
+						</if>
+						<if test="timeScope != null and timeScope =='3'.toString()">
+							<![CDATA[ AND tc.timeday >= STR_TO_DATE(#{stime}, '%Y-%m-%d') AND tc.timeday < STR_TO_DATE(#{etime}, '%Y-%m-%d')]]>
+						</if>
+					) as booknumbs,
+					(
+						SELECT COALESCE(SUM(tc.timelong),0)
+						FROM whg_ven ta, whg_ven_room tb, whg_ven_room_order tc
+						WHERE ta.id=tb.venid and tb.id=tc.roomid and tc.state=3 AND ta.cultid=t1.id
+						<if test="timeScope != null and timeScope =='1'.toString()">
+							AND date_format(tc.timeday,'%Y-%m')=date_format(now(),'%Y-%m')
+						</if>
+						<if test="timeScope != null and timeScope =='2'.toString()">
+							AND date_format(tc.timeday,'%Y')=date_format(now(),'%Y')
+						</if>
+						<if test="timeScope != null and timeScope =='3'.toString()">
+							<![CDATA[ AND tc.timeday >= STR_TO_DATE(#{stime}, '%Y-%m-%d') AND tc.timeday < STR_TO_DATE(#{etime}, '%Y-%m-%d')]]>
+						</if>
+					) as booktimes
+				FROM whg_sys_cult t1
+				WHERE t1.state=6 AND t1.delstate=0
+					<if test="cultid != null and cultid != ''.toString()">
+						AND t1.id = #{cultid}
+					</if>
+					<if test="province != null and province != ''.toString()">
+						AND t1.province = #{province}
+						<if test="city != null and city != ''.toString()">
+							AND t1.city = #{city}
+						</if>
+						<if test="area != null and area != ''.toString()">
+							AND t1.area = #{area}
+						</if>
+					</if>
+					<if test="name != null and name != ''.toString()">
+						AND t1.name like #{name}
+					</if>
+					<if test="level != null and level != ''.toString()">
+						AND t1.level = #{level}
+					</if>
+			) t
+		) t
+		<choose>
+			<when test="sort != null and sort != ''.toString()">
+				ORDER BY ${sort}<if test="order != null and order != ''.toString()"> ${order}</if>
+			</when>
+			<otherwise>
+				ORDER BY ratebook desc
+			</otherwise>
+		</choose>
+	</select>
+
+	<!-- 站点资讯 -->
+	<select id="zdzx" resultType="hashmap">
+		SELECT * FROM (
+			SELECT id, name, total, views
+			FROM (
+				SELECT
+					t1.id,
+					t1.name,
+					(
+						SELECT COUNT(0) FROM whg_inf_colinfo t WHERE t.clnvenueid=t1.id AND t.clnfstata=6 AND t.delstate=0
+						<if test="timeScope != null and timeScope =='1'.toString()">
+							<![CDATA[ AND t.publishdate <= last_day(NOW()) ]]>
+						</if>
+						<if test="timeScope != null and timeScope =='2'.toString()">
+							<![CDATA[ AND t.publishdate <= STR_TO_DATE(CONCAT(DATE_FORMAT(NOW(),'%Y'), '-12-31'), '%Y-%m-%d') ]]>
+						</if>
+						<if test="timeScope != null and timeScope =='3'.toString()">
+							<![CDATA[ AND t.publishdate < STR_TO_DATE(#{etime}, '%Y-%m-%d') ]]>
+						</if>
+					) as total,
+					(
+						SELECT COALESCE(SUM(t.clnfbrowse),0) FROM whg_inf_colinfo t WHERE t.clnvenueid=t1.id AND t.clnfstata=6 AND t.delstate=0
+						<if test="timeScope != null and timeScope =='1'.toString()">
+							<![CDATA[ AND t.publishdate <= last_day(NOW()) ]]>
+						</if>
+						<if test="timeScope != null and timeScope =='2'.toString()">
+							<![CDATA[ AND t.publishdate <= STR_TO_DATE(CONCAT(DATE_FORMAT(NOW(),'%Y'), '-12-31'), '%Y-%m-%d') ]]>
+						</if>
+						<if test="timeScope != null and timeScope =='3'.toString()">
+							<![CDATA[ AND t.publishdate < STR_TO_DATE(#{etime}, '%Y-%m-%d') ]]>
+						</if>
+					) as views
+				FROM whg_sys_cult t1
+				WHERE t1.state=6 AND t1.delstate=0
+				<if test="cultid != null and cultid != ''.toString()">
+					AND t1.id = #{cultid}
+				</if>
+				<if test="province != null and province != ''.toString()">
+					AND t1.province = #{province}
+					<if test="city != null and city != ''.toString()">
+						AND t1.city = #{city}
+					</if>
+					<if test="area != null and area != ''.toString()">
+						AND t1.area = #{area}
+					</if>
+				</if>
+				<if test="name != null and name != ''.toString()">
+					AND t1.name like #{name}
+				</if>
+				<if test="level != null and level != ''.toString()">
+					AND t1.level = #{level}
+				</if>
+			) t
+		) t
+		<choose>
+			<when test="sort != null and sort != ''.toString()">
+				ORDER BY ${sort}<if test="order != null and order != ''.toString()"> ${order}</if>
+			</when>
+			<otherwise>
+				ORDER BY total desc
+			</otherwise>
+		</choose>
+	</select>
+
+
+    <!-- 用户注册，PV，UV -->
+    <select id="tjptsj" resultType="hashmap">
+		SELECT
+		(COUNT(0)) as reg_user_total,
+		(SELECT COUNT(0) FROM whg_user t1 WHERE date_format(t1.registtime,'%Y-%m')=date_format(now(),'%Y-%m')) as  reg_user_month,
+		(SELECT COUNT(0) FROM whg_user t1 WHERE date_format(t1.registtime,'%Y-%m-%d')=date_format(now(),'%Y-%m-%d')) as reg_user_day,
+		(
+				SELECT COUNT(0) FROM (
+					SELECT userid FROM (
+						SELECT t1.userid FROM whg_act_order t1
+						UNION
+						SELECT t1.userid FROM whg_tra_enrol t1
+						UNION
+						SELECT t1.userid FROM whg_ven_room_order t1
+					) t GROUP BY t.userid
+				) t
+		) as hot_user_total,
+		(
+			SELECT COUNT(0) FROM (
+			SELECT userid FROM (
+				SELECT t1.userid FROM whg_act_order t1 WHERE date_format(t1.ordercreatetime,'%Y-%m')=date_format(now(),'%Y-%m')
+				UNION
+				SELECT t1.userid FROM whg_tra_enrol t1 WHERE date_format(t1.crttime,'%Y-%m')=date_format(now(),'%Y-%m')
+				UNION
+				SELECT t1.userid FROM whg_ven_room_order t1 WHERE date_format(t1.crtdate,'%Y-%m')=date_format(now(),'%Y-%m')
+			) t GROUP BY t.userid
+			) t
+		) as hot_user_month,
+		(
+			SELECT COUNT(0) FROM (
+			SELECT userid FROM (
+				SELECT t1.userid FROM whg_act_order t1 WHERE date_format(t1.ordercreatetime,'%Y-%m-%d')=date_format(now(),'%Y-%m-%d')
+				UNION
+				SELECT t1.userid FROM whg_tra_enrol t1 WHERE date_format(t1.crttime,'%Y-%m-%d')=date_format(now(),'%Y-%m-%d')
+				UNION
+				SELECT t1.userid FROM whg_ven_room_order t1 WHERE date_format(t1.crtdate,'%Y-%m-%d')=date_format(now(),'%Y-%m-%d')
+			) t GROUP BY t.userid
+			) t
+		) as hot_user_day,
+		(SELECT (COALESCE(SUM(visit_count), 0)) FROM whg_visit_data) as pv_total,
+		(SELECT COALESCE(SUM(t1.visit_count), 0) FROM whg_visit_data t1 WHERE date_format(t1.visit_date,'%Y-%m')=date_format(now(),'%Y-%m')) as pv_month,
+		(SELECT COALESCE(SUM(t1.visit_count), 0) FROM whg_visit_data t1 WHERE date_format(t1.visit_date,'%Y-%m-%d')=date_format(now(),'%Y-%m-%d')) as pv_day,
+		(SELECT COUNT(0) FROM (SELECT t1.visit_user FROM whg_visit_data t1 GROUP BY t1.visit_user) t) as uv_total,
+		(SELECT COUNT(0) FROM (SELECT t1.visit_user FROM whg_visit_data t1 WHERE date_format(t1.visit_date,'%Y-%m')=date_format(now(),'%Y-%m') GROUP BY t1.visit_user) t) as uv_month,
+		(SELECT COUNT(0) FROM (SELECT t1.visit_user FROM whg_visit_data t1 WHERE date_format(t1.visit_date,'%Y-%m-%d')=date_format(now(),'%Y-%m-%d') GROUP BY t1.visit_user) t) as uv_day
+		FROM whg_user t1
+	</select>
+
+    <!-- 年度-场馆举办活动排行 -->
+    <select id="venActPaihang" resultType="hashmap">
+        SELECT name,acts FROM (
+            SELECT t.name
+            ,(SELECT COUNT(0) FROM whg_act t1 WHERE t1.state=6 AND t1.delstate=0 AND t1.biz IS NULL AND date_format(t1.publishdate,'%Y')=date_format(now(),'%Y') AND t1.cultid=t.id) as acts
+            FROM whg_sys_cult t WHERE t.state=6 AND t.delstate=0
+        ) t ORDER BY acts desc
+    </select>
+    <!-- 年度-场馆举办活动总数 -->
+    <select id="venActTotal" resultType="integer">
+      SELECT COUNT(0) FROM whg_act t1, whg_sys_cult t2 WHERE t1.cultid=t2.id AND t2.state=6 AND t2.delstate=0 AND t1.state=6 AND t1.delstate=0 AND t1.biz IS NULL AND date_format(t1.publishdate,'%Y')=date_format(now(),'%Y')
+    </select>
+
+
+    <!-- 文化服务趋势-活动-最近六个月 -->
+    <select id="actSearch" resultType="hashmap">
+        SELECT COUNT(0) as num, 'month1' as month FROM whg_act t1 WHERE t1.state=6 AND t1.delstate=0 AND biz IS NULL AND date_format(t1.publishdate,'%Y-%m')=#{month1}
+        UNION
+        SELECT COUNT(0) as num, 'month2' as month FROM whg_act t1 WHERE t1.state=6 AND t1.delstate=0 AND biz IS NULL AND date_format(t1.publishdate,'%Y-%m')=#{month2}
+        UNION
+        SELECT COUNT(0) as num, 'month3' as month FROM whg_act t1 WHERE t1.state=6 AND t1.delstate=0 AND biz IS NULL AND date_format(t1.publishdate,'%Y-%m')=#{month3}
+        UNION
+        SELECT COUNT(0) as num, 'month4' as month FROM whg_act t1 WHERE t1.state=6 AND t1.delstate=0 AND biz IS NULL AND date_format(t1.publishdate,'%Y-%m')=#{month4}
+        UNION
+        SELECT COUNT(0) as num, 'month5' as month FROM whg_act t1 WHERE t1.state=6 AND t1.delstate=0 AND biz IS NULL AND date_format(t1.publishdate,'%Y-%m')=#{month5}
+        UNION
+        SELECT COUNT(0) as num, 'month6' as month FROM whg_act t1 WHERE t1.state=6 AND t1.delstate=0 AND biz IS NULL AND date_format(t1.publishdate,'%Y-%m')=#{month6}
+    </select>
+
+    <!-- 文化服务趋势-培训-最近六个月 -->
+    <select id="traSearch" resultType="hashmap">
+        SELECT COUNT(0) as num, 'month1' as month FROM whg_tra t1 WHERE t1.state=6 AND t1.delstate=0 AND t1.biz = 'PT' AND date_format(t1.publishdate,'%Y-%m')=#{month1}
+        UNION
+        SELECT COUNT(0) as num, 'month2' as month FROM whg_tra t1 WHERE t1.state=6 AND t1.delstate=0 AND t1.biz = 'PT' AND date_format(t1.publishdate,'%Y-%m')=#{month2}
+        UNION
+        SELECT COUNT(0) as num, 'month3' as month FROM whg_tra t1 WHERE t1.state=6 AND t1.delstate=0 AND t1.biz = 'PT' AND date_format(t1.publishdate,'%Y-%m')=#{month3}
+        UNION
+        SELECT COUNT(0) as num, 'month4' as month FROM whg_tra t1 WHERE t1.state=6 AND t1.delstate=0 AND t1.biz = 'PT' AND date_format(t1.publishdate,'%Y-%m')=#{month4}
+        UNION
+        SELECT COUNT(0) as num, 'month5' as month FROM whg_tra t1 WHERE t1.state=6 AND t1.delstate=0 AND t1.biz = 'PT' AND date_format(t1.publishdate,'%Y-%m')=#{month5}
+        UNION
+        SELECT COUNT(0) as num, 'month6' as month FROM whg_tra t1 WHERE t1.state=6 AND t1.delstate=0 AND t1.biz = 'PT' AND date_format(t1.publishdate,'%Y-%m')=#{month6}
+    </select>
+
+    <!-- 年度或者本月最热活动 -->
+    <select id="hotAct" resultType="hashmap">
+        SELECT cultid, id, orders, likes, hots FROM (
+            SELECT cultid, id, orders, likes, (orders+likes+comms) hots  FROM (
+            SELECT t1.cultid,t1.id
+            , (SELECT COUNT(ta.id) FROM whg_act_order ta, whg_act_ticket tb WHERE ta.id = tb.orderid and ta.orderisvalid = 1 AND ta.activityid=t1.id) as orders
+            , (SELECT COUNT(0) FROM whg_collection ta WHERE ta.cmopttyp in (0,2) AND ta.cmrefid=t1.id) as likes
+            , (SELECT COUNT(0) FROM whg_comment ta WHERE ta.rmtyp=0 AND ta.rmrefid=t1.id) as comms
+            FROM whg_act t1 WHERE t1.state=6 AND t1.delstate=0 AND biz IS NULL AND date_format(t1.publishdate,#{fmt})=date_format(now(),#{fmt})
+        ) t ) t ORDER BY hots DESC, orders DESC, likes DESC
+    </select>
+</mapper>

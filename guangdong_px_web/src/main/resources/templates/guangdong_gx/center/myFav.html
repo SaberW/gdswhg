@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong_gx/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/style/center/center.css'">
+<div class="wrapper clearfix">
+    <div class="content">
+        <!--公共主头部开始-->
+        <div id="header" th:include="guangdong_gx/public/header :: copy"></div>
+        <!--公共主头部结束-->
+        <!--主体开始-->
+        <div class="container res-center-bg">
+            <div class="sys-crumbs">
+                <span><a href="../index/index">首页</a></span>
+                <i class="icon iconfont icon-enter"></i>
+                <span><a href="index">用户中心</a></span>
+                <i class="icon iconfont icon-enter"></i>
+                <span class="active" id="title">我的收藏</span>
+            </div>
+            <div class="page-list">
+                <div class="center-nav">
+                    <ul class="clearfix">
+                        <li class="active" data-type="5">
+                            线下培训
+                        </li>
+                        <li data-type="16">
+                            在线课程
+                        </li>
+                        <li data-type="31">
+                            培训师资
+                        </li>
+                        <li data-type="32">
+                            培训资源
+                        </li>
+                    </ul>
+                </div>
+                <!--线下培训列表开始-->
+                <ul class="center-list clearfix" id="modelList">
+                    <!--<li class="train-item">
+                        <a href="#" target="_blank"></a>
+                        <div class="img">
+                            <div class="desc">
+                                <i class="icon iconfont icon-time"></i>
+                                <span>报名结束仅剩12天</span>
+                            </div>
+                            <div class="state s-1">立即报名</div>
+                            <img th:src="${basePath}+'/assets/img/img_demo/demo.png'">
+                        </div>
+                        <div class="info">
+                            <h2>线下培训标题线下，标题线下培。标题线下培训标题</h2>
+                            <p>地点：<span>广州市天河区广州大道中12号海天盛宴</span></p>
+                            <p>时间：<span>2017-09-10至2017-10-10</span></p>
+                            <p>人数：<span>仅剩20人</span></p>
+                            <p>年龄：<span>7-12岁</span></p>
+                        </div>
+                    </li>-->
+                </ul>
+                <!--线下培训列表结束-->
+                <!--在线课程列表开始-->
+                <!--<ul class="center-list clearfix">
+                    <li class="live-item">
+                        <a href="#" target="_blank"></a>
+                        <div class="img">
+                            <div class="desc">
+                                <i class="icon iconfont icon-time"></i>
+                                <span>距直播还有10天</span>
+                            </div>
+                            <div class="state s-3">直播预告</div>
+                            <img th:src="${basePath}+'/assets/img/img_demo/demo.png'">
+                        </div>
+                        <div class="info">
+                            <h2>线下培训标题线下，标题线下培。标题线下培训标题</h2>
+                            <p>时间：<span>2017-09-10至2017-10-10</span></p>
+                            <p>人数：<span>仅剩20人</span></p>
+                            <p>年龄：<span>7-12岁</span></p>
+                        </div>
+                    </li>
+                </ul>-->
+                <!--在线课程列表结束-->
+                <!--培训师资开始-->
+                <!--<ul class="center-list clearfix">
+                    <li class="teacher-item">
+                        <a href="#" target="_blank"></a>
+                        <div class="img">
+                            <img th:src="${basePath}+'/assets/img/img_demo/demo.png'">
+                        </div>
+                        <div class="info">
+                            <h2>王粤娜</h2>
+                            <em>舞蹈</em>
+                            <p class="desc">1986年4月26日出生于四川省阿坝藏族羌族自治州汶川县，中国内地男演员、主持人，毕业于四川师范大学电影电视学院。2005年，与周翔宇两人以“羌族双煞”为名恶搞“白蛇传”和“爱情大魔咒”受到网友关注。</p>
+                            <p class="btn">查看详情</p>
+                        </div>
+                    </li>
+                </ul>-->
+                <!--培训师资结束-->
+                <!--培训资源开始-->
+                <!--<ul class="center-list clearfix">
+                    <li class="res-item">
+                        <a href="#" target="_blank"></a>
+                        <div class="img">
+                            <i class="icon iconfont icon-CombinedShape"></i>
+                            <img th:src="${basePath}+'/assets/img/img_demo/demo.png'">
+                        </div>
+                        <div class="info">
+                            <h2>广东省群艺馆图书室一楼</h2>
+                            <p>1986年4月26日出生于四川省阿坝藏族羌族自治州汶川县，中国内地男演员、主持人，毕业于四川师范大学电影电视学院。2005年，与周翔宇两人以“羌族双煞”为名恶搞“白蛇传”和“爱情大魔咒”受到网友关注。</p>
+                        </div>
+                    </li>
+                </ul>-->
+                <!--培训资源结束-->
+                <!--分页开始 -->
+                <div class="green-black" id="artPagging" style="padding-bottom: 50px"></div>
+                <!--分页结束-->
+            </div>
+        </div>
+        <!--主体结束-->
+    </div>
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong_gx/public/footer :: copy"></div>
+<!--底部结束-->
+<a class="to-top"></a>
+<!--<script th:src="${basePath}+'/assets/js/activity/activitylist.js'" type="text/javascript"></script>-->
+<script type="text/javascript" th:inline="javascript">
+
+    var userid = $("#temp_userId").val();
+    var pageType = '5';
+
+    //程序初始化
+    $().ready(function(){
+        dataPage();
+        navChange();
+    })
+
+    //按钮切换
+    function navChange(){
+        $('.center-nav ul li').on('click',function(e){
+            $(this).addClass('active').siblings().removeClass('active');
+            pageType = $(this).attr('data-type');
+            dataPage();
+        })
+    }
+
+
+    function dataPage(page, rows) {
+        var params_page = page || 1;
+        var params_rows = rows || 12;
+        var params = {
+            page: params_page,
+            pageSize: params_rows,
+            cmreftyp: pageType,
+            userid: userid
+        }
+        rongDialog.init({ico: 3, type: 1, desc: '', overTime: 8000});
+        dataInit.ajax({
+            api: [[${apiPath.myCollect}]],
+            params: params,
+            fn: function (data) {
+                rongDialog.closeMaskPanel();
+                showModelList(data);
+                dataInit.pageInit("artPagging", params_page, params_rows, data.total, dataPage);
+            }
+        })
+    }
+
+    function showModelList(data) {
+        var modelList = $("#modelList");
+        modelList.html("");
+        if (data.code == 0) {
+            switch(pageType){
+                case "5":
+                    if (data.rows.length > 0) {
+                        for (var i in data.rows) {
+                            var model = data.rows[i];
+                            var img = data.imgPath + dataInit.getSmallImage(model.trainimg);
+                            var title = model.title;
+                            var adr = model.address;
+                            var startTime = moment(model.starttime).format('YYYY-MM-DD');
+                            var endTime = moment(model.endtime).format('YYYY-MM-DD');
+                            var time = startTime + ' 至 ' + endTime;
+                            var age  = model.age;
+                            if(age){
+                                age = age.split(',');
+                                age = age[0]+'-'+age[1]+'岁';
+                            }else{
+                                age = '不限';
+                            }
+                            var cutNum = model.maxnumber - model.enrolcount;
+                            var lastTime = model.enrollendtime - data.data;
+                            if(lastTime > 0){
+                                if (lastTime < (24 * 60 * 60 * 1000)){
+                                    lastTime = 1;
+                                }else{
+                                    lastTime = parseInt(lastTime/(24 * 60 * 60 * 1000));
+                                }
+                            }else{
+                                lastTime = 0;
+                            }
+                            cutNum  = cutNum <= 0 ? 0 : cutNum;
+
+                            var state,state_cls,date_cls = '';
+                            if(data.data > model.enrollendtime ){
+                                state = '报名结束';
+                                state_cls = 's-4';
+                                date_cls = 'none';
+                            }else{ //未报名
+                                if(model.enrollstarttime > data.data){
+                                    state = '即将开始';
+                                    state_cls = 's-3';
+                                }else if(model.enrollstarttime < data.data && data.data < model.enrollendtime){
+                                    state = model.enrolstate ? '已报名' : '立即报名';
+                                    state_cls = model.enrolstate ? 's-2' : 's-1';
+                                    date_cls = model.enrolstate ? 'none' : '';
+                                }
+                            }
+                            modelList.append('\
+                                 <li class="train-item">\
+                                    <a href="../xxpx/detail?id='+model.id+'" target="_blank"></a>\
+                                    <div class="img">\
+                                        <div class="desc '+date_cls+'">\
+                                            <i class="icon iconfont icon-time"></i>\
+                                            <span>报名结束仅剩 '+lastTime+' 天</span>\
+                                        </div>\
+                                        <div class="state '+state_cls+'">'+state+'</div>\
+                                        <a href="../xxpx/detail?id='+model.id+'" target="_blank"><img src="'+img+'"></a>\
+                                    </div>\
+                                    <div class="info">\
+                                        <h2>'+title+'</h2>\
+                                        <p>地点：<span>'+adr+'</span></p>\
+                                        <p>时间：<span>'+time+'</span></p>\
+                                        <p>人数：<span>仅剩 '+cutNum+' 人</span></p>\
+                                        <p>年龄：<span>'+age+'</span></p>\
+                                    </div>\
+                                </li>\
+                            ');
+                        }
+                    } else {
+                        modelList.append("<div class='public-no-message'></div>");
+                    }
+                    break;
+                case "32":
+                    if (data.rows.length > 0) {
+                        for (var i in data.rows) {
+                            var model = data.rows[i];
+                            var icon = "";
+                            var img = data.imgPath + dataInit.getSmallImage(model.drscpic);
+                            switch(model.drsctyp){
+                                case "1":
+                                    icon = '<i class="icon iconfont icon-tupian"></i>';
+                                    break;
+                                case "2":
+                                    icon = '<i class="icon iconfont icon-CombinedShape"></i>';
+                                    break;
+                                case "3":
+                                    icon = '<i class="icon iconfont icon-yinpin"></i>';
+                                    break;
+                                case "4":
+                                    icon = '';
+                                    break;
+                            }
+                            modelList.append('<li class="res-item">\
+                        <a href="../pxzy/detail?id='+model.drscid+'" target="_blank"></a>\
+                        <div class="img">\
+                        '+icon+'\
+                        <a href="../pxzy/detail?id='+model.drscid+'" target="_blank"></a><img src="'+img+'"></a>\
+                        </div>\
+                        <div class="info">\
+                        <h2>'+model.drsctitle+'</h2>\
+                        <p>'+dataInit.removeHTMLTag(model.drscintro)+'</p>\
+                    </div>\
+                    </li>');
+                        }
+                    } else {
+                        modelList.append("<div class='public-no-message'></div>");
+                    }
+                    break;
+                case "31":
+                    if (data.rows.length > 0) {
+                        for (var i in data.rows) {
+                            var model = data.rows[i];
+                            var img = data.imgPath + dataInit.getSmallImage(model.teacherpic);
+                            /*var tag = model.typname.split(',');
+                            var tagHtml = '';
+                            if(tag){
+                                for(var j in tag){
+                                    tagHtml+= '<em>'+tag[j]+'</em>'
+                                }
+                            }*/
+                            modelList.append('\
+                        <li class="teacher-item">\
+                            <a href="../pxsz/detail?id='+model.id+'" target="_blank"></a>\
+                            <div class="img">\
+                                <img src="'+img+'">\
+                            </div>\
+                            <div class="info">\
+                                <h2 style="margin-bottom: 10px">'+model.name+'</h2>\
+                                <p class="desc">'+model.teacherdesc+'</p>\
+                                <p class="btn">查看详情</p>\
+                            </div>\
+                        </li>');
+                        }
+                    } else {
+                        modelList.append("<div class='public-no-message'></div>");
+                    }
+                    break;
+                case "16":
+                    if (data.rows.length > 0) {
+                        for (var i in data.rows) {
+                            var model = data.rows[i];
+                            var title = model.title;
+                            var stime = moment(model.starttime).format('YYYY-MM-DD');
+                            var etime = moment(model.endtime).format('YYYY-MM-DD');
+                            var maxnumber = model.maxnumber;
+                            var listState = model.listState;//0-未开始(直播预告), 1-正在直播，2-已结束(精彩回顾)
+                            var listStateDesc = listState == 0 ? '直播预告' : (listState == 1 ? "正在直播" : "精彩回顾");
+                            var listStateNone = listState == 0 ? '' : 'none';
+                            var enrolState = model.enrolState;//0-未开始，1-可报名, 2-已报满, 3-已结束, 4-不满足条件, 5-已报名
+                            var showPeople = model.enrolcount ? maxnumber - model.enrolcount : maxnumber;
+                            showPeople = showPeople +'人';
+                            var imgurl = data.imgPath+model.trainimg;
+                            //年龄数据处理
+                            var age ='';
+                            if(model.age){
+                                var ageSize = model.age.split(',');
+                                age = ageSize[0]+ ' - ' +ageSize[1] + '岁';
+                            }else {
+                                age = '不限制';
+                            }
+                            var html = ''+
+                                '<li class="live-item">                                           '+
+                                '	<a href="../zxkc/detail?id='+model.id+'"></a>                         '+
+                                '	<div class="img">                                             '+
+                                '		<div class="desc '+listStateNone+'">                                        '+
+                                '			<i class="icon iconfont icon-time"></i>               '+
+                                '			<span>距直播还有'+model.restTimes+model.restTimesUnit+'</span>                           '+
+                                '		</div>                                                    '+
+                                '		<div class="state s-3">'+listStateDesc+'</div>                     '+
+                                '		<a href="../zxkc/detail?id='+model.id+'"><img src="'+imgurl+'"></a>'+
+                                '	</div>                                                        '+
+                                '	<div class="info">                                            '+
+                                '		<h2>'+title+'</h2>   '+
+                                '		<p>时间：<span>'+stime+'至'+etime+'</span></p>          '+
+                                '		<p>人数：<span>'+showPeople+'</span></p>                        '+
+                                '		<p>年龄：<span>'+age+'</span></p>                          '+
+                                '	</div>                                                        '+
+                                '</li>                                                            ';
+
+
+                            modelList.append(html);
+                        }
+                    } else {
+                        modelList.append("<div class='public-no-message'></div>");
+                    }
+                    break;
+                default:
+                    modelList.append("<div class='public-no-message'></div>");
+                    break;
+            }
+        } else {
+            rongDialog.init({ico: 2, type: 1, desc: data.msg});
+        }
+    }
+</script>
+</body>
+</html>

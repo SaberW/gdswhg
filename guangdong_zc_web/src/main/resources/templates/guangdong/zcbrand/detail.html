@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/style/brand/brand.css'">
+<script th:src="${basePath}+'/assets/js/plugs/rong-dialog/player/sewise.player.min.js'"></script>
+<div class="wrapper clearfix">
+    <div class="content">
+        <!--公共主头部开始-->
+        <div id="header" th:include="guangdong/public/header :: copy"></div>
+        <!--公共主头部结束-->
+        <!--主体开始-->
+        <div class="brand-detail">
+            <div class="brand-detail-content">
+                <div class="banner">
+                    <div class="big-banner">
+                        <div class="banner-count">
+                            <ul>
+                                <li style="background-image: url(http://img2.niutuku.com/desk/130126/01/01-niutuku.com-1459.jpg)">
+                                    <div class="title">
+                                        <span style="text-align: center">品牌众筹名称</span>
+                                    </div>
+                                    <a href="javascript:void(0)"></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="pages"></div>
+                </div>
+                <div class="brand-detail-list">
+                    <div class="brand-detail-nav">
+                        <ul class="clearfix">
+                            <li class="active"><span>品牌介绍</span></li>
+                            <li><span>众筹项目</span></li>
+                            <li><span>品牌风采</span></li>
+                        </ul>
+                    </div>
+                    <div class="brand-detail-list-detail on">
+                        <div class="brand--detail-cont">
+                            <div class="title">品牌介绍：</div>
+                            <div class="text">
+                                这是众筹介绍这是众筹介绍
+                                这是众筹介绍这是众筹介绍
+                                这是众筹介绍这是众筹介绍
+                                这是众筹介绍这是众筹介绍
+                                这是众筹介绍这是众筹介绍
+                                这是众筹介绍这是众筹介绍
+                                这是众筹介绍这是众筹介绍
+                                这是众筹介绍这是众筹介绍
+                            </div>
+                        </div>
+
+                        <div class="brand--detail-cont" id="zixun_div">
+                            <div class="title">相关资讯：</div>
+
+                            <div class="news-page-list">
+                                <ul id="zixun">
+
+                                </ul>
+                            </div>
+                            <!--分页开始 -->
+                           <!-- <div class="green-black clearfix" id="zxPagging" style="margin-bottom: 40px"></div>-->
+                            <!--分页结束-->
+                        </div>
+                    </div>
+
+
+
+
+                    <div class="brand-detail-list-detail brand-detail-list-detail-2">
+                        <div class="brand--detail-cont">
+                            <div class="filter">
+                                <div class="filter-list">
+                                    <div class="clearfix">
+                                        <span class="active"><a href="javascript:void(0)">智能排序</a></span>
+                                        <span><a href="javascript:void(0)">历史众筹</a></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="page-list">
+                                <div class="content-list" id="activityList">
+                                    <ul id="modelList" class="clearfix">
+                                        <!--<li>
+                                            <div class="zc-state">
+                                                <img th:src="${basePath}+'/assets/img/zcproject/success.png'">
+                                            </div>
+                                            <div class="img">
+                                                <a href="javascript:void(0)">
+                                                    <img src="http://183.131.126.132:8092/whgstatic/img/2017/201709/20170921/a768d33e5359460e910de9c08ce4425d_750_500.jpg">
+                                                </a>
+                                            </div>
+                                            <div class="info">
+                                                <div class="title">供需标题</div>
+                                                <div class="progress-bar"><span data-progress-bar="90"></span></div>
+                                                <div class="progress-table clearfix">
+                                                    <div class="progress-table-list">
+                                                        <span>60%</span>
+                                                        <span class="text">达成率</span>
+                                                    </div>
+                                                    <div class="progress-table-list">
+                                                        <span>100</span>
+                                                        <span class="text">剩余份数</span>
+                                                    </div>
+                                                    <div class="progress-table-list no-border">
+                                                        <span>20天</span>
+                                                        <span class="text">剩余时间</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <a href="detail"></a>
+                                        </li>
+                                        <li>
+                                            <div class="zc-state">
+                                                <img th:src="${basePath}+'/assets/img/zcproject/fail.png'">
+                                            </div>
+                                            <div class="img">
+                                                <a href="javascript:void(0)">
+                                                    <img src="http://183.131.126.132:8092/whgstatic/img/2017/201709/20170921/a768d33e5359460e910de9c08ce4425d_750_500.jpg">
+                                                </a>
+                                            </div>
+                                            <div class="info">
+                                                <div class="title">供需标题</div>
+                                                <div class="progress-bar"><span data-progress-bar="50"></span></div>
+                                                <div class="progress-table clearfix">
+                                                    <div class="progress-table-list">
+                                                        <span>60%</span>
+                                                        <span class="text">达成率</span>
+                                                    </div>
+                                                    <div class="progress-table-list">
+                                                        <span>100</span>
+                                                        <span class="text">剩余份数</span>
+                                                    </div>
+                                                    <div class="progress-table-list no-border">
+                                                        <span>20天</span>
+                                                        <span class="text">剩余时间</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <a href="detail"></a>
+                                        </li>
+                                        <li>
+                                            <div class="zc-state">
+                                                <img th:src="${basePath}+'/assets/img/zcproject/underway.png'">
+                                            </div>
+                                            <div class="img">
+                                                <a href="javascript:void(0)">
+                                                    <img src="http://183.131.126.132:8092/whgstatic/img/2017/201709/20170921/a768d33e5359460e910de9c08ce4425d_750_500.jpg">
+                                                </a>
+                                            </div>
+                                            <div class="info">
+                                                <div class="title">供需标题</div>
+                                                <div class="progress-bar"><span data-progress-bar="70"></span></div>
+                                                <div class="progress-table clearfix">
+                                                    <div class="progress-table-list">
+                                                        <span>60%</span>
+                                                        <span class="text">达成率</span>
+                                                    </div>
+                                                    <div class="progress-table-list">
+                                                        <span>100</span>
+                                                        <span class="text">剩余份数</span>
+                                                    </div>
+                                                    <div class="progress-table-list no-border">
+                                                        <span>20天</span>
+                                                        <span class="text">剩余时间</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <a href="detail"></a>
+                                        </li>-->
+                                    </ul>
+                                </div>
+                                <!--分页开始 -->
+                                <div class="green-black" id="artPagging" style="margin-bottom: 40px"></div>
+                                <!--分页结束-->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="brand-detail-list-detail brand-detail-list-detail-2">
+                        <div class="brand--detail-cont">
+                            <div class="filter">
+                                <div class="filter-list">
+                                    <div class="clearfix">
+                                        <span class="active"><a href="javascript:void(0)">全部</a></span>
+                                        <span><a href="javascript:void(0)">图片</a></span>
+                                        <span><a href="javascript:void(0)">视频</a></span>
+                                        <span><a href="javascript:void(0)">音频</a></span>
+                                        <span><a href="javascript:void(0)">文档</a></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="style-list">
+                                <div class="content-list">
+                                    <ul class="clearfix" id="modelList_2">
+                                        <!--<li>
+                                            <div class="img">
+                                                <img src="http://183.131.126.132:8092/whgstatic/img/2017/201709/20170921/a768d33e5359460e910de9c08ce4425d_750_500.jpg">
+                                            </div>
+                                            <div class="info">
+                                                <div class="title">供需标题</div>
+                                            </div>
+                                            <div class="mask"><img th:src="${basePath}+'/assets/img/brand/macphone.png'"></div>
+                                            <a href="javascript:void(0)"></a>
+                                        </li>
+                                        <li>
+                                            <div class="img">
+                                                <img src="http://183.131.126.132:8092/whgstatic/img/2017/201709/20170921/e7f2cf27ba3b41b680c1f10651db8800_750_500.jpg">
+                                            </div>
+                                            <div class="info">
+                                                <div class="title">供需标题</div>
+                                            </div>
+                                            <div class="mask"><img th:src="${basePath}+'/assets/img/brand/play.png'"></div>
+                                            <a href="javascript:void(0)" onclick="rongDialog.init({
+        type : 5,
+        vedioUrl : 'http://szwhg-gds.oss-cn-shenzhen.aliyuncs.com/2016%E5%B9%B4%E9%A6%86%E9%95%BF%E5%9F%B9%E8%AE%AD%E7%8F%AD/%E7%8E%B0%E4%BB%A3%E5%85%AC%E5%85%B1%E6%96%87%E5%8C%96%E6%9C%8D%E5%8A%A1%E4%BD%93%E7%B3%BB%E5%BB%BA%E8%AE%BE%E6%9C%80%E6%96%B0%E6%94%BF%E7%AD%96%E8%A7%A3%E8%AF%BB2%E2%80%94%E7%A5%81%E8%BF%B0%E8%A3%95.mp4',
+        vedioImg : '',
+        vedioTitle : 'RongDialog视频测试2'
+    });"></a>
+                                        </li>
+                                        <li>
+                                            <div class="img">
+                                                <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1507548990671&di=6c7760dcd561c63f7f5386bd4614cf03&imgtype=0&src=http%3A%2F%2Fimg5.duitang.com%2Fuploads%2Fitem%2F201407%2F27%2F20140727202737_sZLAX.jpeg">
+                                            </div>
+                                            <div class="info">
+                                                <div class="title">供需标题</div>
+                                            </div>
+                                            <div class="mask"></div>
+                                            <a href="javascript:void(0)"  onclick="rongDialog.init({
+        ico : 1,
+        type : 6,
+        imgUrl : 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1507548990671&di=6c7760dcd561c63f7f5386bd4614cf03&imgtype=0&src=http%3A%2F%2Fimg5.duitang.com%2Fuploads%2Fitem%2F201407%2F27%2F20140727202737_sZLAX.jpeg'
+    });"></a>
+                                        </li>-->
+                                    </ul>
+                                </div>
+                                <!--分页开始 -->
+                                <div class="green-black" id="artPagging_2" style="margin-bottom: 40px"></div>
+                                <!--分页结束-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--主体结束-->
+    </div>
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong/public/footer :: copy"></div>
+<!--底部结束-->
+<a class="to-top"></a>
+<script type="text/javascript" th:inline="javascript">
+    $(document).ready(function () {
+
+        $(".brand-detail-nav ul li").on("click",function () {
+            $(this).addClass("active").siblings().removeClass("active");
+            $(".brand-detail-list-detail").eq($(".brand-detail-nav ul li").index(this)).addClass("on").siblings().removeClass('on');
+
+            //进度条动画
+            $('.progress-bar span').css("width","0%");
+            setTimeout(function () {
+                $(".progress-bar span").each(function () {
+                    var bar_size = $(this).attr("data-progress-bar");
+                    $(this).css("width",bar_size+"%");
+                })
+            },200);
+
+            loadData.selectTabs($(this).index());
+        });
+
+        var paramId = dataInit.getUrlParam("id");
+        loadData.init(paramId);
+
+    });
+
+    var loadData = {
+
+        init: function(id){
+            this.brandId = id;
+
+            this.loadData_0();
+        },
+
+        selectTabs: function(idx){
+            var me = this;
+
+            var method = "loadData_"+idx;
+            if (me[method] && $.isFunction(me[method])) {
+                me[method].call(me);
+            }
+        },
+
+        loadData_0: function(){
+            var me = this;
+            if (me.is_loaddata_0){ return;  }
+            me.is_loaddata_0 = true;
+
+            me.tabsjq0 = $(".brand-detail-list-detail:eq(0)");
+
+            var bannerli = $(".banner li:first");
+            me.banner_TEMP_UP = bannerli.parent();
+            me.banner_TEMP = bannerli.prop("outerHTML");
+
+            me.banner_TEMP_UP.empty();
+
+            dataInit.ajax({
+                api: [[${apiPath.brandinfo}]],
+                params: {id: me.brandId},
+                fn: function(data){
+                    var model = data.data;
+                    var bannerLiJQ = $(me.banner_TEMP);
+                    me.banner_TEMP_UP.append(bannerLiJQ);
+                    if (model.bgimgurl && model.bgimgurl!=''){
+                        bannerLiJQ.css("background-image", "url("+data.imgPath+model.bgimgurl+")");
+                    }
+                    bannerLiJQ.find(".title span").text(model.title);
+
+                    me.tabsjq0.find(".text").html(model.description);
+                }
+            })
+
+            zx_dataPage();
+            function zx_dataPage(page,rows){
+                var params_page = page || 1;
+                var params_rows = rows || 12;
+                var params = {};
+                params.entityid = me.brandId;
+                params.clnftype = '2017101276534290';
+
+                dataInit.ajax({
+                    api: [[${apiPath.xgzxList}]],
+                    params: params,
+                    fn: function(data){
+                        showZxModelList(data);
+                       // dataInit.pageInit('zxPagging', params_page, params_rows, data.total, zx_dataPage);
+                    }
+                })
+            }
+
+            function showZxModelList(data) {
+                //alert(data);
+                if(data.code == 0){
+                    var model = data.data;
+                    var _html = '';
+                    if (model.length > 0) {
+                        for(var i in model){
+                            var newsContent = removeHTMLTag(model[i].clnfintroduce);
+                            var clnfsource = model[i].clnfsource?model[i].clnfsource:'无';
+                            var clnfkey = model[i].clnfkey?model[i].clnfkey:'无';
+                            _html += '<li>'+
+                                    '    <div class="timeCont">'+
+                                    '        <p class="month">'+moment(model[i].clnfcrttime).format("MM/DD")+'</p>'+
+                                    '        <p class="year">'+moment(model[i].clnfcrttime).format("YYYY")+'</p>'+
+                                    '        <div class="circular"></div>'+
+                                    '    </div>'+
+                                    '    <div class="notice-list-info">'+
+                                    '        <div class="arrow"></div>'+
+                                    '        <div class="info">'+
+                                    '            <h2><a href="../news/detail?id='+model[i].clnfid+'">'+model[i].clnftltle+'</a></h2>'+
+                                    '            <p>'+newsContent+'</p>'+
+                                    '            <p>来源：<span style="margin-right: 10px">'+clnfsource+'</span> 关键字：<span>'+clnfkey+'</span></p>'+
+                                    '        </div>'+
+                                    '    </div>'+
+                                    '</li>';
+                        }
+                        $("#zixun").html(_html);
+                    }else {
+
+                        $("#zixun_div").hide();
+                        $("#zixun").html("<div class='public-no-message'></div>");
+                    }
+
+                }else {
+                    rongDialog.init({ico : 2, type : 1, desc : data.msg});
+                }
+            }
+        },
+
+        loadData_1: function () {
+            var me = this;
+            if (me.is_loaddata_1){ return; }
+            me.is_loaddata_1 = true;
+
+            me.tabsjq1 = $(".brand-detail-list-detail:eq(1)");
+
+            var filterJq = me.tabsjq1.find(".filter");
+            filterJq.on("click", "span>a", function(){
+                $(this).parents("span").addClass("active").siblings().removeClass("active");
+                dataPage();
+                //进度条动画
+                $('.progress-bar span').css("width","0%");
+                setTimeout(function () {
+                    $(".progress-bar span").each(function () {
+                        var bar_size = $(this).attr("data-progress-bar");
+                        $(this).css("width",bar_size+"%");
+                    })
+                },200);
+            });
+            filterJq.find("span>a:eq(0)").click();
+
+            function dataPage(page,rows){
+                var params = {};
+                params.brandid = me.brandId;
+                params.page = page || 1;
+                params.pageSize = rows || 12;
+                var cultid = $.cookie('cultid');
+                if (cultid && cultid!='') {
+                    params.cultid = cultid;
+                }
+                var filterIdx = filterJq.find("span.active").index();
+                params.filter = filterIdx;
+
+                dataInit.ajax({
+                    api: [[${apiPath.brandgatherlist}]],
+                    params: params,
+                    fn: function(data){
+                        showModelList(data);
+                        dataInit.pageInit('artPagging', params.page, params.pageSize, data.total, dataPage);
+                    }
+                })
+            }
+
+            function showModelList(data) {
+                $("#modelList").html("");
+                var __success = [[${basePath}]] + '/assets/img/zcproject/success.png';
+                var __fail = [[${basePath}]] + '/assets/img/zcproject/fail.png';
+                var __underway = [[${basePath}]] + '/assets/img/zcproject/underway.png';
+                var act = data.rows;
+                var dataNow = data.data.now;
+                var actList = $("#modelList");
+                if(data.code == 0){
+                    if (act.length > 0) {
+                        for (var i in act) {
+                            //判断众筹状态
+                            var isOverdueSize = isOverdue(act[i].issuccess,act[i].timestart,act[i].timeend,dataNow);
+                            var _zcState = '';
+                            switch (isOverdueSize){
+                                case 0:
+                                    _zcState = '<img src="'+__fail+'">';
+                                    break;
+                                case 1:
+                                    _zcState = '<img src="'+__success+'">';
+                                    break;
+                                case 2:
+                                    _zcState = '<img src="'+__underway+'">';
+                                    break;
+                                case 3:
+                                    _zcState = '';
+                                    break;
+                            }
+                            //获得众筹达成率
+                            var _DCl = parseInt((act[i].orderCount/act[i].nummin)*100);
+                            _DCl = _DCl>100?100:_DCl;
+                            //获得众筹剩余份数
+                            var _ZC_Max = act[i].numsum - act[i].orderCount;
+                            _ZC_Max = _ZC_Max<0 ? 0 : _ZC_Max;
+                            //获取剩余天数
+                            var SY_Days = getDays(act[i].timeend,dataNow,act[i].timestart);
+                            //判断众筹分类：4活动，5培训，0其他
+                            var _href_detail = [[${basePath}]];
+                            _href_detail += '/'+$.cookie("cultsite");
+                            if(act[i].etype == 4){
+                                _href_detail += '/project/actdetail?id='+act[i].id;
+                            }else if(act[i].etype == 5) {
+                                _href_detail += '/project/traindetail?id='+act[i].id;
+                            }else if(act[i].etype == 0){
+                                _href_detail += '/project/otherdetail?id='+act[i].id;
+                            }else {
+                                _href_detail += '/project/otherdetail?id='+act[i].id;
+                            }
+                            var imgPath = [[${imgPath}]] + dataInit.getSmallImage(act[i].imgurl);
+                            actList.append(
+                                '<li>'+
+                                '    <div class="zc-state">'+_zcState+'</div>'+
+                                '    <div class="img">'+
+                                '        <a href="'+_href_detail+'">' +
+                                '           <img src="'+imgPath+'">' +
+                                '        </a>'+
+                                '    </div>'+
+                                '    <div class="info">'+
+                                '        <div class="title">'+act[i].title+'</div>'+
+                                '        <div class="progress-bar"><span data-progress-bar="'+_DCl+'"></span></div>'+
+                                '        <div class="progress-table clearfix">'+
+                                '            <div class="progress-table-list">'+
+                                '                <span>'+_DCl+'%</span>'+
+                                '                <span class="text">达成率</span>'+
+                                '            </div>'+
+                                '            <div class="progress-table-list">'+
+                                '                <span>'+_ZC_Max+'</span>'+
+                                '                <span class="text">剩余份数</span>'+
+                                '            </div>'+
+                                '            <div class="progress-table-list no-border">'+
+                                '                <span>'+SY_Days+'</span>'+
+                                '                <span class="text">剩余时间</span>'+
+                                '            </div>'+
+                                '        </div>'+
+                                '    </div>'+
+                                '    <a href="'+_href_detail+'"></a>'+
+                                '</li>'
+                            );}
+                    } else {
+                        actList.append("<div class='public-no-message'></div>");
+                    }
+                }else {
+                    rongDialog.init({ico : 2, type : 1, desc : data.msg});
+                }
+            }
+
+
+        },
+
+        loadData_2: function () {
+            var me = this;
+            if (me.is_loaddata_2){ return; }
+            me.is_loaddata_2 = true;
+
+            me.tabsjq2 = $(".brand-detail-list-detail:eq(2)");
+            var filterJq = me.tabsjq2.find(".filter");
+
+            filterJq.on("click", "span>a", function(){
+                $(this).parents("span").addClass("active").siblings().removeClass("active");
+                dataPage();
+            });
+            filterJq.find("span>a:eq(0)").click();
+
+            function dataPage(page,rows){
+                var params = {};
+                params.brandid = me.brandId;
+                params.page = page || 1;
+                params.pageSize = rows || 12;
+
+                var filterIdx = filterJq.find("span.active").index();
+                switch (filterIdx){
+                    case 1:
+                    case 2:
+                    case 3:
+                    case 4:
+                        params.enttype = filterIdx;
+                        break;
+                    default: params.enttype = '';
+                }
+
+                dataInit.ajax({
+                    api: [[${apiPath.brandresourcelist}]],
+                    params: params,
+                    fn: function(data){
+                        showModelList(data);
+                        dataInit.pageInit('artPagging_2', params.page, params.pageSize, data.total, dataPage);
+                    }
+                })
+            }
+
+            function showModelList(data){
+                var modelUL = $("#modelList_2");
+                modelUL.empty();
+                if(data.code == 0){
+                    if (data.rows && data.rows.length > 0) {
+                        for (var i in data.rows) {
+                            var module = data.rows[i];
+
+                            var html = $('<li>\
+                                    <div class="img">\
+                                        <img >\
+                                    </div>\
+                                    <div class="info">\
+                                        <div class="title">'+module.name+'</div>\
+                                    </div>\
+                                    <div class="mask"><img></div>\
+                                    <a href="javascript:void(0)"></a>\
+                                    </li>');
+
+                            if(module.enturl)
+                                var _enturl = module.enturl.indexOf('http') >= 0 ? module.enturl : data.imgPath + module.enturl;
+                            var resBasePath = [[${basePath}]];
+                            switch (module.enttype){
+                                case "1" : //图片
+                                    //html.find(".img img").attr("src", data.imgPath + dataInit.getSmallImage(module.enturl));
+                                    html.find(".img img").attr("src", dataInit.getMidImage(_enturl));
+                                    html.find(".mask").empty();
+                                    html.find("a:last").attr("onClick", "rongDialog.init({\
+                                            ico : 1,\
+                                            type : 6,\
+                                            title : '"+module.name+"',\
+                                            imgUrl : '"+_enturl+"'\
+                                        });"
+                                    );
+                                    break;
+                                case "2" :  //视频
+                                    //html.find(".img img").attr("src", data.imgPath + dataInit.getSmallImage(module.deourl));
+                                    var _deourl = module.deourl.indexOf('http') >= 0 ? module.deourl : data.imgPath + module.deourl;
+                                    html.find(".img img").attr("src", dataInit.getMidImage(_deourl));
+                                    html.find(".mask img").attr("src", [[${basePath}]] + '/assets/img/brand/play.png');
+                                    html.find("a:last").attr("onClick", "rongDialog.init({\
+                                            type : 5,\
+                                            vedioUrl : '"+_enturl+"',\
+                                            vedioImg : '',\
+                                            vedioTitle : '"+module.name+"',\
+                                            basePath : '"+resBasePath+"'\
+                                        })"
+                                    );
+                                    break;
+                                case "3" :  //音频
+                                    html.find(".img img").attr("src", [[${basePath}]] + '/assets/img/brand/brand-music.jpg');
+                                    html.find(".mask img").attr("src", [[${basePath}]] + '/assets/img/brand/macphone.png');
+                                    html.find("a:last").attr("onClick", "rongDialog.init({\
+                                            type : 5,\
+                                            vedioUrl : '"+_enturl+"',\
+                                            vedioType: 'mp3',\
+                                            vedioImg : '"+resBasePath+"/assets/img/brand/brand-music.jpg',\
+                                            vedioTitle : '"+module.name+"',\
+                                            basePath : '"+resBasePath+"'\
+                                        });setWidth();"
+                                    );
+                                    break;
+
+                                case "4" : //文档
+                                    var iconImg = dataInit.getFileTypeIcon(module.enturl, '/assets/img/brand/xiazai.jpg');
+                                    html.find(".img img").attr("src", [[${basePath}]] + iconImg);
+                                    //html.find(".img img").attr("src", [[${basePath}]] + '/assets/img/brand/xiazai.jpg');
+                                    html.find(".mask").empty();
+                                    html.find("a:last").attr({
+                                        target:"_blank",
+                                        href: _enturl
+                                    });
+                                    break;
+
+                                default:
+                                    html.find(".mask").empty();
+                            }
+
+                            modelUL.append(html);
+                        }
+                    } else {
+                        modelUL.append("<div class='public-no-message'></div>");
+                    }
+                }else {
+                    rongDialog.init({ico : 2, type : 1, desc : data.msg});
+                }
+            }
+        }
+
+
+    };
+
+
+    //判断众筹是否过期
+    function isOverdue(issuccess,timestart,timeend,dataNow) {
+        if(dataNow>timeend && issuccess != 1 ){
+            if(issuccess == 0){
+                return 3;//其他状态
+            }else {
+                return 0;//已结束
+            }
+        }else if(dataNow<timeend && dataNow>timestart && issuccess !=1){
+            return 2;//众筹中
+        }else if(issuccess == 1) {
+            return 1;//已成功
+        }else {
+            return 3;//其他状态
+        }
+    }
+
+    //获取剩余天数
+    function getDays(timeend,_dataNow,timestart) {
+        if(_dataNow>timeend){
+            return '已结束';
+        }else if(_dataNow>timestart){
+            return moment(timeend).fromNow(true);
+        }else {
+            return '未开始';
+        }
+    }
+    //给消息过滤HTML标签
+    function removeHTMLTag(str) {
+        str = str.replace(/<\/?[^>]*>/g,''); //去除HTML tag
+        str = str.replace(/[ | ]*\n/g,'\n'); //去除行尾空白
+        //str = str.replace(/\n[\s| | ]*\r/g,'\n'); //去除多余空行
+        str=str.replace(/&nbsp;/ig,'');//去掉&nbsp;
+        return str;
+    }
+
+
+</script>
+</body>
+</html>

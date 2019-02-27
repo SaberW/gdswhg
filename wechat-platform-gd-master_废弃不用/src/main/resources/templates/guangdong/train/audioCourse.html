@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/public/list.css'">
+<div th:include="guangdong/public/leftBar :: copy"></div>
+<div id="page">
+    <div class="mui-content">
+        <div id="category-cont"
+             class="category-cont mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+            <div class="mui-scroll">
+                <a href="javascript:void(0)" class="mui-control-item" data-index="c-1">区域<i></i></a>
+                <a href="javascript:void(0)" class="mui-control-item" data-index="c-2">艺术类型<i></i></a>
+                <a href="javascript:void(0)" class="mui-control-item" data-index="c-3">培训类型<i></i></a>
+                <a href="javascript:void(0)" class="mui-control-item" data-index="c-4">排序<i></i></a>
+            </div>
+        </div>
+        <div class="category-mask none">
+            <div class="category-group none" data-index="c-1">
+                <ul class="clearfix" id="areList">
+                    <!--<li class="active" data-txt="区域">全部</li>
+                    <li item-data="0">雨花区</li>
+                    <li item-data="1">天心区</li>
+                    <li item-data="2">开福区</li>
+                    <li item-data="3">岳麓区</li>
+                    <li item-data="4">芙蓉区</li>-->
+                </ul>
+            </div>
+            <div class="category-group none" data-index="c-2">
+                <ul class="clearfix" id="artList">
+                    <!--<li class="active" data-txt="艺术类型">全部</li>
+                    <li item-data="5">展览</li>
+                    <li item-data="6">讲座</li>
+                    <li item-data="7">演出</li>
+                    <li item-data="8">赛事活动</li>-->
+                </ul>
+            </div>
+            <div class="category-group none" data-index="c-3">
+                <ul class="clearfix" id="regList">
+                    <!--<li item-data="9" class="active" data-txt="活动类型">全部</li>
+                    <li item-data="10">声乐</li>
+                    <li item-data="11">舞蹈</li>
+                    <li item-data="12">器乐</li>
+                    <li item-data="13">戏剧</li>
+                    <li item-data="14">曲艺</li>
+                    <li item-data="15">书法</li>
+                    <li item-data="16">美术</li>
+                    <li item-data="17">摄影</li>
+                    <li item-data="18">粤剧</li>
+                    <li item-data="19">化妆</li>
+                    <li item-data="20">太极拳</li>
+                    <li item-data="21">健身操</li>
+                    <li item-data="22">语言艺术</li>
+                    <li item-data="23">剪纸</li>
+                    <li item-data="24">其它</li>-->
+                </ul>
+            </div>
+            <div class="category-group none" data-index="c-4">
+                <ul class="clearfix">
+                    <li item-data="1" class="active" data-txt="排序">智能排序</li>
+                    <li item-data="2">即将结束</li>
+                    <li item-data="3">最新发布</li>
+                </ul>
+            </div>
+        </div>
+        <!--下拉刷新容器-->
+        <div id="model-list-panel" class="mui-content mui-scroll-wrapper" style="top:45px;">
+            <div class="mui-scroll">
+                <!--数据列表-->
+                <div class="public-list">
+                    <ul id="model-list">
+                        <li>
+                            <a href="detail?id=2017110127436518">
+                                <div class="img">
+                                    <img th:src="${basePath}+'/assets/img/img_demo/q2.jpg'" alt="">
+                                </div>
+                                <div class="info">
+                                    <div class="title">广东省第七届群众音乐舞蹈花会决赛即将在珠海开幕</div>
+                                    <p>培训时间：2017-11-3 至 2017-11-20</p>
+                                </div>
+                                <div class="abstract">
+                                    <div class="ticket">人数：18 / 20</div>
+                                    <div class="other">
+                                        <!--<span class="comment"><i class="iconfont icon-message"></i>15</span>-->
+                                        <span class="zan"><i class="iconfont icon-praise"></i>20</span>
+                                        <span class="favorite"><i class="iconfont icon-like"></i>25</span>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="detail?id=2017110127436518">
+                                <div class="img">
+                                    <img th:src="${basePath}+'/assets/img/img_demo/q3.jpg'" alt="">
+                                </div>
+                                <div class="info">
+                                    <div class="title">广东省第七届群众音乐舞蹈花会决赛即将在珠海开幕</div>
+                                    <p>培训时间：2017-11-3 至 2017-11-20</p>
+                                </div>
+                                <div class="abstract">
+                                    <div class="ticket">人数：18 / 20</div>
+                                    <div class="other">
+                                        <!--<span class="comment"><i class="iconfont icon-message"></i>15</span>-->
+                                        <span class="zan"><i class="iconfont icon-praise"></i>20</span>
+                                        <span class="favorite"><i class="iconfont icon-like"></i>25</span>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" th:inline="javascript">
+    $().ready(function () {
+        dataInit.ajax({
+            api: [[${apiPath.actCate}]],
+            params: {
+                type: 4,//活动分类type
+                cultid: $.cookie('cultid')
+            },
+            fn: showActClass
+        });
+        dataInit.ajax({
+            api: [[${apiPath.actCate}]],
+            params: {
+                type: 1,//艺术分类
+                cultid: $.cookie('cultid')
+            },
+            fn: showYXClass
+        });
+        select.create(modelData);
+        dataInit.showAre($.cookie("city"),[[${apiPath.depts}]]);
+        //modelData();
+    })
+
+    function modelData(page, size) {
+        var page = page || 1;
+        var size = size || 10;
+        dataInit.ajax({
+            api: [[${apiPath.actList}]],
+            params: {
+                index: page,
+                size: size,
+                cultid: $.cookie('cultid'),
+                keywords: $("#searchId").val(),
+                city: $("#c-1").val(), //市
+                deptid: $("#deptid").val(), //区
+                province: $("#province").val(), //省
+                type: $("#c-3").val(),
+                sort: $("#c-4").val(),
+                arttype: $("#c-2").val()
+            },
+            forceUpdate: true,
+            fn: function (data) {
+                var params = {
+                    page: page,
+                    size: size,
+                    total: data.total
+                }
+                dataInit.htmlAdd(page, showModelHtml(data));
+                dataInit.pullUp(params, modelData);
+            }
+        })
+    }
+
+    function showModelHtml(data) {
+        var html = "";
+        if (data.code == 0 && data.rows.length > 0) {
+            for (var i in data.rows) {
+                var model = data.rows[i];
+                var img = data.imgPath + dataInit.getBigImage(model.imgurl);
+                var time = moment(model.starttime).format("YYYY-MM-DD") + ' - ' + moment(model.endtime).format("YYYY-MM-DD");
+                var ticketnum = model.ticketnum, a_label, liststate = model.liststate;
+                if (liststate == 1) {
+                    a_label = '立即预订';
+                } else if (liststate == 2) {
+                    a_label = '已订完';
+                } else if (liststate == 3) {
+                    a_label = '直接前往';
+                } else if (liststate == 4) {
+                    a_label = '活动已结束';
+                } else {
+                    a_label = '即将开始';
+                }
+                html += '<li>' +
+                    '<a href="detail?id=' + model.id + '">' +
+                    '<div class="img">' +
+                    '<img class="lazy" src="' + img + '">' +
+                    '</div>' +
+                    '<div class="info">' +
+                    '<div class="title">' + model.name + '</div>' +
+                    '<p>地址：' + model.address + '</p>' +
+                    '<p>时间：' + time + '</p>' +
+//                '<p>人数：0/50人</p>'+
+                    '<div class="state">' + a_label + '</div>' +
+                    '</div>' +
+                    '<div class="abstract">' +
+                    '<div class="ticket">余票：' + ticketnum + '张</div>' +
+                    '<div class="other">' +
+                    '<!--<span class="comment"><i class="iconfont icon-message"></i>15</span>-->' +
+                    '<span class="zan"><i class="iconfont icon-praise"></i>' + model.dianzan + '</span>' +
+                    '<span class="favorite"><i class="iconfont icon-like"></i>' + model.shoucang + '</span>' +
+                    '</div>' +
+                    '</div>' +
+                    '</a>' +
+                    '</li>';
+            }
+        } else {
+            html = "<div class='newbility-no-msg'></div>";
+        }
+        return html;
+    }
+
+    function showActClass(data) {
+        $("#regList").html("");
+        var region = data.rows;
+        var regList = $("#regList");
+        regList.append('<li class="active" item-data="" data-txt="活动类型">全部</li>');
+        for (var i in region) {
+            regList.append('<li item-data="' + region[i].id + '">' + region[i].name + '</li>');
+        }
+    }
+
+    function showYXClass(data) {
+        var artList = $("#artList");
+        artList.html("");
+        var arts = data.rows;
+        artList.append('<li class="active" item-data="" data-txt="艺术类型">全部</li>');
+        for (var i in arts) {
+            artList.append('<li item-data="' + arts[i].id + '">' + arts[i].name + '</li>');
+        }
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong_gx/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/style/public/detail.css'">
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/rong.validate.js'"></script>
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/rong.message.js'"></script>
+<div class="wrapper clearfix">
+    <div class="content">
+        <!--公共主头部开始-->
+        <div id="header" th:include="guangdong_gx/public/header :: copy"></div>
+        <!--公共主头部结束-->
+        <!--主体开始-->
+        <div class="sys-crumbs">
+            <span><a href="../index/index">首页</a></span>
+            <i class="icon iconfont icon-enter"></i>
+            <span><a href="list">线下培训</a></span>
+            <i class="icon iconfont icon-enter"></i>
+            <span><a href="detail" id="title"></a></span>
+            <i class="icon iconfont icon-enter"></i>
+            <span class="active">在线报名</span>
+        </div>
+        <div class="step-cont">
+            <div class="step-title">
+                <p>立即预订</p>
+            </div>
+            <div class="step-main"  id="step-1">
+                <div class="step">
+                    <ul class="clearfix">
+                        <li class="active">
+                            <div class="line-cont">
+                                <div class="line"></div>
+                                <em>1</em>
+                                <p>填写培训报名资料</p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="line-cont">
+                                <div class="line"></div>
+                                <em>2</em>
+                                <p>等待管理员审核</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <form id="trainForm">
+                <div class="form-cont">
+                    <div class="row-cont clearfix">
+                        <div class="row-name">培训项目：</div>
+                        <div class="row-input train-title" id="train-title">Loading...</div>
+                    </div>
+                    <div class="row-cont clearfix">
+                        <div class="row-name">姓名：</div>
+                        <div class="row-input"><input class="input-text" id="name" type="text" placeholder="请输入真实姓名" name="name" required> </div>
+                    </div>
+                    <div class="row-cont clearfix">
+                        <div class="row-name">证件类型：</div>
+                        <div class="row-input"><input type="radio" name="idtype" value="0">中国大陆 <input name="idtype" value="1" type="radio" >港澳台</div>
+                    </div>
+                    <div class="row-cont clearfix">
+                        <div class="row-name">证件号：</div>
+                        <div class="row-input"><input class="input-text" type="text" placeholder="请输入身份证号码" name="idCard" id="idCard" maxlength="20" required ></div>
+                    </div>
+                    <div class="row-cont clearfix">
+                        <div class="row-name">出生日期：</div>
+                        <div class="row-input"><input id="birthday" class="input-text" type="text" name="birthday" readonly></div>
+                    </div>
+                    <div class="row-cont clearfix">
+                        <div class="row-name">手机号码：</div>
+                        <div class="row-input"><input class="input-text"  placeholder="请输入手机号码" readonly name="mobile" required></div>
+                    </div>
+                    <!--<div class="row-cont clearfix">
+                        <div class="row-name">验证码：</div>
+                        <div class="row-input"><input class="input-text" type="text" id="checkCode" name="checkCode"  placeholder="验证码" style="width:100px;"><img th:src="${basePath}+'/pictureCheckCode'" id="CreateCheckCode" onclick="myReload()" width="88" height="34" style="padding-left: 20px;"></div>
+                    </div>-->
+                    <div class="row-cont clearfix">
+                        <div class="row-name">&nbsp;</div>
+                        <div class="row-input">
+                           <label><input type="checkbox" name="readme" required ><a onclick="return alertXY();">已认真阅读《全民艺术普及安全协议》</a></label>
+                        </div>
+                    </div>
+                    <div class="row-cont clearfix">
+                        <div class="row-name">&nbsp;</div>
+                        <div class="row-input">
+                            <button class="none" id="submit" type="submit">ok</button>
+                            <a class="btn" href="javascript:void(0)" id="submitDiv">确认订单</a>
+                        </div>
+                    </div>
+                </div>
+                </form>
+            </div>
+            <div class="step-main none"  id="step-2">
+                <div class="step">
+                    <ul class="clearfix">
+                        <li class="active">
+                            <div class="line-cont">
+                                <div class="line"></div>
+                                <em>1</em>
+                                <p>填写培训报名资料</p>
+                            </div>
+                        </li>
+                        <li class="active">
+                            <div class="line-cont">
+                                <div class="line"></div>
+                                <em>2</em>
+                                <p>等待管理员审核</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="form-cont">
+                    <div class="ok-msg">
+                        <i class="icon iconfont icon-gou"></i>
+                        <h1><span id="ok-name"></span><!--报名订单提交成功，<br>
+                            请耐心等待管理员审核--></h1>
+                        <p><a href="../usercenter/myTrain?type=1">查看订单详情</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--主体结束-->
+    </div>
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong_gx/public/footer :: copy"></div>
+<!--底部结束-->
+<a class="to-top"></a>
+
+
+
+<div id="abc" style="display:none; overflow-y: scroll; height: 500px; margin:0px auto; padding-top:30px;">
+    <h1 style="text-align: center">全民艺术普及——艺术培训班安全协议书
+    </h1>
+    <div>
+        通过甲方的安全教育和提示，乙方完全知悉在全民艺术普及——2017年秋季公益性（免费）艺术培训班（学制为一年，分春、秋季两期，每期16周）期间的安全义务并自觉履行，完全同意遵守甲方的相关管理制度和课堂纪律要求，自愿参加甲方举办的课程。经过甲乙双方协商一致，特签订本安全协议书，双方共同遵守：
+        <br><br><b>一、甲方的义务</b>
+        <br><br>1、甲方为乙方培训提供免费培训场所，并提供符合法律规定的的安全场所和设施。
+        <br>2、在甲方培训场所发生突发事件时，甲方根据法律法规和有关部门的要求予以处置。
+        <br><br><b>二、乙方知悉并同意在培训期间的履行下列安全义务：</b>
+        <br><br>1、乙方应服从甲方的管理制度、课堂纪律，自行承担安全责任；
+        <br>2、乙方往返培训场地的交通安全自行负责；
+        <br>3、乙方因过错造成自身损害或侵害他人权益，应自行承担责任；
+        <br>4、乙方应了解自身身体状况，对在培训期间自身出现的突发疾病等状况自行承担责任；
+        <br>5、乙方知悉甲方已为乙方提供了安全提示和合理的安全义务措施；
+        <br>6、乙方若属于未成年学员，不得自行到达或离开培训场所，其监护人或得到监护人授权的亲属应负责接送。其监护人或得到监护人授权的亲属应切实履行对乙方的监护职责和安全防范义务，培训期间不得离开培训现场，否则承担损害后果和相关责任；
+        <br>7、老年艺术大学的学员及其家属需充分注意自身身体状况，选择适合身体条件的培训项目及课程；
+        <br>8、乙方在培训中使用的学习资料、各类器乐用具和物品、材料，应自行选择和购买，注意使用安全。
+        <br>9、乙方应根据自身需要自行选择和购买人身意外伤害保险产品。
+        <br><br><b>三、违约责任</b>
+        <br><br>1、乙方在培训期间造成其他学员或第三人损害的，或造成甲方场馆设施损害的，应承担法律责任。
+        <br>2、乙方在培训期间违反管理制度和课堂纪律的，甲方有权采取措施终止其学习资格，并追究乙方相应法律责任。
+        <br><br><b>四、不可抗力</b>
+        <br><br>因台风、龙卷风、暴雨、洪水、地震等不可抗力引发的损害后果，甲方依法不承担法律责任。
+        <br><br><b>五、争议解决</b>
+        <br><br>1. 本合同在履行过程中若发生争议，双方通过友好协商解决；
+        <br>2. 双方协商不能解决的，提交甲方所在地人民法院解决；
+        <br>3. 该培训活动最终解释权归于甲方。
+        <br><br><b>本协议一式两份，甲方和乙方（或乙方监护人）各留一份，双方签字后生效，协议有效期为一年。</b>
+    </div>
+</div>
+<script type="text/javascript" th:inline="javascript">
+    var userId = $("#temp_userId").val();
+    var itemId = dataInit.getUrlParam('id');
+
+    $().ready(function(){
+        checkUserTrain();
+        $("#submitDiv").on('click',function(){
+            /*var checkCode=$("#checkCode").val();
+
+            if (checkCode == '' ) {
+                return rongDialog.init({ico : 2, type : 1, desc : "操作失败,验证码不能为空!"});
+            }
+            $.ajax({
+                url: [[${basePath}]]+"/check/checkCode",
+                data:{"checkCode":checkCode},
+                type: "post",
+                async : true,
+                dataType: 'json',
+                success: function (data) {
+                    if(data=="0"){
+                        return rongDialog.init({ico : 2, type : 1, desc : "验证码有误!"});
+                    }else{
+                        $("#submit").click();
+                    }
+                }
+            })*/
+            $("#submit").click();
+        })
+    })
+
+    //显示安全协议
+    function alertXY() {
+        rongDialog.init({
+            type:3,
+            size: 'auto,1200',
+            panelDIV:'#abc',
+            showButtonPanel: true,
+            closeFn: function () {
+                if($('input[name="readme"]').is(':checked')){
+                    $('input[name="readme"]').removeAttr("checked");
+                }else {
+                    $('input[name="readme"]').attr("checked", "true");
+                }
+
+            }
+        });
+        return false;
+    }
+
+    //验证该用户是否可以报名
+    function checkUserTrain(){
+        dataInit.ajax({
+            api:[[${apiPath.checkEnrol}]],
+            params:{
+                userid:userId,
+                id:itemId
+            },
+            fn:function(data){
+                if(data.code != 0){
+                    rongDialog.init({ico: 2, type: 1, desc: data.msg || '报名异常',nextFn:function(){
+                        window.location.href = "detail?id="+itemId+"";
+                    }});
+                }else{
+                    initDetail();
+                }
+            }
+        })
+    }
+
+    function initDetail(){
+        dataInit.ajax({
+            api:[[${apiPath.pxDetail}]],
+            params:{
+                userId: userId,
+                id:itemId
+            },
+            fn:function(data){
+                initInputValue(data);
+                dataInit.ajax({
+                    api:[[${apiPath.userInfo}]],
+                    params:{
+                        userId: userId
+                    },
+                    fn:function(data){
+                        initUserDate(data);
+                    }
+                })
+            }
+        })
+
+    }
+
+    //初始化表单
+    var _isbasicclass = "";
+    var isrealname = "";
+
+    function initInputValue(data){
+        if(data.code == 0) {
+            var model = data.data.tra;
+            var title = model.title;
+            var _title = '';
+            var isbasicclass = model.isbasicclass;
+            _isbasicclass = model.isbasicclass;
+            isrealname = model.isrealname;
+            if(isrealname == 1){
+                $("#idCard").attr("readonly",true);
+                $("#name").attr("readonly",true);
+            }else {
+                $("#idCard").attr("readonly",false);
+                $("#name").attr("readonly",false);
+            }
+            if(isbasicclass == 2){
+                _title = title+"报名成功";
+            }else{
+                _title = title+"报名订单提交成功，请耐心等待管理员审核";
+            }
+            $('#ok-name').text(_title);
+            $("#title,#train-title").text(title);
+            $("#title").attr('href','detail?id='+dataInit.getUrlParam('id'));
+            $("input[name='name']").val($("#temp_nickName").val());
+            $("input[name='mobile']").val($("#temp_mobile").val());
+        }
+    }
+    //初始化用户实名信息
+    function initUserDate(data){
+        if(data.code == 0) {
+            var model = data.data;
+            var cardId = model.idCard;
+            var _bir = moment(model.birthday).format('YYYY-MM-DD');
+            //身份证类型
+            var _idcardtype = model.idcardtype;
+            if(_idcardtype == 2){
+                $('input[name="idtype"]').eq(1).attr("checked",true);
+                $("input[name='birthday']").val(_bir);
+            }else{
+                createBir();
+                $('input[name="idtype"]').eq(0).attr("checked",true);
+                if(cardId){
+                    var birthday =  birthdayInit(cardId);
+                    $("input[name='birthday']").val(birthday);
+                }
+            }
+
+            $('input[type=radio][name=idtype]').change(function() {
+                if(isrealname == 1){
+                    if(this.value == 0){
+                        $("#idCard").val(cardId);
+                        var birthday =  birthdayInit(cardId);
+                        $("input[name='birthday']").val(birthday);
+                        //createBir();
+                    }else {
+                        $("input[name='birthday']").val(_bir);
+                    }
+                }else{
+
+                    if(this.value == 0){
+                        $("#idCard").val(cardId);
+                        $("#birthday").attr("readonly",true);
+                        var birthday =  birthdayInit(cardId);
+                        $("input[name='birthday']").val(birthday);
+                        //createBir();
+                    }else {
+                        $("#birthday").attr("readonly",false);
+                    }
+                }
+            });
+
+            $("#idCard").val(cardId);
+            createBir();
+
+            //身份证如果有值，不能修改身份证，证件类型，出生日期
+            if (cardId && cardId!=''){
+                $("#idCard").attr("readonly",true);
+                $('input[type=radio][name=idtype]:not(:checked)').attr("disabled", true);
+                $("#birthday").attr("readonly",true);
+            }
+            //手机号有值，不能修改
+            var _mobile = $("input[name='mobile']").val();
+            if (_mobile && _mobile != ''){
+                $("input[name='mobile']").attr("readonly",true);
+            }
+            //姓名有值，不能修改
+            if(model.realName&&model.realName!=""){
+                $("input[name='name']").val(model.realName);
+            }else {
+                $("input[name='name']").val(model.nickname);
+            }
+            var _name = $("input[name='name']").val();
+            if (_name && _name != ''){
+                $("input[name='name']").attr("readonly",true);
+            }
+        }
+    }
+
+    function createBir() {
+        $("#idCard").keyup(function(){
+            var idcardtype = $('input[type=radio][name=idtype]:checked').val();
+            if (idcardtype == 1) return;
+
+            var idCard = $(this).val();
+            var birthday = birthdayInit(idCard);
+            $("input[name='birthday']").val(birthday);
+        })
+
+        $("#idCard").focusout(function(){
+            var idcardtype = $('input[type=radio][name=idtype]:checked').val();
+            if (idcardtype == 1) return;
+
+            var idCard = $(this).val();
+            var birthday = birthdayInit(idCard);
+            $("input[name='birthday']").val(birthday);
+        })
+    }
+
+
+        //生日自动生成
+        function birthdayInit(idCard){
+            var birthday = idCard;
+            birthday = birthday.substring(6,14);
+            birthday = birthday.substring(0,4)+"-"+birthday.substring(4,6)+"-"+birthday.substring(6);
+            return birthday;
+        }
+
+
+
+
+
+    //手机格式
+    $.validator.addMethod("phoneType", function (value) {
+        var reg = /^0?(13[0-9]|15[012356789]|17[013678]|18[0-9]|14[57])[0-9]{8}$/;
+        return reg.test(value);
+    }, '请输入正确的手机号码');
+    //身份证格式
+    $.validator.addMethod("userCode", function (value) {
+        var idcardtype = $('[name=idtype]:checked').val();
+
+        if (idcardtype == '1'){
+            /*var taiwanreg=/^[A-Z][0-9]{9}$/;
+            var xianggangreg=/^[A-Z][0-9]{6}\([0-9A]\)$/;
+            var aomenreg=/^[157][0-9]{6}\([0-9]\)$/;
+
+            return taiwanreg.test(value) || xianggangreg.test(value) || aomenreg.test(value);*/
+            return value && $.trim(value)!='';
+        }else{
+            var reg = /^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X|x)$/;
+            return reg.test(value);
+        }
+
+
+//        var reg = /^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X|x)$/;
+//        return reg.test(value);
+    }, '请输入正确的身份证号码');
+    //出生日期
+    $.validator.addMethod("birthday", function (value, element, params) {
+        var idcardtype = $('[name=idtype]:checked').val();
+        if (idcardtype == '1'){
+            return /^\d{4}-\d{2}-\d{2}$/.test(value);
+        }else{
+            return true;
+        }
+    }, '请输入正确的出生日期,如2000-01-01');
+
+    $("#trainForm").validate({
+        errorElement: "em",
+        debug:true,
+        rules: {
+            mobile: "phoneType",
+            idCard: "userCode",
+            birthday: {birthday:['[name=idtype]:checked']}
+        },
+        messages: {
+            mobile: {
+                required: "请输入您的手机号码"
+            },
+            idCard:{
+                required:"请输入您的身份证号码"
+            },
+            name:{
+                required:"请填写您的真实姓名"
+            },
+            readme:{
+                required:"请同意《全民艺术普及安全协议》"
+            }
+        },
+        submitHandler: function () {
+            var _desc = '';
+            if(_isbasicclass == 2){
+                _desc = "提交成功"
+            }else {
+                _desc = "提交成功，请耐心等待审核"
+            }
+
+            var params = {};
+            var temp_list = $("#trainForm [name]").serializeArray();
+            for (var i in temp_list) {
+                params[temp_list[i].name] = temp_list[i].value;
+            }
+            params["userid"] = userId;
+            params["traid"] = itemId;
+            dataInit.ajax({
+                api:[[${apiPath.enrol}]],
+                params : params,
+                fn:function(data){
+//                    console.log(data);
+
+                    if(data.code == "0"){
+                        rongDialog.init({
+                            ico: 1,
+                            type: 1,
+                            desc: _desc,
+                            nextFn:function(){
+                                $("#step-1").hide();
+                                $("#step-2").show();
+                            }
+                        });
+                    }else{
+                        rongDialog.init({
+                            ico: 2,
+                            type: 1,
+                            desc: data.msg || "培训提交失败"
+                        });
+                    }
+                }
+            });
+
+        }
+    });
+    /*function myReload() {
+        document.getElementById("CreateCheckCode").src =
+            document.getElementById("CreateCheckCode").src+ "?nocache=" + new Date().getTime();
+    }*/
+</script>
+</body>
+</html>

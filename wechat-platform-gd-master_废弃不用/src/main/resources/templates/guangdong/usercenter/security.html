@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/usercenter/usercenter.css'" >
+<div th:include="guangdong/public/leftBar :: copy"></div>
+<div id="page">
+    <div class="mui-content">
+        <!--安全认证-->
+        <div class="setting breadth">
+            <ul class="mui-table-view">
+                <li class="mui-table-view-cell mui-table-view-cell2">
+                    <a href="myusersecurityphone">
+                        <span class="mui-pull-left">绑定手机</span>
+                        <span class="mui-pull-right"><span>已绑定</span>&nbsp;<i class="icon iconfont icon-enter"></i></span>
+                    </a>
+                </li>
+                <li class="mui-table-view-cell mui-table-view-cell2">
+                    <a href="myusersecurityreal">
+                        <span class="mui-pull-left">实名认证</span>
+                        <span class="mui-pull-right"><span id="card-state"></span>&nbsp;<i class="icon iconfont icon-enter"></i></span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <!--安全认证-->
+    </div>
+</div>
+<script type="text/javascript" th:inline="javascript">
+    var userId = $("#temp_userId").val();
+    $().ready(function(){
+        userDataInit();
+    })
+    function userDataInit(){
+        dataInit.ajax({
+            api:[[${apiPath.userInfo}]],
+            params:{
+                userId:userId
+            },
+            fn:function(data){
+                if(data.code === 0){
+                    var model = data.data;
+                    //0-待完善; 1-已认证;  2-认证失败; 3-提交审核中
+                    var state = '';
+                    switch(model.authState){
+                        case 1:
+                            state = '已认证';
+                            break;
+                        case 2:
+                            state = '认证失败';
+                            break;
+                        case 3:
+                            state = '审核中';
+                            break;
+                        default:
+                            state = '未认证';
+                    }
+                    $("#card-state").text(state);
+                }
+            }
+        })
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<script th:src="${basePath}+'/assets/common/js/whg.maps.js'"></script>
+<div class="wrapper clearfix">
+    <div class="content">
+        <!--公共主头部开始-->
+        <div id="header" th:include="guangdong/public/header :: copy"></div>
+        <!--公共主头部结束-->
+        <div class="wrapper-banner">
+            <img th:src="${basePath}+'/assets/img/public/body-bg.jpg'">
+        </div>
+        <div class="sys-crumbs">
+            <span><a href="../index">首页</a></span>
+            <i class="icon iconfont icon-enter"></i>
+            <span><a href="list">非遗活动</a></span>
+            <i class="icon iconfont icon-enter"></i>
+            <span class="active" id="crumbs-title">这是一个活动标题</span>
+        </div>
+        <div class="wrapper-detail clearfix">
+            <div class="left-wrapper">
+                <div class="left-wrapper-header clearfix">
+                    <div class="img">
+                        <!--<img th:src="${basePath}+'/assets/img/public/loading.png'" id="imgPath">-->
+                        <img src="http://183.131.126.132:8092/whgstatic/img/2017/201709/20170921/a768d33e5359460e910de9c08ce4425d.jpg" id="imgPath">
+                    </div>
+                    <div class="info" id="infoDetail">
+                        <h1 id="title">这是一个活动标题</h1>
+                        <p class="desc">活动时间：<span><span>2017-9-26 16:16</span> 至 <span>2017-9-26 16:16</span></span></p>
+                        <p class="desc">联系电话：<span>13554564582</span></p>
+                        <p class="desc">活动地址：<span>这是一个地址</span></p>
+                        <p class="desc">活动标签：<span class="tag">非遗收徒</span></p>
+                        <a class="go-next" href="javascript:goSignUp()">我要报名</a>
+                        <div class="other-cont clearfix">
+                            <div class="sns-cont" title="分享">
+                                分享到
+                                <a href="javascript:void(0);" target="_blank" class="fxweix"><i class="icon iconfont icon-wechat"></i></a>
+                                <a href="javascript:void(0);" target="_blank" class="fxweibo"><i class="icon iconfont icon-xinlang"></i></a>
+                                <a href="javascript:void(0);" target="_blank" class="fxqq"><i class="icon iconfont icon-kongjian"></i></a>
+                            </div>
+                            <div class="fav-vote-cont clearfix">
+                                <div class="sys-vote" title="点赞"><i class="icon iconfont icon-praise icon-praise_fill" id="good"></i><span>0</span></div>
+                                <div class="sys-fav" title="收藏"><i class="icon iconfont icon-collection icon-collection_fill" id="collection"></i><span>0</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="left-wrapper-content">
+                    <div class="left-wrapper-box" id="descriptions">
+                        <div class="title">活动详情</div>
+                        <div class="html-panel">
+                            为贯彻落实中宣部、中央文明办等7部门印发的《关于公共文化设施开展学雷锋志愿服务的实施意见》精神，大力推进文化志愿服务，提高我省文化志愿服务工作管理人员的综合素质和业务能力，广东省文化志愿者总队于9月1日下午在广东省文化馆小剧场举办了广东省文化厅系统文化志愿服务工作培训班。省文化厅党组成员、副厅长、省文化志愿者总队总队长刘启宇,省文化厅公共文化处副处长（主持工作）毛凌文以及来自厅系统各单位文化志愿者分队管理人员和工作人员，部分文化志愿者分队志愿者代表共110多人参加了培训。培训班由毛凌文副处长（主持工作）主持。
+                            培训班特邀请团中央青年志愿者工作部部长、中国青年志愿者协会副会长张朝晖，作了题为《中国志愿服务的历史、现状和发展》的专题讲座。张朝晖部长以丰富详实的志愿服务实例以及对政策理论的准确把握，对中国志愿服务的发展历程进行了阐述分析，对比了中国与国际志愿服务的差距与不足。通过对新时期志愿服务工作的要求与国际形势下志愿服务的发展趋势的分析介绍，给培训班的学员带来了新的思维和信息，并从实际工作的角度对做好文化志愿服务工作提出了建议：一是项目要做实，二是要立足本地实际，三是做大文化，四是充分利用新媒体、大数据。
+                            本次培训讲座内容丰富、事例详实，有效地促进文化志愿服务工作者开拓思路、提升组织管理能力，提升文化志愿服务的实践操作能力，受到了学员们的热烈欢迎。
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="right-wrapper">
+                <div class="right-wrapper-title">
+                    相关推荐
+                </div>
+                <div class="right-wrapper-list recommend-list">
+                    <ul>
+                        <li>
+                            <div class="img">
+                                <a href="#">
+                                    <img src="http://183.131.126.132:8092/whgstatic/img/2017/201709/20170921/a768d33e5359460e910de9c08ce4425d.jpg" id="imgPath">
+                                </a>
+                            </div>
+                            <div class="title">
+                                <a href="#">不过话说text-ellipsis是一个特殊的样式</a>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="img">
+                                <a href="#">
+                                    <img src="http://183.131.126.132:8092/whgstatic/img/2017/201709/20170921/a768d33e5359460e910de9c08ce4425d.jpg" id="imgPath">
+                                </a>
+                            </div>
+                            <div class="title">
+                                <a href="#">不过话说text-ellipsis是一个特殊的样式</a>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="img">
+                                <a href="#">
+                                    <img src="http://183.131.126.132:8092/whgstatic/img/2017/201709/20170921/a768d33e5359460e910de9c08ce4425d.jpg" id="imgPath">
+                                </a>
+                            </div>
+                            <div class="title">
+                                <a href="#">不过话说text-ellipsis是一个特殊的样式</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div th:include="guangdong/public/fav :: copy"></div>
+        <div th:include="guangdong/public/voteup :: copy"></div>
+        <input type="hidden" id="temp_type" value="28">
+        <input type="hidden" id="commType">
+    </div>
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong/public/footer :: copy"></div>
+<!--底部结束-->
+<!--<script type="text/javascript" th:inline="javascript">
+    var itemId = dataInit.getUrlParam('id');
+    var userid = $("#temp_userId").val();
+    $(document).ready(function () {
+        dataInit.ajax({
+            api: [[${apiPath.zcProjectDetail}]],
+            fn: showDetail,
+            params: {id: itemId}
+        });
+        dataPage();
+        $("#fileter-nav").on("click", "span>a", function(){
+            $(this).parents("span").addClass("active").siblings().removeClass("active");
+            dataPage();
+        });
+    })
+    function goSignUp(actId) {
+        dataInit.ajax({
+            api: [[${apiPath.checkActPublish}]],
+            fn: goNext,
+            params: {actId: actId,zcId:itemId,userId:userid}
+        });
+        function goNext(data) {
+            if(data.code == 0){
+                window.location.href='actliucheng?id='+itemId+'&actId='+actId;
+            }else {
+                rongDialog.init({ico : 2, type : 1, desc : data.msg});
+            }
+        }
+    }
+    function showDetail(data) {
+        if(data && data.code == 0){
+            var model = data.data;
+            var imgPath = [[${imgPath}]] + dataInit.getBigImage(model.imgurl);
+            var title = model.title;
+            //调分享接口
+            dataInit.share(title,imgPath);
+            $('#crumbs-title').text(title);
+            $('#imgPath').attr("src",imgPath);
+            //判断众筹状态
+            var isOverdueSize = isOverdue(model.issuccess,model.timestart,model.timeend,model.now);
+            var __success = [[${basePath}]] + '/assets/img/zcproject/success.png';
+            var __fail = [[${basePath}]] + '/assets/img/zcproject/fail.png';
+            var __underway = [[${basePath}]] + '/assets/img/zcproject/underway.png';
+            var _zcState = '',zcButtonState = '';
+            switch (isOverdueSize){
+                case 0:
+                    _zcState = '<img src="'+__fail+'">';
+                    zcButtonState = '<a class="go-next go-next-fail" href="javascript:void(0)">已结束</a>';
+                    break;
+                case 1:
+                    _zcState = '<img src="'+__success+'">';
+                    zcButtonState = '<a class="go-next go-next-success" href="javascript:void(0)">众筹成功</a>'
+                    break;
+                case 2:
+                    _zcState = '<img src="'+__underway+'">';
+                    zcButtonState = '<a class="go-next" href="javascript:goSignUp('+model.refinfo.id+')">我要支持</a>'
+                    break;
+                case 3:
+                    _zcState = '';
+                    zcButtonState = '';
+                    break;
+            }
+            $(".zc-state").html(_zcState);
+            //获得众筹达成率
+            var _DCl = parseInt((model.orderCount/model.nummin)*100);
+            _DCl = _DCl>100?100:_DCl;
+            //获得众筹剩余份数
+            var _ZC_Max = model.numsum - model.orderCount;
+            _ZC_Max = _ZC_Max<0 ? 0 : _ZC_Max;
+            //获取剩余天数
+            var SY_Days = getDays(model.timeend,model.now,model.timestart);
+            //获取众筹标签
+            var zc_tag = '';
+            if(model.etype == 4){
+                zc_tag = '活动众筹';
+            }else if(model.etype == 5) {
+                zc_tag = '培训众筹';
+            }else if(model.etype == 0){
+                zc_tag = '其他众筹';
+            }else {
+                zc_tag = '其他众筹';
+            }
+            //是否存在联系电话
+            var telPhone = '';
+            if (model.phone) {
+                telPhone = '<p class="desc"><i class="iconfont icon-dianhua"></i>联系电话：<span>' + model.phone + '</span></p>';
+            }
+            var _html = '<h1>'+model.title+'</h1>'+
+                '<p class="desc"><i class="iconfont icon-time"></i>众筹时间：<span><span>'+moment(model.timestart).format("YYYY-MM-DD HH:mm:ss")+'</span> 至 <span>'+moment(model.timeend).format("YYYY-MM-DD HH:mm:ss")+'</span></span></p>'+
+                '<p class="desc"><i class="iconfont icon-activity"></i>活动时间：<span>'+moment(model.refinfo.starttime).format("YYYY-MM-DD")+' 至 '+moment(model.refinfo.endtime).format("YYYY-MM-DD")+'</span></p>'+telPhone+
+                '<p class="desc"><i class="iconfont icon-location"></i>活动地址：<span>'+model.refinfo.address+'</span></p>'+
+                '<p class="desc"><i class="iconfont icon-label"></i>众筹标签：<span class="tag">'+zc_tag+'</span></p>'+
+                '<div class="progress clearfix">'+
+                '    <div class="text float-left"><span>已筹到: <i>'+model.orderCount+'</i> 份</span></div>'+
+                '    <div class="text float-right"><span>上限: <i>'+model.numsum+'</i> 份</span></div>'+
+                '</div>'+
+                '<div class="progress-bar">'+
+                '    <span data-progress-bar="'+_DCl+'"></span>'+
+                '</div>'+
+                '<div class="progress-end clearfix">'+
+                '    <div class="text text-1 float-left "><span>目标分数: <i>'+model.nummin+'</i> 份</span></div>'+
+                '    <div class="text text-2 float-left"><span>剩余时间: <i>'+SY_Days+'</i></span></div>'+
+                '    <div class="text text-3 float-left"><span>剩余份数: <i>'+_ZC_Max+'</i> 份</span></div>'+
+                '</div>'+zcButtonState;
+            $("#infoDetail").html(_html);
+            if(model.explains){
+                $("#explains .info").html(model.explains);
+            }else {
+                $("#explains").hide();
+            }
+            if(model.notice){
+                $("#notice .info").html(model.notice);
+            }else {
+                $("#notice").hide();
+            }
+            if(model.descriptions){
+                $("#descriptions .html-panel").html(model.descriptions);
+            }else {
+                $("#descriptions").hide();
+            }
+            if(model.refinfo.remark){
+                $("#remark .html-panel").html(model.refinfo.remark);
+            }else {
+                $("#remark").hide();
+            }
+
+            setTimeout(function () {
+                //进度条动画
+                $(".progress-bar span").each(function () {
+                    var bar_size = $(this).attr("data-progress-bar");
+                    $(this).css("width",bar_size+"%");
+                })
+            },200)
+
+            //文件下载
+            var fileHtml = '';
+            if(model.enclosure){
+                var filePath = data.imgPath + model.enclosure;
+                $('#filePath').attr('href',filePath);
+                var index = filePath.lastIndexOf("\/");
+                var fileName = filePath.substring(index + 1, filePath.length);
+                fileHtml = '<div class="fileName"><i class="iconfont icon-download-copy"></i><a href="'+filePath+'">'+fileName+'</a></div>';
+                $("#fileDownload").html(fileHtml);
+            }else {
+                $("#fileDownload").parent(".sys-detail-list").hide();
+            }
+
+
+            dataInit.ajax({
+                api: [[${apiPath.query}]],
+                fn: queryVenue, //查询现属场馆
+                params: {
+                    id: model.cultid
+                }
+            });
+        }else {
+            rongDialog.init({
+                ico : 2, //1 勾  2 叉
+                type : 1,
+                desc : data.msg
+            });
+        }
+
+    }
+
+    function queryVenue(data) {
+        var _html = '';
+        if (data.code == 0 && data.data) {
+            var queryVenueImgPath = data.imgPath + data.data.picture;
+            _html = '<div class="img">'+
+                '    <img src="'+queryVenueImgPath+'">'+
+                '</div>'+
+                '<div class="text">'+
+                '    <div class="text-title">'+data.data.name+'</div>'+
+                '    <div class="text-info">'+data.data.introduction+'</div>'+
+                '</div>';
+        }
+        $("#ZCFQR").html(_html);
+    }
+    //判断众筹是否过期
+    function isOverdue(issuccess,timestart,timeend,dataNow) {
+        if(dataNow>timeend && issuccess != 1 ){
+            if(issuccess == 0){
+                return 3;//其他状态
+            }else {
+                return 0;//已结束
+            }
+        }else if(dataNow<timeend && dataNow>timestart && issuccess !=1){
+            return 2;//众筹中
+        }else if(issuccess == 1) {
+            return 1;//已成功
+        }else {
+            return 3;//其他状态
+        }
+    }
+
+    //获取剩余天数
+    function getDays(timeend,_dataNow,timestart) {
+        if(_dataNow>timeend){
+            return '已结束';
+        }else if(_dataNow>timestart){
+            return moment(timeend).fromNow(true);
+        }else {
+            return '未开始';
+        }
+    }
+
+    function dataPage(page,rows){
+        var params = {};
+        params.id = itemId;
+        params.page = page || 1;
+        params.pageSize = rows || 12;
+
+        var filterIdx = $("#fileter-nav").find("span.active").index();
+        switch (filterIdx){
+            case 1:
+            case 2:
+            case 3:
+                params.enttype = filterIdx;
+                break;
+            default: params.enttype = '';
+        }
+
+        dataInit.ajax({
+            api: [[${apiPath.gatherresourcelist}]],
+            params: params,
+            fn: function(data){
+                showModelList(data,filterIdx);
+                dataInit.pageInit('artPagging_2', params.page, params.pageSize, data.total, dataPage);
+            }
+        })
+    }
+
+    function showModelList(data,filterIdx){
+        var modelUL = $("#modelList_2");
+        modelUL.empty();
+        if(data.code == 0){
+            if(!filterIdx && data.rows.length == 0){
+                $("#res-box").hide();
+            }
+            if (data.rows && data.rows.length > 0) {
+                for (var i in data.rows) {
+                    var module = data.rows[i];
+
+                    var html = $('<li>\
+                                    <div class="img">\
+                                        <img >\
+                                    </div>\
+                                    <div class="info">\
+                                        <div class="title">'+module.name+'</div>\
+                                    </div>\
+                                    <div class="mask"><img></div>\
+                                    <a href="javascript:void(0)"></a>\
+                                    </li>');
+                    if(module.enturl)
+                        var _enturl = module.enturl.indexOf('http') >= 0 ? module.enturl : data.imgPath + module.enturl;
+                    var resBasePath = [[${basePath}]];
+                    switch (module.enttype){
+                        case "1" : //图片
+                            html.find(".img img").attr("src", data.imgPath + dataInit.getSmallImage(module.enturl));
+                            html.find(".mask").empty();
+                            html.find("a:last").attr("onClick", "rongDialog.init({\
+                                            ico : 1,\
+                                            type : 6,\
+                                            title : '"+module.name+"',\
+                                            imgUrl : '"+_enturl+"'\
+                                        });"
+                            );
+                            break;
+                        case "2" :  //视频
+                            html.find(".img img").attr("src", data.imgPath + dataInit.getSmallImage(module.deourl));
+                            html.find(".mask img").attr("src", [[${basePath}]] + '/assets/img/brand/play.png');
+                            html.find("a:last").attr("onClick", "rongDialog.init({\
+                                            type : 5,\
+                                            vedioUrl : '"+_enturl+"',\
+                                            vedioImg : '',\
+                                            vedioTitle : '"+module.name+"',\
+                                            basePath : '"+resBasePath+"'\
+                                        })"
+                            );
+                            break;
+                        case "3" :  //音频
+                            html.find(".img img").attr("src", [[${basePath}]] + '/assets/img/brand/brand-music.jpg');
+                            html.find(".mask img").attr("src", [[${basePath}]] + '/assets/img/brand/macphone.png');
+                            html.find("a:last").attr("onClick", "rongDialog.init({\
+                                            type : 5,\
+                                            vedioUrl : '"+_enturl+"',\
+                                            vedioImg : '',\
+                                            vedioTitle : '"+module.name+"',\
+                                            basePath : '"+resBasePath+"'\
+                                        })"
+                            );
+                            break;
+
+                        default:
+                            html.find(".mask").empty();
+                    }
+
+                    modelUL.append(html);
+                }
+            } else {
+                modelUL.append("<div class='public-no-message'></div>");
+            }
+        }else {
+            rongDialog.init({ico : 2, type : 1, desc : data.msg});
+        }
+    }
+</script>-->
+</body>
+</html>

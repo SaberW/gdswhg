@@ -1,0 +1,116 @@
+<header th:fragment="copy" xmlns:th="http://www.w3.org/1999/xhtml">
+    <link rel="stylesheet" th:href="${basePath}+'/assets/css/public/index_leftBar.css'" >
+    <nav id="menu"
+         class="mm-menu mm-effect-slide-menu mm-pageshadow mm-offcanvas mm-hasnavbar-top mm-hasnavbar mm-hasnavbar-bottom mm-hassearch">
+        <div th:include="guangdong/public/header :: copy"></div>
+        <facecont class="clearfix">
+            <div class="user-face">
+                <a th:href="${basePath}+'/login'" th:if="${session.sessUserKey == null}">
+                    <img th:src="${basePath}+'/assets/img/public/face2.png'" alt="demo">
+                </a>
+                <a th:href="${basePath}+'/usercenter/index'" th:if="${session.sessUserKey != null}">
+                    <img th:src="${session.sessUserKey.headimgurl} ? ${session.sessUserKey.headimgurl} : ${basePath}+'/assets/img/public/face2.png'"
+                         alt="个人头像">
+                    <em class="message-wx-3"></em>
+                </a>
+            </div>
+            <div class="logining">
+                <span th:if="${session.sessUserKey == null}"><a th:href="${basePath}+'/login'">账号登录</a></span>
+                <span th:if="${session.sessUserKey != null}"><a th:href="${basePath}+'/usercenter/index'"
+                                                                th:text="${session.sessUserKey.nickName}"></a></span>
+            </div>
+        </facecont>
+        <div class="mm-panel mm-opened mm-current" id="mm-0">
+            <ul class="mm-listview mm-first mm-last">
+                <li><a th:href="${basePath}+'/index'"><i class="iconfont icon-homepage"></i>首页</a></li>
+                <li><a th:href="${basePath}+'/news/list'"><i class="iconfont icon-createtask"></i>资讯动态</a></li>
+                <li><a th:href="${basePath}+'/act/list'"><i class="iconfont icon-like"></i>活动预约</a></li>
+                <li><a th:href="${basePath}+'/venue/list'"><i class="iconfont icon-manage"></i>场馆服务</a></li>
+                <li><a th:href="${basePath}+'/train/index'"><i class="iconfont icon-group"></i>培训驿站</a></li>
+                <li><a th:href="${basePath}+'/brand/list'"><i class="iconfont icon-praise"></i>品牌活动</a></li>
+                <li><a th:href="${basePath}+'/digit/list'"><i class="iconfont icon-wxbmingxingdianpu"></i>数字展馆</a></li>
+                <!--<li><a th:href="${basePath}+'/gather/index'"><i class="iconfont icon-browse"></i>众筹</a></li>-->
+                <!--<li><a th:href="${basePath}+'/intangibleheritage/index'"><i class="iconfont icon-flag"></i>非遗中心</a></li>-->
+                <!--<li><a th:href="${basePath}+'/resource/index'"><i class="iconfont icon-barrage"></i>群文资源</a></li>-->
+                <li><a th:href="${basePath}+'/union/index'"><i class="iconfont icon-addition"></i>文化联盟</a></li>
+                <li><a th:href="${basePath}+'/usercenter/index'"><i class="iconfont icon-setup"></i>个人中心</a></li>
+                <li><a th:href="${basePath}+'/about'"><i class="iconfont icon-prompt"></i>关于我们</a></li>
+            </ul>
+        </div>
+    </nav>
+    <script type="text/javascript" th:inline="javascript">
+        $().ready(function () {
+            dataInit.initWechat({
+                jsTicket: [[${apiPath.wechatTicket}]]
+            });
+            var a = $("#a_open").val() || true;
+            if (a != 0) {
+                mui('.mui-content').on('tap', 'a', function () {
+                    document.location.href = this.href
+                });
+            }
+            mui('#menu').on('tap', 'a', function () {
+                document.location.href = this.href
+            });
+            dataInit.createLeftBar();
+            $('.assistive-top').toTop({
+                autohide: true,
+                offset: 100,
+                speed: 200,
+                right: 0,
+                bottom: 60
+            });
+            if ($("#temp_userId").val()) {
+                dataInit.ajax({
+                    api: [[${apiPath.supplyMsgList}]],
+                    params: {
+                        userid: $("#temp_userId").val(),
+                        toproject: 'ALL',
+                        type: 0
+                    },
+                    fn: setMessage
+                })
+            }
+            //获取地理位置
+            /*if (dataInit.isWeixin()) {
+                wx.ready(function () {
+                    wx.getLocation({
+                        type: 'gcj02', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+                        success: function (res) {
+                            latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+                            longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+                            var data = {
+                                location: latitude + ',' + longitude,
+                                key: "5XJBZ-XLUWU-PHHVB-BP6P7-FNKCQ-IOBBW",
+                                get_poi: 0
+                            }
+                            var url = "http://apis.map.qq.com/ws/geocoder/v1/?";
+                            data.output = "jsonp";
+                            $.ajax({
+                                type: "get",
+                                dataType: 'jsonp',
+                                data: data,
+                                jsonp: "callback",
+                                jsonpCallback: "QQmap",
+                                url: url,
+                                success: function (json) {
+                                    console.log(json)
+                                },
+                                error: function (err) {
+                                    mui.toast("服务端错误，请刷新浏览器后重试")
+                                }
+                            })
+                        }
+                    })
+                })
+            }*/
+        })
+
+        function setMessage(data) {
+            var messageSize = dataInit.getStorage('messageSizeWX') || 0;
+            if (messageSize < data.total) {
+                $(".message-wx,.message-wx-2,.message-wx-3").show();
+            }
+        }
+    </script>
+</header>

@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong_gx/public/resource :: copy"></head>
+<body>
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/jquery-form.js'"></script>
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/rong.validate.js'"></script>
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/rong.message.js'"></script>
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugins/laydate/laydate.js'"></script>
+<div class="wrapper clearfix">
+    <div class="content">
+        <!--公共主头部开始-->
+        <div id="header" th:include="guangdong_gx/public/header :: copy"></div>
+        <!--公共主头部结束-->
+        <div class="sys-main-top">
+            <div class="supplylist">
+                <div class="title" id="gxtype"><span class="button">供给信息（<span id="gcount">0</span>）</span><span>需求信息（<span id="xcount">0</span>）</span></div>
+                <div class="search">
+                    <div class="searchGx">
+                        <input type="text" id="searchKey" name="searchKey" placeholder="请输入搜索关键字..." onkeydown="if(event.keyCode==13) searchList();">
+                        <a href="javascript:void(0)" id="search-button">搜索</a>
+                    </div>
+                </div>
+                <div class="keyword">关键词：
+                    <a href="javascript:void(0)">演出</a>
+                    <a href="javascript:void(0)">培训</a>
+                </div>
+            </div>
+        </div>
+        <!--主体开始-->
+        <div class="supplylist-cate">
+            <div class="categoryChange supplylist-cate-content">
+                <div class="row clearfix">
+                    <div class="title">区域：</div>
+                    <div class="adrList" id="areList"></div>
+                <div class="row clearfix">
+                    <div class="title">时间：</div>
+                    <div class="start-time">
+                        <input class="input-txt time startTime" onkeyup="this.value=this.value.replace(/[, ]/g,'')"
+                               id="startTime" name="startTime" readonly=""
+                               placeholder="请选择时间">
+                        <input type="hidden" id="beginDay">
+                        <input type="hidden" id="endDay">
+                    </div>
+                    <!--<div class="wenzi">至</div>
+                    <div class="end-time">
+                        <input class="input-txt time endTime" onkeyup="this.value=this.value.replace(/[, ]/g,'')"
+                               id="endTime" name="endTime" readonly=""
+                               placeholder="请选择结束时间">
+                        <i class="iconfont icon-activity"></i>
+                    </div>-->
+                    <script type="text/javascript">
+                        laydate.render({
+                            elem: '#startTime',
+                            range: true,
+                            done: function(value, date, endDate){
+                                if (date && date.year && date.month && date.date
+                                && endDate && endDate.year && endDate.month && endDate.date){
+                                    $("#beginDay").val(date.year+'-'+date.month+'-'+date.date);
+                                    $("#endDay").val(endDate.year+'-'+endDate.month+'-'+endDate.date);
+                                }else{
+                                    $("#beginDay").val('');
+                                    $("#endDay").val('');
+                                }
+                                dataPage();
+                            }
+                        });
+                    </script>
+                </div>
+                <div class="row clearfix">
+                    <div class="title">类型：</div>
+                    <div class="adrList" id="typeList">
+                    </div>
+                </div>
+                <div class="row clearfix">
+                    <div class="title">配送范围：</div>
+                    <div class="adrList" id="psList">
+                        <span class="item active"><a href="javascript:void(0)" onclick="setArea(this,null)">全部</a></span><span class="item"><a href="javascript:void(0)" onclick="setArea(this,2017072516954870)">广州市</a></span><span class="item"><a href="javascript:void(0)" onclick="setArea(this,2017083195263801)">深圳市</a></span><span class="item"><a href="javascript:void(0)" onclick="setArea(this,2017083156798432)">东莞市</a></span><span class="item"><a href="javascript:void(0)" onclick="setArea(this,2017083179520836)">惠州市</a></span>
+                    </div>
+                </div>
+                <input type="hidden" id="type">
+                <input type="hidden" id="_startTime">
+                <input type="hidden" id="_endTime">
+                <input type="hidden" id="sortType">
+                <input type="hidden" id="psprovince">
+                <input type="hidden" id="pscity">
+            </div>
+        </div>
+        <div class="supplylist-cate">
+            <div class="categoryChange supplylist-cate-content">
+                <div class="row clearfix">
+                    <div class="title">排序方式：</div>
+                    <div class="adrList">
+                        <!--<span class="item"><a href="javascript:void(0)" onclick="setState(this,null)">默认</a></span>-->
+                        <span class="item active"><a href="javascript:void(0)" onclick="setState(this,1)">最新</a></span></div>
+                </div>
+            </div>
+        </div>
+        <div class="container content">
+            <div class="page-list" style="margin-top:0px; padding-top:20px">
+                <!--<div class="public-no-message"></div>-->
+                <ul class="center-list" id="supplyList">
+                    <!--<li class="dist-item">
+                        <a href="#"></a>
+                        <img src="//iconfont.alicdn.com/t/1503992387686.jpg@100h_100w.jpg" class="dist-type">
+                        <div class="user-name"><span>项目发布者用户名</span><i class="iconfont icon-dunpai"></i></div>
+                        <h2>供需项目的标题 [广州/深圳]<em><span>一天前</span>发布</em></h2>
+                        <p>配送范围：<span>汕头市</span><span>广州市</span><span>深圳市</span><span>潮州市</span></p>
+                        <div class="info-cont">
+                            <p>简介：<span>作为一部硬汉题材的电影，它的另一层悲剧还在于影片为了获得更大的市场，而制作成了一部PG-13级的电影。这让很多动作片迷非常不满。日前，影片的主演史泰龙在接受采访的时候称，让更多的家庭来看这部电影是一个“严重的预计错误”。所以在下一部电影，也就是《敢死队4》中，这种温吞水的暴力将不复存在，更多、更直接的暴力将会出现。</span></p>
+                            <a class="more" href="javascript:void(0)">查看更多></a>
+                            <a class="button" href="javascript:void(0)">申请配送</a>
+                        </div>
+                    </li>-->
+                </ul>
+                <!--分页开始 -->
+                <div class="green-black" id="artPagging" style="margin-bottom: 40px"></div>
+                <!--分页结束-->
+            </div>
+        </div>
+        <!--主体结束-->
+    </div>
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong_gx/public/footer :: copy"></div>
+<!--底部结束-->
+<script type="text/javascript" th:inline="javascript">
+
+    var itemId = dataInit.getUrlParam('searchKey');
+    var cityValue = dataInit.getUrlParam('cityValue');
+    var typeValue = dataInit.getUrlParam('typeValue');
+    var gxtype = 0;
+    if(itemId == 'null'||itemId == null){
+        itemId = '';
+    }else {
+        itemId = decodeURI(decodeURI(itemId));
+    }
+    if(typeValue == 'null'||typeValue == null){
+        typeValue = '';
+    }
+    if(cityValue == 'null'||cityValue == null){
+        cityValue = '';
+    }else{
+        cityValue = decodeURI(decodeURI(cityValue));
+    }
+    if(itemId != ''){
+        $("#searchKey").val(itemId);
+    }
+    if(typeValue != ''){
+        $("#type").val(typeValue);
+    }
+    if(cityValue != ''){
+        $("#pscity").val(cityValue);
+    }
+
+    $("#search-button").on("click", function () {
+        var searchKey = $("#searchKey").val();
+        searchKey = $.trim(searchKey);
+        $(".keyword a").each(function () {
+            if($(this).text() == searchKey){
+                $(this).addClass('active').siblings().removeClass('active');
+            }else {
+                $(this).removeClass('active');
+            }
+        })
+
+        if(itemId != searchKey){
+            itemId = searchKey;
+            dataPage();
+        }
+    });
+    function searchList() {
+        $("#search-button").click();
+    }
+    $(document).ready(function () {
+        dataInit.ajax({
+            //api: [[${apiPath.actCate}]],
+            api: [[${apiPath.gxTypes}]],
+            /*params: {
+                type:2//分类type
+            },*/
+            fn: showType
+        });
+        showAre($.cookie("city"));
+        showPsArea(cityValue);
+        dataPage();
+
+        //0供给，1需求
+        $("#gxtype>span").on("click",function () {
+            $(this).addClass('button').siblings().removeClass("button");
+            gxtype = $(this).index()+'';
+            dataPage();
+        });
+
+        $(".keyword a").on("click",function () {
+            $("#searchKey").val($(this).text());
+            $("#search-button").click();
+        })
+    })
+
+    function dataPage(page,rows) {
+        var params_page = page || 1;
+        var params_rows = rows || 12;
+        var params = {
+            page: params_page,
+            pageSize: params_rows,
+            cultid: $.cookie('cultid'),
+            etype: $("#type").val(), //类型
+            area: $("#area").val(), //区域
+            deptid: $("#deptid").val(), //部门id
+            city: $("#city").val(), //市
+            province: $("#province").val(), //省
+            psprovince: $("#psprovince").val(), //省
+            pscity: $("#pscity").val(), //省
+            beginDay: $("#beginDay").val(), //起始天
+            endDay: $("#endDay").val(), //结束天
+            sortType: $("#sortType").val(), //结束天
+            srchkey: itemId, //模糊查询
+            gxtype: gxtype //0供给，1需求
+        };
+
+
+        /*for (var k in params){
+            var v = params[k];
+            if (!v || v==''){
+                delete params[k];
+            }
+        }*/
+
+        dataInit.ajax({
+            api: [[${apiPath.supplyList}]],
+            params: params,
+            fn: function(data){
+                showModelList(data);
+                dataInit.pageInit('artPagging', params_page, params_rows, data.total, dataPage);
+            }
+        })
+    }
+
+    function showType(data) {
+        $("#typeList").html("");
+        var region = data.rows||[];
+        var typeList = $("#typeList");
+        if(typeValue!=""){
+            typeList.append("<span class='item'><a href='javascript:void(0)' onclick='setType(this," + null + ")'>全部</a></span>");
+        }else{
+            typeList.append("<span class='item active'><a href='javascript:void(0)' onclick='setType(this," + null + ")'>全部</a></span>");
+        }
+
+        for (var i in region) {
+            if(typeValue!=""&&typeValue==region[i].value){
+                typeList.append("<span class='item active'><a href='javascript:void(0)' onclick=setType(this,'" + region[i].value + "')>" + region[i].name + "</a></span>");
+            }else{
+                typeList.append("<span class='item'><a href='javascript:void(0)' onclick=setType(this,'" + region[i].value + "')>" + region[i].name + "</a></span>");
+            }
+        }
+    }
+
+    function showModelList(data) {
+        $("#modelList").html("");
+        var modelList = $("#modelList");
+        if(data.code == 0){
+            if(data.data.gcount > 500){
+                $("#gcount").text('500+');
+            }else {
+                $("#gcount").text(data.data.gcount);
+            }
+            if (data.data.xcount > 500){
+                $("#xcount").text("500+");
+            }else{
+                $("#xcount").text(data.data.xcount);
+            }
+
+            var gxtype = data.data.gxtype;
+            var _html = '';
+            if (data.rows.length > 0) {
+                var model = data.rows;
+                var _imgPath = data.imgPath;
+                for(var i in model){
+                    var city = model[i].pscity ? model[i].pscity.split(",") : [];
+                    var cityHtml = '';
+                    for(var j in city){
+                        cityHtml+= "<span>"+city[j]+"</span>"
+                    }
+
+                    var time = model[i].publishdate;
+                    var content = model[i].content || "";
+                    if (gxtype=="0"){
+                        content = model[i].memo || "";
+                    }
+                    if(time==undefined){
+                        time = model[i].statemdfdate;
+                    }
+
+                    moment.lang('zh-cn');
+                    time = moment(time).fromNow();
+                    content = removeHTMLTag(content);
+
+                    var _href = "javascript:void(0)";
+                    var cbutton='';
+                    if (gxtype == "0"){
+                        if(model[i].type&&model[i].type=="1"){
+                            _href = [[${basePath}]]+"/res-cg/venueorder?id="+ model[i].fkid;
+                        }else if(model[i].type&&model[i].type=="2"){
+                            _href = [[${basePath}]]+"/res-px/detail?id="+ model[i].fkid;
+                        }else if(model[i].type&&model[i].type=="3"){
+                            _href = [[${basePath}]]+"/res-ss/detail?id="+ model[i].fkid;
+                        }else if(model[i].type&&model[i].type=="4"){
+                            _href = [[${basePath}]]+"/res-jm/detail?id="+ model[i].fkid;
+                        }else if(model[i].type&&model[i].type=="5"){
+                            _href = [[${basePath}]]+"/res-zl/detail?id="+ model[i].fkid;
+                        }else if(model[i].type&&model[i].type=="6"){
+                            _href = [[${basePath}]]+"/res-rc/detail?id="+ model[i].fkid;
+                        }
+                        cbutton='申请配送';
+                    }else{
+                        _href = "detail?id="+ model[i].id;
+                        cbutton='提供配送';
+                    }
+
+
+                    _html+='<li class="dist-item">'+
+                        '    <a href="'+_href+'" target="_blank"></a>'+
+                        //'    <img src="//iconfont.alicdn.com/t/1503992387686.jpg@100h_100w.jpg" class="dist-type">'+
+                        '    <img src="'+_imgPath+model[i].cultidImg+'" class="dist-type">'+
+                        '    <div class="user-name"><span>'+model[i].cultidName+'</span><i class="iconfont icon-dunpai"></i></div>'+
+                        '    <h2>'+model[i].title+' ['+(model[i].psprovince||'')+']<em><span>'+time+'</span>发布</em></h2>'+
+                        '    <p>配送范围：'+cityHtml+'</p>'+
+                        '    <div class="info-cont">'+
+                        '        <p>简介：<span>'+content+'</span></p>'+
+                        '        <a class="button" href="'+_href+'">'+cbutton+'</a>'+
+                        '    </div>'+
+                        '</li>';
+                }
+            } else {
+                _html = "<div class='public-no-message'></div>";
+            }
+            $("#supplyList").html(_html);
+        }else {
+            rongDialog.init({ico : 2, type : 1, desc : data.msg});
+        }
+    }
+    function setActive(dom){
+        $(dom).parent('span').addClass("active").siblings().removeClass("active");
+    }
+
+
+    function setType(dom, id) {
+        $("#type").val(id);
+        dataPage();
+        setActive(dom);
+    }
+
+    function setState(dom, id) {
+        $("#sortType").val(id);
+        dataPage();
+        setActive(dom);
+    }
+
+    //给消息过滤HTML标签
+    function removeHTMLTag(str) {
+        str = str.replace(/<\/?[^>]*>/g,''); //去除HTML tag
+        str = str.replace(/[ | ]*\n/g,'\n'); //去除行尾空白
+        //str = str.replace(/\n[\s| | ]*\r/g,'\n'); //去除多余空行
+        str=str.replace(/&nbsp;/ig,'');//去掉&nbsp;
+        return str;
+    }
+</script>
+</body>
+</html>

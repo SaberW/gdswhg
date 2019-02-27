@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.creatoo.hn.dao.mapper.api.train.ApiTraLiveMapper">
+    <!-- 查询所有在线课程培训 -->
+    <select id="queryAllLive" resultType="hashmap" parameterType="hashmap">
+        select * from (
+            select
+                t1.*,
+                (select count(*) from whg_tra_course tc where tc.traid=t1.id and tc.starttime &lt; CURRENT_TIMESTAMP and tc.endtime &gt; CURRENT_TIMESTAMP) as liveing,
+                (SELECT TIMESTAMPDIFF(SECOND,'1970-1-1 8:0:0',CURRENT_TIMESTAMP) -  TIMESTAMPDIFF(SECOND,'1970-1-1 8:0:0',tc.endtime) FROM whg_tra_course tc WHERE tc.traid = t1.id ORDER BY tc.endtime DESC LIMIT 0, 1) as isover,
+                (select starttime from whg_tra_course tc where tc.traid = t1.id and tc.starttime > CURRENT_TIMESTAMP order by tc.starttime LIMIT 0,1) as livestime,
+                (select count(*) from whg_collection tc where tc.cmrefid = t1.id and tc.cmopttyp in (0,2)) as hots
+               ,(select count(*) from whg_tra_enrol tc where tc.traid =t1.id and tc.state in (1,4,6)) as enrolnumber
+               ,(select count(*) from whg_collection tc where tc.cmrefid = t1.id and tc.cmopttyp in (0)) as sctimes
+               ,(select count(*) from whg_collection tc where tc.cmrefid = t1.id and tc.cmopttyp in (2)) as dztimes,
+                (SELECT COUNT(wc.cmid) FROM whg_collection wc WHERE wc.cmrefid = t1.id  AND wc.cmopttyp = 2) as dianzan,
+                (SELECT COUNT(wc.cmid) FROM whg_collection wc WHERE wc.cmrefid = t1.id  AND wc.cmopttyp = 0) as shoucang
+            from whg_tra t1
+            where  t1.islive = 1
+            and t1.biz = 'PT'
+            and t1.state = 6 and t1.delstate=0
+            <if test="cultid != null ">
+                AND t1.cultid IN
+                <foreach item="item" index="index" collection="cultid" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+                <if test="arttype != null and arttype != ''">and t1.arttype  LIKE "%"#{arttype}"%"</if>
+                <if test="tratype != null and tratype != ''">and t1.etype = #{tratype}</if>
+            </if>
+            <if test="deptid != null ">
+                AND t1.deptid IN
+                <foreach item="item" index="index" collection="deptid" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="cultid == null">
+                <if test="arttype != null and arttype != ''">and t1.arttype LIKE "%"#{arttype}"%" </if>
+                <if test="tratype != null and tratype != ''">and t1.etype LIKE "%"#{tratype}"%" </if>
+            </if>
+
+            <if test="traid != null and traid != ''">and t1.id = #{traid}</if>
+            <if test="province != null and province != ''">and t1.province = #{province}</if>
+            <if test="city != null and city != ''">and t1.city = #{city}</if>
+            <if test="area != null and area != ''">and t1.area = #{area}</if>
+            <if test="recommend != null and recommend == 1">and t1.recommend = 1</if>
+
+        ) ta where  1=1
+
+            <if test="livestate != null and livestate == 0">
+                and ta.isover &lt; 1 and ta.liveing = 0
+            </if>
+            <if test="livestate != null and livestate == 1">
+                and ta.isover &lt; 1 and ta.liveing = 1
+            </if>
+            <if test="livestate != null and livestate == 2">
+                and ta.isover &gt; 0
+            </if>
+            <if test="keyword != null and keyword != ''">
+                and ta.title like "%"#{keyword}"%"
+            </if>
+
+            <if test="sort != null and sort == 0">
+                <choose>
+                    <when test="allprovince!=null">
+                        ORDER BY ta.toprovince DESC, ta.recommend desc, ta.statemdfdate desc
+                    </when>
+                    <when test="allcity!=null">
+                        ORDER BY ta.tocity DESC, ta.recommend desc, ta.statemdfdate desc
+                    </when>
+                    <otherwise>
+                        order by ta.recommend desc, ta.statemdfdate desc
+                    </otherwise>
+                </choose>
+            </if>
+            <if test="sort != null and sort == 1">
+                <choose>
+                    <when test="allprovince!=null">
+                        ORDER BY ta.toprovince DESC, ta.hots desc, ta.liveing desc, ta.recommend desc, ta.statemdfdate desc
+                    </when>
+                    <when test="allcity!=null">
+                        ORDER BY ta.tocity DESC, ta.hots desc, ta.liveing desc, ta.recommend desc, ta.statemdfdate desc
+                    </when>
+                    <otherwise>
+                        order by ta.hots desc, ta.liveing desc, ta.recommend desc, ta.statemdfdate desc
+                    </otherwise>
+                </choose>
+            </if>
+            <if test="sort != null and sort == 2">
+                <choose>
+                    <when test="allprovince!=null">
+                        ORDER BY ta.toprovince DESC, ta.statemdfdate desc, ta.liveing desc, ta.recommend desc, ta.hots desc
+                    </when>
+                    <when test="allcity!=null">
+                        ORDER BY ta.tocity DESC, ta.statemdfdate desc, ta.liveing desc, ta.recommend desc, ta.hots desc
+                    </when>
+                    <otherwise>
+                        order by ta.statemdfdate desc, ta.liveing desc, ta.recommend desc, ta.hots desc
+                    </otherwise>
+                </choose>
+            </if>
+    </select>
+    <!-- 查询所有在线课程培训 END -->
+
+    <!-- 根据视频直播录制的开始时间和appName,streamName获取相应的live配置信息 -->
+    <select id="queryLiveByTime" resultType="hashmap" parameterType="hashmap">
+        SELECT t.id, t.starttime, t.endtime, t.appname, t.streamname, t.liveaddr
+        FROM whg_live_comm t
+        WHERE date_format(t.starttime, '%Y-%m-%d %H') = #{starttime} AND t.appname=#{appName} AND t.streamname=#{streamName}
+        ORDER BY t.starttime DESC limit 0,1
+    </select>
+    <!-- 根据视频直播录制的开始时间和appName,streamName获取相应的live配置信息 END -->
+</mapper>

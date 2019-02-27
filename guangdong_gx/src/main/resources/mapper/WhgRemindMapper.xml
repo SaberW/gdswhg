@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.creatoo.hn.dao.mapper.admin.WhgRemindMapper">
+
+    <!-- 查询内部供需各模块的待审核待发布数量 -->
+    <select id="t_nbgxsrchList4p" resultType="hashmap">
+        SELECT COUNT(id) 'trauncheck',(SELECT COUNT(id) FROM whg_supply_tra st WHERE st.state = 2 and st.delstate = 0
+        <if test="cultids != null">
+            AND st.cultid in
+            <foreach collection="cultids" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="deptids != null">AND st.deptid IN <foreach collection="deptids" item="item" open="(" close=")" separator=",">#{item}</foreach></if>
+        ) 'traunpub',
+            (SELECT COUNT(id) FROM whg_show_exh se WHERE se.state = 9 and se.delstate = 0
+        <if test="cultids != null">
+            AND se.cultid IN
+            <foreach collection="cultids" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="deptids != null">AND se.deptid IN <foreach collection="deptids" item="item" open="(" close=")" separator=",">#{item}</foreach></if>
+        ) 'exhuncheck',
+            (SELECT COUNT(id) FROM whg_show_exh se WHERE se.state = 2 and se.delstate = 0
+        <if test="cultids != null">
+            AND se.cultid IN
+            <foreach collection="cultids" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="deptids != null">AND se.deptid IN <foreach collection="deptids" item="item" open="(" close=")" separator=",">#{item}</foreach></if>
+        ) 'exhunpub',
+            (SELECT COUNT(id) FROM whg_show_goods sg WHERE sg.state = 2 and sg.delstate = 0
+        <if test="cultids != null">
+            AND sg.cultid IN
+            <foreach collection="cultids" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="deptids != null">AND sg.deptid IN <foreach collection="deptids" item="item" open="(" close=")" separator=",">#{item}</foreach></if>
+        ) 'sgunpub',
+            (SELECT COUNT(id) FROM whg_show_goods sg WHERE sg.state = 9 and sg.delstate = 0
+        <if test="cultids != null">
+            AND sg.cultid IN
+            <foreach collection="cultids" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="deptids != null">AND sg.deptid IN <foreach collection="deptids" item="item" open="(" close=")" separator=",">#{item}</foreach></if>
+        ) 'sguncheck',
+            (SELECT COUNT(id) FROM whg_supply_ven ven WHERE ven.state = 9 and ven.delstate = 0
+        <if test="cultids != null">
+            AND ven.cultid IN
+            <foreach collection="cultids" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="deptids != null">AND ven.deptid IN <foreach collection="deptids" item="item" open="(" close=")" separator=",">#{item}</foreach></if>
+        ) 'venuncheck',
+            (SELECT COUNT(id) FROM whg_supply_ven ven WHERE ven.state = 2 and ven.delstate = 0
+        <if test="cultids != null">
+            AND ven.cultid IN
+            <foreach collection="cultids" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="deptids != null">AND ven.deptid IN <foreach collection="deptids" item="item" open="(" close=")" separator=",">#{item}</foreach></if>
+        ) 'venunpub',
+            (SELECT COUNT(id) FROM whg_supply_room room WHERE room.state = 9 and room.delstate = 0
+        <if test="cultids != null">
+            AND room.cultid IN
+            <foreach collection="cultids" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="deptids != null">AND room.deptid IN <foreach collection="deptids" item="item" open="(" close=")" separator=",">#{item}</foreach></if>
+        ) 'roomuncheck',
+            (SELECT COUNT(id) FROM whg_supply_room room WHERE room.state = 2 and room.delstate = 0
+        <if test="cultids != null">
+            AND room.cultid IN
+            <foreach collection="cultids" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="deptids != null">AND room.deptid IN <foreach collection="deptids" item="item" open="(" close=")" separator=",">#{item}</foreach></if>
+        ) 'roomunpub',
+            (SELECT COUNT(id) FROM whg_exh_goods exhgoods WHERE exhgoods.state = 9 and exhgoods.delstate = 0
+        <if test="cultids != null">
+            AND exhgoods.cultid IN
+            <foreach collection="cultids" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        ) 'exhgoodsuncheck',
+            (SELECT COUNT(id) FROM whg_exh_goods exhgoods WHERE exhgoods.state = 2 and exhgoods.delstate = 0
+        <if test="cultids != null">
+            AND exhgoods.cultid IN
+            <foreach collection="cultids" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>) 'exhgoodsunpub',
+            (SELECT COUNT(id) FROM whg_show_organ organ WHERE organ.state = 9 and organ.delstate = 0
+        <if test="cultids != null">
+            AND organ.cultid IN
+            <foreach collection="cultids" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="deptids != null">AND organ.deptid IN <foreach collection="deptids" item="item" open="(" close=")" separator=",">#{item}</foreach></if>
+        ) 'organuncheck',
+            (SELECT COUNT(id) FROM whg_show_organ organ WHERE organ.state = 2 and organ.delstate = 0
+        <if test="cultids != null">
+            AND organ.cultid IN
+            <foreach collection="cultids" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="deptids != null">AND organ.deptid IN <foreach collection="deptids" item="item" open="(" close=")" separator=",">#{item}</foreach></if>
+        ) 'organunpub',
+            (SELECT COUNT(id) FROM whg_goods goods WHERE goods.state = 9 and goods.delstate = 0
+        <if test="cultids != null">
+            AND goods.cultid IN
+            <foreach collection="cultids" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="deptids != null">AND goods.deptid IN <foreach collection="deptids" item="item" open="(" close=")" separator=",">#{item}</foreach></if>
+        ) 'goodsuncheck',
+            (SELECT COUNT(id) FROM whg_goods goods WHERE goods.state = 2 and goods.delstate = 0
+        <if test="cultids != null">
+            AND goods.cultid IN
+            <foreach collection="cultids" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="deptids != null">AND goods.deptid IN <foreach collection="deptids" item="item" open="(" close=")" separator=",">#{item}</foreach></if>
+        ) 'goodsunpub',
+            (SELECT COUNT(id) FROM whg_supply sup WHERE sup.state = 9 and sup.delstate = 0
+        <if test="cultids != null">
+            AND sup.cultid IN
+            <foreach collection="cultids" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="deptids != null">AND sup.deptid IN <foreach collection="deptids" item="item" open="(" close=")" separator=",">#{item}</foreach></if>
+        ) 'supuncheck',
+            (SELECT COUNT(id) FROM whg_supply sup WHERE sup.state = 2 and sup.delstate = 0
+        <if test="cultids != null">
+            AND sup.cultid IN
+            <foreach collection="cultids" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="deptids != null">AND sup.deptid IN <foreach collection="deptids" item="item" open="(" close=")" separator=",">#{item}</foreach></if>
+        ) 'supunpub',
+            (SELECT COUNT(id) FROM whg_personnel per WHERE per.state = 9 and per.delstate = 0
+        <if test="cultids != null">
+            AND per.cultid IN
+            <foreach collection="cultids" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="deptids != null">AND per.deptid IN <foreach collection="deptids" item="item" open="(" close=")" separator=",">#{item}</foreach></if>
+        ) 'peruncheck',
+            (SELECT COUNT(id) FROM whg_personnel per WHERE per.state = 2 and per.delstate = 0
+        <if test="cultids != null">
+            AND per.cultid IN
+            <foreach collection="cultids" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="deptids != null">AND per.deptid IN <foreach collection="deptids" item="item" open="(" close=")" separator=",">#{item}</foreach></if>
+        ) 'perunpub'
+        FROM
+            whg_supply_tra st
+        WHERE
+            st.state = 9  and st.delstate = 0
+        <if test="cultids != null">
+            AND st.cultid IN
+            <foreach collection="cultids" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+
+    </select>
+
+    <!-- 查询wai部供需各模块的待审核待发布数量 -->
+    <select id="t_wbgxsrchList" resultType="hashmap">
+        SELECT 'venuncheck' as type, COUNT(v.id) as cnt FROM whg_ven v WHERE v.state = 9
+        <if test="cultids != null">AND v.cultid IN <foreach collection="cultids" item="item" open="(" close=")" separator=",">#{item}</foreach></if>
+        <if test="deptids != null">AND v.deptid IN <foreach collection="deptids" item="item" open="(" close=")" separator=",">#{item}</foreach></if>
+
+        UNION
+        SELECT 'venunpub' as type,count(v.id) as cnt FROM whg_ven v WHERE v.state = 2
+        <if test="cultids != null">AND v.cultid IN <foreach collection="cultids" item="item" open="(" close=")" separator=",">#{item}</foreach></if>
+        <if test="deptids != null">AND v.deptid IN <foreach collection="deptids" item="item" open="(" close=")" separator=",">#{item}</foreach></if>
+
+        UNION
+        SELECT 'roomuncheck' as type,count(room.id) as cnt FROM whg_ven_room room,whg_ven v WHERE room.state = 9 AND room.venid = v.id
+        <if test="cultids != null">AND v.cultid IN <foreach collection="cultids" item="item" open="(" close=")" separator=",">#{item}</foreach></if>
+        <if test="deptids != null">AND v.deptid IN <foreach collection="deptids" item="item" open="(" close=")" separator=",">#{item}</foreach></if>
+
+        UNION
+        SELECT 'roomunpub' as type, count(room.id) as cnt FROM whg_ven_room room,whg_ven v WHERE room.state = 2 AND room.venid = v.id
+        <if test="cultids != null">AND v.cultid IN <foreach collection="cultids" item="item" open="(" close=")" separator=",">#{item}</foreach></if>
+        <if test="deptids != null">AND v.deptid IN <foreach collection="deptids" item="item" open="(" close=")" separator=",">#{item}</foreach></if>
+
+        UNION
+        SELECT 'vrouncheck' as type,COUNT(vro.id) as cnt FROM whg_ven_room_order vro,whg_ven_room room,whg_ven v WHERE vro.state = 0 AND vro.roomid = room.id AND room.venid = v.id
+        <if test="cultids != null">AND v.cultid IN <foreach collection="cultids" item="item" open="(" close=")" separator=",">#{item}</foreach></if>
+        <if test="deptids != null">AND v.deptid IN <foreach collection="deptids" item="item" open="(" close=")" separator=",">#{item}</foreach></if>
+
+        UNION
+        SELECT 'actuncheck' as type, count(v.id) as cnt FROM whg_act v WHERE v.state = 9
+        <if test="cultids != null">AND v.cultid IN <foreach collection="cultids" item="item" open="(" close=")" separator=",">#{item}</foreach></if>
+        <if test="deptids != null">AND v.deptid IN <foreach collection="deptids" item="item" open="(" close=")" separator=",">#{item}</foreach></if>
+
+        UNION
+        SELECT 'actunpub' as type,count(id) as cnt FROM whg_act v WHERE v.state = 2
+        <if test="cultids != null">AND v.cultid IN <foreach collection="cultids" item="item" open="(" close=")" separator=",">#{item}</foreach></if>
+        <if test="deptids != null">AND v.deptid IN <foreach collection="deptids" item="item" open="(" close=")" separator=",">#{item}</foreach></if>
+    </select>
+
+    <!-- 查询网络培训各模块的待审核待发布数量 -->
+    <select id="t_wlpxsrchList" resultType="hashmap">
+        SELECT 'traunpub' as type, COUNT(tra.id) as cnt FROM whg_tra tra WHERE tra.state = 2 AND tra.islive=0 AND tra.biz = 'PT'
+        <if test="cultids != null">
+            AND tra.cultid IN <foreach collection="cultids" item="item" open="(" close=")" separator=","> #{item} </foreach>
+        </if>
+        <if test="deptids != null">
+            AND tra.deptid IN <foreach collection="deptids" item="item" open="(" close=")" separator=","> #{item} </foreach>
+        </if>
+
+        UNION
+        SELECT 'traliveuncheck' as type,COUNT(id) as cnt FROM whg_tra tra WHERE tra.state = 9 AND tra.islive=1 AND tra.biz = 'PT'
+        <if test="cultids != null">
+            AND tra.cultid IN <foreach collection="cultids" item="item" open="(" close=")" separator=","> #{item} </foreach>
+        </if>
+        <if test="deptids != null">
+            AND tra.deptid IN <foreach collection="deptids" item="item" open="(" close=")" separator=","> #{item} </foreach>
+        </if>
+
+        UNION
+        SELECT 'enroluncheck' as type, COUNT(enrol.id) as cnt FROM whg_tra_enrol enrol,whg_tra tra WHERE enrol.state = 1 AND enrol.traid = tra.id  AND tra.biz = 'PT' AND tra.islive = 0
+        <if test="cultids != null">
+            AND tra.cultid IN <foreach collection="cultids" item="item" open="(" close=")" separator=","> #{item} </foreach>
+        </if>
+        <if test="deptids != null">
+            AND tra.deptid IN <foreach collection="deptids" item="item" open="(" close=")" separator=","> #{item} </foreach>
+        </if>
+
+        UNION
+        SELECT 'enrolunview' as type,COUNT(enrol.id) as cnt FROM whg_tra_enrol enrol,whg_tra tra WHERE enrol.state = 4 AND enrol.traid = tra.id AND tra.biz = 'PT' AND tra.islive = 0
+        <if test="cultids != null">
+            AND tra.cultid IN <foreach collection="cultids" item="item" open="(" close=")" separator=","> #{item} </foreach>
+        </if>
+        <if test="deptids != null">
+            AND tra.deptid IN <foreach collection="deptids" item="item" open="(" close=")" separator=","> #{item} </foreach>
+        </if>
+
+        UNION
+        SELECT 'leaveuncheck' as type,COUNT(tl.id) FROM whg_traleave tl,whg_tra tra,whg_tra_course c,whg_tra_enrol e WHERE tl.state = 0 AND tl.traid = tra.id and tl.courseid = c.id and tl.userid = e.userid and tl.traid = e.traid AND tra.biz = 'PT' AND tra.islive = 0
+        <if test="cultids != null">
+            AND tra.cultid IN <foreach collection="cultids" item="item" open="(" close=")" separator=","> #{item} </foreach>
+        </if>
+        <if test="deptids != null">
+            AND tra.deptid IN <foreach collection="deptids" item="item" open="(" close=")" separator=","> #{item} </foreach>
+        </if>
+
+        UNION
+        SELECT 'traliveunpub' as type,COUNT(id) as cnt FROM whg_tra tra WHERE tra.state = 2 AND tra.islive=1 AND tra.biz = 'PT'
+        <if test="cultids != null">
+            AND tra.cultid IN <foreach collection="cultids" item="item" open="(" close=")" separator=","> #{item} </foreach>
+        </if>
+        <if test="deptids != null">
+            AND tra.deptid IN <foreach collection="deptids" item="item" open="(" close=")" separator=","> #{item} </foreach>
+        </if>
+
+        UNION
+        SELECT 'majoruncheck' as type,COUNT(id) as cnt FROM whg_tra_major major WHERE major.state = 9
+        <if test="cultids != null">
+            AND major.cultid IN <foreach collection="cultids" item="item" open="(" close=")" separator=","> #{item} </foreach>
+        </if>
+        <if test="deptids != null">
+            AND major.deptid IN <foreach collection="deptids" item="item" open="(" close=")" separator=","> #{item} </foreach>
+        </if>
+
+        UNION
+        SELECT 'majorunpub' as type,COUNT(id) as cnt FROM whg_tra_major major WHERE major.state = 2
+        <if test="cultids != null">
+            AND major.cultid IN <foreach collection="cultids" item="item" open="(" close=")" separator=","> #{item} </foreach>
+        </if>
+        <if test="deptids != null">
+            AND major.deptid IN <foreach collection="deptids" item="item" open="(" close=")" separator=","> #{item} </foreach>
+        </if>
+
+        UNION
+        SELECT 'teauncheck' as type,COUNT(id) as cnt FROM whg_tra_teacher tea WHERE tea.state = 9
+        <if test="cultids != null">
+            AND tea.cultid IN <foreach collection="cultids" item="item" open="(" close=")" separator=","> #{item} </foreach>
+        </if>
+        <if test="deptids != null">
+            AND tea.deptid IN <foreach collection="deptids" item="item" open="(" close=")" separator=","> #{item} </foreach>
+        </if>
+
+        UNION
+        SELECT 'teaunpub' as type,COUNT(id) as cnt FROM whg_tra_teacher tea WHERE tea.state = 2
+        <if test="cultids != null">
+            AND tea.cultid IN <foreach collection="cultids" item="item" open="(" close=")" separator=","> #{item} </foreach>
+        </if>
+        <if test="deptids != null">
+            AND tea.deptid IN <foreach collection="deptids" item="item" open="(" close=")" separator=","> #{item} </foreach>
+        </if>
+
+        UNION
+        SELECT 'drscuncheck' as type, COUNT(drscid) as cnt FROM whg_drsc drsc WHERE drsc.drscstate = 9
+        <if test="cultids != null">
+            AND drsc.drscvenueid IN <foreach collection="cultids" item="item" open="(" close=")" separator=","> #{item} </foreach>
+        </if>
+        <if test="deptids != null">
+            AND drsc.deptid IN <foreach collection="deptids" item="item" open="(" close=")" separator=","> #{item} </foreach>
+        </if>
+
+        UNION
+        SELECT 'trauncheck' as type, COUNT(*) as cnt FROM whg_tra t WHERE t.state = 9 AND t.islive = 0 AND t.biz = 'PT'
+        <if test="cultids != null">
+            AND t.cultid IN <foreach collection="cultids" item="item" open="(" close=")" separator=","> #{item} </foreach>
+        </if>
+        <if test="deptids != null">
+            AND t.deptid IN <foreach collection="deptids" item="item" open="(" close=")" separator=","> #{item} </foreach>
+        </if>
+
+        UNION
+        SELECT 'drscunpub' as type, COUNT(drscid) as cnt FROM whg_drsc drsc WHERE drsc.drscstate = 2
+        <if test="cultids != null">
+            AND drsc.drscvenueid IN <foreach collection="cultids" item="item" open="(" close=")" separator=","> #{item} </foreach>
+        </if>
+        <if test="deptids != null">
+            AND drsc.deptid IN <foreach collection="deptids" item="item" open="(" close=")" separator=","> #{item} </foreach>
+        </if>
+
+    </select>
+
+
+    <!-- 群文待办查询 -->
+    <select id="t_massSrchList" resultType="hashmap">
+
+        SELECT 'M_MAS_ZT_LIST_C' as type, count(t.id) as cnt FROM whg_mass_brand t WHERE t.state=9 and t.delstate=0
+        <if test="cultids != null">AND t.cultid IN <foreach collection="cultids" item="item" open="(" close=")" separator=",">#{item}</foreach></if>
+        <if test="deptids != null">AND t.deptid IN <foreach collection="deptids" item="item" open="(" close=")" separator=",">#{item}</foreach></if>
+        UNION
+        SELECT 'M_MAS_ZT_LIST_P' as type, count(t.id) as cnt FROM whg_mass_brand t WHERE t.state=2 and t.delstate=0
+        <if test="cultids != null">AND t.cultid IN <foreach collection="cultids" item="item" open="(" close=")" separator=",">#{item}</foreach></if>
+        <if test="deptids != null">AND t.deptid IN <foreach collection="deptids" item="item" open="(" close=")" separator=",">#{item}</foreach></if>
+
+        UNION
+        SELECT 'M_MAS_JC_LIST_C' as type, count(t.id) as cnt FROM whg_mass_brand_batch t WHERE t.state=9 and t.delstate=0
+        <if test="cultids != null">AND t.cultid IN <foreach collection="cultids" item="item" open="(" close=")" separator=",">#{item}</foreach></if>
+        <if test="deptids != null">AND t.deptid IN <foreach collection="deptids" item="item" open="(" close=")" separator=",">#{item}</foreach></if>
+        UNION
+        SELECT 'M_MAS_JC_LIST_P' as type, count(t.id) as cnt FROM whg_mass_brand_batch t WHERE t.state=2 and t.delstate=0
+        <if test="cultids != null">AND t.cultid IN <foreach collection="cultids" item="item" open="(" close=")" separator=",">#{item}</foreach></if>
+        <if test="deptids != null">AND t.deptid IN <foreach collection="deptids" item="item" open="(" close=")" separator=",">#{item}</foreach></if>
+
+        UNION
+        SELECT 'M_MAS_RC_LIST_C' as type, count(t.id) as cnt FROM whg_mass_artist t WHERE t.state=9 and t.delstate=0
+        <if test="cultids != null">AND t.cultid IN <foreach collection="cultids" item="item" open="(" close=")" separator=",">#{item}</foreach></if>
+        <if test="deptids != null">AND t.deptid IN <foreach collection="deptids" item="item" open="(" close=")" separator=",">#{item}</foreach></if>
+        UNION
+        SELECT 'M_MAS_RC_LIST_P' as type, count(t.id) as cnt FROM whg_mass_artist t WHERE t.state=2 and t.delstate=0
+        <if test="cultids != null">AND t.cultid IN <foreach collection="cultids" item="item" open="(" close=")" separator=",">#{item}</foreach></if>
+        <if test="deptids != null">AND t.deptid IN <foreach collection="deptids" item="item" open="(" close=")" separator=",">#{item}</foreach></if>
+
+        UNION
+        SELECT 'M_MAS_TD_LIST_C' as type, count(t.id) as cnt FROM whg_mass_team t WHERE t.state=9 and t.delstate=0
+        <if test="cultids != null">AND t.cultid IN <foreach collection="cultids" item="item" open="(" close=")" separator=",">#{item}</foreach></if>
+        <if test="deptids != null">AND t.deptid IN <foreach collection="deptids" item="item" open="(" close=")" separator=",">#{item}</foreach></if>
+        UNION
+        SELECT 'M_MAS_TD_LIST_P' as type, count(t.id) as cnt FROM whg_mass_team t WHERE t.state=2 and t.delstate=0
+        <if test="cultids != null">AND t.cultid IN <foreach collection="cultids" item="item" open="(" close=")" separator=",">#{item}</foreach></if>
+        <if test="deptids != null">AND t.deptid IN <foreach collection="deptids" item="item" open="(" close=")" separator=",">#{item}</foreach></if>
+
+    </select>
+
+</mapper>

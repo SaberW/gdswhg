@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.creatoo.hn.dao.mapper.api.ApiInsGoodsMapper">
+
+    <select id="selectGoodsList" resultType="hashmap">
+        select
+        xx.*,
+        cult.name as cultidname
+        from whg_sys_cult cult, whg_goods xx
+        where cult.id = xx.cultid
+        and xx.state = 6 and xx.delstate = 0
+        <if test="cultid!=null">
+            and xx.cultid in
+            <foreach collection="cultid" item="item" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="deptid!=null">
+            and xx.deptid in
+            <foreach collection="deptid" item="item" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="etype!=null and etype!=''.toString()">
+            <choose>
+                <when test="cultid!=null">
+                    and xx.etype = #{etype}
+                </when>
+                <otherwise>
+                    and xx.etype LIKE "%"#{etype}"%"
+                </otherwise>
+            </choose>
+        </if>
+        <if test="area!=null and area!=''.toString()">
+            and xx.area = #{area}
+        </if>
+        <if test="psprovince!=null and psprovince!=''.toString()">
+            and xx.psprovince = #{psprovince}
+        </if>
+        <if test="pscity!=null and pscity!=''.toString()">
+            and xx.pscity LIKE "%"#{pscity}"%"
+        </if>
+        <if test="province!=null and province!=''.toString()">
+            and xx.province = #{province}
+        </if>
+        <if test="city!=null and city!=''.toString()">
+            and xx.city = #{city}
+        </if>
+        <if test="area!=null and area!=''.toString()">
+            and xx.area = #{area}
+        </if>
+        <if test="psprovince!=null and psprovince!=''.toString()">
+            and xx.psprovince = #{psprovince}
+        </if>
+        <if test="pscity!=null and pscity!=''.toString()">
+            and xx.pscity LIKE "%"#{pscity}"%"
+        </if>
+
+        order by xx.statemdfdate desc
+
+    </select>
+
+    <select id="findGoods" resultType="hashmap">
+        select xx.*, cult.name as cultidname
+        from whg_sys_cult cult, whg_goods xx
+        where cult.id = xx.cultid
+        and xx.state = 6 and xx.delstate = 0
+        and xx.id = #{id}
+    </select>
+
+    <select id="selectGoodsReflist" resultType="hashmap">
+        select xx.*, cult.name as cultidname
+        from whg_sys_cult cult, whg_goods xx
+        where cult.id = xx.cultid
+        and xx.state = 6 and xx.delstate = 0
+        and xx.id != #{id}
+        <!--
+        and xx.etype = (
+          select DISTINCT t.etype from whg_goods t where t.id= #{id}
+        )-->
+        <if test="cultid!=null">
+            and xx.cultid in
+            <foreach collection="cultid" item="item" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="deptid!=null">
+            and xx.deptid in
+            <foreach collection="deptid" item="item" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
+
+        order by xx.statemdfdate desc
+    </select>
+</mapper>

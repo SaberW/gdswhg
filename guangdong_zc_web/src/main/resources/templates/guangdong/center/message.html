@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/style/supply_sys/center.css'">
+<div class="wrapper clearfix">
+    <div class="content">
+        <!--公共主头部开始-->
+        <div id="header" th:include="guangdong/public/header :: copy"></div>
+        <!--公共主头部结束-->
+        <!--主体开始-->
+        <div class="container res-center-bg">
+            <div class="sys-crumbs">
+                <span><a href="../index">首页</a></span>
+                <i class="icon iconfont icon-enter"></i>
+                <span><a href="index">用户中心</a></span>
+                <i class="icon iconfont icon-enter"></i>
+                <span class="active" id="title">我的消息</span>
+            </div>
+            <div class="page-list">
+                <div class="center-nav">
+                    <ul class="clearfix">
+                        <!--<li data-type="1">
+                            私人消息
+                        </li>-->
+                        <li class="active" data-type="0">
+                            系统消息
+                        </li>
+                    </ul>
+                </div>
+                <!--<ul class="control-switch clearfix" style="display: none">
+                    <li class="active" data-type="0">我发送的</li>
+                    <li data-type="1">我收到的</li>
+                </ul>-->
+                <ul class="message-list" id="modelList">
+
+                </ul>
+                <!--分页开始 -->
+                <div class="green-black" id="artPagging" style="margin-bottom: 40px"></div>
+                <!--分页结束-->
+            </div>
+        </div>
+        <!--主体结束-->
+    </div>
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong/public/footer :: copy"></div>
+<!--底部结束-->
+<a class="to-top"></a>
+<script type="text/javascript" th:inline="javascript">
+
+    var userId = $("#temp_userId").val();
+    var type = 0;
+//    var sendType = 0;
+
+    $().ready(function(){
+        dataPage();
+        /*$(".center-nav ul li").on("click",function(){
+            $(this).addClass("active").siblings().removeClass("active");
+            type = $(this).attr("data-type");
+            dataPage();
+        })
+        $(".control-switch li").on("click",function(){
+            $(this).addClass("active").siblings().removeClass("active");
+            sendType = $(this).attr("data-type");
+            dataPage();
+        })*/
+    })
+
+    function dataPage(page,rows) {
+        var params_page = page || 1;
+        var params_rows = rows || 12;
+        var params = {
+            page: params_page,
+            pageSize: params_rows,
+            userid: userId,
+            toproject: 'ZC',
+            type: type //场馆关键字
+        }
+        dataInit.ajax({
+            api: [[${apiPath.supplyMsgList}]],
+            params: params,
+            fn: function(data){
+                //console.log(data);
+                showModelList(data);
+                dataInit.pageInit("artPagging", params_page, params_rows, data.total, dataPage);
+            }
+        })
+    }
+
+    function showModelList(data) {
+        $("#modelList").html("");
+        $.cookie('messageSizeZC', data.total, {path: "/", expires: 7});
+        var modelList = $("#modelList");
+        if(data.code == 0){
+            if (data.rows.length > 0) {
+                for (var i in data.rows) {
+                    var model = data.rows[i];
+                    var time = moment(model.sendtime).format("YYYY-MM-DD HH:mm:ss");
+                    modelList.append('<li class="message-item"> ' +
+                        '<div class="message-info">'+model.message+'</div> ' +
+                        '<p class="message-time">发送时间：'+time+'</p> ' +
+                        '<p class="message-time">来源：'+model.fromuserid+'</p> ' +
+                        '<hr> ' +
+                        '<a href="javascript:void(0)" onclick="delMsg('+model.id+')"><i class="icon iconfont icon-close"></i></a> ' +
+                        '</li>');
+                }
+            } else {
+                modelList.append("<div class='public-no-message'></div>");
+            }
+        }else {
+            rongDialog.init({ico : 2, type : 1, desc : data.msg});
+        }
+    }
+
+    function delMsg(id){
+        rongDialog.init({
+            ico:1,
+            type:2,
+            desc:"删除这一条消息？",
+            nextFn:function(){
+                dataInit.ajax({
+                    api:[[${apiPath.msgDel}]],
+                    params:{id:id},
+                    fn:function(data){
+                        if(data.code == 0){
+                            rongDialog.init({ico : 1, type : 1, desc : '删除成功',nextFn:function(){
+                                dataPage();
+                            }});
+                        }else{
+                            rongDialog.init({ico : 2, type : 1, desc : '删除失败'});
+                        }
+                    }
+                })
+            }
+        })
+    }
+</script>
+</body>
+</html>

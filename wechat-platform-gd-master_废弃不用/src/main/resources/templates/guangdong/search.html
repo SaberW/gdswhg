@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/js/picker/css/mui.picker.css'">
+<script th:src="${basePath}+'/assets/js/picker/js/mui.picker.min.js'" type="text/javascript"></script>
+<style type="text/css">
+    .mui-content,body{background-color:#f5f5f5}
+    div.dialog1{width:100%;height:100%;position:fixed;top:0;right:0;bottom:0;left:0;z-index:1000;background-color:rgba(0,0,0,.3)}
+    .search-content{height:44px;background:#fff;display:-webkit-box;display:-ms-flexbox;display:flex;padding:0 15px;position:relative}
+    .search{height:30px;border:solid 1px #e5e5e5;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-flex:1;-ms-flex:1;flex:1;padding:0 10px;margin-top:7px;border-radius:4px;background:#f5f5f5}
+    .search>.select{-webkit-box-flex:0;-ms-flex:0 0 50px;flex:0 0 50px;width:50px;height:14px;margin-top:7px;border-right:solid 1px #e5e5e5;position:relative}
+    .search>input{-webkit-box-flex:1;-ms-flex:1;flex:1;height:28px;border:none;margin:0;padding:0 0 0 10px;color:#666;font-size:12px;background:#f5f5f5}
+    .search>.select>a{font-size:14px;color:#666;line-height:14px;vertical-align:top;display:inline-block}
+    .search>.select>a>i.downUp{width:20px;position:relative;color:#666}
+    .search>.select>a>i.downUp:after{font-family:Muiicons;font-size:15px;line-height:1;font-style:normal;position:relative;top:7px;display:inline-block;-webkit-transform:translateY(-50%);transform:translateY(-50%);text-decoration:none;-webkit-font-smoothing:antialiased;content:'\e581'}
+    .search-button{-webkit-box-flex:0;-ms-flex:0 0 50px;flex:0 0 50px;width:50px}
+    .search-button a{display:block;text-align:right;font-size:16px;color:#666;line-height:44px}
+    .dialog{position:relative;left:-15px;top:10px;background:#fff;z-index:2;width:90px;border-radius:8px;overflow:hidden}
+    .dialog>.text{background:rgba(0,0,0,.6);color:#fff;text-align:center;height:30px;line-height:30px;border-bottom:solid 1px #000}
+    .mui-popover-arrow{position:relative}
+    .mui-popover-arrow:before{position:absolute;top:5px;left:11px;width:15px;height:15px;content:' ';-webkit-transform:rotate(45deg);transform:rotate(45deg);background:rgba(0,0,0,.6)}
+    .dialog-content{display:none;position:relative;z-index:2}
+    .title{display:-webkit-box;display:-ms-flexbox;display:flex;width:180px;margin:0 auto;padding:20px 0 14px 0;position:relative}
+    .hot-search>.title .line{-webkit-box-flex:1;-ms-flex:1;flex:1;height:1px;position:relative;top:7px;border-bottom:1px solid #999}
+    .hot-search>.title .line:first-child:after{content:'';position:absolute;right:-1px;bottom:-3px;width:5px;height:5px;border-radius:50%;background:#999}
+    .hot-search>.title .line:last-child:after{content:'';position:absolute;left:-1px;bottom:-3px;width:5px;height:5px;border-radius:50%;background:#999}
+    .hot-search>.title .text{padding:0 12px 0 12px;font-size:16px;line-height:16px;color:#1a1a1a;position:relative}
+    .mui-card.no-corner{box-shadow:none;background:#f5f5f5;margin:0}
+    .search-list,.search-list-2{margin:0 15px 15px}
+    .search-list>.search-list-l{font-size:14px;color:#666;display:inline-block;padding:0 20px;height:30px;line-height:30px;border:solid 1px #e5e5e5;margin-right:10px;margin-bottom:10px;border-radius:4px}
+    .search-list-2>.search-list-l{font-size:14px;color:#666;height:44px;line-height:44px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        position: relative;
+    }
+    .search-list-2>.search-list-l:after{
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        height: 1px;
+        content: '';
+        background-color: #e5e5e5;
+        -webkit-transform: scaleY(0.5);
+        transform: scaleY(0.5);
+    }
+    .clear-history{text-align:center;margin-top:30px}
+    .clear-history>a{display:inline-block;padding:5px 15px;border:solid 1px #e5e5e5;text-align:center;color:#666;border-radius:4px}
+</style>
+<div th:include="guangdong/public/leftBar :: copy"></div>
+<div id="page">
+    <div class="mui-content">
+    <div class="search-content">
+        <div class="search">
+            <div class="select">
+                <a id="searchID" href="javascript:void(0);"><span>活动</span><i class="downUp"></i></a>
+            </div>
+            <input id="InputText" type="text" placeholder="搜索你感兴趣的内容" onblur="EnterSubmint()" onfocus = "addDialog()">
+        </div>
+        <div class="search-button">
+            <a href="javascript:loadData()">搜索</a>
+        </div>
+    </div>
+    <!--<div class="mui-card no-corner">
+        <div class="hot-search">
+            <div class="title">
+                <div class="line"></div>
+                <div class="text">热门搜索</div>
+                <div class="line"></div>
+            </div>
+            <div class="search-list">
+            </div>
+        </div>
+    </div>-->
+    <div class="mui-card no-corner">
+        <div class="hot-search">
+            <div class="title">
+                <div class="line"></div>
+                <div class="text">历史搜索</div>
+                <div class="line"></div>
+            </div>
+            <div class="search-list-2" id="search-list">
+            </div>
+            <div class="clear-history">
+                <a href="javascript:clearQueue()" onclick="clearQueue()">清除所有记录</a>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</body>
+<script type="text/javascript" th:inline="javascript">
+    var curKey,value = '1';
+    queue = dataInit.getStorage('queueList');
+    if(!queue){
+        var queue = new Array();
+    }
+    $(function () {
+        initView();
+    })
+
+    function initView() {
+        loadSearchList(queue);
+        mui("#search-list").on("tap",".search-list-l",function () {
+            var searchText = $(this).text();
+            loadPage(searchText);
+        })
+        mui(".select").on("tap","#searchID",function () {
+            $(".dialog1").remove();
+            var picker = new mui.PopPicker();
+            picker.setData([{value: '1', text: '活动'},
+                {value: '2', text: '场馆'},
+                {value: '3', text: '培训'},
+                {value: '4', text: '众筹'},
+                {value: '5', text: '资讯'},
+                {value: '6', text: '直播'}
+//                {value: '6', text: '品牌'}
+            ]);
+            picker.show(function (selectItems) {
+                $("#searchID").html(selectItems[0].text+'<i class="downUp"></i>');
+                value = selectItems[0].value;
+            });
+        })
+    }
+    function loadPage(curKey) {
+        var param =curKey;
+        dataInit.setCache('sgkeywords', param);
+        if(value == '1') window.location.href = [[${basePath}]]+'/act/list';
+        if(value == '2') window.location.href = [[${basePath}]]+'/venue/list';
+        if(value == '3') window.location.href = [[${basePath}]]+'/train/list';
+        if(value == '4') window.location.href = [[${basePath}]]+'/gather/list';
+        if(value == '5') window.location.href = [[${basePath}]]+'/news/list';
+        if(value == '6') window.location.href = [[${basePath}]]+'/train/liveList';
+//        if(value == '5') window.location.href = [[${basePath}]]+'/brand/list';
+
+    }
+
+    function loadData(){
+        var CommentText = $("#InputText").val();
+        CommentText = CommentText.trim();
+
+        setTimeout(function () {
+            if(CommentText && CommentText.length > 0){
+                curKey = CommentText;
+                if (queue.length >= 5) {
+                    queue.shift();
+                }
+                queue.push([value,curKey]);
+                dataInit.setStorage('queueList', queue);
+                $("#InputText").blur();
+                loadPage(CommentText);
+            }
+        },300)
+
+        $(".dialog1").remove();
+        loadSearchList(queue);
+    }
+
+    function EnterSubmint(){
+        $(".dialog1").remove();
+    }
+
+    function addDialog() {
+        $("body").prepend($("<div class='dialog1'></div>"));
+        $(".search-content").css("z-index","1001");
+        $('.dialog1').on('click', function () {
+            EnterSubmint();
+        });
+    }
+    function loadSearchList(queue) {
+        $("#search-list").html('');
+        var queueList = queue.reverse();
+        for(var i = 0;i<queueList.length;i++){
+            $("#search-list").append("<div class='search-list-l' data-value='"+queueList[i][0]+"'>"+queueList[i][1]+"</div>");
+//                console.log(queue[i],queue.length);
+        }
+
+    }
+    function clearQueue(){
+        dataInit.resetStorage('queueList');
+        $("#search-list").html('');
+    }
+</script>
+</html>

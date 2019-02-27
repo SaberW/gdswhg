@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.creatoo.hn.dao.mapper.WhgCollectionMapper">
+	<resultMap id="BaseResultMap" type="com.creatoo.hn.dao.model.WhgCollection">
+		<!-- WARNING - @mbg.generated -->
+		<id column="cmid" jdbcType="VARCHAR" property="cmid" />
+		<result column="cmdate" jdbcType="TIMESTAMP" property="cmdate" />
+		<result column="cmuid" jdbcType="VARCHAR" property="cmuid" />
+		<result column="cmreftyp" jdbcType="VARCHAR" property="cmreftyp" />
+		<result column="cmrefid" jdbcType="VARCHAR" property="cmrefid" />
+		<result column="cmopttyp" jdbcType="VARCHAR" property="cmopttyp" />
+	</resultMap>
+	<!-- 个人中心 之 我的活动收藏查询 -->
+	 <select id="selectMyActColle" resultType="hashMap">
+	    SELECT
+	   t1.cmid,t1.cmdate,t1.cmreftyp,t1.cmurl,t1.cmopttyp,t1.cmtitle,t4.id,t4.name,t4.imgurl,t4.address
+	   from whg_collection t1,whg_user t3,whg_act t4
+	   where t1.cmrefid=t4.id and t1.cmuid=t3.id and t1.cmreftyp='4' AND t1.cmopttyp=0
+	   <if test="cmuid!=null">
+		and t1.cmuid=#{cmuid}
+		</if>
+	</select> 
+	
+	<!-- 个人用户中心 之 我的培训收藏查询  -->
+	 <select id="selectMyTraitmColle" resultType="hashmap">
+		SELECT
+		 t1.cmid,t1.cmdate,t1.cmreftyp,t1.cmurl,t1.cmopttyp,t1.cmtitle,t3.*,
+		 (SELECT COUNT(*) from whg_tra_enrol e WHERE e.traid = t3.id  AND e.state in (1,4,6)) enrolcount
+		FROM whg_collection t1,whg_tra t3,whg_user t4
+		 where t1.cmrefid=t3.id and t1.cmuid=t4.id AND t1.cmopttyp=0 AND t3.islive = 0 AND t3.biz='PT'
+		<if test="cmuid!=null">
+		and t1.cmuid=#{cmuid}
+		</if>
+	 	<if test="cmreftyp!=null">
+		 and t1.cmreftyp=#{cmreftyp}
+		 </if>
+	 </select>
+
+	<!-- 个人用户中心 之 我的场馆收藏查询  -->
+	 <select id="selectMyVenueColle" resultType="hashmap">
+		 SELECT
+		 t1.cmid,t1.cmdate,t1.cmreftyp,t1.cmurl,t1.cmopttyp,t1.cmtitle,t4.id,t4.title as name,t4.imgurl,t4.address
+		 from whg_collection t1, whg_user t3,whg_ven t4
+		 where t1.cmrefid=t4.id and t1.cmuid=t3.id and t1.cmreftyp='2' AND t1.cmopttyp=0
+		<if test="cmuid!=null">
+		and t1.cmuid=#{cmuid}
+		</if>
+	</select>
+
+
+	<!-- 个人用户中心 之 我的培训收藏查询  -->
+	<select id="selectMyRoomColle" resultType="hashmap">
+		SELECT
+		t1.cmid,t1.cmdate,t1.cmreftyp,t1.cmurl,t1.cmopttyp,t1.cmtitle,t4.id,t4.title as name,t4.imgurl
+		from whg_collection t1, whg_user t3,whg_ven_room t4
+		where t1.cmrefid=t4.id and t1.cmuid=t3.id and t1.cmreftyp='3' AND t1.cmopttyp=0
+		<if test="cmuid!=null">
+			and t1.cmuid=#{cmuid}
+		</if>
+	</select>
+
+	<!-- 点赞列表  关联查询 开始-->
+	<select id="selectCollectionWithUser" parameterType="java.util.HashMap" resultType="hashmap">
+		select c.cmid as itemId, c.cmuid as userId, c.cmdate as time ,u.headimgurl as avatar
+		from whg_collection   c,whg_resource cr,whg_usr_weixin u where c.cmrefid=cr.entid and c.cmuid=u.userid and c.cmopttyp=2
+		<if test="userId !=null">
+			and and c.cmuid=#{userId}
+		</if>
+
+		<if test="itemId != null">
+			and cr.entid = #{itemId}
+		</if>
+
+		<if test="type != null">
+			and c.cmreftyp= #{type}
+		</if>
+
+	</select>
+	<!-- 点赞列表  关联查询 开始-->
+
+	<select id="getCollectionCount" resultType="java.lang.Integer">
+		SELECT
+			count(cmid)
+		FROM whg_collection
+		<where>
+			cmreftyp = #{cmreftyp} AND
+			cmrefid = #{cmrefid}
+		</where>
+	</select>
+
+
+	<!-- 个人用户中心 之 我的直播收藏查询  -->
+	<select id="selectMyTraLiveColle" resultType="hashmap">
+		SELECT
+		t1.cmid,t1.cmdate,t1.cmreftyp,t1.cmurl,t1.cmopttyp,t1.cmtitle,t3.*,
+		(SELECT COUNT(*) from whg_tra_enrol e WHERE e.traid = t3.id  AND e.state in (1,4,6)) enrolcount
+		FROM whg_collection t1,whg_tra t3,whg_user t4
+		where t1.cmrefid=t3.id and t1.cmuid=t4.id AND t1.cmopttyp=0 AND t3.islive=1 AND t3.biz='PT'
+		<if test="cmuid!=null">
+			and t1.cmuid=#{cmuid}
+		</if>
+		<if test="cmreftyp!=null">
+			and t1.cmreftyp=#{cmreftyp}
+		</if>
+	</select>
+
+	<!-- 个人用户中心 之 我的师资收藏查询  -->
+	<select id="selectMyTraTeaColle" resultType="hashmap">
+		SELECT
+		t1.cmid,t1.cmdate,t1.cmreftyp,t1.cmurl,t1.cmopttyp,t1.cmtitle,t3.*
+		FROM whg_collection t1,whg_tra_teacher t3,whg_user t4
+		where t1.cmrefid=t3.id and t1.cmuid=t4.id AND t1.cmopttyp=0
+		<if test="cmuid!=null">
+			and t1.cmuid=#{cmuid}
+		</if>
+		<if test="cmreftyp!=null">
+			and t1.cmreftyp=#{cmreftyp}
+		</if>
+	</select>
+
+	<!-- 个人用户中心 之 我的资源收藏查询  -->
+	<select id="selectMyTraDrscColle" resultType="hashmap">
+		SELECT
+		t1.cmid,t1.cmdate,t1.cmreftyp,t1.cmurl,t1.cmopttyp,t1.cmtitle,t3.*
+		FROM whg_collection t1,whg_drsc t3,whg_user t4
+		where t1.cmrefid=t3.drscid and t1.cmuid=t4.id AND t1.cmopttyp=0
+		<if test="cmuid!=null">
+			and t1.cmuid=#{cmuid}
+		</if>
+		<if test="cmreftyp!=null">
+			and t1.cmreftyp=#{cmreftyp}
+		</if>
+	</select>
+
+</mapper>

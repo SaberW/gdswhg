@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/train/specialty.css'" >
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/public/detail.css'" >
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/public/list.css'" >
+<div th:include="guangdong/public/leftBar :: copy"></div>
+<div id="page">
+    <div class="mui-content">
+        <div class="pic-list">
+            <!--品牌名称-->
+            <div class="brand">
+                <div class="img">
+                    <a href="#">
+                        <!--<img class="lazy" th:src="${basePath}+'/assets/img/public/no-img.png'" id="image">-->
+                    </a>
+                </div>
+            </div>
+            <!--品牌名称-->
+            <div class="mien">
+                <div class="brand-nav mui-row" id="newbility-nav-fixed">
+                    <div class="mui-col-sm-3 mui-col-xs-3">
+                        <a href="javascript:void(0)" id="b-1" class="active">专业介绍</a>
+                    </div>
+                    <div class="mui-col-sm-3 mui-col-xs-3">
+                        <a href="javascript:void(0)" id="b-2" >培训讲师</a>
+                    </div>
+                    <div class="mui-col-sm-3 mui-col-xs-3">
+                        <a href="javascript:void(0)" id="b-3" >培训课程</a>
+                    </div>
+                    <div class="mui-col-sm-3 mui-col-xs-3">
+                        <a href="javascript:void(0)" id="b-4" >课程资源</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="group-panel">
+            <div id="cont-1" class="group-cont fixed-cont">
+
+            </div>
+            <div id="cont-2" class="group-cont">
+                <div class="mui-content">
+                    <div class="public-list-l-r mui-scroll">
+                        <ul class="fixed-cont clearfix">
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div id="cont-3" class="group-cont">
+                <div class="mui-content">
+                    <div class="public-list">
+                        <ul class="fixed-cont">
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div th:include="guangdong/resource/publicres :: copy" class="gather-nav-content wrapper-detail" id="res-box" style="display: none"></div>
+        </div>
+
+    </div>
+</div>
+<input type="hidden" id="temp_type" value="34">
+<script type="text/javascript" th:inline="javascript">
+    var itemId = dataInit.getUrlParam("id");
+    var temp_height = $("#image").height();
+    $().ready(function(){
+        mui(".brand-nav").on("tap","div",function(){
+            $(".brand-nav a").removeClass("active");
+            $(this).children().addClass("active");
+        });
+        mui(".brand-nav").on("tap","#b-1",function(){
+            $("#cont-1").show();
+            $("#cont-2,#cont-3,#res-box").hide()
+            majorList();
+        })
+        mui(".brand-nav").on("tap","#b-2",function(){
+            $("#cont-2").show();
+            $("#cont-1,#cont-3,#res-box").hide()
+            teachersData();
+        })
+        mui(".brand-nav").on("tap","#b-3",function(){
+            $("#cont-3").show();
+            $("#cont-1,#cont-2,#res-box").hide()
+            curriculumData();
+        })
+        mui(".brand-nav").on("tap","#b-4",function(){
+            $("#res-box").show();
+            $("#cont-1,#cont-2,#cont-3").hide();
+        })
+
+        majorList();
+        fixed.init({
+            topHeight:temp_height,
+            panelCls:".fixed-cont"
+        });
+    })
+
+    function majorList(){
+        dataInit.ajax({
+            api:[[${apiPath.majorDetail}]],
+            params: {
+                id:itemId
+            },
+            fn: showMajorDetail
+        })
+    }
+
+    function　showMajorDetail(data){
+        var model = data.data;
+        var _jieshao = dataInit.removeHTMLTag(model.detail);
+        var imgPath = data.imgPath + dataInit.getBigImage(model.image);
+        $('#image').attr('src',imgPath);
+        html = '<div class="specialty-info">\
+                    <h1>'+model.name+'</h1>\
+                    <div class="info">'+_jieshao+'</div>\
+                </div>'
+        dataInit.setCache("specialty-img",imgPath);
+        dataInit.setCache("specialty-id",itemId);
+        $("#cont-1").html(html);
+    }
+
+    function teachersData(page, size){
+        var page = page || 1;
+        var size = size || 1000;
+        var params = {
+            page:page,
+            pageSize:size,
+            id:itemId
+        }
+        dataInit.ajax({
+            api: [[${apiPath.majortea}]],
+            params: params,
+            fn: showTeachersHtml
+        })
+    }
+
+
+    function showTeachersHtml(data){
+        var html = "";
+        if (data.code == 0 && data.rows.length > 0) {
+            for (var i in data.rows) {
+                var model = data.rows[i];
+                var img = data.imgPath + dataInit.getBigImage(model.teacherpic);
+                var typname = model.typname?model.typname:'';
+                html += '<li>\
+                            <div class="cont">\
+                                <div class="face">\
+                                    <img src="'+img+'">\
+                                </div>\
+                                <h2>'+model.name+'</h2>\
+                                <p>'+typname+'</p>\
+                                <p><a href="teachersInfo?id='+model.id+'">查看详情</a></p>\
+                            </div>\
+                        </li>';
+            }
+        } else {
+            html = "<div class='newbility-no-msg2'></div>";
+        }
+        $("#cont-2 .fixed-cont").html(html);
+    }
+
+    function curriculumData(page, size){
+        var page = page || 1;
+        var size = size || 1000;
+        var params = {
+            page:page,
+            pageSize:size,
+            id:itemId
+        }
+        dataInit.ajax({
+            api: [[${apiPath.majortra}]],
+            params: params,
+            fn: showCurriculumHtml
+        })
+    }
+    function showCurriculumHtml(data){
+        var html = "";
+        if (data.code == 0 && data.rows.length > 0) {
+            for (var i in data.rows) {
+                var model = data.rows[i];
+                var img = data.imgPath + dataInit.getBigImage(model.trainimg);
+                //var applyBegin = moment(model.enrolstarttime).format('YYYY-MM-DD');
+                //var applyEnd = moment(model.enrolendtime).format('YYYY-MM-DD');
+                var applyBegin = model.enrollstarttime;
+                var applyEnd = model.enrollendtime;
+                var trainingBegin = moment(model.starttime).format('YYYY-MM-DD');
+                var trainingEnd = moment(model.endtime).format('YYYY-MM-DD');
+                var age = model.age ? model.age.split(',') : "不限制年龄";
+                age = age == "不限制年龄" ? age : ''+age[0] + '-' + age[1] + ' 岁';
+                var state= '',state_cls;
+                if(data.data > applyEnd ){
+                    state = '报名结束';
+                    state_cls = 's-4';
+                }else{ //未报名
+                    if(applyBegin > data.data){
+                        state = '即将开始';
+                        state_cls = 's-3';
+                    }else if(applyBegin < data.data && data.data < applyEnd){
+                        state = model.enrolstate ? '已报名' : '立即报名';
+                        state_cls = model.enrolstate ? 's-4' : 's-1';
+                    }
+                }
+                var mustsignupSty = '';
+                if (model.mustsignup == 0){
+                    mustsignupSty = 'style="display:none"';
+                }
+
+                var _href = 'detail?id='+model.id;
+                if (model.islive == 1){
+                    _href = 'liveDetail?id='+model.id;
+                }
+
+                html += '<li>\
+                            <a href="'+_href+'">\
+                                <div class="img">\
+                                    <img src="'+img+'" class="lazy" >\
+                                </div>\
+                                <div class="info">\
+                                    <div class="title">'+model.title+'</div>\
+                                    <p><i class="iconfont icon-coordinates"></i> 地址：广州市天河区</p>\
+                                    <p><i class="iconfont icon-time"></i> 时间：'+trainingBegin+' 至 '+trainingEnd+'</p>\
+                                    <p '+mustsignupSty+'><i class="iconfont icon-group"></i> 人数：'+model.enrolcount+'/'+(model.maxnumber||0)+'人</p>\
+                                    <div class="state '+state_cls+'">'+state+'</div>\
+                                </div>\
+                                <div class="abstract">\
+                                    <div class="ticket">年龄段：'+age+'</div>\
+                                    <div class="other">\
+                                        <span class="zan"><i class="iconfont icon-praise"></i>'+model.dianzan+'</span>\
+                                        <span class="favorite"><i class="iconfont icon-like"></i>'+model.shoucang+'</span>\
+                                    </div>\
+                                </div>\
+                            </a>\
+                        </li>';
+            }
+        } else {
+            html = "<div class='newbility-no-msg2'></div>";
+        }
+        $("#cont-3 .fixed-cont").html(html);
+    }
+
+</script>
+</body>
+</html>

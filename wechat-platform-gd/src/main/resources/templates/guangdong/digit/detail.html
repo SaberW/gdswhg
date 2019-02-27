@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/public/detail.css'" >
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/resource/resource.css'" >
+<link rel="stylesheet" th:href="${basePath}+'/assets/js/mui/css/mui.previewImage.css'" >
+<script th:src="${basePath}+'/assets/js/mui.lazyload.js'" type="text/javascript"></script>
+<script th:src="${basePath}+'/assets/js/mui.lazyload.img.js'" type="text/javascript"></script>
+<script th:src="${basePath}+'/assets/js/mui/js/mui.previewimage.js'" type="text/javascript"></script>
+<script th:src="${basePath}+'/assets/js/mui/js/mui.zoom.js'" type="text/javascript"></script>
+<script th:src="${apiPath.statistics}" id="whgtongji"></script>
+<style>
+    .bottomMoreBtn{text-align: center;padding: 10px;}
+    .bottomMoreBtn .mui-spinner{display:none}
+    .bottomMoreBtn.active span{display:none}
+    .bottomMoreBtn.active span.mui-spinner{display:inline-block}
+    .preview-title, .preview-msg {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 50px;
+        color: #fff;
+        font-size: 16px;
+        text-align: center;
+        padding: 0 20px;
+        line-height: 20px;
+        z-index: 12;
+    }
+    .preview-msg {
+        top: auto;
+        bottom: 10px;
+    }
+</style>
+<div th:include="guangdong/public/leftBar :: copy"></div>
+<div id="page">
+    <div class="mui-content">
+        <div class="wrapper-detail" id="act-detail">
+            <div class="wrapper-detail-box">
+                <!--<div class="img">
+                    <img id="image" class="lazy" src="http://183.131.126.132:8092/whgstatic/img/2017/201709/20170921/e7f2cf27ba3b41b680c1f10651db8800.jpg"/>
+                </div>
+                <div class="info">
+                    <div class="title">反对的风格</div>
+                    <p>主办：阿斯顿</p>
+                </div>-->
+            </div>
+        </div>
+        <div class="wrapper-detail">
+            <div class="wrapper-detail-box">
+                <h2>展览展示</h2>
+                <div class="brand-nav-content mui-clearfix">
+                    <div class="picture">
+                        <div class="photo mui-clearfix" id="res-box">
+                            <div class="photo-l">
+                                <div class="img" style="height: 120px;">
+                                    <img class="lazy" src="http://szwhg-gds-admin.oss-cn-shanghai.aliyuncs.com/lib18fc99b6a73844b981e2a6bbb214de4c/01.jpg">
+                                    <p>01</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bottomMoreBtn">
+                            <span>查看更多
+                                <i class="iconfont icon-unfold"></i>
+                            </span>
+                            <span class="mui-spinner"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" th:inline="javascript">
+    var itemId = dataInit.getUrlParam('id');
+    var modePage = 1;
+    var placeholder = [[${basePath}]]+'/assets/img/public/no-img.jpg';
+    var regx = /<[^>]*>|<\/[^>]*>/gm;
+    $().ready(function(){
+        dataInit.ajax({
+            api: [[${apiPath.digitalDetail}]],
+            fn: showActivityDetail,
+            params: {id: itemId}
+        });
+        getWords(1);
+        $('.bottomMoreBtn').on('tap',function () {
+            var $this = $(this);
+            if($this.hasClass('active')){
+                return false;
+            }else{
+                $this.addClass('active');
+                getWords(modePage);
+            }
+        })
+    });
+    function showActivityDetail(data) {
+        if(data && data.code == 0){
+            var model = data.data;
+            var imgPath = data.imgPath + dataInit.getBigImage(model.imgurl);
+            var times = moment(model.statemdfdate).format('YYYY-MM-DD');
+            var html = ' <div class="wrapper-detail-box">' +
+                '<div class="img">' +
+                '<img id="image" class="lazy" src="'+imgPath+'"/>' +
+                '</div>' +
+                '<div class="info">' +
+                '<div class="title">'+model.title+'<span id="visitCount"></span></div>' +
+                '<p>主办：'+model.host+'</p>' +
+                '<p>时间：'+times+'</p>' +
+                '</div>' +
+                '</div>';
+            $("#act-detail").html(html);
+        }else {
+            mui.toast(data.msg || '数据加载失败');
+        }
+
+        getVisitSumCount4url(itemId, function(count){
+            $("#visitCount").text(' (访问量 '+count+')');
+        });
+    }
+
+    function getWords(page, size) {
+        var params = {};
+        params.refid = itemId;
+        params.page = page || 1;
+        params.pageSize =size || 12;
+        params.reftype=40;
+        params.enttype=1;
+        dataInit.ajax({
+            api: [[${apiPath.resourceList}]],
+            fn: function (data) {
+                createWords(data);
+                modePage += 1;
+            },
+            params: params
+        });
+    }
+
+    function createWords(data) {
+        if(data.rows.length){
+            var html = '';
+            var imgPath = data.imgPath;
+            $.each(data.rows,function (i, v) {
+                var imgUrl = ( v.enturl.indexOf('http://')>=0 ? v.enturl : imgPath + v.enturl ) + '?v=' + Math.random() * 1000 ;
+                var img = dataInit.getMidImage(imgUrl);
+                var summary = v.summary.replace(regx,"");
+                html+= '<div class="photo-l">' +
+                    '<div class="img" style="height: 120px;">' +
+                    // '<img src="'+placeholder+'" class="lazy" data-lazyload="'+img+'" data-preview-src="'+imgUrl+'" data-preview-group="1" data-preview-title="'+v.name+'" data-preview-msg="'+summary+'">' +
+                    '<img src="'+placeholder+'" class="lazy" data-lazyload="'+img+'" data-preview-src="'+imgUrl+'" data-preview-group="1" data-preview-title="'+v.name+'">' +
+                    '<p>'+v.name+'</p>' +
+                    '</div>' +
+                    '</div>'
+            });
+            if(data.page == 1){
+                $('#res-box').html(html);
+                mui.previewImage();
+            }else{
+                $('#res-box').append(html);
+                mui.previewImage('refresh');
+            }
+            mui('#res-box').imageLazyload({
+                placeholder: placeholder,
+                effect : "fadeIn"
+            });
+
+
+            $('.bottomMoreBtn').removeClass('active');
+            if(data.total <= 12){
+                $('.bottomMoreBtn').hide();
+            }
+            if(modePage >= data.total/data.pageSize){
+                $('.bottomMoreBtn').off('tap').find('span').html('没有更多了');
+            }
+        }
+    }
+</script>
+</body>
+</html>

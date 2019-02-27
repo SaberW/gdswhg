@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link th:href="${basePath}+'/assets/style/login/login.css'" rel="stylesheet">
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/rong.validate.js'"></script>
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/rong.message.js'"></script>
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/jquery.md5.js'"></script>
+<div class="bg-img">
+    <div class="login-cont">
+        <div class="step-cont clearfix">
+            <div class="step active">
+                基本资料
+                <i class="line-icon-border"></i>
+            </div>
+            <div class="step">
+                完善资料
+                <i class="line-icon-border"></i>
+            </div>
+            <div class="step">
+                注册成功
+            </div>
+        </div>
+
+        <!--  防止记住密码 -->
+        <form style="display:none">
+            <input type="password" style="width:100px;height:0px;float:left;visibility: hidden;"/>
+            <input type="text" style="width:100px;height:0px;float:left;visibility: hidden;"/>
+        </form>
+        <!--  防止记住密码-END -->
+
+        <form method="post" id="step-1">
+            <div class="form-cont step-1">
+                <div class="input-cont phone-cont">
+                    <div class="left-icon"></div>
+                    <!--valid error-->
+                    <input type="text" class="input-row" id="phoneNum" name="phoneNum" placeholder="手机号" maxlength="11"
+                           required>
+                </div>
+                <div class="input-cont code-cont clearfix">
+                    <div class="left-icon"></div>
+                    <input type="text" class="input-row code-row" placeholder="短信验证码" maxlength="6" minlength="6"
+                           id="code" name="code" required>
+                    <!-- 防止记住密码 -->
+                    <input type="text" style="width:100px;height:1px;position:absolute;top: -1000000px;left: 0;" />
+                    <input type="password" style="width:100px;height:0px;float:left;visibility: hidden;"/>
+                    <!-- 防止记住密码-END -->
+                    <div class="send-code phoneNum none"><span>120</span></div>
+                    <div class="send-code postCode" id="sendCode">发送验证码</div>
+                </div>
+                <div class="input-cont pwd-cont">
+                    <div class="left-icon"></div>
+                    <input type="password" class="input-row" id="password" name="password" placeholder="密码"
+                           minlength="6" maxlength="18" required>
+                </div>
+                <div class="input-cont pwd-cont">
+                    <div class="left-icon"></div>
+                    <input type="password" class="input-row" id="password_again" name="password_again" placeholder="重复密码"
+                           maxlength="18">
+                </div>
+                <div class="input-cont read-cont">
+                    <label><input type="checkbox" id="agree" name="agree" class="ck_agree" checked> 认真阅读并接受<a th:href="${basePath}+'/_cultsite_/readme'" target="_blank" style="text-decoration: underline">《会员注册条款》</a></label>
+                </div>
+                <div class="go-next">
+                    <button type="submit" class="login-btn goNext">下一步</button>
+                    <!--<a href="javascript:void(0)">登录</a>-->
+                </div>
+            </div>
+        </form>
+        <form method="post" id="step-2">
+            <div class="form-cont step-2 none">
+                <input type="hidden" id="temp_id" name="id">
+                <input type="hidden" id="sex" name="sex" value="1">
+                <div class="input-cont pwd-cont">
+                    <div class="left-icon"></div>
+                    <input type="text" class="input-row" placeholder="个性昵称" maxlength="20" id="nickname" name="nickname">
+                </div>
+                <div class="input-cont code-cont">
+                    <div class="left-icon"></div>
+                    <input type="text" class="input-row" placeholder="所属职业"  name="job" id="job" maxlength="25">
+                </div>
+                <div class="input-cont qq-cont">
+                    <div class="left-icon"></div>
+                    <input type="text" class="input-row" placeholder="QQ号码"  name="qq" id="qq" maxlength="16">
+                </div>
+                <div class="input-cont weixin-cont">
+                    <div class="left-icon"></div>
+                    <input type="text" class="input-row" placeholder="微信号" name="wx" id="wx" maxlength="25">
+                </div>
+                <div class="go-next">
+                    <button type="submit" class="login-btn goNext">下一步</button>
+                </div>
+            </div>
+        </form>
+        <div class="form-cont step-3 none">
+            <div class="login-message">
+                <i class="icon iconfont icon-gou"></i>
+                <h1>注册成功</h1>
+                <a href="index">返回首页<i class="icon iconfont icon-enter"></i><i class="icon iconfont icon-enter"></i></a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- core public JavaScript -->
+<script type="text/javascript" th:inline="javascript">
+    $(window).resize(function () {
+        positionCenter($('.login-cont'));
+    })
+    $().ready(function () {
+        var cultsite = $.cookie("cultsite");
+        $(".bg-img a").each(function(){
+            var ahref = $(this).attr("href");
+            if (!ahref) return true;
+            if (ahref.indexOf("_cultsite_")==-1) return true;
+            ahref = ahref.replace("_cultsite_", cultsite);
+            $(this).attr("href", ahref);
+        });
+
+        positionCenter($('.login-cont'));
+    });
+
+    function positionCenter(dom) {
+        dom.css({
+            position: 'fixed',
+            left: ($(window).width() - dom.outerWidth()) / 2,
+            top: ($(window).height() - dom.outerHeight()) / 2,
+            zIndex: 1
+        })
+    }
+    //手机号格式
+    $.validator.addMethod("phoneType", function (value) {
+        var reg = /^0?(13[0-9]|15[012356789]|17[013678]|18[0-9]|14[57])[0-9]{8}$/;
+        return reg.test(value);
+    }, '请输入正确的手机号码');
+    //密码格式
+    $.validator.addMethod("pwdType", function (value) {
+        var reg = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$/;
+        return reg.test(value);
+    }, '密码必须由6-18位的数字或字母组成');
+    //手机号格式
+    $(document).ready(function () {
+        $("#step-1").validate({
+            errorElement: "em",
+            debug:true,
+            rules: {
+                agree: "required",
+                phoneNum: "required",
+                phoneNum: "phoneType",
+                password: "required",
+                password: "pwdType",
+                password_again: {
+                    equalTo: "#password"
+                }
+            },
+            messages: {
+                agree: {
+                    required: "请认真阅读并同意"
+                },
+                phoneNum: {
+                    required: "请输入您的手机号码"
+                },
+                code: {
+                    required: "请输入手机验证码"
+                },
+                password: {
+                    required: "请输入您的登录密码"
+                },
+                password_again: {
+                    equalTo: "两次密码输入不一致"
+                }
+            },
+            submitHandler: function (form) {
+                var pwd = $.md5($('#password_again').val());
+                var user = $('#phoneNum').val();
+                //验证验证码是否通过
+                dataInit.ajax({
+                    api: [[${apiPath.userRegister}]],
+                    params: {
+                        mobile: user,
+                        password: pwd,
+                        code : $("#code").val()
+                    },
+                    //
+                    fn: function (data) {
+                        //form.submit();
+                        //console.log(data);
+                        if(data.code == 0){
+                            $(".step-1").hide();
+                            $(".step-2").show();
+                            $(".step-cont .step").eq(1).addClass("active");
+                            $("#temp_id").val(data.data.id);
+                        }else{
+                            rongDialog.init({
+                                ico: 2,
+                                type: 1,
+                                desc: data.msg || '注册失败',
+                                nextFn: function () {
+                                    $("#phoneNum").onfocus;
+                                }
+                            });
+                        }
+
+                    }
+                })
+            }
+        });
+
+        $("#step-2").validate({
+            errorElement: "em",
+            debug:true,
+            submitHandler: function (form) {
+                var params = {};
+                var temp_list = $("#step-2 [name]").serializeArray();
+                for( var i in temp_list){
+                    params[temp_list[i].name] = temp_list[i].value;
+                }
+                dataInit.ajax({
+                    api: [[${apiPath.userRegister2}]],
+                    params:params,
+                    fn:function(data) {
+                        if(data.code == 0){
+                            $(".step-2").hide();
+                            $(".step-3").show();
+                            $(".step-cont .step").eq(2).addClass("active");
+                        }else{
+                            rongDialog.init({
+                                ico: 2,
+                                type: 1,
+                                desc: data.msg || "完善资料失败"
+                            });
+                        }
+                    }
+                })
+            }
+        });
+    });
+
+    $("#sendCode").on("click", function () {
+        var phone = $("#phoneNum").val();
+        var reg = /^0?(13[0-9]|15[012356789]|17[013678]|18[0-9]|14[57])[0-9]{8}$/;
+        //前端验证手机号是否真实
+        if (reg.test(phone)) {
+            dataInit.ajax({
+                api: [[${apiPath.hasPhone}]],
+                params: {"phone": phone},
+                fn: function (data) {
+                    if (data.data != 0) {
+                        rongDialog.init({
+                            ico: 2,
+                            type: 1,
+                            desc: data.msg || '该手机号已注册',
+                            nextFn: function () {
+                                $("#phoneNum").onfocus;
+                            }
+                        });
+                    } else { //手机号验证能过发送短信息
+                        dataInit.ajax({
+                            api: [[${apiPath.sendSmsCode}]],
+                            params: {
+                                phone: phone
+                            },
+                            fn: function (data) {
+                                if (data.code != 0) {
+                                    rongDialog.init({
+                                        ico: 2,
+                                        type: 1,
+                                        desc: data.msg,
+                                        nextFn: function () {
+                                            $("#phoneNum").onfocus;
+                                        }
+                                    });
+                                } else {
+                                    $("#phoneNum").addClass("locking").attr("readonly", "readonly");
+                                    numAdd();
+                                }
+                            }
+                        })
+                    }
+                }
+            });
+        } else {
+            if ($("body").find("#phoneNum-error").length == 0) {
+                rongDialog.init({
+                    ico: 2,
+                    type: 1,
+                    desc: '请输入正确的手机号码',
+                    nextFn: function () {
+                        $("#phoneNum").focus();
+                    }
+                });
+            }
+        }
+    })
+    //时间重置
+    function numAdd() {
+        $('.postCode').hide();
+        $('.phoneNum').show();
+        function loadTime() {
+            var countdown = $('.phoneNum span').html();
+            if (countdown == 0) {
+                $('.phoneNum').hide();
+                $('.phoneNum span').html(120);
+                $('.postCode').show();
+                return;
+            }
+            countdown--;
+            $('.phoneNum span').html(countdown);
+            setTimeout(function () {
+                loadTime()
+            }, 1000)
+        }
+
+        loadTime();
+    }
+</script>
+</body>
+</html>

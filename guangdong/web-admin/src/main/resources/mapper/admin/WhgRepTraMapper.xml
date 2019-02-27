@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.creatoo.hn.mapper.WhgTraMapper">
+    <select id="selTraByEtype" resultType="hashmap">
+        SELECT
+            y1.`name`,
+            COUNT(*) 'count'
+        FROM
+            whg_tra t1,
+            whg_ywi_type y1
+        WHERE
+            t1.etype = y1.id
+        AND y1.type = 5
+        AND t1.state = 6
+        AND t1.delstate = 0
+        AND y1.state = 1
+        GROUP BY
+            y1.id;
+    </select>
+
+    <select id="selTraByArea" resultType="hashmap">
+        SELECT
+            y1.`name`,
+            COUNT(*) 'count'
+        FROM
+            whg_tra t1,
+            whg_ywi_type y1
+        WHERE
+            t1.area = y1.id
+        AND y1.type = 6
+        AND t1.state = 6
+        AND t1.delstate = 0
+        AND y1.state = 1
+        GROUP BY
+            y1.id;
+    </select>
+
+    <select id="srchTraByMonth" resultType="hashmap">
+        SELECT
+            MONTH (t1.statemdfdate) mymonth,
+            COUNT(t1.id) mycount
+        FROM
+            whg_tra t1
+        WHERE
+            t1.state = 6
+            AND t1.delstate = 0
+            AND t1.statemdfdate &gt; #{startdate} AND t1.statemdfdate &lt; #{enddate}
+        GROUP BY
+            mymonth;
+    </select>
+
+    <select id="t_searchTraTop10" resultType="hashmap">
+        SELECT
+            sum(d.visit_count) viewcount,
+            d.visit_eid id,
+            t1.title 'name',
+            (
+                SELECT
+                    sum(d1.visit_count)
+                FROM
+                    whg_visit_data d1
+                WHERE
+                    d1.visit_eid = d.visit_eid
+                AND d1.visit_etype = 2
+                AND d1.visit_type = 1
+            ) pccount,
+            (
+                SELECT
+                    sum(d2.visit_count)
+                FROM
+                    whg_visit_data d2
+                WHERE
+                    d2.visit_eid = d.visit_eid
+                AND d2.visit_etype = 2
+                AND d2.visit_type = 2
+            ) wxcount
+        FROM
+            whg_visit_data d
+        INNER JOIN whg_tra t1 ON d.visit_eid = t1.id
+        WHERE
+            d.visit_etype = 2
+        GROUP BY
+            d.visit_eid
+        ORDER BY
+            viewcount DESC
+        LIMIT 10
+    </select>
+
+    <select id="reptra" resultType="hashmap">
+        SELECT t1.title,(SELECT count(c1.cmid) FROM wh_collection c1 WHERE c1.cmrefid = t1.id AND c1.cmopttyp = 0) collectcount,
+            (SELECT count(m1.rmid) FROM wh_comment m1 WHERE m1.rmrefid = t1.id AND m1.rmtyp = 0) commentcount,
+            (SELECT count(c1.cmid) FROM wh_collection c1 WHERE c1.cmrefid = t1.id AND c1.cmopttyp = 2) remcount,
+            (SELECT count(o1.id) FROM whg_rep_order o1,whg_tra_enrol e1 WHERE o1.entid = t1.id AND o1.orderid = e1.id AND e1.state in (1,3,4,5,6)) ordercount,
+            (SELECT count(o2.id) FROM whg_rep_order o2,whg_tra_enrol e2 WHERE o2.entid = t1.id AND o2.devtype = 0 AND o2.orderid = e2.id AND e2.state in (1,3,4,5,6)) pcordercount,
+            (SELECT count(o3.id) FROM whg_rep_order o3,whg_tra_enrol e3 WHERE o3.entid = t1.id AND o3.devtype = 1 AND o3.orderid = e3.id AND e3.state in (1,3,4,5,6)) wxordercount
+        from whg_tra t1
+        where t1.state = 6 AND t1.delstate = 0
+        <if test="title != null and title != ''">
+            AND t1.title LIKE "%"#{title}"%"
+        </if>
+        ORDER BY t1.statemdfdate DESC
+
+        <!--<if test="sort != '' and order == 'desc'">
+            <if test="sort == 'collectcount'">
+                ORDER BY collectcount  desc
+            </if>
+            <if test="sort == 'commentcount'">
+                ORDER BY commentcount  desc
+            </if>
+            <if test="sort == 'remcount'">
+                ORDER BY remcount  desc
+            </if>
+            <if test="sort == 'ordercount'">
+                ORDER BY ordercount  desc
+            </if>
+            <if test="sort == 'pcordercount'">
+                ORDER BY pcordercount  desc
+            </if>
+            <if test="sort == 'wxordercount'">
+                ORDER BY wxordercount  desc
+            </if>
+        </if>
+        <if test="sort != '' and order == 'asc'">
+            <if test="sort == 'collectcount' ">
+                ORDER BY collectcount asc
+            </if>
+            <if test="sort == 'commentcount'">
+                ORDER BY commentcount  asc
+            </if>
+            <if test="sort == 'remcount'">
+                ORDER BY remcount  asc
+            </if>
+            <if test="sort == 'ordercount'">
+                ORDER BY ordercount  asc
+            </if>
+            <if test="sort == 'pcordercount'">
+                ORDER BY pcordercount  asc
+            </if>
+            <if test="sort == 'wxordercount'">
+                ORDER BY wxordercount  asc
+            </if>
+        </if>-->
+    </select>
+
+</mapper>

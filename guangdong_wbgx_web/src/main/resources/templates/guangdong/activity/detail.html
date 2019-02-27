@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<script th:src="${basePath}+'/assets/common/js/whg.maps.js'"></script>
+<div class="wrapper clearfix">
+    <div class="content">
+        <!--公共主头部开始-->
+        <div id="header" th:include="guangdong/public/header :: copy"></div>
+        <!--公共主头部结束-->
+        <div class="sys-crumbs">
+            <span><a href="../index">首页</a></span>
+            <i class="icon iconfont icon-enter"></i>
+            <span><a href="list">活动列表</a></span>
+            <i class="icon iconfont icon-enter"></i>
+            <span class="active" id="crumbs-title"></span>
+        </div>
+        <div class="sys-main-info">
+            <div class="img">
+                <img   th:src="${basePath}+'/assets/img/public/loading.png'" id="imgPath">
+            </div>
+            <div class="info">
+                <h1 id="title"></h1>
+                <p class="tag-list" id="types">
+
+                </p>
+                <p class="desc">
+                    主办单位：<span id="hostVal"></span>
+                </p>
+                <p class="desc" id="baomingTime">
+                    报名时间：<span id="regTime"></span>
+                </p>
+                <p class="desc">
+                    活动时间：<span id="time"></span>
+                </p>
+                <p class="desc">
+                    固定电话：<span id="phone"></span>
+                </p>
+                <p class="desc">
+                    活动地址：<span id="address"></span>
+                </p>
+                <p class="desc" id='tags'>
+                    活动标签：
+                </p>
+                <div class="go-next none">立即预订</div>
+                <div class="go-gather none">关联众筹</div>
+                <!--<div class="order-info none">余票<span class="surplus" id="ticket-surplus"></span>张，总票<span class="more" id="ticket-more"></span>张</div>-->
+                <div class="order-info none">票数<span class="surplus" id="ticket-currNum"></span> / <span class="more" id="ticket-more"></span>张</div>
+                <div class="other-cont clearfix">
+                    <div class="fav-vote-cont clearfix">
+                        <div class="sys-vote" title="点赞"><i class="icon iconfont icon-praise icon-praise_fill" id="good"></i><span>0</span></div>
+                        <div class="sys-fav" title="收藏"><i class="icon iconfont icon-collection icon-collection_fill" id="collection"></i><span>0</span></div>
+                        <div class="sys-fav" title="访问量"><i class="icon iconfont icon-search icon-collection_fill" id="visitCount"></i><span>0</span></div>
+                    </div>
+                    <div class="sns-cont" title="分享">
+                        分享到
+                        <a href="javascript:void(0);" class="fxweix"><i class="icon iconfont icon-wechat"></i></a>
+                        <a href="javascript:void(0);" class="fxweibo"><i class="icon iconfont icon-xinlang"></i></a>
+                        <a href="javascript:void(0);" class="fxqq"><i class="icon iconfont icon-kongjian"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="sys-main-bottom">
+            <div class="main-cont clearfix">
+                <div class="left-cont">
+                    <div class="item-cont">
+                        <div class="sys-main-title">
+                            <div class="title">活动详情</div>
+                            <hr>
+                        </div>
+
+                        <!-- 如果配置了直播则显示 -->
+                        <div class="sys-detail-list" style="display: none;" id="liveContainer">
+                            <div class="title">活动直播</div>
+                            <div class="html-panel">
+                                <div class="live-list-cont">
+                                    <ul id="detail-course">
+                                        <li>
+                                            <a href="live" onclick="javascript:void(0);"></a>
+                                            <span class="time">
+                                                2017-09-29 15:00-18:00
+                                            </span>
+                                            <span class="title">
+                                                在线课程神童麻将教学（第一章）
+                                            </span>
+                                            <div class="btn">进入直播</div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="sys-detail-list">
+                            <div class="title">活动信息</div>
+                            <div class="html-panel" id="info"></div>
+                        </div>
+                        <div class="sys-detail-list">
+                            <div class="title">文件下载：</div>
+                            <div class="html-panel" id="fileDownload">
+                                <div class="fileName"><i class="iconfont icon-download-copy"></i><a href="javascript:void(0)">文件名称</a></div>
+                            </div>
+                        </div>
+                        <div class="sys-detail-list">
+                            <div class="title">活动地址</div>
+                            <div class="map-panel" id="maps_ven_target">
+
+                            </div>
+                        </div>
+                        <div class="sys-detail-list" id="res-list">
+                            <div class="title">资源列表</div>
+                            <div class="html-panel">
+                                <div class="res-detail-cont">
+                                    <div class="res-filter">
+                                        <div class="filter-list">
+                                            <div class="clearfix" id="fileter-nav">
+                                                <span class="active"><a href="javascript:void(0)">全部</a></span>
+                                                <span><a href="javascript:void(0)">图片</a></span>
+                                                <span><a href="javascript:void(0)">视频</a></span>
+                                                <span><a href="javascript:void(0)">音频</a></span>
+                                                <span><a href="javascript:void(0)">文档</a></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="style-list">
+                                        <div class="content-list">
+                                            <ul class="clearfix" id="modelList_2">
+
+                                            </ul>
+                                        </div>
+                                        <!--分页开始 -->
+                                        <div class="green-black" id="artPagging_2" style="margin-bottom: 40px"></div>
+                                        <!--分页结束-->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="right-cont">
+                    <div class="item-cont" >
+                        <div class="sys-main-title" id="_recommend">
+                            <div class="title">相关推荐</div>
+                            <hr>
+                        </div>
+                        <div class="recommend-cont">
+                            <ul id="recommend">
+
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="item-cont" id="_zixun">
+                        <div class="sys-main-title">
+                            <div class="title">相关资讯</div>
+                            <hr>
+                        </div>
+                        <div class="recommend-cont">
+                            <ul id="zixun">
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div th:include="guangdong/public/fav :: copy"></div>
+        <div th:include="guangdong/public/voteup :: copy"></div>
+        <input type="hidden" id="temp_type" value="4">
+        <input type="hidden" id="commType">
+    </div>
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong/public/footer :: copy"></div>
+<!--底部结束-->
+<script th:src="${apiPath.myvisitnote}" id="whgtongji"></script>
+
+<script th:src="${basePath}+'/assets/js/FilteDatail.js'"></script>
+<script type="text/javascript" th:inline="javascript">
+    var itemId = dataInit.getUrlParam('id');
+    var userid = $("#temp_userId").val();
+    var latitude,longitude,venueAddress,title;
+    //alert(dataInit.checkTag(2017031700000004));
+    $(document).ready(function () {
+        dataInit.ajax({
+            api: [[${apiPath.actDetail}]],
+            fn: showActivityDetail,
+            params: {actId: itemId,cultid:cultid}
+        });
+        zx_dataPage();
+        dataPage();
+        $("#fileter-nav").on("click", "span>a", function(){
+            $(this).parents("span").addClass("active").siblings().removeClass("active");
+            dataPage();
+        });
+
+        getVisitSumCount4url(itemId, function(count){
+            $("#visitCount").next("span").text(count);
+        });
+    })
+    function goSignUp() {
+        dataInit.ajax({
+            api: [[${apiPath.checkPreAct}]],
+            fn: goNext,
+            params: {actId: itemId,userId:userid}
+        });
+        function goNext(data) {
+            if(data.code == 0){
+                window.location.href='actliucheng?id='+itemId;
+            }else if(data.code==101) {
+                window.location.href = [[${basePath}]] + '/' + [[${cultsite}]] + "/login";
+            }else if(data.code == 200){
+                rongDialog.init({
+                    type: 2,
+                    desc: data.msg || '您还未完成实名认证，请先完成实名认证！',
+                    nextFn: function(){
+                        window.location.href = [[${basePath}]] + '/' + [[${cultsite}]] +'/center/safely/real';
+                    }
+                });
+            }else{
+                rongDialog.init({ico : 2, type : 1, desc : data.msg});
+            }
+        }
+    }
+    function showActivityDetail(data) {
+        FilteDatail.options({
+            toUrl: [[${basePath}]]+'/'+[[${cultsite}]]+'/index',
+            info: data.data.actdetail
+        }).filte();
+
+        if(data && data.code == 0){
+            var model = data.data.actdetail;
+            var remark = model.remark;
+            var acturl = model.acturl;
+            //活动时间
+            var begin = moment(model.starttime).format('YYYY-MM-DD');
+            var end = moment(model.endtime).format('YYYY-MM-DD');
+            var time = begin + ' ~ ' + end;
+            if(begin==end){
+                time=begin;
+            }
+            //报名时间
+            var regBegin = moment(model.enterstrtime).format('YYYY-MM-DD HH:mm:ss');
+            var regEnd = moment(model.enterendtime).format('YYYY-MM-DD HH:mm:ss');
+            var regTime = regBegin + ' ~ ' + regEnd;
+            if(regBegin!=""&&regEnd!=""&&regBegin.substring(0,10)==regEnd.substring(0,10)){
+                regTime=regBegin+' ~ '+moment(model.enterendtime).format('HH:mm:ss');
+            }
+            var phone = model.telephone;
+            var address = model.address;
+            title = model.name;
+            var imgPath = [[${imgPath}]] + dataInit.getBigImage(model.imgurl);
+            var ticketnum = data.data.ticketAllnum;
+            var ticketcut = data.data.ticketnum;
+            var currNum = ticketnum-ticketcut;
+            var liststate = data.data.liststate;
+            //调分享接口
+            dataInit.share(title,imgPath);
+            $('#hostVal').text(model.host);
+            $('#info').html(remark);
+            $('#time').text(time);
+            $('#regTime').text(regTime);
+            $('#phone').text(phone);
+            $('#address').text(address);
+            $('#title,#crumbs-title').text(title);
+            $('#imgPath').attr('src',imgPath);
+            if(liststate == 1){
+                $('.order-info').show();
+                $('#ticket-more').text(ticketnum);
+                //$('#ticket-surplus').text(ticketcut);
+                $('#ticket-currNum').text(currNum);
+                $('.go-next').on('click',function(){
+                    goSignUp();
+                    //window.location.href="actliucheng?id="+model.id;
+
+                }).css('display','inline-block');
+            }else if(liststate == 2){
+                //$('.order-info').hide();
+                $('.order-info').show();
+                $('#ticket-more').text(ticketnum);
+                //$('#ticket-surplus').text(ticketcut);
+                $('#ticket-currNum').text(currNum);
+                $('.go-next').text('已订完').addClass('complete').css('display','inline-block');
+            }else if(liststate == 3){
+                $('.order-info').hide();
+                $('.go-next').hide();
+                if(acturl != null && acturl != ''){
+                    $('.go-next').show();
+                    $('.go-next').text('查看链接')
+                    $('.go-next').on('click',function(){
+                        window.location.href=acturl;
+                    }).css('display','inline-block');
+                }
+
+                /*$('.go-next').text('直接前往').addClass('just-see').css('display','inline-block');*/
+            }else if(liststate == 4){
+                // $('.order-info').hide();
+                $('.order-info').show();
+                $('#ticket-more').text(ticketnum);
+                //$('#ticket-surplus').text(ticketcut);
+                $('#ticket-currNum').text(currNum);
+                $('.go-next').text('活动已结束').addClass('complete').css('display','inline-block');
+            }else{
+                $('.order-info').hide();
+                $('.go-next').text('即将开始').css('display','inline-block');
+            }
+            if(data.data.gatherid&&data.data.gatherid!=""){
+                $('.go-gather').on('click',function(){
+                    window.location.href=[[${rootUrl}]]+"gdzcweb"+'/'+[[${cultsite}]]+"/project/actdetail?id="+data.data.gatherid;
+                }).addClass('just-see').css('display','inline-block');
+            }else{
+                $('.go-gather').css('display','none');
+            }
+            if(model.filepath){
+                var filePath = [[${imgPath}]] + model.filepath;
+                $('#filePath').attr('href',filePath);
+                var index = filePath.lastIndexOf("\/");
+                var fileName = filePath.substring(index + 1, filePath.length);
+                $('#filePath span').text(fileName);
+            }else {
+                $('.__file-box').hide();
+            }
+            var labelListl = model.etag;
+            if (labelListl)
+                labelListl = labelListl.split(",");
+            var labelListHtml = '';
+            if (labelListl && labelListl.length > 0) {
+                for (var j in labelListl) {
+                    var text = labelListl[j];
+                    labelListHtml += '<span class="tag">'+text+'</span>';
+                }
+                $('#tags').append(labelListHtml);
+            } else {
+                $("#tags").hide();
+            }
+            var types = model.etype;
+            if (types)
+                types = types.split(",");
+            var typesHtml = '';
+            if (types && types.length > 0) {
+                for (var j in types) {
+                    var text = types[j];
+                    typesHtml += '<span class="tag">'+text+'</span>';
+                }
+                $('#types').append(typesHtml);
+            } else {
+                $("#types").hide();
+            }
+            //推荐列表
+            var acttj = data.data.acttj;
+            if(acttj && acttj.length){
+                var i_length = acttj.length > 3 ? 3 : acttj.length;
+                for (var i=0;i<i_length;i++) {
+                    var imgPath = [[${imgPath}]] + dataInit.getBigImage(acttj[i].imgurl);
+                    if(acttj[i].id != itemId){
+                        $("#recommend").append(
+                            '<li> ' +
+                            '<div class="img"> ' +
+                            '<a href="detail?id='+acttj[i].id+'"> ' +
+                            '<img src="'+imgPath+'"> ' +
+                            '</a> ' +
+                            '</div> ' +
+                            '<p> ' +
+                            '<a href="detail?id='+acttj[i].id+'">'+acttj[i].name+'</a> ' +
+                            '</p> ' +
+                            '</li>'
+                        );
+                    }
+                }
+            }else {
+                $("#_recommend").hide();
+                //$("#Recommend").append('<div class="public-no-message-detail"></div>');
+            }
+
+            //是否可以预定
+            if(model.sellticket == 1){
+                $("#baomingTime").hide();
+            }
+            //获取经纬度
+            if(model.actlat)
+                latitude = model.actlat;
+            if(model.actlon)
+                longitude = model.actlon;
+            venueAddress = model.address;
+            WhgMap.showMap('maps_ven_target', venueAddress, longitude, latitude);
+
+            //文件下载
+            var fileHtml = '';
+            if(model.filepath){
+                var filePath = data.imgPath + model.filepath;
+                $('#filePath').attr('href',filePath);
+                var index = filePath.lastIndexOf("\/");
+                var fileName = filePath.substring(index + 1, filePath.length);
+                fileHtml = '<div class="fileName"><i class="iconfont icon-download-copy"></i><a href="'+filePath+'">'+fileName+'</a></div>';
+                $("#fileDownload").html(fileHtml);
+            }else {
+                $("#fileDownload").parent(".sys-detail-list").hide();
+            }
+
+            //活动直播
+            var liveInfo = data.data.liveInfo;
+            if(liveInfo.hasLive == '1'){
+                var state = liveInfo.state;
+                var livehref = '';
+                switch(state){
+                    case '1':
+                        state = '查看直播';
+                        livehref = 'href="live?id='+model.id+'"';
+                        break;
+                    case '2':
+                        state = '直播未开始';
+                        break;
+                    case '3':
+                        state = '直播已结束';
+                        break;
+                    case '4':
+                        state = '精彩回顾';
+                        livehref = 'href="live?id='+model.id+'"';
+                        break;
+                }
+
+                var html = '\
+                <li>\
+                    <a '+livehref+'></a>\
+                    <span class="time">'+liveInfo.time+'</span>\
+                    <span class="title">'+liveInfo.title+'</span>\
+                    <div class="btn">'+state+'</div>\
+                </li>\
+                ';
+                $('#detail-course').html(html);
+                $('#liveContainer').show();
+            }
+        }else {
+            /*rongDialog.init({
+                ico : 2, //1 勾  2 叉
+                type : 1,
+                desc : data.msg
+            });*/
+        }
+    }
+
+
+    function dataPage(page,rows){
+        var params = {};
+        params.refid = itemId;
+        params.page = page || 1;
+        params.pageSize = rows || 12;
+        params.reftype = 4;
+
+        var filterIdx = $("#fileter-nav").find("span.active").index();
+        switch (filterIdx){
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+                params.enttype = filterIdx;
+                break;
+            default: params.enttype = '';
+        }
+
+        dataInit.ajax({
+            api: [[${apiPath.resourceList}]],
+            params: params,
+            fn: function(data){
+                showModelList(data);
+//                dataInit.pageInit('artPagging_2', params.page, params.pageSize, data.total, dataPage);
+            }
+        })
+    }
+
+    function showModelList(data){
+        var modelUL = $("#modelList_2");
+        modelUL.empty();
+        if(data.code == 0){
+            if (data.data) {
+                for (var i in data.data) {
+                    var module = data.data[i];
+
+                    var html = $('<li>\
+                                    <div class="img">\
+                                        <img >\
+                                    </div>\
+                                    <div class="info">\
+                                        <div class="title">'+module.name+'</div>\
+                                    </div>\
+                                    <div class="mask"><img></div>\
+                                    <a href="javascript:void(0)"></a>\
+                                    </li>');
+                    if(module.enturl)
+                        var _enturl = module.enturl.indexOf('http') >= 0 ? module.enturl : data.imgPath + module.enturl;
+                    var resBasePath = [[${basePath}]];
+                    switch (module.enttype){
+                        case "1" : //图片
+                            html.find(".img img").attr("src",dataInit.getRemoteURL(data.imgPath ,dataInit.getMidImage(module.enturl)));
+                            html.find(".mask").empty();
+                            html.find("a:last").attr("onClick", "rongDialog.init({\
+                                            ico : 1,\
+                                            type : 6,\
+                                            imgUrl : '"+_enturl+"',\
+                                            title : '"+module.name+"'\
+                                        });"
+                            );
+                            break;
+                        case "2" :  //视频
+                            html.find(".img img").attr("src", dataInit.getRemoteURL(data.imgPath , dataInit.getMidImage(module.deourl)));
+                            html.find(".mask img").attr("src", [[${basePath}]] + '/assets/img/brand/play.png');
+                            html.find("a:last").attr("onClick", "rongDialog.init({\
+                                            type : 5,\
+                                            vedioUrl : '"+_enturl+"',\
+                                            vedioImg : '',\
+                                            vedioTitle : '"+module.name+"',\
+                                            basePath : '"+resBasePath+"'\
+                                        })"
+                            );
+                            break;
+                        case "3" :  //音频
+                            html.find(".img img").attr("src", [[${basePath}]] + '/assets/img/brand/brand-music.jpg');
+                            html.find(".mask img").attr("src", [[${basePath}]] + '/assets/img/brand/macphone.png');
+                            html.find("a:last").attr("onClick", "rongDialog.init({\
+                                            type : 5,\
+                                            vedioUrl : '"+_enturl+"',\
+                                            vedioType: 'mp3',\
+                                            vedioImg : '"+resBasePath+"/assets/img/brand/brand-music.jpg',\
+                                            vedioTitle : '"+module.name+"',\
+                                            basePath : '"+resBasePath+"'\
+                                        });setWidth();"
+                            );
+                            break;
+
+                        case "4" : //文档
+                            //html.find(".img img").attr("src", [[${basePath}]] + '/assets/img/brand/xiazai.jpg');
+                            var iconImg = dataInit.getFileTypeIcon(module.enturl, '/assets/img/brand/xiazai.jpg');
+                            html.find(".img img").attr("src", [[${basePath}]] + iconImg);
+
+                            html.find(".mask").empty();
+                            html.find("a:last").attr({
+                                target:"_blank",
+                                href: dataInit.getRemoteURL(data.imgPath , module.enturl)
+                            });
+                            break;
+
+                        default:
+                            html.find(".mask").empty();
+                    }
+
+                    modelUL.append(html);
+                }
+            } else {
+                modelUL.append("<div class='public-no-message'></div>");
+            }
+        }else {
+            $("#res-list").hide();
+        }
+    }
+
+
+    function zx_dataPage(){
+        var params = {};
+        params.entityid = itemId;
+        params.clnftype = '2016111900000018';
+
+        dataInit.ajax({
+            api: [[${apiPath.xgzxList}]],
+            params: params,
+            fn: function(data){
+                zx_showModelList(data);
+//                dataInit.pageInit('artPagging_2', params.page, params.pageSize, data.total, dataPage);
+            }
+        })
+    }
+
+    function zx_showModelList(data){
+        var modelUL = $("#zixun");
+        modelUL.empty();
+        //alert(data.data);
+        var acttj = data.data;
+        if(acttj && acttj.length){
+            var i_length = acttj.length > 3 ? 3 : acttj.length;
+            for (var i=0;i<i_length;i++) {
+
+                $("#zixun").append(
+                        '<li> ' +
+                        '<a href="../zx/detail?id='+acttj[i].clnfid+'">'+acttj[i].clnftltle+'</a> ' +
+                        '<p class="time">'+moment(acttj[i].clnfcrttime).format('YYYY-MM-DD HH:mm:ss')+'</p> ' +
+                        '</li>'
+                );
+
+            }
+        }else {
+            $("#_zixun").hide();
+            $("#zixun").append('<div class="public-no-message-detail"></div>');
+        }
+    }
+</script>
+</body>
+</html>

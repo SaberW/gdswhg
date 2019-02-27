@@ -1,0 +1,131 @@
+// out: ../../css/resource/public.css, sourcemap: false, compress: true
+//加载LESS框架
+@import "../public/config";
+
+.res-main{
+  min-height:840px;
+  background:url(../../img/index/04.jpg) repeat-y 50% 0%;
+  .main-cont{
+    width:1200px;
+    min-height:840px;
+    margin:0px auto;
+    position:relative;
+    .nav{
+      width:240px;
+      float:left;
+      //position:absolute;
+      //left:0px;
+      //top:0px;
+      background:url(../../img/public/b.png) repeat;
+      position:relative;
+      min-height:840px;
+      .son-cont{
+        height:100%;
+        width:240px;
+        background-color:#fff;
+        position:absolute;
+        z-index: 999;
+        left:240px;
+        top:0px;
+        display: none;
+        ul{
+          padding:16px 0px;
+        }
+        ul li{
+          color:@-font-color-1;
+          padding:0px 40px;
+          border-bottom:1px #eee dashed;
+          height:49px;
+          line-height:49px;
+          a{
+            display: block;
+            width:100%;
+            height:100%;
+          }
+        }
+      }
+      .top-title{
+        height:100px;
+        line-height:100px;
+        text-align: center;
+        background-color:@-main-color;
+        i{
+          margin-right:5px;
+        }
+      }
+      ul{
+        padding:15px 0px;
+      }
+      ul li{
+        height:50px;
+        line-height:50px;
+        color:#fff;
+        .n{
+          cursor: pointer;
+          text-indent:40px;
+          display: block;
+        }
+        i{
+          float:right;
+          margin-right:40px;
+        }
+        &:hover{
+          background-color:#fff;
+          .n{
+            color:@-font-color-1;
+          }
+          i{
+            color:@-font-color-1;
+          }
+          .son-cont{
+            display: block;
+          }
+        }
+      }
+    }
+    .search{
+      width:660px;
+      padding-top:200px;
+      padding-left:150px;
+      float:left;
+      h1{
+        text-align: center;
+        color:#fff;
+      }
+      .search-cont{
+        margin-top:85px;
+        .border-radius();
+        height:60px;
+        line-height:60px;
+        background-color:#fff;
+        border:3px @-main-color solid;
+        position:relative;
+        input{
+          background-color:#fff;
+          height:58px;
+          line-height:58px;
+          width:450px;
+          position:absolute;
+          left:20px;
+          top:0px;
+        }
+        a{
+          display: block;
+          width:100px;
+          height:60px;
+          line-height:60px;
+          background-color:@-main-color;
+          position:absolute;
+          right:0px;
+          top:0px;
+          text-align: center;
+          padding-left:3px;
+          i{
+            color:#fff;
+            font-size:36px;
+          }
+        }
+      }
+    }
+  }
+}

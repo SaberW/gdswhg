@@ -1,0 +1,237 @@
+<div th:fragment="copy" xmlns:th="http://www.w3.org/1999/xhtml">
+
+    <div class="wrapper-detail-box">
+        <div class="gather-nav">
+            <span class="gather-nav-list active" data-type="imgGroup" style="display: none">图片</span>
+            <span class="gather-nav-list" data-type="videoGroup" style="display: none">视频</span>
+            <span class="gather-nav-list" data-type="audioGroup" style="display: none">音频</span>
+            <span class="gather-nav-list" data-type="fileGroup" style="display: none">文档</span>
+        </div>
+        <div class="gather-nav-content gather-nav-content-qw on" data-for="imgGroup">
+            <div class="gather-content-list">
+                <div id="img_groups">
+
+                </div>
+            </div>
+        </div>
+        <div class="gather-nav-content gather-nav-content-qw" data-for="videoGroup">
+            <div class="gather-content-list">
+                <div id="video_groups">
+
+                </div>
+            </div>
+        </div>
+        <div class="gather-nav-content gather-nav-content-qw" data-for="audioGroup">
+            <div class="gather-content-list">
+                <div id="audio_groups">
+
+                </div>
+            </div>
+        </div>
+        <div class="gather-nav-content gather-nav-content-qw" data-for="fileGroup">
+            <div class="gather-content-list">
+                <div id="file_groups">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" th:inline="javascript">
+        var itemId = dataInit.getUrlParam('id'),reftype;
+        $(document).ready(function (){
+
+            mui(".gather-nav").on("tap", ".gather-nav-list", function () {
+                $(this).addClass("active").siblings().removeClass("active");
+                // $(".gather-nav-content").eq($(".gather-nav .gather-nav-list").index(this)).addClass("on").siblings().removeClass('on');
+                $('[data-for="'+$(this).attr('data-type')+'"]').addClass('on').siblings().removeClass('on');
+            });
+
+            reftype = $("#temp_type").val();
+            dataInit.ajax({
+                api: [[${apiPath.ppResourceList}]],
+                fn: showResourcesList_,
+                params: {
+                    page: 1,
+                    pageSize: 10,
+                    refid: itemId,
+                    reftype: reftype,
+                    wechat: 1,
+                    cultid: $.cookie("cultid")
+                }
+            });
+        })
+
+        //品牌资源列表
+        function showResourcesList(data) {
+            if(data.code == 0 && data.rows.length>0){
+                var resBasePath = [[${basePath}]];
+                var resList = {};
+                resList.imgPath = data.imgPath;
+                resList.rows = data.rows;
+                dataInit.setCache('resList',resList);
+                var resHtml = $('<div class="res-box-1"><h2>图片</h2>'+
+                    '<div class="res-box scroll-box mui-scroll-wrapper mui-slider-indicatorcode mui-segmented-control mui-segmented-control-inverted">'+
+                    '    <div class="mui-scroll res-pic"></div>'+
+                    '</div></div>'+
+                    '<div class="res-box-1"><h2>视频</h2>'+
+                    '<div class="res-box scroll-box mui-scroll-wrapper mui-slider-indicatorcode mui-segmented-control mui-segmented-control-inverted">'+
+                    '    <div class="mui-scroll res-video"></div>'+
+                    '</div></div>'+
+                    '<div class="res-box-1"><h2>音频</h2>'+
+                    '<div class="res-box scroll-box mui-scroll-wrapper mui-slider-indicatorcode mui-segmented-control mui-segmented-control-inverted">'+
+                    '    <div class="mui-scroll res-mp3"></div>'+
+                    '</div></div>' +
+
+                    '<div class="res-box-1"><h2>文件</h2>'+
+                    '<div class="res-box scroll-box mui-scroll-wrapper mui-slider-indicatorcode mui-segmented-control mui-segmented-control-inverted">'+
+                    '    <div class="mui-scroll res-file"></div>'+
+                    '</div></div>' +
+
+                    '<div class="look-more" style="display: none"><a href="'+resBasePath+'/resource/resourcelist?id='+itemId+'&reftype='+reftype+'">查看更多<i class="iconfont icon-enter"></i></a></div>');
+                for(var i in data.rows){
+                    var resModel = data.rows[i];
+                    var _a_url = 'javascript:goPage(\''+resModel.id+'\',\''+resModel.enttype+'\')';
+                    if(resModel.enturl)
+                        var _enturl = resModel.enturl.indexOf('http') >= 0 ? resModel.enturl : data.imgPath + resModel.enturl;
+                    if(resModel.enttype == 1){
+                        //var imgPath = data.imgPath + dataInit.getSmallImage(resModel.enturl);
+                        var imgPath = dataInit.getMidImage(_enturl);
+                        resHtml.find('.res-pic').append(
+                            '<a href="'+_a_url+'"><div class="mask">'+resModel.name+'</div> <img class="lazy" src="'+imgPath+'"> </a>'
+                        );
+                    }
+                    if(resModel.enttype == 2){
+                        //var imgPath = data.imgPath + dataInit.getSmallImage(resModel.deourl);
+                        var _deourl = resModel.deourl.indexOf('http') >= 0 ? resModel.deourl : data.imgPath + resModel.deourl;
+                        var imgPath = dataInit.getMidImage(_deourl);
+                        resHtml.find('.res-video').append(
+                            '<a href="'+_a_url+'">'+
+                            '<div class="mask">'+resModel.name+'</div>'+
+                            '<img src="'+imgPath+'">'+
+                            '<div class="video-mask">'+
+                            '<img src="'+resBasePath+'/assets/img/gather/play.png">'+
+                            '</div>'+
+                            '</a>'
+                        );
+                    }
+                    if(resModel.enttype == 3){
+                        resHtml.find('.res-mp3').append(
+                            '<a href="'+_a_url+'">'+
+                            '<div class="mask">'+resModel.name+'</div>'+
+                            '<img src="'+resBasePath+'/assets/img/gather/mp3.jpg">'+
+                            '<div class="video-mask">'+
+                            '<img src="'+resBasePath+'/assets/img/gather/macphone.png">'+
+                            '</div>'+
+                            '</a>'
+                        );
+                    }
+
+                    if(resModel.enttype == 4){
+                        resHtml.find('.res-file').append(
+                                '<a href="'+_a_url+'">'+
+                                '<div class="mask">'+resModel.name+'</div>'+
+                                '<img src="'+resBasePath+'/assets/img/gather/music.jpg">'+
+                                '</a>'
+                        );
+                    }
+                }
+                if(data.rows.length>10){
+                    resHtml.find('.res-mp3').show();
+                }
+                $("#res-box").html(resHtml);
+                mui('.res-box').scroll();
+                $(".res-box-1").each(function () {
+                    if(!$(this).find('.mui-scroll').children().length>0){
+                        $(this).hide();
+                    }
+                })
+            }else {
+                /*if(data.msg)
+                    mui.toast(data.msg || '数据加载失败');*/
+                $('#res-box').append("<div class='newbility-no-msg2'></div>");
+            }
+        }
+
+        // 相关资源列表
+        function showResourcesList_(data) {
+            if(data.code == '0' && data.rows.length){
+                var resBasePath = [[${basePath}]];
+                var resList = {};
+                resList.imgPath = data.imgPath;
+                resList.rows = data.rows;
+                dataInit.setCache('resList',resList);
+                var imgPath = data.imgPath;
+                $.each(data.rows,function (i, v) {
+                    var imgUrl = '';
+                    var _a_url = 'javascript:goPage(\''+ v.id +'\',\''+ v.enttype +'\')';
+                    if(v.enttype == '1'){
+                        imgUrl= v.enturl.indexOf('http://') >= 0 ? v.enturl : (imgPath+v.enturl);
+                        $('#img_groups').append('<div class="ref_item">' +
+                            '<a href="'+ _a_url +'">' +
+                            '<img src="'+imgUrl+'">' +
+                            '<p>'+v.name+'</p>' +
+                            '</a>' +
+                            '</div>'
+                        );
+                        $('[data-type="imgGroup"]').show()
+                    }
+                    if(v.enttype == '2'){
+                        imgUrl= v.deourl.indexOf('http://') >= 0 ? v.deourl : (imgPath+v.deourl);
+                        $('#video_groups').append('<div class="ref_item">' +
+                            '<a href="'+ _a_url +'">' +
+                            '<img src="'+imgUrl+'">' +
+                            '<p>'+v.name+'</p>' +
+                            '<div class="mask_video"></div>' +
+                            '</a>' +
+                            '</div>'
+                        );
+                        $('[data-type="videoGroup"]').show()
+                    }
+                    if(v.enttype == '3'){
+                        imgUrl= [[${basePath}]]+'/assets/img/gather/mp3.jpg';
+                        $('#audio_groups').append('<div class="ref_item">' +
+                            '<a href="'+ _a_url +'">' +
+                            '<img src="'+imgUrl+'">' +
+                            '<p>'+v.name+'</p>' +
+                            '<div class="mask_audio"></div>' +
+                            '</a>' +
+                            '</div>'
+                        );
+                        $('[data-type="audioGroup"]').show()
+                    }
+                    if(v.enttype == '4'){
+                        imgUrl = [[${basePath}]] + dataInit.getFileTypeIcon(v.enturl, '/assets/img/gather/xiazai.jpg');
+                        //imgUrl= [[${basePath}]]+'/assets/img/gather/music.jpg';
+                        $('#file_groups').append('<div class="ref_item">' +
+                            '<a href="'+ _a_url +'">' +
+                            '<img src="'+imgUrl+'">' +
+                            '<p>'+v.name+'</p>' +
+                            '</a>' +
+                            '</div>'
+                        );
+                        $('[data-type="fileGroup"]').show()
+                    }
+                });
+                //mui('.res-box').scroll();
+            }else {
+                /*if(data.msg)
+                    mui.toast(data.msg || '数据加载失败');*/
+                $('#res-box').html("<div class='newbility-no-msg2'></div>");
+            }
+        }
+
+        // 查看详情
+        function goPage(resid,enttype) {
+            if(enttype == 1){
+                window.location.href = [[${basePath}]] + '/resource/digitalimage?id='+resid+'&reftype='+reftype+'&refid='+itemId;
+            }else if(enttype == 2) {
+                window.location.href = [[${basePath}]] + '/resource/digitalvideo?id='+resid+'&reftype='+reftype+'&refid='+itemId;
+            }else if(enttype == 3) {
+                window.location.href = [[${basePath}]] + '/resource/digitalaudio?id='+resid+'&reftype='+reftype+'&refid='+itemId;
+            }else if(enttype == 4) {
+                window.location.href = [[${basePath}]] + '/resource/digitalfile?id='+resid+'&reftype='+reftype+'&refid='+itemId;
+            }
+        }
+    </script>
+</div>

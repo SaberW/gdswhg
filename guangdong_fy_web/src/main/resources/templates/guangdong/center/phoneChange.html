@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/style/center/center.css'">
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/jquery-form.js'"></script>
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/rong.validate.js'"></script>
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/rong.message.js'"></script>
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/jquery.md5.js'"></script>
+<div class="wrapper clearfix">
+    <div class="content">
+        <!--公共主头部开始-->
+        <div id="header" th:include="guangdong/public/header :: copy"></div>
+        <!--公共主头部结束-->
+        <!--主体开始-->
+        <div class="container res-center-bg">
+            <div class="sys-crumbs">
+                <span><a href="../index">首页</a></span>
+                <i class="icon iconfont icon-enter"></i>
+                <span><a href="index">个人中心</a></span>
+                <i class="icon iconfont icon-enter"></i>
+                <span class="active">安全设置</span>
+            </div>
+            <div class="page-list" id="step-1">
+                <div class="chapter"></div>
+                <div class="center-nav">
+                    <ul class="clearfix">
+                        <li data-type="1"  onclick="window.location.href='pwdChange'">
+                            修改密码
+                        </li>
+                        <li class="active"  data-type="2">
+                            修改绑定手机
+                        </li>
+                        <li data-type="3"  onclick="window.location.href='realUser'">
+                            实名认证
+                        </li>
+                    </ul>
+                </div>
+                <div class="form-cont">
+                    <form method="post" id="phoneForm">
+                        <h3>
+                            <em>1</em>原手机号
+                        </h3>
+                        <div class="row">
+                            <div class="input-bg">
+                                <input class="input-panel" id="phoneNum" name="phoneNum" minlength="11" maxlength="11"
+                                       placeholder="请输入您的11位原始手机号码" required>
+                            </div>
+                        </div>
+                        <h3>
+                            <em>2</em>手机验证码
+                        </h3>
+                        <div class="row">
+                            <div class="input-bg">
+                                <input class="input-panel" id="code" name="code" minlength="6" maxlength="6"
+                                       placeholder="输入手机验证码"  required>
+                                <div class="numAdd phoneNum none"><span>120</span>秒后可重新发送</div>
+                                <div class="numAdd postCode sendCodeP" id="sendCode">发送验证码</div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <input type="submit" class="submit none">
+                            <a href="javascript:void(0)" class="next-btn ok-next">确定</a>
+                        </div>
+                    </form>
+                </div>
+                <div class="form-cont">
+                    <form method="post" id="phoneForm2" class="none">
+                        <h3>
+                            <em>1</em>新手机号
+                        </h3>
+                        <div class="row">
+                            <div class="input-bg">
+                                <input class="input-panel" id="phoneNum2" name="phoneNum2" minlength="11" maxlength="11"
+                                       placeholder="请输入您的11位手机号码" required>
+                            </div>
+                        </div>
+                        <h3>
+                            <em>2</em>手机验证码
+                        </h3>
+                        <div class="row">
+                            <div class="input-bg">
+                                <input class="input-panel" id="code2" name="code2" minlength="6" maxlength="6"
+                                       placeholder="输入手机验证码"  required>
+                                <div class="numAdd phoneNum2 none"><span>120</span>秒后可重新发送</div>
+                                <div class="numAdd postCode2 sendCodeP" id="sendCode2">发送验证码</div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <input type="submit" class="submit2 none">
+                            <a href="javascript:void(0)" class="next-btn ok-next2">绑定</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!--主体结束-->
+    </div>
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong/public/footer :: copy"></div>
+<!--底部结束-->
+<a class="to-top"></a>
+<script type="text/javascript" th:inline="javascript">
+    var userId = $("#temp_userId").val();
+    var sendCodeType = true;
+    //时间重置
+    function numAdd() {
+        $('.postCode').hide();
+        $('.phoneNum').show();
+        function loadTime() {
+            var countdown = $('.phoneNum span').html();
+            if (countdown == 0) {
+                $('.phoneNum').hide();
+                $('.phoneNum span').html(120);
+                $('.postCode').show();
+                sendCodeType = true;
+                return;
+            }
+            countdown--;
+            $('.phoneNum span').html(countdown);
+            setTimeout(function () {
+                loadTime()
+            }, 1000)
+        }
+
+        loadTime();
+    }
+
+    function numAdd2() {
+        $('.postCode2').hide();
+        $('.phoneNum2').show();
+        function loadTime2() {
+            var countdown = $('.phoneNum2 span').html();
+            if (countdown == 0) {
+                $('.phoneNum2').hide();
+                $('.phoneNum2 span').html(120);
+                $('.postCode2').show();
+                sendCodeType = true;
+                return;
+            }
+            countdown--;
+            $('.phoneNum2 span').html(countdown);
+            setTimeout(function () {
+                loadTime2()
+            }, 1000)
+        }
+
+        loadTime2();
+    }
+
+    $("#sendCode").on("click", function () {
+        var phone = $("#phoneNum").val();
+        var reg = /^0?(13[0-9]|15[012356789]|17[013678]|18[0-9]|14[57])[0-9]{8}$/;
+        //前端验证手机号是否真实
+        if (reg.test(phone) && phone == $("#temp_mobile").val() && sendCodeType == true) {
+            sendCodeType = false;
+            dataInit.ajax({
+                api: [[${apiPath.hasPhone}]],
+                params: {"phone": phone},
+                fn: function (data) {
+                    if (data.data == 1) {
+                        dataInit.ajax({
+                            api: [[${apiPath.sendSmsCode}]],
+                            params: {
+                                phone: phone
+                            },
+                            fn: function (data) {
+                                if (data.code != 0) {
+                                    rongDialog.init({
+                                        ico: 2,
+                                        type: 1,
+                                        desc: data.msg || "验证码异常",
+                                        nextFn: function () {
+                                            $("#code").val("");
+                                            $("#code").onfocus;
+                                            sendCodeType = true;
+                                        }
+                                    });
+                                } else {
+                                    $("#temp_pid").val(data.temp_pid);
+                                    numAdd();
+                                }
+                            }
+                        })
+                    } else {
+                        rongDialog.init({
+                            ico: 2,
+                            type: 1,
+                            desc: data.msg || "手机号异常",
+                            nextFn:function(){
+                                sendCodeType = true;
+                            }
+                        });
+                    }
+                }
+            });
+        }else{
+            rongDialog.init({
+                ico: 2,
+                type: 1,
+                desc: "请输入该账号绑定的手机号"
+            });
+        }
+    });
+    $("#sendCode2").on("click", function () {
+        var phone = $("#phoneNum2").val();
+        var reg = /^0?(13[0-9]|15[012356789]|17[013678]|18[0-9]|14[57])[0-9]{8}$/;
+        //前端验证手机号是否真实
+        if (reg.test(phone) &&  sendCodeType == true) {
+            sendCodeType = false;
+            dataInit.ajax({
+                api: [[${apiPath.hasPhone}]],
+                params: {"phone": phone},
+                fn: function (data) {
+                    //console.log(data);
+                    if (data.data == 1) {
+                        rongDialog.init({
+                            ico: 2,
+                            type: 1,
+                            desc: "手机号已存在",
+                            nextFn:function(){
+                                sendCodeType = true;
+                            }
+                        });
+                    } else { //手机号验证能过发送短信息
+                        dataInit.ajax({
+                            api: [[${apiPath.sendSmsCode}]],
+                            params: {
+                                phone: phone
+                            },
+                            fn: function (data) {
+                                //console.log(data);
+                                if (data.code != 0) {
+                                    rongDialog.init({
+                                        ico: 2,
+                                        type: 1,
+                                        desc: data.msg || "验证码异常",
+                                        nextFn: function () {
+                                            $("#code").val("");
+                                            $("#code").onfocus;
+                                        }
+                                    });
+                                } else {
+                                    $("#temp_pid").val(data.temp_pid);
+                                    numAdd2();
+                                }
+                            }
+                        })
+                    }
+                }
+            })
+        }
+    })
+    //手机号格式
+    $.validator.addMethod("phoneType", function (value) {
+        var reg = /^0?(13[0-9]|15[012356789]|17[013678]|18[0-9]|14[57])[0-9]{8}$/;
+        return reg.test(value);
+    }, '请输入正确的手机号码');
+    $(document).ready(function () {
+        $("#phoneForm").validate({
+            errorElement: "em",
+            rules: {
+                phoneNum: "phoneType"
+            },
+            messages: {
+                phoneNum: {
+                    required: "请输入您的手机号码"
+                },
+                code: {
+                    required: "手机验证码不能为空"
+                }
+            },
+            submitHandler: function () {
+                var phone = $("#phoneNum").val();
+                //验证验证码是否通过
+                dataInit.ajax({
+                    api: [[${apiPath.hasCode}]],
+                    params: {
+                        temp_pid: $("#temp_pid").val(),
+                        phone: phone,
+                        code: $("#code").val()
+                    },
+                    fn: function (data) {
+                        //验证通过即可修改密码
+                        if (data.code == 0 && data.data == 1) {
+                            $('#phoneForm').hide();
+                            $('#phoneForm2').show();
+                            sendCodeType = true;
+                        } else {
+                            rongDialog.init({
+                                ico: 2,
+                                type: 1,
+                                desc: "验证码错误"
+                            });
+                        }
+                    }
+                })
+            }
+        });
+
+        $("#phoneForm2").validate({
+            debug: true,
+            errorElement: "em",
+            rules: {
+                phoneNum2: "phoneType"
+            },
+            messages: {
+                phoneNum2: {
+                    required: "请输入您的手机号码"
+                },
+                code2: {
+                    required: "手机验证码不能为空"
+                }
+            },
+            submitHandler: function () {
+                var phone = $("#phoneNum2").val();
+                //验证验证码是否通过
+                dataInit.ajax({
+                    api: [[${apiPath.relationMobile}]],
+                    params: {
+                        userId: userId,
+                        phone: phone,
+                        code: $("#code2").val()
+                    },
+                    fn: function (data) {
+                        if (data.code == 0) {
+                            rongDialog.init({
+                                ico: 1,
+                                type: 1,
+                                desc: "绑定成功，重新登录",
+                                nextFn: function () {
+                                    window.location.href = [[${basePath}]] + "/doLogout";
+                                }
+                            });
+                        } else {
+                            rongDialog.init({
+                                ico: 2,
+                                type: 1,
+                                desc: data.msg || "手机绑定异常"
+                            });
+                        }
+                    }
+                });
+
+
+            }
+        });
+    });
+
+    $(".ok-next").on("click", function () {
+        $(".submit").click();
+    });
+
+    $(".ok-next2").on("click", function () {
+        $(".submit2").click();
+    })
+</script>
+</body>
+</html>

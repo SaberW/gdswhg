@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/news/news.css'">
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/public/list.css'">
+<div th:include="guangdong/public/leftBar :: copy"></div>
+<div id="page">
+    <div class="mui-content">
+        <div class="niubility-search">
+            <div class="niubility-search-dd">
+                <input id="title" placeholder="搜索你感兴趣的资讯" type="text">
+                <span onclick="niubilitySearch();">搜索</span>
+            </div>
+        </div>
+        <!--通知公告-->
+        <div class="inform">
+            <!--滚动栏-->
+            <div class="inform-nav-bar">
+                <div class="mui-scroll" id="_nav_bar">
+                    <!--<a class="mui-control-item">
+                        通知公告
+                    </a>
+                    <a class="mui-control-item">
+                        馆务公开
+                    </a>
+                    <a class="mui-control-item">
+                        新闻动态
+                    </a>
+                    <a class="mui-control-item">
+                        培训驿站
+                    </a>
+                    <a class="mui-control-item">
+                        娱乐消息
+                    </a>
+                    <a class="mui-control-item">
+                        科技发展
+                    </a>
+                    <a class="mui-control-item">
+                        热点聚焦
+                    </a>-->
+                </div>
+            </div>
+            <!--滚动栏-->
+            <div id="model-list-panel" class="mui-scroll-wrapper" style="top:96px">
+                <div class="mui-scroll">
+                    <div class="news-list">
+                        <ul id="model-list"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--通知公告-->
+        <input type="hidden" value="" id="navId">
+    </div>
+</div>
+<script type="text/javascript" th:inline="javascript">
+    var keywords = dataInit.getCache('sgkeywords');
+    dataInit.resetCache('sgkeywords');
+    //html加载完执行
+    $(document).ready(function () {
+        dataInit.ajax({
+            api: [[${apiPath.infcolumn}]],
+            params: {},
+            fn:showInfcolumn
+        })
+        modelData();
+        mui('#_nav_bar').on("tap",'a',function (e) {
+            var id = jQuery(this).attr('data-id');
+            jQuery("#navId").val(id);
+            jQuery("#model-list").html('');
+            modelData();
+        })
+    })
+    function modelData(page, size) {
+        var page = page || 1;
+        var size = size || 10;
+        //ajax请求
+        dataInit.ajax({
+            api: [[${apiPath.infolist}]],
+            params: {
+                index: page,
+                size: size,
+                searcheKey: keywords?keywords:'', //市
+                city: $("#city").val(), //市
+                area: $("#area").val(), //区
+                deptid: $("#deptid").val(), //服务站
+                province: $("#province").val(), //省
+                cultid:$.cookie("cultid"),
+                type:$("#navId").val()
+            },
+            //
+            forceUpdate: false,
+            fn: function (data) {
+                var params = {
+                    page: page,
+                    size: size,
+                    total: data.total
+                }
+                dataInit.htmlAdd(page, showModelHtml(data));
+                dataInit.pullUp(params, modelData);
+            }
+        })
+    }
+    function showModelHtml(data) {
+        var html = '';
+        if(data && data.code == 0 && data.rows.length>0){
+            for(var i =0; i< data.rows.length;i++){
+                var model = data.rows[i];
+                var imgHtml ='';
+                if(model.clnfbigpic){
+                    var img = data.imgPath + dataInit.getSmallImage(model.clnfbigpic);
+                    imgHtml = '    <div class="img">'+
+                        '        <img class="lazy" src="'+img+'" alt="'+model.clnftltle+'">'+
+                        '    </div>';
+                }
+                var clnfsource = '';
+                if(model.clnfsource){
+                    clnfsource = '<div class="source">来源：'+model.clnfsource+'</div>';
+                }
+                var time = moment(model.clnfcrttime).format("YYYY-MM-DD");
+                html+='<li>'+imgHtml+
+                    '    <div class="info">'+
+                    '        <h2>'+model.clnftltle+'</h2>'+
+                    '        <div class="abstract">'+clnfsource+
+                    '            <div class="time">'+time+'</div>'+
+                    '        </div>'+
+                    '    </div>'+
+                    '    <a href="detail?id='+model.clnfid+'"></a>'+
+                    '</li>';
+            }
+        }else {
+            html = "<div class='newbility-no-msg'></div>";
+        }
+        return html;
+    }
+    function showInfcolumn(data) {
+        if(data && data.code ==0){
+            $("#_nav_bar").html('');
+            var html = '';
+            html+='<a class="mui-control-item mui-active" href="javascript:void(0)" data-id="">全部</a>';
+            for (var i in data.rows){
+                var model =data.rows[i];
+                html += '<a class="mui-control-item" href="javascript:void(0)" data-id="'+model.id+'">'+model.coltitle+'</a>';
+            }
+            $('.inform-nav-bar').attr('class','inform-nav-bar mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted')
+            $("#_nav_bar").append(html);
+            mui('.inform-nav-bar').scroll();
+        }
+    }
+
+    function niubilitySearch() {
+        mui('#model-list-panel').pullRefresh().scrollTo(0,0,0);
+        mui('#model-list-panel').pullRefresh().refresh(true);
+        keywords = $.trim($("#title").val());
+        $("#model-list").html("");
+        modelData();
+    }
+</script>
+</body>
+</html>
+

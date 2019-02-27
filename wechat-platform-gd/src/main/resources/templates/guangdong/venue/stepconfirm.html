@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/venue/stepconfirm.css'" >
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/public/detail.css'" >
+<div th:include="guangdong/public/leftBar :: copy"></div>
+<div id="page">
+    <div class="mui-content" id="modelHtml">
+
+    </div>
+    <nav class="mui-bar mui-bar-tab">
+        <div class="mui-tab-item"><a class="goNext" href="javascript:void(0)">确认订单</a></div>
+    </nav>
+</div>
+<script type="text/javascript" th:inline="javascript">
+    var userid = $("#temp_userId").val();
+    var params = dataInit.getCache("venue-submit");
+
+    $().ready(function(){
+        pageInit();
+        mui('.mui-tab-item').on('tap','.goNext',function(){
+            confirmOrder();
+        })
+    })
+    function pageInit(){
+        html = '<div class="mui-card no-corner">\
+            <div class="mui-card-header wrapper-par">\
+            <div class="left-wrapper">\
+            <img class="lazy"  width="120" height="80" src="'+params.img+'">\
+            </div>\
+            <div class="right-wrapper">\
+            <div class="page-title">'+params.venTitle+'</div>\
+            </div>\
+            </div>\
+            </div>\
+            <div class="mui-card no-corner label-list">\
+            <ul class="mui-table-view mui-table-view-chevron">\
+            <li class="mui-table-view-cell mui-media">\
+            <a href="javascript:void(0)">\
+            <div class="mui-media-body label">活动室名称</div>\
+            <div id="title" class="detail">'+params.roomTitle+'</div>\
+            </a>\
+            </li>\
+            <li class="mui-table-view-cell mui-media">\
+            <a href="javascript:void(0)">\
+            <div class="mui-media-body label">活动室地址</div>\
+            <div class="detail">'+params.roomAdr+'</div>\
+            </a>\
+            </li>\
+            <li class="mui-table-view-cell mui-media">\
+            <a href="javascript:void(0)">\
+            <div class="mui-media-body label">预订时间</div>\
+            <div class="detail">\
+            '+params.timeday+'</div>\
+            </a>\
+            </li>\
+            <li class="mui-table-view-cell mui-media">\
+            <a href="javascript:void(0)">\
+            <div class="mui-media-body label">预订场次</div>\
+            <div class="detail">\
+            '+params.timestart+'\
+        </div>\
+        </a>\
+        </li>\
+        <li class="mui-table-view-cell mui-media">\
+            <a href="javascript:void(0)">\
+            <div class="mui-media-body label">联系人</div>\
+            <div class="detail">'+params.username+'</div>\
+            </a>\
+            </li>\
+            <li class="mui-table-view-cell mui-media">\
+            <a href="javascript:void(0)">\
+            <div class="mui-media-body label">预订电话</div>\
+            <div class="detail">'+params.phone+'</div>\
+            </a>\
+            </li>\
+            </ul>\
+            </div>';
+        $('#modelHtml').html(html);
+    }
+
+    //验证是否可预订
+    var isoneapply = true;
+    function confirmOrder() {
+        if (isoneapply){
+            isoneapply = false;
+            dataInit.ajax({
+                api: [[${apiPath.venueOrderCheck}]],
+                fn: nextPage,
+                params: {
+                    roomTimeId: params.roomtimeid,
+                    userId:params.userId
+                }
+            });
+        }
+    }
+    //开始下单
+    function nextPage(data) {
+        if(data.code == 0 ){
+            var temp_params = {
+                roomTimeId: params.roomtimeid,
+                userId:params.userId,
+                username:params.username,
+                phone:params.phone,
+                purpose:params.purpose
+            }
+            dataInit.ajax({
+                api: [[${apiPath.orderApply}]],
+                params: temp_params,
+                fn: function (data) {
+                    if(data.code == 0){
+                        var completeMsg = {
+                            'modelName':'返回场馆列表',
+                            'url' : 'venue/list',
+                            'title': '恭喜您，您已申请预订'+params.roomTitle+'，请等待工作人员的确认！',
+                            'msg': '如需退订，请至“个人中心-我的场馆”进行退订'
+                        }
+                        dataInit.setCache('completeMsg', completeMsg);
+                        window.location.href = '../complete';
+
+                    }else {
+                        //flag = true;
+                        isoneapply = true;
+                        mui.toast('预订失败');
+                    }
+                },
+            });
+        }else {
+            isoneapply = true;
+            mui.toast(data.msg || '预订失败');
+        }
+    }
+</script>
+</body>
+</html>

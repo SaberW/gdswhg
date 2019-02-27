@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link th:href="${basePath}+'/assets/style/public/detail.css'" rel="stylesheet">
+<div class="wrapper clearfix">
+    <div class="content">
+        <!--公共主头部开始-->
+        <div id="header" th:include="guangdong/public/header :: copy"></div>
+        <!--公共主头部结束-->
+        <!--主体开始-->
+        <div class="sys-crumbs">
+            <span><a href="${basePath}+'/index'">首页</a></span>
+            <i class="icon iconfont icon-enter"></i>
+            <span><a th:href="${basePath}+'/ysrc/index'">艺术人才</a></span>
+            <i class="icon iconfont icon-enter"></i>
+            <span><a th:href="${basePath}+'/ysrc/list'">人才列表</a></span>
+            <i class="icon iconfont icon-enter"></i>
+            <span class="active" id="title" name="name"></span>
+        </div>
+        <div class="train-main-info" style="margin-bottom:0px;" id="p_0">
+            <div class="face-cont">
+                <img id="imgPath">
+            </div>
+            <h1 id="teacherName" name="name">韩美美</h1>
+            <div class="teacher-info">
+                <span>地区：<em id="__area" name="area">长沙</em></span>
+                <span>专长：<em id="teachertype" name="feattype">唱歌、舞蹈</em></span>
+                <!--<span><i class="icont iconfont icon-collection"></i>收藏：<em>100</em></span>-->
+                <div class="fav-vote-cont clearfix" style="margin-left:55px; display: inline-block; vertical-align: middle">
+                    <div class="sys-vote" title="点赞" style="padding-left:0px;" id="good">
+                        <i class="icon iconfont icon-praise icon-praise_fill"></i>
+                        <span style="padding:0px 5px; margin-right:15px">0</span>
+                    </div>
+                    <div class="sys-fav" title="收藏" style="padding-left:0px;" id="collection">
+                        <i class="icon iconfont icon-collection icon-collection_fill" ></i>
+                        <span style="padding:0px 5px;"></span>
+                    </div>
+                </div>
+                <!--点赞和收藏封装的代码start-->
+                <div th:include="guangdong/public/fav :: copy"></div>
+                <div th:include="guangdong/public/voteup :: copy"></div>
+                <!--temp_type 的 值需和 WJQ 对接-->
+                <input type="hidden" id="temp_type" value="52">
+                <input type="hidden" id="commType" value="0">
+                <input type="hidden" id="cmtitle">
+                <!--点赞和收藏封装的代码end-->
+            </div>
+        </div>
+        <div class="info-nav">
+            <ul>
+                <li><a href="#p_1">个人简介</a></li>
+                <li><a href="#p_2">工作经历</a></li>
+                <li><a href="#p_3">获奖情况</a></li>
+                <li><a href="#p_4">获奖作品</a></li>
+                <li><a href="#p_5">艺术作品</a></li>
+            </ul>
+        </div>
+        <div class="detail-cont">
+            <div class="lt-tt" id="p_1">个人简介</div>
+            <div class="info-cont" name="summary">
+                <!--作为地球上最为重要的粮食作物之一，水稻的产量直接关系到地球近一半人口的温饱，不断增加水稻产量一直是很多农业科学家毕生的追求。日前，中国科学家发现水稻的穗发育基因（FRIZZY PANICLE，FZP）在自然界中发生变异，可显著增加水稻每穗的粒数和轻微降低每粒的粒重，使水稻产量增加15%。-->
+            </div>
+            <div class="lt-tt" id="p_2">工作经历</div>
+            <div class="info-cont val-type-html" name="live">
+                <!--2010年2月-至今&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;粤海艺术团团长<br>
+                2010年2月-至今&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;粤海艺术团团长<br>
+                2010年2月-至今&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;粤海艺术团团长<br>
+                2010年2月-至今&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;粤海艺术团团长<br>
+                2010年2月-至今&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;粤海艺术团团长<br>-->
+            </div>
+            <div class="lt-tt" id="p_3">获奖情况</div>
+            <div class="info-cont val-type-html" name="prize">
+                <!--2010年2月-至今&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;奥斯卡影帝小金人<br>
+                2010年2月-至今&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;奥斯卡影帝小金人<br>
+                2010年2月-至今&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;奥斯卡影帝小金人<br>
+                2010年2月-至今&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;奥斯卡影帝小金人<br>
+                2010年2月-至今&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;奥斯卡影帝小金人<br>-->
+            </div>
+            <div class="lt-tt" id="p_4">获奖作品</div>
+            <div class="info-cont-works-1">
+                <ul class="clearfix" id="hjzpList">
+                    <!--<li onclick="rongDialog.init({
+                        ico : 1,
+                        type : 6,
+                        imgUrl : '../../../assets/img/img_demo/q1.jpg',
+                        title : '获奖作品'
+                        });">
+                        <div class="title">
+                            <p>获奖作品</p>
+                            <p>时间：<span>2017-09-30</span></p>
+                            <p>描述：<span>升也明灯，庆中秋佳节，喜迎国庆喜迎国庆</span></p>
+                        </div>
+                        <img th:src="${basePath}+'/assets/img/img_demo/q1.jpg'" alt="">
+                    </li>
+                    <li onclick="rongDialog.init({
+                        ico : 1,
+                        type : 6,
+                        imgUrl : '../../../assets/img/img_demo/q2.jpg',
+                        title : '获奖作品'
+                        });">
+                        <div class="title">
+                            <p>获奖作品</p>
+                            <p>时间：<span>2017-09-30</span></p>
+                            <p>描述：<span>升也明灯，庆中秋佳节，喜迎国庆喜迎国庆</span></p>
+                        </div>
+                        <img th:src="${basePath}+'/assets/img/img_demo/q2.jpg'" alt="">
+                    </li>
+                    <li onclick="rongDialog.init({
+                        ico : 1,
+                        type : 6,
+                        imgUrl : '../../../assets/img/img_demo/q3.jpg',
+                        title : '获奖作品'
+                        });">
+                        <div class="title">
+                            <p>获奖作品</p>
+                            <p>时间：<span>2017-09-30</span></p>
+                            <p>描述：<span>升也明灯，庆中秋佳节，喜迎国庆喜迎国庆</span></p>
+                        </div>
+                        <img th:src="${basePath}+'/assets/img/img_demo/q3.jpg'" alt="">
+                    </li>
+                    <li onclick="rongDialog.init({
+                        ico : 1,
+                        type : 6,
+                        imgUrl : '../../../assets/img/img_demo/q4.jpg',
+                        title : '获奖作品'
+                        });">
+                        <div class="title">
+                            <p>获奖作品</p>
+                            <p>时间：<span>2017-09-30</span></p>
+                            <p>描述：<span>升也明灯，庆中秋佳节，喜迎国庆喜迎国庆</span></p>
+                        </div>
+                        <img th:src="${basePath}+'/assets/img/img_demo/q4.jpg'" alt="">
+                    </li>-->
+                </ul>
+            </div>
+            <div class="info-cont-works-1">
+                <div class="lt-tt" id="p_5">艺术作品</div>
+                <ul class="clearfix" id="zpList">
+                    <!--<li onclick="rongDialog.init({
+                        ico : 1,
+                        type : 6,
+                        imgUrl : '../../../assets/img/img_demo/q1.jpg',
+                        title : '获奖作品'
+                        });">
+                        <div class="title">
+                            <p>获奖作品</p>
+                            <p>时间：<span>2017-09-30</span></p>
+                            <p>描述：<span>升也明灯，庆中秋佳节，喜迎国庆喜迎国庆</span></p>
+                        </div>
+                        <img th:src="${basePath}+'/assets/img/img_demo/q1.jpg'" alt="">
+                    </li>
+                    <li onclick="rongDialog.init({
+                        ico : 1,
+                        type : 6,
+                        imgUrl : '../../../assets/img/img_demo/q2.jpg',
+                        title : '获奖作品'
+                        });">
+                        <div class="title">
+                            <p>获奖作品</p>
+                            <p>时间：<span>2017-09-30</span></p>
+                            <p>描述：<span>升也明灯，庆中秋佳节，喜迎国庆喜迎国庆</span></p>
+                        </div>
+                        <img th:src="${basePath}+'/assets/img/img_demo/q2.jpg'" alt="">
+                    </li>
+                    <li onclick="rongDialog.init({
+                        ico : 1,
+                        type : 6,
+                        imgUrl : '../../../assets/img/img_demo/q3.jpg',
+                        title : '获奖作品'
+                        });">
+                        <div class="title">
+                            <p>获奖作品</p>
+                            <p>时间：<span>2017-09-30</span></p>
+                            <p>描述：<span>升也明灯，庆中秋佳节，喜迎国庆喜迎国庆</span></p>
+                        </div>
+                        <img th:src="${basePath}+'/assets/img/img_demo/q3.jpg'" alt="">
+                    </li>
+                    <li onclick="rongDialog.init({
+                        ico : 1,
+                        type : 6,
+                        imgUrl : '../../../assets/img/img_demo/q4.jpg',
+                        title : '获奖作品'
+                        });">
+                        <div class="title">
+                            <p>获奖作品</p>
+                            <p>时间：<span>2017-09-30</span></p>
+                            <p>描述：<span>升也明灯，庆中秋佳节，喜迎国庆喜迎国庆</span></p>
+                        </div>
+                        <img th:src="${basePath}+'/assets/img/img_demo/q4.jpg'" alt="">
+                    </li>-->
+                </ul>
+            </div>
+        </div>
+        <!--主体结束-->
+    </div>
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong/public/footer :: copy"></div>
+<!--底部结束-->
+<script type="text/javascript" th:inline="javascript">
+    $().ready(function(){
+        dataInit.anchor();
+    });
+
+
+    $(function(){
+        PageTool.init();
+    });
+
+    var PageTool = {
+        bashPath: [[${basePath}]],
+        id: [[${param.id[0]}]],
+
+        artistInfoURL: [[${apiPath.artistInfo}]],
+        massResourceListUrl: [[${apiPath.massResourceList}]],
+
+        init: function () {
+            var me = this;
+            $.post(me.artistInfoURL, {id: me.id}, function(data){
+                me.showInfo(data);
+            }, "JSON");
+
+            me.loadResours("#hjzpList", 1);
+            me.loadResours("#zpList", 0);
+        },
+
+        showInfo: function (data) {
+            $("[name]").text('');
+
+            if (!data || !data.data) {
+                return;
+            }
+            var imgPath = data.imgPath;
+            var info = data.data;
+            //$("#imgPath").attr("src", imgPath+ dataInit.getSmallImage(info.imgurl));
+            $("#imgPath").attr("src", imgPath+ dataInit.getImage(info.imgurl, 300, 200));
+            $("[name]").each(function(){
+                var ent = $(this);
+                var name = ent.attr("name");
+                if (!name || name=='') {
+                    return true;
+                }
+                if (ent.hasClass("val-type-html")){
+                    ent.html(info[name]||'');
+                }else{
+                    ent.text(info[name]||'');
+                }
+            });
+            $("#cmtitle").val(info.name);
+        },
+
+
+        loadResours: function(el,isaward){
+            var me = this;
+            //加载作品列表
+            var params = {
+                page:1, pageSize:1000,
+                refid: me.id,
+                reftype: 52
+            };
+            if (isaward){
+                params.extisaward=1;
+            }
+
+            $.post(me.massResourceListUrl, params, function(data){
+                var rowsUl = $(el);
+                rowsUl.empty();
+
+                if (!data || !data.rows || data.rows.length==0) {
+                    rowsUl.append("<div class='public-no-message'></div>");
+                    return;
+                }
+                var rows = data.rows;
+
+                me.srcLiTemp = me.srcLiTemp || '<li >\
+                        <a href="javascript:void(0)">\
+                        <div class="title">\
+                            <p class="togger-isaward">获奖作品</p>\
+                            <p>时间：<span rowkey="crtdate"></span></p>\
+                            <p>名称：<span rowkey="name"></span></p>\
+                        </div>\
+                        <img  alt="">\
+                        </a>\
+                    </li>';
+
+                for (var i in rows){
+                    var row = rows[i];
+                    var rowsLi = $(me.srcLiTemp);
+
+                    if (isaward){
+                        rowsLi.find(".togger-isaward").text("获奖作品");
+                    }else{
+                        rowsLi.find(".togger-isaward").text("艺术作品");
+                    }
+
+                    row.crtdate = moment(row.crtdate).format("YYYY-MM-DD HH:mm:ss");
+
+                    rowsLi.find("[rowkey]").each(function(){
+                        var ent = $(this);
+                        var name = ent.attr("rowkey");
+                        if (!name || name=='') return true;
+                        var value = row[name] || '';
+                        ent.text(value);
+                    });
+
+                    var img='';
+                    switch (row.enttype){
+                        case "1": img = row.enturl;
+                            rowsLi.attr("onClick", "rongDialog.init({\
+                                            ico : 1,\
+                                            type : 6,\
+                                            imgUrl : '"+row.enturl+"',\
+                                            title : '"+ row.name +"'\
+                                        });" );
+
+                            break;
+                        case "2": img = (row.deourl && row.deourl!='') ? row.deourl : me.bashPath+"/assets/img/brand/brand-music.jpg";
+                            rowsLi.attr("onClick", "rongDialog.init({\
+                                            type : 5,\
+                                            vedioUrl : '"+row.enturl+"',\
+                                            vedioImg : '"+img+"',\
+                                            vedioTitle : '"+row.name+"',\
+                                            basePath : '"+me.bashPath+"'\
+                                        })" );
+
+                            break;
+                        case "3": img = me.bashPath+"/assets/img/brand/brand-music.jpg";
+                            rowsLi.attr("onClick", "rongDialog.init({\
+                                            type : 5,\
+                                            vedioUrl : '"+row.enturl+"',\
+                                            vedioImg : '"+me.bashPath+"/assets/img/brand/brand-music.jpg',\
+                                            vedioTitle : '"+row.name+"',\
+                                            basePath : '"+me.bashPath+"'\
+                                        })" );
+
+                            break;
+                        default: //img = me.bashPath+"/assets/img/public/file.png";
+                            img = me.bashPath + dataInit.getFileTypeIcon(row.enturl, '/assets/img/brand/xiazai.jpg');
+                            rowsLi.find("a").attr({
+                                target:"_blank",
+                                href: row.enturl
+                            });
+
+                    }
+                    rowsLi.find("img").attr("src", img);
+                    rowsUl.append(rowsLi);
+                }
+            }, "json");
+        }
+    }
+
+</script>
+</body>
+</html>

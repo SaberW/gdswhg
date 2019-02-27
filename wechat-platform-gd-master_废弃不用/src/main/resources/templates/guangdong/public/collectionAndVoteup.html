@@ -1,0 +1,272 @@
+<header th:fragment="copy" xmlns:th="http://www.w3.org/1999/xhtml">
+    <div class="zan" id="good">
+        <i class="iconfont icon-praise icon-praise_fill"></i>点赞 (<span>0</span>)
+    </div>
+    <div class="collection" id="collection">
+        <i class="iconfont icon-collection icon-collection_fill"></i>收藏 (<span>0</span>)
+    </div>
+    <script type="text/javascript" th:inline="javascript">
+        var fav = {
+            add: function (option) {
+                var m = this;
+                if (option.userId == null) {
+                    mui.toast('请登录后操作');
+//                    setTimeout(function(){
+//                        dataInit.setCache("toUrl",dataInit.encodeUrl());
+//                        window.location.href = [[${basePath}]]+'/login';
+//                    },2000)
+                } else {
+                    var cmurl = window.location.href;
+                    var FavbaseUrl = option.baseUrl;
+                    cmurl = cmurl.replace(new RegExp(FavbaseUrl, 'g'), '');
+                    var params = {
+                        cmuid:option.userId,
+                        cmrefid:option.itemId,
+                        toproject: option.toproject,
+                        cmopttyp:$("#commType").val(),
+                        cmurl:cmurl,
+                        cmreftyp:option.type //活动1 场馆2 活动室3
+                    }
+                    dataInit.ajax({
+                        api: option.api,  //api1 添加  api2 删除 api3 查询
+                        params: params,
+                        fn: function (data) {
+                            if(data.code == "0"){
+                                mui.toast('收藏成功');
+                                m.icon_fly($("#collection").find('i'));
+                                $("#commType").val('1');
+                                $("#collection").find('i').removeClass("icon-collection");
+                            }else{
+                                mui.toast('收藏异常');
+                            }
+                        }
+                    })
+                }
+            },
+            del:function (option) {
+                var m = this;
+                if (option.userId == null) {
+                    mui.toast('请登录后操作');
+                } else {
+                    var params = {
+                        cmuid:option.userId,
+                        cmrefid:option.itemId,
+                        cmopttyp:$("#commType").val(),
+                        cmreftyp:option.type //活动1 场馆2 活动室3
+                    }
+                    dataInit.ajax({
+                        api: option.api,
+                        params: params,
+                        fn: function (data) {
+                            if(data.code == 0){
+                                mui.toast('收藏已取消');
+                                $("#commType").val('0');
+                                $("#collection").find('i').addClass("icon-collection");
+                            }else{
+                                mui.toast('收藏异常');
+                            }
+                        }
+                    })
+                }
+            },
+            init:function(option){
+                var params = {
+                    userId : option.userId,
+                    cmrefid : option.cmrefid,
+                    cmreftyp : option.cmreftyp //活动4 场馆2 活动室3
+                }
+                dataInit.ajax({
+                    api:option.api,
+                    params:params,
+                    fn:function(data){
+                        $("#commType").val(data.data.success);
+                        //$("#collection").find("span").html(data.data.scNum);
+                        if(option.userId && data.data.success == '1'){
+                            $("#collection").find('i').removeClass("icon-collection");
+                        }
+                        $("#collection").find('i').next("span").text(data.data.scNum);
+                    }
+                })
+            },
+            icon_fly:function(dom){
+                dom.animate({
+                    top:-10
+                },120);
+                dom.animate({
+                    top:2
+                },120);
+                dom.animate({
+                    top:-5
+                },100);
+                dom.animate({
+                    top:2
+                },100);
+                dom.animate({
+                    top:-1
+                },50);
+                dom.animate({
+                    top:2
+                },50);
+                dom.animate({
+                    top:1
+                },10);
+                dom.animate({
+                    top:2
+                },10);
+            }
+        }
+        var voteup = {
+            add: function (option) {
+                var m = this;
+                if (option.userId == null) {
+                    mui.toast('请登录后操作');
+                } else if (option.cmrefid == null) {
+                    mui.toast('参数错误');
+                } else {
+                    var userId = option.userId;
+                    var refid = option.cmrefid;
+                    var reftyp = option.cmreftyp;
+                    dataInit.ajax({
+                        api: option.api2,
+                        params: {
+                            userId: userId,
+                            cmrefid: refid,
+                            cmreftyp: reftyp
+                        },
+                        fn: function (data) {
+                            if(data.data.success == "0"){
+                                m.init({
+                                    api1 : option.api1,
+                                    userId : userId,
+                                    dom:"#good",
+                                    cmrefid: refid,
+                                    cmreftyp: reftyp
+                                })
+                                m.icon_fly($(option.dom).find('i'));
+                                mui.toast('+1');
+                            }else{
+                                mui.toast('点赞异常');
+                            }
+                        }
+                    })
+                }
+            },
+            init:function(option){
+                var m = this;
+                var reftyp = option.cmreftyp;
+                var refid = option.cmrefid;
+                var userId = option.userId;
+                // $(option.dom).next("span").html("0");
+                dataInit.ajax({
+                    api:option.api1,
+                    params:{
+                        userId:userId,
+                        cmreftyp:reftyp,
+                        cmrefid:refid
+                    },
+                    fn:function(data){
+                        if(data.data.success != "2"){
+                            if(data.data.success == "1"){
+                                $(option.dom).find('i').removeClass("icon-praise");
+                            }
+                            $(option.dom).find('i').next("span").html(data.data.num);
+                        }else{
+                            mui.toast('点赞数据异常');
+                        }
+                    }
+                })
+            },
+            icon_fly:function(dom){
+                dom.animate({
+                    top:-10
+                },120);
+                dom.animate({
+                    top:2
+                },120);
+                dom.animate({
+                    top:-5
+                },100);
+                dom.animate({
+                    top:2
+                },100);
+                dom.animate({
+                    top:-1
+                },50);
+                dom.animate({
+                    top:2
+                },50);
+                dom.animate({
+                    top:1
+                },10);
+                dom.animate({
+                    top:2
+                },10);
+            }
+        }
+        $(document).ready(function () {
+            var id = dataInit.getUrlParam("id");
+            var userId = $("#temp_userId").val();
+            var type = $("#temp_type").val();
+            var baseUrl = [[${basePath}]];
+            favInit();
+            function favInit(){
+                fav.init({
+                    api: [[${apiPath.initFav}]],
+                    userId: userId,
+                    cmrefid: id,
+                    cmreftyp: $("#temp_type").val()
+                });
+            }
+            mui('body').on('tap','#collection', function () {
+                var commType  = $("#commType").val();
+                var isDel = $("#collection").find('i').hasClass("icon-collection");
+                //if(commType == "1"){
+                if(!isDel){
+                    fav.del({
+                        api: [[${apiPath.delListFav}]],
+                        userId: userId,
+                        itemId: id,
+                        type: $("#temp_type").val()
+                    });
+                    //setTimeout(function(){
+                        favInit()
+                    //},500)
+                }else{
+                    fav.add({
+                        api: [[${apiPath.addFav}]],
+                        userId: userId,
+                        itemId: id,
+                        operateType: 0,
+                        toproject: $("#toproject").val(),
+                        baseUrl: baseUrl,
+                        type: $("#temp_type").val(), //活动1 场馆2 活动室3
+                        refurl: window.location.href
+                    });
+                    favInit()
+                }
+            });
+
+            //点赞
+            voteup.init({
+                api1 : [[${apiPath.voteCount}]],
+                api2 : [[${apiPath.voteup}]],
+                cmreftyp : type,
+                cmrefid: id,
+                userId : userId,
+                dom:"#good"
+            });
+            mui('body').on("tap",'#good',function(){
+                if($(this).find('i').hasClass("icon-praise")){
+                    voteup.add({
+                        cmrefid  : id,
+                        userId : userId,
+                        cmreftyp  : type,
+                        api1 : [[${apiPath.voteCount}]],
+                        api2 : [[${apiPath.voteup}]],
+                        dom:"#good"
+                    });
+                }
+            })
+        });
+    </script>
+</header>

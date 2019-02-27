@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link th:href="${basePath}+'/assets/style/regist/regist.css'" rel="stylesheet">
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/rong.validate.js'"></script>
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/rong.message.js'"></script>
+<div class="regist-logo"><a href="../indexminor.html"></a></div>
+<ul class="crumbs crumbs-2nd clearfix">
+    <li class="step-1">1. 基本资料<em class="arrow"></em></li>
+    <li class="step-2">2. 完善资料<em class="arrow"></em></li>
+    <li class="step-3 last">3. 注册成功</li>
+</ul>
+<div class="main">
+    <form action="" method="post" id="regist">
+        <input type="hidden" id="temp_id" name="id" th:value="${temp_id}">
+        <div class="main-cont">
+            <div class="other-reg"></div>
+            <dl class="clearfix">
+                <dt class="float-left">昵称</dt>
+                <dd class="float-left">
+                    <input class="in-txt" placeholder="添加个性昵称" maxlength="20" id="nickname" name="nickname">
+                    <em></em>
+                </dd>
+            </dl>
+            <dl class="clearfix">
+                <dt class="float-left">性别</dt>
+                <dd class="float-left">
+                    <div class="radio radio-success">
+                        <input type="radio" value="1" name="sex" checked id="r1">
+                        <label for="r1">男</label>
+                        <input type="radio" value="0" name="sex" id="r2">
+                        <label for="r2">女</label>
+                    </div>
+                </dd>
+            </dl>
+            <dl class="clearfix">
+                <dt class="float-left">职业</dt>
+                <dd class="float-left">
+                    <div class="box float-left">
+                        <div class="rong-select">
+                            <ul>
+                                <li opt-val="其它">其它</li>
+                                <li opt-val="政府机关">政府机关</li>
+                                <li opt-val="互联网">互联网</li>
+                                <li opt-val="电子商务">电子商务</li>
+                                <li opt-val="信息传媒">信息传媒</li>
+                                <li opt-val="通信">通信</li>
+                                <li opt-val="金融">金融</li>
+                                <li opt-val="学生">学生</li>
+                                <li opt-val="其它">其它</li>
+                            </ul>
+                        </div>
+                        <script type="text/javascript">
+                            var ul_h = $('.rong-select').height();
+                            var m = $('.rong-select')
+                            m.toggle(function () {
+                                m.children("ul").css({
+                                    height: "auto"
+                                });
+                            }, function () {
+                                m.children("ul").css({
+                                    height: ul_h
+                                });
+                            });
+                            $('.rong-select ul li').on("click", function () {
+                                var opt_val = $(this).attr("opt-val");
+                                m.find("ul li:first").attr("opt-val", opt_val);
+                                m.find("ul li:first").html(opt_val);
+                                $("#job").val(opt_val);
+                            })
+                        </script>
+                        <input type="hidden" name="job" id="job">
+                    </div>
+                    <em></em>
+                </dd>
+            </dl>
+            <!--<dl class="clearfix">
+                <dt class="float-left">出生日期</dt>
+                <dd class="float-left">
+                    <div class="box float-left">
+                        <input class="in-txt dateChange" placeholder="请选择" id="dateCont" name="birthday" required>
+                    </div>
+                    <em></em>
+                </dd>
+                <script type="text/javascript">
+                    $('.dateChange').on('click',
+                        function () {
+                            laydate({
+                                elem: '#dateCont'
+                            });
+                        })
+                </script>
+            </dl>
+            <dl class="clearfix">
+                <dt class="float-left">QQ号</dt>
+                <dd class="float-left">
+                    <input class="in-txt" type="txt"  name="qq" id="qq" placeholder="输入QQ号码" maxlength="16">
+                    <em></em>
+                </dd>
+            </dl>
+            <dl class="clearfix">
+                <dt class="float-left">微信号</dt>
+                <dd class="float-left">
+                    <input class="in-txt" type="txt" name="wx" id="wx" placeholder="输入微信号" maxlength="25">
+                    <em></em>
+                </dd>
+            </dl>-->
+            <dl class="clearfix">
+                <dt class="float-left">&nbsp;</dt>
+                <dd class="float-left">
+                    <a href="javascript:void(0);">
+                        <div class="goNext float-left">下一步</div>
+                    </a>
+                </dd>
+            </dl>
+        </div>
+    </form>
+</div>
+<div class="mask none"></div>
+<!-- core public JavaScript -->
+<script th:src="${basePath}+'/assets/js/plugins/laydate.dev.min.js'"></script>
+<script type="text/javascript" th:inline="javascript">
+    $('.goNext').on('click',function(){
+        var params = {};
+        var temp_list = $("#regist [name]").serializeArray();
+        for( var i in temp_list){
+            params[temp_list[i].name]=temp_list[i].value;
+        }
+        dataInit.ajax({
+            api: [[${apiPath.userRegister2}]],
+            params:params,
+            fn:function(data) {
+                //console.log(data);
+                if(data.code == 0){
+                    window.location.href='regist-3';
+                }else{
+                    rongDialog.init({
+                        ico: 2,
+                        type: 1,
+                        desc: data.msg || "完善资料失败"
+                    });
+                }
+            }
+        })
+
+    })
+</script>
+</body>
+</html>

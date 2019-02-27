@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/brand/brand.css'" >
+<div th:include="guangdong/public/leftBar :: copy"></div>
+<div id="page">
+    <div class="mui-content">
+        <div id="category-cont"
+             class="category-cont mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+            <div class="mui-scroll">
+                <a href="javascript:void(0)" class="mui-control-item" data-index="c-1">区域<i></i></a>
+                <a href="javascript:void(0)" class="mui-control-item" data-index="c-2">艺术类型<i></i></a>
+                <a href="javascript:void(0)" class="mui-control-item" data-index="c-3">文件格式<i></i></a>
+                <a href="javascript:void(0)" class="mui-control-item" data-index="c-4">排序<i></i></a>
+            </div>
+        </div>
+        <div class="category-mask none">
+            <div class="category-group none" data-index="c-1">
+                <ul class="clearfix" id="areList">
+                    <!--<li class="active" data-txt="区域">全部</li>
+                    <li item-data="0">雨花区</li>
+                    <li item-data="1">天心区</li>
+                    <li item-data="2">开福区</li>
+                    <li item-data="3">岳麓区</li>
+                    <li item-data="4">芙蓉区</li>-->
+                </ul>
+            </div>
+            <div class="category-group none" data-index="c-2">
+                <ul class="clearfix" id="artList">
+                    <!--<li class="active" data-txt="艺术类型">全部</li>
+                    <li item-data="5">展览</li>
+                    <li item-data="6">讲座</li>
+                    <li item-data="7">演出</li>
+                    <li item-data="8">赛事活动</li>-->
+                </ul>
+            </div>
+            <div class="category-group none" data-index="c-3">
+                <ul class="clearfix" id="pxList">
+                    <li item-data="" class="active" data-txt="文件格式">全部</li>
+                    <li item-data="1" data-txt="图片">图片</li>
+                    <li item-data="2" data-txt="视频">视频</li>
+                    <li item-data="3" data-txt="音频">音频</li>
+                    <li item-data="4" data-txt="其他">其他</li>
+                </ul>
+            </div>
+            <div class="category-group none" data-index="c-4">
+                <ul class="clearfix">
+                    <li item-data="0" class="active" data-txt="排序">智能排序</li>
+                    <li item-data="1">最新发布</li>
+                </ul>
+            </div>
+        </div>
+        <!--下拉刷新容器-->
+        <div id="model-list-panel" class="mui-content mui-scroll-wrapper" style="top:46px">
+            <div class="mui-scroll">
+                <div class="pic-list" id="model-list">
+                    <!--精选品牌-->
+                    <!-- <div class="brand">
+                         <div class="img">
+                             <p>品牌名称</p>
+                             <a href="#">
+                                 <img class="lazy" src="http://mpic.tiankong.com/bbd/0e1/bbd0e1190ec0ae9e134732eeb4e4135e/640.jpg">
+                             </a>
+                         </div>
+                     </div>-->
+                    <!--精选品牌-->
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <input type="hidden" id="enttype" value="">
+</div>
+<script type="text/javascript" th:inline="javascript">
+    $(document).ready(function (){
+        dataInit.ajax({
+            api: [[${apiPath.actCate}]],
+            params: {
+                type: 1,//艺术分类
+                cultid: $.cookie('cultid')
+            },
+            fn: showYXClass
+        });
+        select.create(modelData);
+        dataInit.showAre($.cookie("city"),[[${apiPath.depts}]]);
+        modelData();
+    })
+
+    function modelData(page, size){
+        var page = page || 1;
+        var size = size || 10;
+        //ajax请求
+        dataInit.ajax({
+            api: [[${apiPath.drscList}]],
+            params: {
+                page:page,
+                pageSize:size,
+                sort:$("#c-4").val(),
+                title:$("#search").val(),
+                cultid:$.cookie('cultid'),
+                arttype:$("#c-2").val(),
+                etype:$("#c-3").val(),
+                city: $("#city").val(), //市
+                area: $("#area").val(), //区
+                deptid: $("#deptid").val(), //服务站
+                province: $("#province").val(), //省
+
+            },
+            forceUpdate: false,
+            fn: function (data) {
+                var params = {
+                    page: page,
+                    size: size,
+                    total: data.total
+                }
+                dataInit.htmlAdd(page, showBrandSelect(data));
+                dataInit.pullUp(params, modelData);
+            }
+        })
+    }
+
+    function showBrandSelect(data) {
+        var html = "";
+        if (data.code == 0 && data.rows.length > 0) {
+            for (var i in data.rows) {
+                var resList = {};
+                resList.imgPath = data.imgPath;
+                resList.rows = data.rows;
+                var model = data.rows[i],resBasePath = [[${basePath}]];
+                var _enturl = '',mask_img = '',imgUrl = '';
+                if(model.enturl){
+                    _enturl = model.enturl.indexOf('http') >= 0 ? model.enturl : data.imgPath + model.enturl;
+                }
+                if(model.drsctyp == 2){
+                    if(model.drscpic){
+                        imgUrl = data.imgPath + dataInit.getBigImage(model.drscpic);
+                    }else {
+                        imgUrl = data.imgPath + '/assets/img/gather/mp3.jpg';
+                    }
+                    mask_img = '<div class="mask"><img src="'+resBasePath+'/assets/img/gather/play.png"></div>';
+                }else if(model.drsctyp == 3){
+                    if(model.drscpic){
+                        imgUrl = data.imgPath + dataInit.getBigImage(model.drscpic);
+                    }else {
+                        imgUrl = data.imgPath + '/assets/img/gather/mp3.jpg';
+                    }
+                    mask_img = '<div class="mask"><img src="'+resBasePath+'/assets/img/gather/macphone.png"></div>';
+                }else if(model.drsctyp == 4){
+                    if(model.drscpic){
+                        imgUrl = data.imgPath + dataInit.getBigImage(model.drscpic);
+                    }else {
+                        //imgUrl = resBasePath + '/assets/img/gather/music.jpg';
+                        imgUrl = resBasePath + dataInit.getFileTypeIcon(model.enturl, '/assets/img/gather/xiazai.jpg');
+                    }
+                }else {
+                    imgUrl = data.imgPath + dataInit.getBigImage(model.drscpic);
+                }
+                html +='<div class="brand">'+
+                    '<div class="img">'+
+                    '<p>'+model.drsctitle+'</p>'+
+                    '<img class="lazy" src="'+imgUrl+'">'+mask_img+
+                    '<a href="javascript:goPage(\''+model.drscid+'\',\''+model.drsctyp+'\')"></a>' +
+                    '</div>' +
+                    '</div>';
+            }
+        } else {
+            html = '<div class="newbility-no-msg"></div>';
+        }
+        return html;
+    }
+    function goPage(id,enttype) {
+        if(enttype == 1){
+            window.location.href = [[${basePath}]] + '/train/digitalimage?id='+id;
+        }else if(enttype == 2) {
+            window.location.href = [[${basePath}]] + '/train/digitalvideo?id='+id;
+        }else if(enttype == 3) {
+            window.location.href = [[${basePath}]] + '/train/digitalaudio?id='+id;
+        }else if(enttype == 4) {
+            window.location.href = [[${basePath}]] + '/train/digitalfile?id='+id;
+        }
+    }
+
+    function showYXClass(data) {
+        var artList = $("#artList");
+        artList.html("");
+        var arts = data.rows;
+        artList.append('<li class="active" item-data="" data-txt="艺术类型">全部</li>');
+        for (var i in arts) {
+            artList.append('<li item-data="' + arts[i].id + '">' + arts[i].name + '</li>');
+        }
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/public/detail.css'" >
+<div th:include="guangdong/public/leftBar :: copy"></div>
+<div id="page">
+    <div class="mui-content">
+        <div class="wrapper-detail">
+            <div class="wrapper-detail-box" id="gather-detail">
+                <!--<div class="img">
+                    <img id="image" class="lazy" src="http://183.131.126.132:8092/whgstatic/img/2017/201709/20170921/e7f2cf27ba3b41b680c1f10651db8800.jpg"/>
+                    <div class="gather-title">
+                        <h2><span class="label">活动众筹</span>亲子陶艺大作战</h2>
+                    </div>
+                </div>
+                <div class="gather-info">
+                    <div class="gather-state">
+                        <div class="zc-state">众筹中</div>
+                        <span>200份</span>
+                    </div>
+                    <div class="gather-progress-bar">
+                        <span data-progress-bar="66" style="width: 66%;"></span>
+                    </div>
+                    <div class="progress-table mui-clearfix">
+                        <div class="progress-table-list">
+                            <span>剩余20天</span>
+                        </div>
+                        <div class="progress-table-list">
+                            <span>剩余80份</span>
+                        </div>
+                        <div class="progress-table-list">
+                            <span>完成80%</span>
+                        </div>
+                    </div>
+                </div>-->
+            </div>
+            <div class="wrapper-detail-box" id="gather-abstract">
+                <!--<div class="address">众筹时间：<span>2017-11-6 19:11:08</span></div>
+                <div class="address">培训讲师：<span>娃娃</span></div>
+                <a href="tel:15012345645"><div class="phone">培训电话：<span id="phone">130****1545</span></div></a>
+                <div class="address">众筹地址：<span>长沙市橘子洲头</span></div>-->
+            </div>
+            <div class="wrapper-detail-box">
+                <div class="gather-nav">
+                    <span class="gather-nav-list active">课程表</span>
+                    <span class="gather-nav-list">众筹详情</span>
+                    <span class="gather-nav-list">培训详情</span>
+                    <span class="gather-nav-list">相关资源</span>
+                </div>
+                <div class="gather-nav-content syllabus on">
+                    <div class="syllabus-list" id="model-list-panel">
+                        <div>
+                            <ul id="model-list"></ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="gather-nav-content" id="gather-jieshao">
+                    <!--<div class="gather-content-list">
+                        <div class="title">众筹说明</div>
+                        <div class="info">众筹成功可以参加活动</div>
+                    </div>
+                    <div class="gather-content-list">
+                        <div class="title">众筹介绍</div>
+                        <div class="info">众筹成功可以介绍活动</div>
+                    </div>
+                    <div class="gather-content-list">
+                        <div class="title">众筹发起人</div>
+                        <div class="info">
+                            <div class="people-pic">
+                                <img src="http://iconfont.alicdn.com/t/1503992387686.jpg">
+                            </div>
+                            <div class="people-info">
+                                <div class="people-name">ワカバ</div>
+                                <div class="people-msg">あこがれだけじゃ埋めきれない</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="gather-content-list">
+                        <div class="title">众筹须知</div>
+                        <div class="info">众筹成功可以介绍活动</div>
+                    </div>-->
+                </div>
+                <div class="gather-nav-content" id="gather-traindetail">
+                    <div class="gather-content-list">
+                        <div class="title">活动介绍</div>
+                        <div class="info"></div>
+                    </div>
+                </div>
+                <div th:include="guangdong/resource/publicres :: copy" class="gather-nav-content" id="res-box">
+                    <!--<h2>培训图片</h2>
+                    <div class="res-box scroll-box mui-scroll-wrapper mui-slider-indicatorcode mui-segmented-control mui-segmented-control-inverted">
+                        <div class="mui-scroll" id="res-box-1">
+                            <a>
+                                <div class="mask">休息室</div>
+                                <img th:src="${basePath}+'/assets/img/img_demo/q1.jpg'" alt="demo">
+                            </a>
+                        </div>
+                    </div>
+                    <h2>培训视频</h2>
+                    <div class="res-box scroll-box mui-scroll-wrapper mui-slider-indicatorcode mui-segmented-control mui-segmented-control-inverted">
+                        <div class="mui-scroll" id="res-box-2">
+                            <a>
+                                <div class="mask">休息室</div>
+                                <img th:src="${basePath}+'/assets/img/img_demo/q1.jpg'" alt="demo">
+                                <div class="video-mask">
+                                    <img th:src="${basePath}+'/assets/img/gather/play.png'">
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <h2>培训音频</h2>
+                    <div class="res-box scroll-box mui-scroll-wrapper mui-slider-indicatorcode mui-segmented-control mui-segmented-control-inverted">
+                        <div class="mui-scroll" id="res-box-3">
+                            <a>
+                                <div class="mask">休息室</div>
+                                <img th:src="${basePath}+'/assets/img/gather/mp3.jpg'" alt="demo">
+                                <div class="audio-mask">
+                                    <img th:src="${basePath}+'/assets/img/gather/macphone.png'">
+                                </div>
+                            </a>
+                        </div>
+                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+    <nav class="mui-bar mui-bar-tab">
+        <div th:include="guangdong/public/collectionAndVoteup :: copy" class="zan-collection mui-tab-item"></div>
+        <div class="mui-tab-item" id="goNext"></div>
+    </nav>
+    <input type="hidden" id="temp_type" value="28">
+    <input type="hidden" id="toproject" value="ZC">
+    <input type="hidden" id="commType">
+</div>
+<script type="text/javascript" th:inline="javascript">
+    var itemId = dataInit.getUrlParam('id');
+    var userid = $("#temp_userId").val();
+    var traId = '',etype = '';
+    $().ready(function(){
+        dataInit.ajax({
+            api: [[${apiPath.zcProjectDetail}]],
+            fn: showDetail,
+            params: {id: itemId,cultid:cultid}
+        });
+        mui(".gather-nav").on("click",".gather-nav-list",function () {
+            $(this).addClass("active").siblings().removeClass("active");
+            $(".gather-nav-content").eq($(".gather-nav .gather-nav-list").index(this)).addClass("on").siblings().removeClass('on');
+
+            cont.init({
+                panelCls:"#gather-remark"
+            })
+        });
+    })
+    function showDetail(data) {
+        if(data && data.code == 0){
+            $("#gather-detail").html('');
+            $("#gather-abstract").html('');
+            $("#gather-jieshao").html('');
+            var __success = '众筹成功';
+            var __fail = '众筹失败';
+            var __underway = '众筹中';
+            var model = data.data;
+            map_params = {
+                latitude:data.data.refinfo.latitude,
+                longitude:data.data.refinfo.longitude,
+                name: data.data.refinfo.address,
+                address: data.data.refinfo.address
+            }
+            var dataNow = model.now;
+            var imgPath = [[${imgPath}]] + dataInit.getBigImage(model.imgurl);//判断众筹状态
+            var isOverdueSize = isOverdue(model.issuccess,model.timestart,model.timeend,dataNow);
+            var _zcState = '',zcButtonState = '';
+            switch (isOverdueSize){
+                case 0:
+                    _zcState = __fail;
+                    zcButtonState = '<a class="goNext complete" href="javascript:void(0)">已结束</a>';
+                    break;
+                case 1:
+                    _zcState = __success;
+                    zcButtonState = '<a class="goNext just-see" href="javascript:void(0)">众筹成功</a>';
+                    break;
+                case 2:
+                    _zcState = __underway;
+                    etype = model.etype;
+                    traId = model.refid;
+                    zcButtonState = '<a class="goNext" href="javascript:void(0)" id="goSign">我要支持</a>';
+                    break;
+                case 3:
+                    _zcState = '未开始';
+                    zcButtonState = '<a class="goNext complete" href="javascript:void(0)">未开始</a>';
+                    break;
+            }
+            $("#goNext").empty();
+            $("#goNext").html(zcButtonState);
+            //获得众筹达成率
+            var _DCl = parseInt((model.orderCount/model.nummin)*100);
+            _DCl = _DCl>100?100:_DCl;
+            //获得众筹剩余份数
+            var _ZC_Max = model.numsum - model.orderCount;
+            _ZC_Max = _ZC_Max<0 ? 0 : _ZC_Max;
+            //获取剩余天数
+            var SY_Days = getDays(model.timeend,dataNow,model.timestart);
+            //判断众筹分类：4活动，5培训，0其他
+            var _href_detail = '',label = '';
+            if(model.etype == 4){
+                _href_detail = 'actdetail?id='+model.id;
+                label = '活动众筹';
+            }else if(model.etype == 5) {
+                _href_detail = 'traindetail?id='+model.id;
+                label = '培训众筹';
+            }else if(model.etype == 0){
+                _href_detail = 'otherdetail?id='+model.id;
+                label = '其他众筹';
+            }else {
+                _href_detail = 'otherdetail?id='+model.id;
+                label = '其他众筹';
+            }
+            var html = '<div class="img">'+
+                '<img class="lazy" src="'+imgPath+'"/>'+
+                '<div class="gather-title">'+
+                '<h2><span class="label">'+label+'</span>'+model.title+'</h2>'+
+                '</div>'+
+                '</div>'+
+                '<div class="gather-info">'+
+                '<div class="gather-state">'+
+                '<div class="zc-state">'+_zcState+'</div>'+
+                '<span>已筹到：'+model.orderCount+' 份，上限：'+model.numsum+' 份</span>'+
+                '</div>'+
+                '<div class="gather-progress-bar">'+
+                '<span style="width: '+_DCl+'%;"></span>'+
+                '</div>'+
+                '<div class="progress-table mui-clearfix">'+
+                '<div class="progress-table-list">'+
+                '<span>目标：'+model.nummin+' 份</span>'+
+                '</div>'+
+                '<div class="progress-table-list">'+
+                '<span>'+SY_Days+'</span>'+
+                '</div>'+
+                '<div class="progress-table-list">'+
+                '<span>剩余：'+_ZC_Max+' 份</span>'+
+                '</div>'+
+                '</div>'+
+                '</div>';
+            $("#gather-detail").html(html);
+            //判断是否存在电话
+            var telPhone = '';
+            if (model.phone) {
+                telPhone = '<a href="tel:'+model.phone+'"><div class="phone"><i class="iconfont icon-dianhua"></i> 培训电话：<span>'+model.phone+'</span></div></a>';
+            }
+            //众筹详情信息
+            var html2 =
+                '<div class="address"><i class="iconfont icon-time"></i> 众筹时间：<span>'+moment(model.timestart).format("YYYY-MM-DD HH:mm")+' 至 '+moment(model.timeend).format("YYYY-MM-DD HH:mm")+'</span></div>'+
+                '<div class="address"><i class="iconfont icon-time"></i> 活动时间：<span>'+moment(model.refinfo.starttime).format("YYYY-MM-DD")+' 至 '+moment(model.refinfo.endtime).format("YYYY-MM-DD")+'</span></div>'+telPhone+
+                '<div class="address" id="_address"><i class="iconfont icon-location"></i> 培训地址：<span>'+model.refinfo.address+'</span></div>';
+            $("#gather-abstract").html(html2);
+            //众筹介绍
+            var descriptions = '';
+            if(model.descriptions){
+                descriptions = '<div class="gather-content-list">'+
+                    '<div class="title">众筹介绍</div>'+
+                    '<div class="info"><div class="jieshao">'+model.descriptions+'</div></div>'+
+                    '</div>';
+            }
+            var html3 = '<div class="gather-content-list">'+
+                '<div class="title">众筹说明</div>'+
+                '<div class="info"><div class="shuoming">'+model.explains+'</div></div>'+
+                '</div>'+descriptions+
+                '<div class="gather-content-list">'+
+                '<div class="title">众筹发起人</div>'+
+                '<div class="info" id="venue-info">'+
+                '<div class="people-pic">'+
+                '<img class="lazy" src="">'+
+                '</div>'+
+                '<div class="people-info">'+
+                '<div class="people-name"></div>'+
+                '<div class="people-msg"><div class="peoplemsg"></div></div>'+
+                '</div>'+
+                '</div>'+
+                '</div>'+
+                '<div class="gather-content-list">'+
+                '<div class="title">众筹须知</div>'+
+                '<div class="info"><div class="xuzhi">'+model.notice+'</div></div>'+
+                '</div>';
+            $("#gather-jieshao").html(html3);
+            var outline,coursedesc,teacherdesc;
+            if(model.refinfo.outline){
+                outline = '<div class="gather-content-list">'+
+                    '<div class="title">课程内容</div>'+
+                    '<div class="info"><div class="jieshao">'+model.refinfo.outline+'</div></div>'+
+                    '</div>';
+            }
+            if(model.refinfo.coursedesc){
+                coursedesc = '<div class="gather-content-list">'+
+                    '<div class="title">课程简介</div>'+
+                    '<div class="info"><div class="jieshao">'+model.refinfo.coursedesc+'</div></div>'+
+                    '</div>';
+            }
+            if(model.refinfo.teacherdesc){
+                teacherdesc = '<div class="gather-content-list">'+
+                    '<div class="title">老师介绍</div>'+
+                    '<div class="info"><div class="jieshao">'+model.refinfo.teacherdesc+'</div></div>'+
+                    '</div>';
+            }
+            $("#gather-traindetail").html(coursedesc+outline+teacherdesc);
+            dataInit.ajax({
+                api: [[${apiPath.query}]],
+                fn: queryVenue, //查询现属场馆
+                params: {
+                    id: model.cultid
+                }
+            });
+            traId = model.refid;
+            mui('#goNext').on('tap','#goSign',function () {
+                goSignUp();
+            })
+            mui('body').on('tap','#_address',function () {
+                dataInit.menuMap(map_params)
+            })
+            //遍历课程表
+            modelData();
+            cont.init({
+                panelCls:".jieshao,.xuzhi,.shuoming"
+            })
+        }else {
+            mui.toast(data.msg || '数据加载失败');
+        }
+
+    }
+    function queryVenue(data) {
+        if (data.code == 0 && data.data) {
+            var queryVenueImgPath = data.imgPath + data.data.picture;
+            $('#venue-info').find('img').attr('src',queryVenueImgPath);
+            $('#venue-info').find('.people-name').text(data.data.name);
+            $('#venue-info').find('.peoplemsg').text(data.data.introduction);
+            cont.init({
+                panelCls:".peoplemsg"
+            })
+
+        }
+    }
+    //遍历课程表
+    function modelData(page, size) {
+        var page = page || 1;
+        var size = size || 10;
+        var params = {
+            page: page,
+            pageSize: size,
+            id:traId
+        }
+        dataInit.ajax({
+            api: [[${apiPath.course}]],
+            params: params,
+            forceUpdate: false,
+            fn: function (data) {
+                params = {
+                    page: page,
+                    size: size,
+                    total: data.total
+                }
+                dataInit.htmlAdd(page, showCourse(data));
+                dataInit.pullUp(params, modelData);
+            }
+        })
+        function showCourse(data) {
+            var modelSyllabus = data.rows;
+            var html = '';
+            if(modelSyllabus.length>0){
+                if(data.page == 1){
+                    html = '<li>' +
+                        '<span>序列</span>' +
+                        '<span>开始时间</span>' +
+                        '<span>结束时间</span>' +
+                        '</li>';
+                }
+                for (var i in modelSyllabus) {
+                    var activeTime = moment(modelSyllabus[i].starttime).format('YYYY-MM-DD HH:mm:ss');
+                    var endTime = moment(modelSyllabus[i].endtime).format('YYYY-MM-DD HH:mm:ss');
+                    var count =  (data.page - 1)*10;
+                    count = count + Number(i)+1;
+                    html += '<li>' +
+                        '<span>' + count + '</span>' +
+                        '<span>' + activeTime + '</span>' +
+                        '<span>' + endTime + '</span>' +
+                        '</li>';
+                }
+            }else {
+                html = '<div class="newbility-no-msg"></div>';
+            }
+            return html;
+        }
+    }
+    //判断众筹是否过期
+    function isOverdue(issuccess,timestart,timeend,dataNow) {
+        if(dataNow>timeend){
+            if(issuccess == 1){
+                return 1;//已成功
+            }else {
+                return 0;//已结束
+            }
+        }else if(dataNow<timeend && dataNow>timestart){
+            return 2;//众筹中
+        }else {
+            return 3;//未开始
+        }
+    }
+
+    //获取剩余天数
+    function getDays(timeend,_dataNow,timestart) {
+        if(_dataNow>timeend){
+            return '已结束';
+        }else if(_dataNow>timestart){
+            return '剩余 '+moment(timeend).fromNow(true);
+        }else {
+            return '未开始';
+        }
+    }
+
+    //给消息过滤HTML标签
+    function removeHTMLTag(str) {
+        //str = str.replace(/<\/?[^>]*>/g,''); //去除HTML tag
+        str = str.replace(/[ | ]*\n/g,'\n'); //去除行尾空白
+        //str = str.replace(/\n[\s| | ]*\r/g,'\n'); //去除多余空行
+        str=str.replace(/&nbsp;/ig,'');//去掉&nbsp;
+        return str;
+    }
+
+    //报名检查接口
+    function goSignUp() {
+        if(userid && userid!=undefined){
+            dataInit.ajax({
+                api: [[${apiPath.trainZcApplyChecking}]],
+                fn: goNext,
+                params: {itemId: traId,gatherid:itemId,userId:userid}
+            });
+        }else {
+            mui.toast('请登录后操作')
+        }
+        function goNext(data) {
+            if(data.code == 0){
+                window.location.href='pxliucheng?id='+traId+'&gatherid='+itemId+'&etype='+etype;
+            }else {
+                mui.toast(data.msg || '数据加载失败');
+            }
+        }
+    }
+</script>
+</body>
+</html>

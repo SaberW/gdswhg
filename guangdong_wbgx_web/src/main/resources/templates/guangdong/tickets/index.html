@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/jquery.qrcode.min.js'"></script>
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/LodopFuncs.js'"></script>
+<object id="LODOP" classid="clsid:2105C259-1E0C-4534-8141-A753534CB4CA" width=0 height=0>
+    <embed id="LODOP_EM" type="application/x-print-lodop" width=0 height=0 pluginspage="install_lodop.exe"></embed>
+</object>
+<input type="hidden" id="temp_url" th:value="${basePath}">
+<style>
+    body {
+        background: url(../../../assets/img/tickets/body-bg.png) repeat;
+        position: relative;
+    }
+
+    .ticketMask {
+        background: url(../../../assets/img/public/b2.png) repeat;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        left: 0px;
+        top: 0px;
+        z-index: 99;
+        display: none;
+    }
+
+    .ticketDialog {
+        display: none;
+        width: 800px;
+        padding: 200px 0px;
+        height: 40px;
+        text-align: center;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        margin-top: -220px;
+        margin-left: -400px;
+        z-index: 100;
+        background-color: #fff;
+    }
+
+    .header {
+        width: 100%;
+        border-bottom: solid 1px #d3d3d3;
+        text-align: center;
+    }
+
+    .header .container {
+        height: 162px;
+        margin: 20px auto 0 auto;
+    }
+
+    .get-ticket {
+        width: 760px;
+        float: left;
+        margin-left: 40px;
+        padding: 50px 0 25px;
+    }
+
+    .qpm span {
+        display: block;
+        float: left;
+        font-size: 40px;
+        line-height: 80px;
+        color: #333;
+        margin-right: 15px;
+    }
+
+    .right-page {
+        width: 318px;
+        height: 495px;
+        float: left;
+        padding-left: 50px;
+        margin: 50px 0px 0px 20px;
+    }
+    .right-page .code-panel{
+        text-align: center;
+        padding:135px 60px;
+        border:1px #d3d3d3 solid;
+        background-color:#fff;
+    }
+    .get-ticket-btn {
+        width: 552px;
+        height: 80px;
+        font-size: 40px;
+        line-height: 80px;
+        border: none;
+        border-radius: 5px;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        color: #f5f5f5;
+        text-align: center;
+        position: absolute;
+        right: 18px;
+        bottom: 0px;
+        cursor: pointer;
+        background: #cd0a1b;
+    }
+
+    .ticket-content {
+        margin: 0 auto;
+    }
+
+    .htitle {
+        font-size: 44px;
+    }
+
+    .num-board {
+        width: 760px;
+        height: 382px;
+        position: relative;
+        margin: 30px 0 30px 0;
+    }
+
+    .num-board ul {
+        width: 760px;
+        height: 400px;
+        position: relative;
+    }
+
+    .showImgs {
+        padding-top: 10px;
+        display: block;
+    }
+
+    .hideImgs {
+        padding-top: 10px;
+        display: block;
+    }
+
+    .num-board ul li.key1 {
+        position: absolute;
+        left: 0px;
+        top: 0px;
+    }
+
+    .num-board ul li.key2 {
+        position: absolute;
+        left: 190px;
+        top: 0px;
+    }
+
+    .num-board ul li.key3 {
+        position: absolute;
+        left: 380px;
+        top: 0px;
+    }
+    .num-board ul li a{
+        display: block;
+        width:100%;
+        height:100%;
+        color:#000;
+    }
+    .num-board ul li a:link,.num-board ul li a:visited{
+        color:#000;
+    }
+    .num-board ul li a:hover{
+        color:#fff;
+        background-color:#979797;
+    }
+    .num-board ul li a:active{
+        color:#fff;
+        background-color:#cd0a1b;
+    }
+    .num-board ul li.key4 {
+        position: absolute;
+        left: 0px;
+        top: 100px;
+    }
+
+    .num-board ul li.key5 {
+        position: absolute;
+        left: 190px;
+        top: 100px;
+    }
+
+    .num-board ul li.key6 {
+        position: absolute;
+        left: 380px;
+        top: 100px;
+    }
+
+    .num-board ul li.key7 {
+        position: absolute;
+        left: 0px;
+        top: 200px;
+    }
+
+    .num-board ul li.key8 {
+        position: absolute;
+        left: 190px;
+        top: 200px;
+    }
+
+    .num-board ul li.key9 {
+        position: absolute;
+        left: 380px;
+        top: 200px;
+    }
+
+    .num-board ul li.key10 {
+        position: absolute;
+        left: 0px;
+        top: 300px;
+    }
+
+    .num-board ul li.key11 {
+        position: absolute;
+        left: 570px;
+        top: 0px;
+    }
+
+    .num-board ul li.key12 {
+        position: absolute;
+        left: 570px;
+        top: 100px;
+        height: 180px;
+        background: #fff;
+    }
+
+    .num-board li, .num-board .btn-del, .num-board .btn-clean {
+        width: 170px;
+        display: block;
+        height: 80px;
+        line-height: 80px;
+        margin: 0 18px 18px 0;
+        background: #fff;
+        border-radius: 5px;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        color: #333;
+        text-align: center;
+        cursor: pointer;
+        border: solid 1px #d3d3d3;
+    }
+
+    .num-board .key {
+        font-size: 48px;
+        font-family: "微软雅黑";
+    }
+
+    .num-board .btn {
+        float: right;
+        height: 80px;
+    }
+
+    .num-board .btn-del {
+        height: 80px;
+        line-height: 80px;
+        font-size: 40px;
+        letter-spacing: 8px;
+        border: 0;
+    }
+
+    .num-board .btn-clean {
+        height: 180px;
+        line-height: 180px;
+        font-size: 40px;
+        letter-spacing: 8px;
+        border: 0;
+        width: 170px;
+    }
+
+    .num-board .btn-del:hover, .num-board .btn-clean:hover {
+        color: #fff;
+        background: #979797;
+
+    }
+
+    .btn-submit {
+        display: block;
+        width: 400px;
+        height: 100px;
+        line-height: 100px;
+        background: #f58636;
+        margin: 70px auto 0;
+        text-align: center;
+        color: #ffffff;
+        font-size: 40px;
+        border: 0;
+        border-radius: 4px;
+        -moz-border-radius: 4px;
+        -webkit-border-radius: 4px;
+        cursor: pointer;
+        letter-spacing: 6px;
+    }
+
+    .get-ticket input[type=submit] {
+        margin-top: -300px;
+        margin-left: 585px;
+        border-radius: 7px;
+    }
+
+    .get-ticket input[type=text] {
+        font-size: 36px;
+        width: 550px;
+        height: 80px;
+        padding: 0 0 0 15px;
+        line-height: 80px;
+        color: #666;
+        margin: 0;
+        float: left;
+        border: solid 1px #d3d3d3;
+        border-radius: 5px;
+        -webkit-border-radius: 5px;
+        -moz-border-radius: 5px;
+        background: #fff;
+    }
+
+    .get-ticket {
+        width: 760px;
+        float: left;
+        margin-left: 40px;
+    }
+    .tickets-footer{
+        position:absolute;
+        bottom:0px;
+        left:0px;
+        width:100%;
+        background-color:#cd0a1b;
+        text-align: center;
+        color:#fff;
+        padding:20px 0px;
+    }
+</style>
+<div class="ticketDialog">
+    <h1>正在出票</h1>
+</div>
+<div class="ticketMask"></div>
+<div class="header clearfix">
+    <div class="container">
+        <div class="logo">
+            <img th:src="${basePath}+'/assets/img/tickets/logo.png'" width="255" height="119">
+        </div>
+    </div>
+</div>
+<div class="ticket-content clearfix">
+    <div class="get-ticket">
+        <div class="qpm clearfix"><span>取票码：</span><input name="orderValidateCode" type="text" id="orderValidateCode"/>
+        </div>
+        <div class="num-board clear">
+            <ul>
+                <li class="key key1"><a>1</a></li>
+                <li class="key key2"><a>2</a></li>
+                <li class="key key3"><a>3</a></li>
+                <li class="key key4"><a>4</a></li>
+                <li class="key key5"><a>5</a></li>
+                <li class="key key6"><a>6</a></li>
+                <li class="key key7"><a>7</a></li>
+                <li class="key key8"><a>8</a></li>
+                <li class="key key9"><a>9</a></li>
+                <li class="key key10"><a>0</a></li>
+                <li class="btn key11"><input type="button" class="btn-del" id="btn-del" value="删除"/></li>
+                <li class="btn key12"><input type="button" class="btn-clean" id="btn-clean" value="清空"/></li>
+            </ul>
+            <button type="submit" class="get-ticket-btn" id="doPrint">确定取票</button>
+        </div>
+    </div>
+    <div class="right-page">
+        <div class="code-panel">
+            <img width="170" height="224" th:src="${basePath}+'/assets/img/tickets/code.png'">
+        </div>
+    </div>
+</div>
+<div class="tickets-footer">
+    客服电话：8888-88888888
+</div>
+<!-- 打印模板 Start -->
+<div id="act_panel" class="none"></div>
+<div id="venue_panel" class="none"></div>
+<input type="hidden" id="ticketType">
+<!--打印模板 End-->
+<script type="text/javascript" th:inline="javascript">
+    var LODOP;
+    $().ready(function () {
+        ticket.init()
+    });
+    var ticket = {
+        init: function () {
+            var m = this;
+            m.bodyHeight();
+            m.keyUp();
+            $(".key").on("click", function () {
+                ticket.detailKeyBoard(this);
+            })
+            $(".key11").on("click", function () {
+                ticket.delKey();
+            })
+            $(".key12").on("click", function () {
+                ticket.clear();
+            })
+            $("#doPrint").on("click", function () {
+                ticket.pickUp();
+            })
+        },
+        unBind: function () {
+            $(".key,.btn").unbind("click");
+        },
+        bodyHeight: function () {
+            $("body").height($(window).height());
+            $("body").width($(window).width());
+        },
+        inputPanel: $("#orderValidateCode"),
+        //取票验证
+        pickUp: function () {
+            var m = this;
+            var val = m.inputPanel.val();
+            if (val.length >= 12) {
+                dataInit.ajax({
+                    api: [[${apiPath.pickUp}]],
+                    params: {ticketNo: val},
+                    fn: function (data) {
+                        var showTime = 1000;
+                        if (data.success == "1") {
+                            m.unBind();
+                            $('#doPrint').attr("disabled", "disabled");
+                            $('#doPrint').text("数据加载...");
+                            if (data.data.act) {
+                                $("#ticketType").val("act");
+                                m.actTemplate(data);
+                            } else if (data.data.venRoom) {
+                                $("#ticketType").val("ven");
+                                m.venueTemplate(data);
+                            }
+                            setTimeout(function () {
+                                $('#doPrint').text("正在打印...");
+                                m.printCode();
+                                if (m.printTicket()) {
+                                    var params = {
+                                        orderId: data.data.order.id,
+                                        orderType: $("#ticketType").val()
+                                    }
+                                    dataInit.ajax({
+                                        api: [[${apiPath.completePickUp}]],
+                                        params: params,
+                                        fn: function (data) {
+                                            if (data.success != "1") {
+                                                rongDialog.init({
+                                                    ico: 2,
+                                                    type: 1,
+                                                    desc: '服务器错误',
+                                                    nextFn: function () {
+                                                        window.location.reload();
+                                                    }
+                                                })
+                                            } else {
+                                                window.location.reload();
+                                            }
+                                        }
+                                    });
+                                }
+                            }, 0);
+                        } else {
+                            rongDialog.init({
+                                ico: 2,
+                                type: 1,
+                                desc: data.errormsg,
+                                nextFn: function () {
+                                    m.inputPanel.val("");
+                                }
+                            })
+                        }
+                    }
+                })
+            } else {
+                rongDialog.init({
+                    ico: 2,
+                    type: 1,
+                    desc: '取票码错误',
+                    nextFn: function () {
+                        m.inputPanel.val("");
+                    }
+                })
+            }
+        },
+        //控制键盘输入的最大长度和输入类型
+        keyUp: function () {
+            var m = this;
+            m.inputPanel.keyup(function () {
+                m.inputPanel.val(m.inputPanel.val().replace(/\D/g, ''));
+                if (m.inputPanel.val().length >= 16) {
+                    var v = m.inputPanel.val();
+                    m.inputPanel.val(v.substring(0, 16));
+                }
+            })
+        },
+        //数字键盘输入
+        detailKeyBoard: function (dom) {
+            var m = this;
+            var d = $(dom);
+            var val = m.inputPanel.val();
+            if (val.length < 16) {
+                m.inputPanel.val(val + d.text());
+            } else {
+                rongDialog.init({
+                    ico: 2,
+                    type: 1,
+                    desc: '最大长度为16位'
+                })
+            }
+        },
+        //删除键
+        delKey: function () {
+            var m = this;
+            var val = m.inputPanel.val();
+            if (val.length > 0) {
+                val = val.substring(0, val.length - 1);
+                m.inputPanel.val(val);
+            }
+        },
+        //清空键
+        clear: function () {
+            var m = this;
+            m.inputPanel.val("");
+        },
+        //打票
+        printTicket: function () {
+            var flag = false;
+            try {
+                LODOP = getLodop(document.getElementById('LODOP'), document.getElementById('LODOP_EM'));
+                var type = $("#ticketType").val();
+                if ($("body").find(".ticket_panel").length > 0) {
+                    var cut = $(".ticket_panel").length;
+                    for (var i = 0; i < cut; i++) {
+                        LODOP.PRINT_INIT("");
+                        LODOP.SET_PRINT_PAGESIZE(3, 800, 240, "");
+                        LODOP.SET_PRINT_STYLEA(1, "ItemType", 0);
+                        LODOP.SET_PRINT_STYLEA(1, "FontName", "微软雅黑");
+                        LODOP.SET_PRINT_STYLEA(1, "FontSize", 8);
+                        LODOP.ADD_PRINT_HTM(0, 0, "100%", "100%", $(".ticket_panel").eq(i).html());
+                        LODOP.PRINT();
+                    }
+                    flag = true;
+                }
+            } catch (e) {
+                rongDialog.init({
+                    ico: 2,
+                    type: 1,
+                    desc: '请检查驱动'
+                })
+            }
+            return flag;
+        },
+        //活动模板
+        actTemplate: function (data) {
+            var m = this;
+            var ticketList = data.data.ticket;
+            var orderInfo = data.data.order;
+            var name = data.data.act.name;
+            var timeStr = moment(data.data.time.playstarttime).format('YYYY-MM-DD,HH:mm');
+            var timeEnd = moment(data.data.time.playendtime).format('YYYY-MM-DD,HH:mm');
+            var time = timeStr + "-" + timeEnd;
+            timeStr = timeStr.split(",");
+            timeEnd = timeEnd.split(",");
+            var timeHeader = timeStr[0] == timeEnd[0] ? timeStr[0] : null;
+            if (timeHeader != null) {
+                time = timeHeader + " " + timeStr[1] + "-" + timeEnd[1];
+            }
+            var adr = data.data.act.address;
+            var template = "";
+            var id = $("#orderValidateCode").val();
+            $("#act_panel").html("");
+            for (var i in ticketList) {
+                var ticketType = ticketList[i].seatcode;
+                var orderId = orderInfo.ordernumber;
+                var orderPickTime = moment(ticketList[i].printtime).format('YYYY-MM-DD HH:mm');
+                var codeUrl = orderId + "****" + ticketList[i].seatid;
+                //alert(codeUrl);
+                template = "<div class='ticket_panel'> " +
+                    "<p>活动名称: <span>" + name + "</span></p> " +
+                    "<p>活动时间: <span>" + time + "</span></p> " +
+                    "<p>活动地址: <span>" + adr + "</span></p> " +
+                    "<p>票务信息: <span>" + ticketType + "</span></p> " +
+                    "<p>取票号码: <span>" + id + "</span></p> " +
+                    "<p class='code' data-url='" + codeUrl + "'></p>" +
+                    "<p>取票时间: <span>" + orderPickTime + "</span></p> " +
+                    "</div class='ticket_panel'>";
+                $("#act_panel").append(template);
+            }
+            ;
+        },
+        //场馆模板
+        venueTemplate: function (data) {
+            var m = this;
+            var name = data.data.ven.title;
+            var id = $("#orderValidateCode").val();
+            var adr = data.data.ven.address;
+            var roomAdr = data.data.venRoom.title;
+            var day = moment(data.data.order.timeday).format('YYYY-MM-DD');
+            var timeStr = moment(data.data.order.timestart).format('HH:mm');
+            var timeEnd = moment(data.data.order.timeend).format('HH:mm');
+            var time = day + " " + timeStr + "-" + timeEnd;
+            var nickName = data.data.order.ordercontact;
+            var orderPickTime = moment(data.data.order.printtime).format('YYYY-MM-DD HH:mm');
+            var codeUrl = data.data.order.orderid;
+            //alert(codeUrl);
+            $("#venue_panel").html("");
+            template = "<div class='ticket_panel'> " +
+                "<p>场馆名称: <span>" + name + "</span></p> " +
+                "<p>场馆地址: <span>" + adr + "</span></p> " +
+                "<p>--------------------------------------</p>" +
+                "<p>活动室: <span>" + roomAdr + "</span></p> " +
+                "<p>使用时间: <span>" + time + "</span></p> " +
+                "<p>预订用户: <span>" + nickName + "</span></p> " +
+                "<p>--------------------------------------</p>"+
+                "<p>取票号码: <span>" + id + "</span></p> " +
+                "<p class='code' data-url='" + codeUrl + "'></p>" +
+                "<p>取票时间: <span>" + orderPickTime + "</span></p> " +
+                "</div class='ticket_panel'>";
+            $("#venue_panel").append(template);
+        },
+        //生成二维码
+        printCode: function () {
+            var m = this;
+            var cut = $("body").find(".ticket_panel").length;
+            for (var i = 0; i < cut; i++) {
+                var code = $("body").find(".ticket_panel").eq(i).children(".code");
+                code.qrcode({
+                    render: "table",
+                    width: "140",
+                    height: "140",
+                    text: code.attr("data-url")
+                }); }
+        }
+    }
+</script>
+</body>
+</html>

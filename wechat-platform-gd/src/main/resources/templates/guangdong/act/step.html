@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/public/detail.css'">
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/act/step.css'">
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/act/seat.css'">
+<link rel="stylesheet" th:href="${basePath}+'/assets/js/picker/css/mui.picker.css'">
+<script th:src="${basePath}+'/assets/js/seatOrder.js'" type="text/javascript"></script>
+<script th:src="${basePath}+'/assets/js/iscroll.js'" type="text/javascript"></script>
+<script th:src="${basePath}+'/assets/js/picker/js/mui.picker.min.js'" type="text/javascript"></script>
+<div th:include="guangdong/public/leftBar :: copy"></div>
+<div id="page">
+    <div class="mui-content">
+        <!-- Card Header -->
+        <!-- Card Body -->
+        <div class="mui-card no-corner">
+            <div class="mui-card-header wrapper-par">
+                <div class="left-wrapper">
+                    <img class="lazy" id="pageImg" width="120" height="80" src="">
+                </div>
+                <div class="right-wrapper">
+                    <div class="page-title" id="title"></div>
+                    <!--<div class="time"><i class="iconfont icon-time"></i><span id="time"></span></div>
+                    <div class="time address"><i class="iconfont icon-coordinates"></i><span id="district"></span></div>-->
+                </div>
+            </div>
+        </div>
+        <div class="mui-card no-corner step-table">
+            <div class="mui-card-content mui-input-group">
+                <div class="step-list mui-input-row">填写预订信息</div>
+                <div class="step-list mui-input-row">
+                    <a class="mui-navigate-right" href="javascript:void(0)" id="createControl">
+                        <label>选择日期</label>
+                        <input type="text" id="eventTime" placeholder="请选择场次" readonly>
+                        <input type="hidden" id="eventId" readonly>
+                    </a>
+                </div>
+                <div class="step-list mui-input-row" id="ticketBox" style="display: none">
+                    <label>余票 / 总票数</label>
+                    <input type="text" id="ticket" placeholder="" readonly>
+                </div>
+                <div id="wrapperLimit" class="limit mui-input-row" style="display: none">
+                    <label>订票数量</label>
+                    <div class="mui-numbox" data-numbox-min='0'>
+                        <button class="mui-btn mui-btn-numbox-minus" type="button"></button>
+                        <input id="numLimit" class="mui-input-numbox" type="number" value="0"/>
+                        <button class="mui-btn mui-btn-numbox-plus" type="button"></button>
+                    </div>
+                    <p class="warning"><span class="asterisk">*</span>本场活动最多可预订 <span class="seatMax"></span> 个座位，您已预订 <span class="userSeats" style="color: #f00">0</span> 张</p>
+                </div>
+                <div class="mui-input-row input-merge">
+                    <label>姓名</label>
+                    <input id="username" type="text" maxlength="15" class="mui-input-clear" readonly="true" placeholder="请输入联系人姓名"
+                           data-input-clear="1"><span
+                        class="mui-icon mui-icon-clear mui-hidden"></span>
+                </div>
+                <div class="mui-input-row">
+                    <label>手机</label>
+                    <input id="txtMobile" type="tel" maxlength="11" class="mui-input-clear" readonly="true" placeholder="请输入联系电话"
+                           data-input-clear="1"><span
+                        class="mui-icon mui-icon-clear mui-hidden"></span>
+                </div>
+                <!--<div class="mui-input-row">
+                    <label>验证码</label>
+                    <img th:src="${basePath}+'/pictureCheckCode'" id="CreateCheckCode" onclick="myReload()" width="100" height="30" style="position: absolute;top: 10px;right: 15px;">
+                    <input type="text" id="checkCode" name="checkCode"  placeholder="验证码" class="mui-input-clear" style="padding-right: 130px;">
+                </div>-->
+                <div class="mui-card-content-inner">
+                    <!-- Seat Begin -->
+                    <div id="wrapperSeat" style="display: none">
+                        <div class="legends">
+                            <div><span class="legend"></span><span class="name">可选</span></div>
+                            <div><span class="legend unavailable"></span><span class="name">被预订</span></div>
+                            <div><span class="legend selected"></span><span class="name">已选择</span></div>
+                            <p class="warning"><span class="asterisk">*</span>本场活动最多可预订 <span class="seatMax">5</span> 个座位，您已预订 <span class="userSeats" style="color: #f00">0</span> 张</p>
+                        </div>
+                        <div class="seat wrapper" id="seatWrapper">
+                            <!--座位渲染-->
+                            <div class="seat-container scroller" id="seat"></div>
+                            <div class="row-num">
+                                <ul></ul>
+                            </div>
+                        </div>
+                        <div class="seat-on">
+                            <div>
+                                <span class="tt">已选座位</span>
+                                <div class="seat-on-message clearfix" id="seat-on-message">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Seat End -->
+                    <div class="help-info">
+                        <label><p><input id="readmeck" value="yes" type="checkbox" checked>&nbsp;&nbsp;我已阅读并接受<a
+                                href="readme">《订票须知》</a>相关条款</p></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <nav class="mui-bar mui-bar-tab">
+        <div class="mui-tab-item"><a class="goNext" href="javascript:dealOrder()">下一步</a></div>
+    </nav>
+</div>
+<script type="text/javascript" th:inline="javascript">
+    var itemId = dataInit.getUrlParam('id'),
+        userid = $("#temp_userId").val(),
+        nickName = $("#temp_nickName").val(),
+        realName = $("#temp_realName").val(),
+        mobile = $("#temp_mobile").val(),
+        modelDetail,
+        username,
+        phone,
+        seats,
+        seatMax=0,
+        userSeats = 0,
+        orderType,
+        timeList;
+    $(document).ready(function () {
+        loadPage();
+        mui('.help-info').on('tap', 'label', function () {
+            if ($('#readmeck').is(':checked')) {
+                $('#readmeck').val('no');
+            } else {
+                $('#readmeck').val('yes');
+            }
+        })
+        mui('body').on('tap', '.goNext', function () {
+            dealOrder();
+        })
+        mui('.step-list').on('tap', '#createControl', function () {
+            createControl();
+        })
+
+        //表单返显
+        if(realName&&realName!=""){
+            $("#username").val(realName);
+        }else {
+            $("#username").val(nickName);
+        }
+        if(mobile)
+            $("#txtMobile").val(mobile);
+    })
+    function loadPage() {
+        dataInit.ajax({
+            api: [[${apiPath.actdetail}]],
+            fn: showActivityDetail,
+            params: {actId: itemId}
+        });
+    }
+    function showActivityDetail(data) {
+        if(data.code == 0){
+            var model = data.data.actdetail;
+            modelDetail = model;
+            modelDetail['imgPath'] = data.imgPath;
+            timeList = data.data.timeList;
+            $("#title").text(model.name);
+            $("#pageImg").attr("src", data.imgPath + dataInit.getSmallImage(model.imgurl));
+            $(".seatMax").text(model.seats);
+            seatMax=model.seats;
+            $("#ticket").text(model.seats);
+            seats = model.seats;
+        }else {
+            mui.toast(data.msg || '数据加载失败');
+        }
+    }
+
+    //初始化场次控件
+    function createControl() {
+        var picker = new mui.PopPicker({
+            layer: 2
+        });
+        var arrEvent = new Array();
+        for (var i in timeList) {
+            arrEvent.push(timeList[i]);
+        }
+        picker.setData(arrEvent);
+        picker.pickers[0].setSelectedIndex(0);
+        picker.show(function (SelectedItems) {
+//            console.log(SelectedItems);
+            $("#eventTime").val(SelectedItems[0].text+ ' ' + SelectedItems[1].text);
+            $("#eventId").val(SelectedItems[1].value);
+            modelDetail['eventData'] = SelectedItems[0].text;
+            modelDetail['eventTime'] = SelectedItems[1].text;
+            dataInit.ajax({
+                api: [[${apiPath.actBooking}]],
+                fn: showActivitySeat,
+                params: {actId: itemId,eventId:$("#eventId").val(),userId:userid}
+            });
+        });
+    }
+
+    function showActivitySeat(data) {
+        if(data.code == 0){
+            var modelSeat = data.data;
+            userSeats = data.data.seatSizeUser;
+            $(".userSeats").text(data.data.seatSizeUser);
+            //活动总票数
+            var totalSeatSize = data.data.totalSeatSize;
+            $('#ticketnum').text(totalSeatSize);
+            //活动余票数
+            var seatSize = data.data.seatSize;
+            $('#ticket').val(totalSeatSize-seatSize+' / '+totalSeatSize+' 张');
+            $("#ticketBox").show();
+            if (modelSeat.statusMap.length>0) {
+                $("#wrapperSeat").show();
+                $("#seatWrapper").find("#seat").empty();
+                $("#seat-on-message").empty();
+                $("#seatWrapper").find(".row-num ul").empty();
+                prepareSeat(modelSeat.statusMap, modelSeat.mapType,seats,userSeats);
+                var myOptions = {
+                    mouseWheel: true,
+                    scrollbars: false,
+                    fadeScrollbars: true,
+                    probeType: 1,
+                    scrollX: true,
+                    scrollY: false,
+                    eventPassthrough: true,
+                    zoom: false,
+                    startZoom: 1,
+                    zoomMin: 0.2,
+                    zoomMax: 1,
+                    click: false
+                    /*onScrollMove:function(){
+                     $('body').html('1111');
+                     },
+                     onScrollEnd:function(){
+                     alert(2222)
+                     }*/
+                };
+                var myScroll = new IScroll('#seatWrapper', myOptions);
+                orderType = 1;
+            } else {
+                $("#wrapperLimit").show();
+                mui(".mui-numbox").numbox().setOption('max', seats);
+                orderType = 2;
+            }
+        }else {
+            mui.toast(data.msg || '数据加载失败');
+        }
+    }
+    function dealOrder() {
+        if (orderType == 1) {
+            userSeats = $("#seat-on-message").children('.seat-list').length;
+        } else {
+            userSeats = mui(".mui-numbox").numbox().getValue();
+        }
+        if (verification()) {
+            username = $('#username').val();
+            phone = $('#txtMobile').val();
+            var seatStr1 = [];
+            var selection = $("#seat-on-message").find("span.seat-list");
+            for(var i = 0;i < selection.length;i++){
+                var item = selection[i];
+                seatStr1.push($(item).html());
+            }
+            seatStr1 = seatStr1.join(",");
+            //如果存在座位号码，将userSeats置为0 ，不然后台出bug
+            if(seatStr1.length>0){
+                userSeats = 0;
+            }
+            var params = {
+                userId:userid,
+                actId:itemId,
+                eventId:$("#eventId").val(),
+                orderPhoneNo:phone,
+                name:username,
+                seatStr:seatStr1,
+                seats:userSeats
+            }
+            dataInit.ajax({
+                api: [[${apiPath.actBooking}]],
+                fn: function (data) {
+                    if(data.code == 0){
+                        nextPage(params)
+                    }else {
+                        mui.toast(data.msg || '数据加载失败');
+                    }
+                },
+                params: params
+            });
+        }
+
+        /*var checkCode=$("#checkCode").val();
+        if (checkCode == '' ) {
+            mui.toast("操作失败,验证码不能为空!");
+            return false;
+        }
+        $.ajax({
+            url: [[${basePath}]]+"/check/checkCode",
+            data:{"checkCode":checkCode},
+            type: "post",
+            async : false,
+            dataType: 'json',
+            success: function (data) {
+                if(data=="0"){
+                    mui.toast("操作失败,验证码有误!");
+                    return false;
+                }else{
+                    if (verification()) {
+                        username = $('#username').val();
+                        phone = $('#txtMobile').val();
+                        var seatStr1 = [];
+                        var selection = $("#seat-on-message").find("span.seat-list");
+                        for(var i = 0;i < selection.length;i++){
+                            var item = selection[i];
+                            seatStr1.push($(item).html());
+                        }
+                        seatStr1 = seatStr1.join(",");
+                        //如果存在座位号码，将userSeats置为0 ，不然后台出bug
+                        if(seatStr1.length>0){
+                            userSeats = 0;
+                        }
+                        var params = {
+                            userId:userid,
+                            actId:itemId,
+                            eventId:$("#eventId").val(),
+                            orderPhoneNo:phone,
+                            name:username,
+                            seatStr:seatStr1,
+                            seats:userSeats
+                        }
+                        dataInit.ajax({
+                            api: [[${apiPath.actBooking}]],
+                            fn: function (data) {
+                                if(data.code == 0){
+                                    nextPage(params)
+                                }else {
+                                    mui.toast(data.msg || '数据加载失败');
+                                }
+                            },
+                            params: params
+                        });
+                    }
+                }
+            }
+        })*/
+    }
+
+    function verification() {
+        var reg = /^0?(13[0-9]|15[012356789]|17[013678]|18[0-9]|14[57])[0-9]{8}$/;
+        console.log(!(userSeats>0) +'-'+ userSeats)
+        if(!($("#eventId").val())) {
+            mui.toast("请选择场次");
+            return false;
+        }else if(!(userSeats>0)) {
+            mui.toast("请选择座位或选择订票数量");
+            return false;
+        }else if ($("#username").val().length < 2 || $("#username").val().length > 15) {
+            mui.toast("请输入正确的姓名");
+            return false;
+        } else if (!reg.test(($("#txtMobile").val()))) {
+            mui.toast("请输入正确的手机号码");
+            return false;
+        }else if (seatMax<userSeats) {
+            mui.toast("您最多只能选择"+seatMax+"个座位");
+            return false;
+        } else if ($('#readmeck').val() == 'no') {
+            mui.toast("请接受《订票须知》条款");
+            return false;
+        }else {
+            return true;
+        }
+    }
+
+    function nextPage(paramOk) {
+        var paramOk = paramOk;
+        dataInit.ajax({
+            api: [[${apiPath.checkActPublish}]],
+            fn:function (data) {
+                if(data.code == 0){
+                    dataInit.setCache('hint', paramOk);
+                    dataInit.setCache('modelDetail', modelDetail);
+                    window.location.href = 'actconfirm';
+                }else {
+                    mui.toast(data.msg || '数据加载失败');
+                }
+            },
+            params: paramOk
+        });
+    }
+    function myReload() {
+        document.getElementById("CreateCheckCode").src =
+            document.getElementById("CreateCheckCode").src+ "?nocache=" + new Date().getTime();
+    }
+</script>
+</body>
+</html>

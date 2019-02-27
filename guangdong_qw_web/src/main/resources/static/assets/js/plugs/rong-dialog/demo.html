@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Rong-Dialog-2.0版</title>
+    <link rel="stylesheet" href="css/rong-dialog-2.0.css">
+    <script type="text/javascript" src="../jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="rong-dialog-2.0.js"></script>
+    <script type="text/javascript" src="../jquery.imgareaselect.pack.js"></script>
+</head>
+<body>
+<a href="javascript:void(0)" onclick="rongDialog.init({
+        ico : 1, //1 勾  2 叉
+        type : 1,
+        desc : 'Rong-dialog nice',
+        panelDIV : '.div_p',
+        nextFn:function(){
+            alert(3);
+        }
+    });">打开弹出层1</a>
+<br>
+<a href="javascript:void(0)" onclick="rongDialog.init({
+        ico : 2,  //1 感叹号  2 问号  3 叉叉
+        type : 2,
+        desc : 'Rong-dialog nice',
+        panelDIV : '.div_p',
+        nextFn:function(){
+            alert(1);
+        },
+        closeFn:function(){
+            alert(2);
+        }
+    });">打开弹出层2</a>
+<br>
+<a href="javascript:void(0)" onclick="rongDialog.init({
+        ico : 1,
+        type : 3,
+        panelDIV : '.div_p'
+    });">打开弹出层3</a>
+<br>
+<br>
+<a href="javascript:void(0)" onclick="rongDialog.init({
+        type : 5,
+        vedioUrl : 'http://szwhg-gds.oss-cn-shenzhen.aliyuncs.com/%E5%B9%BF%E4%B8%9C%E7%9C%81%E7%BE%A4%E4%BC%97%E5%B9%BF%E5%9C%BA%E6%8E%92%E8%88%9E%E6%95%99%E5%AD%A6%E8%A7%86%E9%A2%91%E2%80%94%E4%BA%94%E6%9C%88%E4%BA%94%E6%97%A5.mp4',
+        vedioImg : '',
+        vedioTitle : 'RongDialog视频测试1'
+    });">打开弹出层5</a>
+<br>
+<a href="javascript:void(0)" onclick="rongDialog.init({
+        type : 5,
+        vedioUrl : 'http://szwhg-gds.oss-cn-shenzhen.aliyuncs.com/2016%E5%B9%B4%E9%A6%86%E9%95%BF%E5%9F%B9%E8%AE%AD%E7%8F%AD/%E7%8E%B0%E4%BB%A3%E5%85%AC%E5%85%B1%E6%96%87%E5%8C%96%E6%9C%8D%E5%8A%A1%E4%BD%93%E7%B3%BB%E5%BB%BA%E8%AE%BE%E6%9C%80%E6%96%B0%E6%94%BF%E7%AD%96%E8%A7%A3%E8%AF%BB2%E2%80%94%E7%A5%81%E8%BF%B0%E8%A3%95.mp4',
+        vedioImg : '',
+        vedioTitle : 'RongDialog视频测试2'
+    });">打开弹出层6</a>
+<br>
+<a href="javascript:void(0)" onclick="rongDialog.init({
+        ico : 1,
+        type : 5,
+        vedioUrl : 'https://www.html5rocks.com/en/tutorials/audio/quick/test.mp3',
+        vedioImg : '',
+        vedioType: 'mp3',
+        vedioTitle : 'RongDialog音频测试2'
+    });">打开弹出层8</a>
+<br>
+<a href="javascript:void(0)" onclick="rongDialog.init({
+        ico : 1,
+        type : 6,
+        imgUrl : 'img/demo.jpg'
+    });">弹出层截图</a>
+<script type="text/javascript">
+    $(document).ready(function(){
+        rongDialog.init({
+            type : 4,
+            imgGroupId : '#imgGroup'
+        });
+    })
+</script>
+<div id="imgGroup">
+    <ul>
+        <li>
+            <img rong-zoom="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1496670060492&di=57471421519ffd72e894cbdeb3996520&imgtype=0&src=http%3A%2F%2Fwww.bz55.com%2Fuploads%2Fallimg%2F150512%2F139-1505121T503.jpg" src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2497085819,1894064311&fm=26&gp=0.jpg" alt="Cuo Na Lake" class="viewer-toggle">
+        </li>
+        <li>
+            <img rong-zoom=https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1496671588192&di=848d135449c3f9272330e4eaa422199d&imgtype=0&src=http%3A%2F%2Fwww.pp3.cn%2Fuploads%2F201601%2F2016012706.jpg" src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1389917916,2641412126&fm=26&gp=0.jpg" alt="Cuo Na Lake" class="viewer-toggle">
+        </li>
+    </ul>
+</div>
+<div class="div_p r_none">
+    这是自定义弹出层
+</div>
+</body>
+</html>

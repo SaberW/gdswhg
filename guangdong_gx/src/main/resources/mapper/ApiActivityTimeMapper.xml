@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.creatoo.hn.dao.mapper.api.ApiActivityTimeMapper">
+<!-- ��ѯʱ��� -->
+    <select id="findPlayDate4actId" resultType="com.creatoo.hn.dao.model.WhgActivityTime">
+       select *  
+        from whg_act_time t 
+		where t.actid = #{actId}   and t.playstarttime > NOW() 
+		GROUP BY t.playdate 
+	</select>
+
+    <select id="getActDate" resultType="java.lang.String">
+        SELECT
+        date_format(playdate,'%Y-%c-%d')
+        FROM whg_act_time
+        <where>
+            state=1 AND
+            actid = #{actId} AND
+            playstarttime &gt; now()
+        </where>
+        GROUP BY playdate
+    </select>
+
+    <select id="getActTimes" resultType="hashmap">
+        SELECT
+            id,
+            playstime,
+            playetime,
+            playstarttime 
+        FROM whg_act_time
+        <where>
+            state=1 AND
+            actid = #{actId} AND
+            playdate = str_to_date(#{actDate},'%Y-%c-%d')
+        </where>
+    </select>
+
+    <select id="'getActTicketChecked" resultType="java.lang.Integer">
+        SELECT
+        COUNT(wat.id)
+        FROM whg_act_ticket wat
+        <where>
+            wat.ticketstatus = 1 AND
+            wat.orderid = #{orderId}
+        </where>
+    </select>
+
+</mapper>

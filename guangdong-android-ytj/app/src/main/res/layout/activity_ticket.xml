@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@mipmap/ticket_bg_icon"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cv_bg"
+        android:layout_width="450dp"
+        android:layout_height="570dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="H,17:20"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.38">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/ll_ticket_tab"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tv_code"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/selector_ticket_tab_bg"
+                    android:gravity="center"
+                    android:text="@string/ticket_code"
+                    android:textColor="@color/selector_ticket_tab_text"
+                    android:textSize="24sp" />
+
+                <TextView
+                    android:id="@+id/tv_qrcode"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/selector_ticket_tab_bg"
+                    android:gravity="center"
+                    android:text="@string/ticket_qrcode"
+                    android:textColor="@color/selector_ticket_tab_text"
+                    android:textSize="24sp" />
+            </LinearLayout>
+
+            <include
+                layout="@layout/layout_keyboard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:visibility="visible"
+                android:layout_gravity="center_horizontal"
+                android:layout_below="@+id/ll_ticket_tab"
+                 />
+
+            <include
+                layout="@layout/layout_loading_circle_ticket"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:visibility="gone"
+                android:layout_gravity="center_horizontal"
+                android:layout_below="@+id/ll_ticket_tab"
+                />
+
+            <include
+                layout="@layout/layout_loading_square"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:visibility="gone"
+                android:layout_gravity="center_horizontal"
+                android:layout_below="@+id/ll_ticket_tab"
+                />
+
+            <View
+                style="@style/line_horizontal"
+                android:layout_marginTop="20dp"
+                android:layout_above="@+id/ll_remark"/>
+
+
+
+            <LinearLayout
+                android:id="@+id/ll_remark"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:orientation="horizontal">
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_centerInParent="true">
+                        <ImageView
+                            android:id="@+id/iv_function"
+                            android:layout_width="36dp"
+                            android:layout_height="30dp"
+                            android:layout_gravity="center_horizontal"
+                            android:src="@mipmap/ticket_function_icon"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/red_ac1"
+                            android:textSize="12sp"
+                            android:text="@string/ticket_function"
+                            android:layout_marginTop="10dp"
+                            android:layout_gravity="center_horizontal"
+                            />
+                    </LinearLayout>
+
+
+
+                </RelativeLayout>
+
+
+                <View
+
+                    style="@style/line_vertical"/>
+                <TextView
+                    android:id="@+id/tv_remark"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="4"
+                    android:gravity="center_vertical"
+                    android:lineSpacingExtra="15dp"
+                    android:paddingBottom="20dp"
+                    android:paddingEnd="1dp"
+                    android:layout_gravity="center_vertical"
+                    android:paddingStart="10dp"
+                    android:paddingTop="20dp"
+                    android:text="@string/ticket_code_remark"
+                    android:textColor="@color/gray_61"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+
+    </android.support.v7.widget.CardView>
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:background="@color/black_29"
+        android:alpha="0.9"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+        
+        <TextView
+            android:id="@+id/tv_home"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@color/red_da3"
+            android:text="@string/home"
+            android:gravity="center_horizontal"
+            android:layout_gravity="center_horizontal"
+            android:drawableTop="@mipmap/home_icon"
+            />
+
+        <TextView
+            android:id="@+id/tv_top"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:layout_marginTop="20dp"
+            android:textColor="@color/gray_cc"
+            android:text="@string/top"
+            android:gravity="center_horizontal"
+            android:layout_gravity="center_horizontal"
+            android:drawableTop="@mipmap/top_icon"
+            />
+
+        <TextView
+            android:id="@+id/tv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:layout_marginTop="20dp"
+            android:textColor="@color/gray_cc"
+            android:text="@string/back"
+            android:gravity="center_horizontal"
+            android:layout_gravity="center_horizontal"
+            android:drawableTop="@mipmap/back_icon"
+            />
+    </LinearLayout>
+
+
+</android.support.constraint.ConstraintLayout>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.creatoo.hn.dao.mapper.api.ApiGlobalSearchMapper">
+
+    <select id="globalSearch" resultType="hashmap">
+        select temp.id, temp.title, temp.srchtype, temp.type
+        from (
+
+        select
+        t4.id as id, t4.`name` as title, '文化活动' as srchtype, '4' as type, t4.ekey as ekey, t4.actsummary as doc
+        from whg_act t4
+        where t4.state = 6 and t4.delstate = 0
+
+        union
+        select
+        t2.id as id, t2.title as title, '场馆' as srchtype, '2' as type, t2.ekey as ekey, t2.summary as doc
+        from whg_ven t2 where t2.state = 6 and t2.delstate = 0
+
+        union
+        select
+        t3.id as id, t3.title as title, '活动室' as srchtype, '3' as type, t3.ekey as ekey, t3.summary as doc
+        from whg_ven_room t3 where t3.state = 6 and t3.delstate = 0
+
+        ) temp
+        where 1=1
+        <if test="srchkey!=null and srchkey!=''.toString()">
+            and (
+            temp.title LIKE "%"#{srchkey}"%"
+            or temp.ekey LIKE "%"#{srchkey}"%"
+            or temp.doc LIKE "%"#{srchkey}"%"
+            )
+        </if>
+    </select>
+</mapper>

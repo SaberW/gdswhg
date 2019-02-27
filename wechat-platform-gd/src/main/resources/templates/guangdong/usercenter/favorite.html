@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/usercenter/usercenter.css'">
+<div th:include="guangdong/public/leftBar :: copy"></div>
+<div id="page">
+    <div class="mui-content">
+
+        <!--favorite-->
+        <div class="favorite">
+            <!--滚动栏-->
+            <div class="favorite-nav-bar mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+                <div class="mui-scroll" id="nav-bar">
+                    <a class="mui-control-item mui-active" href="javascript:void(0)" data-id="4">
+                        活动
+                    </a>
+                    <a class="mui-control-item" href="javascript:void(0)" data-id="2">
+                        场馆
+                    </a>
+                    <a class="mui-control-item" href="javascript:void(0)" data-id="3">
+                        活动室
+                    </a>
+                    <a class="mui-control-item" href="javascript:void(0)" data-id="5">
+                        线下培训
+                    </a>
+                    <a class="mui-control-item" href="javascript:void(0)" data-id="16">
+                        在线课程
+                    </a>
+                    <a class="mui-control-item" href="javascript:void(0)" data-id="31">
+                        培训师资
+                    </a>
+                    <a class="mui-control-item" href="javascript:void(0)" data-id="32">
+                        培训资源
+                    </a>
+                    <a class="mui-control-item" href="javascript:void(0)" data-id="28">
+                        众筹
+                    </a>
+                </div>
+            </div>
+            <!--滚动栏-->
+            <div id="model-list-panel" class="mui-scroll-wrapper" style="top:46px">
+                <div class="mui-scroll">
+                    <div class="favorite-list">
+                        <ul id="model-list" class="mui-table-view favorite-list-ul">
+                            <!--<li class="mui-table-view-cell">
+                                <div class="mui-slider-right mui-disabled">
+                                    <a class="mui-btn mui-btn-red">删除</a>
+                                </div>
+                                <div class="mui-slider-handle">
+                                    <div class="img">
+                                        <img class="lazy" src="" width="100%" height="100%">
+                                    </div>
+                                    <div class="detail">
+                                        <h2>摄影大师工作坊《摄影的态度》</h2>
+                                        <p><i class="iconfont icon-location"></i><span>东莞市文化馆一楼实验剧场</span></p>
+                                        <p><i class="iconfont icon-time"></i><span>2017-04-30</span></p>
+                                    </div>
+                                </div>
+                            </li>-->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--favorite-->
+    </div>
+</div>
+<script type="text/javascript" th:inline="javascript">
+    var userid = $("#temp_userId").val(),
+        type = 4,
+        _param = {userId: userid, type:type},
+        apiUrl = [[${apiPath.myFavorite}]],
+        basePath = [[${basePath}]],
+        _a_href = '';
+    $(document).ready(function () {
+        modelData();
+        mui('#nav-bar').on("tap",'a',function (e) {
+            type = jQuery(this).attr('data-id');
+            jQuery("#model-list").html('');
+            switch(Number(type))
+            {
+                case 2:
+                    apiUrl = [[${apiPath.myFavorite}]];
+                    _param.type = type;
+                    _a_href = basePath+'/venue/detail?id=';
+                    break;
+                case 3:
+                    apiUrl = [[${apiPath.myFavorite}]];
+                    _param.type = type;
+                    _a_href = basePath+'/venue/roomDetail?id=';
+                    break;
+                case 4:
+                    apiUrl = [[${apiPath.myFavorite}]];
+                    _param.type = type;
+                    _a_href = basePath+'/act/detail?id=';
+                    break;
+                case 5:
+                    apiUrl = [[${apiPath.trainCollect}]];
+                    _param.userid = userid;
+                    _param.cmreftyp = type;
+                    _a_href = basePath+'/train/detail?id=';
+                    break;
+                case 16:
+                    apiUrl = [[${apiPath.trainCollect}]];
+                    _param.userid = userid;
+                    _param.cmreftyp = type;
+                    _a_href = basePath+'/train/liveDetail?id=';
+                    break;
+                case 31:
+                    apiUrl = [[${apiPath.trainCollect}]];
+                    _param.userid = userid;
+                    _param.cmreftyp = type;
+                    _a_href = basePath+'/train/teachersInfo?id=';
+                    break;
+                case 32:
+                    apiUrl = [[${apiPath.trainCollect}]];
+                    _param.userid = userid;
+                    _param.cmreftyp = type;
+                    _a_href = basePath+'/train/resourcedetail?id=';
+                    break;
+                case 28:
+                    apiUrl = [[${apiPath.userColleGathers}]];
+                    _param.userid = userid;
+                    _param.filter = 0;
+                    _a_href = '';
+                    break;
+            }
+            modelData();
+        })
+    })
+    function modelData(page, size) {
+        var page = page || 1;
+        var size = size || 10;
+        _param.page = page;
+        _param.pageSize = size;
+        //ajax请求
+        dataInit.ajax({
+            api: apiUrl,
+            params: _param,
+            //
+            forceUpdate: false,
+            fn: function (data) {
+                var params = {
+                    page: page,
+                    size: size,
+                    total: data.total
+                }
+                dataInit.htmlAdd(page, showModelHtml(data));
+                dataInit.pullUp(params, modelData);
+            }
+        })
+    }
+    function showModelHtml(data) {
+        var html = '';
+        if(data && data.code == 0 && data.rows.length>0){
+            for(var i =0; i< data.rows.length;i++){
+                var model = data.rows[i];
+                var imgHtml ='';
+                if(model.imgurl){
+                    var img = data.imgPath + dataInit.getBigImage(model.imgurl);
+                    imgHtml = '        <div class="img">'+
+                        '            <img class="lazy" src="'+img+'" width="100%">'+
+                        '        </div>';
+                }
+                if(model.trainimg){
+                    var img = data.imgPath + dataInit.getBigImage(model.trainimg);
+                    imgHtml = '        <div class="img">'+
+                        '            <img class="lazy" src="'+img+'" width="100%">'+
+                        '        </div>';
+                }
+                if(model.teacherpic){
+                    var img = data.imgPath + dataInit.getBigImage(model.teacherpic);
+                    imgHtml = '        <div class="img">'+
+                        '            <img class="lazy" src="'+img+'" width="100%">'+
+                        '        </div>';
+                }
+                if(model.drscpic){
+                    var img = data.imgPath + dataInit.getBigImage(model.drscpic);
+                    imgHtml = '        <div class="img">'+
+                        '            <img class="lazy" src="'+img+'" width="100%">'+
+                        '        </div>';
+                }
+                var time = moment(model.cmdate).format("YYYY-MM-DD");
+                var address = model.address?'':'none';
+                var modelId = model.id?model.id:model.drscid;
+                if(Number(type) == 28){
+                    switch (model.etype){
+                        case "4":   //活动
+                            _a_href = basePath+'/gather/actdetail?id=';
+                            break;
+                        case "5":   //培训
+                            _a_href = basePath+'/gather/traindetail?id=';
+                            break;
+                        default:
+                            _a_href = basePath+'/gather/otherdetail?id=';
+                            break;
+
+                    }
+                }
+                if(Number(type) == 32){
+                    if(model.drsctyp == 1){
+                        _a_href = [[${basePath}]] + '/train/digitalimage?id=';
+                    }else if(model.drsctyp == 2) {
+                        _a_href = [[${basePath}]] + '/train/digitalvideo?id=';
+                    }else if(model.drsctyp == 3) {
+                        _a_href = [[${basePath}]] + '/train/digitalaudio?id=';
+                    }else if(model.drsctyp == 4) {
+                        _a_href = [[${basePath}]] + '/train/digitalfile?id=';
+                    }
+                }
+                var href_list = _a_href + modelId;
+
+                var title = '';
+                if(model.name)
+                    title = model.name;
+                if(model.title)
+                    title = model.title;
+                if(model.drsctitle)
+                    title = model.drsctitle;
+                html+='<li class="mui-table-view-cell">'+
+                    '    <div class="mui-slider-right mui-disabled">'+
+                    '        <a class="mui-btn mui-btn-red" href="javascript:decCollection(\''+modelId+'\','+type+')">删除</a>'+
+                    '    </div>'+
+                    '       <div class="mui-slider-handle">'+
+                    '       <a href="'+href_list+'"></a>'+imgHtml+
+                    '           <div class="detail">'+
+                    '               <h2>'+title+'</h2>'+
+                    '               <p class="'+address+'"><i class="iconfont icon-location"></i><span>'+model.address+'</span></p>'+
+                    '               <p><i class="iconfont icon-time"></i><span>'+time+'</span></p>'+
+                    '           </div>'+
+                    '       </div>'+
+                    '</li>';
+            }
+        }else {
+            html = "<div class='newbility-no-msg'></div>";
+        }
+        return html;
+    }
+
+    function decCollection(itemId, type) {
+        var btnArray = ['确认', '取消'];
+        mui.confirm('你确认删除这条收藏吗？', '提示', btnArray, function (e) {
+            if (e.index == 0) {
+                dataInit.ajax({
+                    api: [[${apiPath.deleteCollect}]],
+                    params: {
+                        cmrefid:itemId,
+                        cmuid:userid,
+                        cmopttyp:1,
+                        cmreftyp:type
+                    },
+                    fn: function (data) {
+                        if(data.code == 0){
+                            mui.toast(data.msg || '删除收藏成功');
+                            refreshPage();
+                        }else {
+                            mui.toast(data.msg || '删除收藏失败');
+                        }
+                    }
+                })
+            }
+        });
+    }
+    function refreshPage() {
+        $("#model-list").html('');
+        modelData();
+
+    }
+</script>
+</body>
+</html>

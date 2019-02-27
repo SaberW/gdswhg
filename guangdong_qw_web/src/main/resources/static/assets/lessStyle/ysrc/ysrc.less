@@ -1,0 +1,235 @@
+// out: ../../css/resource/public.css, sourcemap: false, compress: true
+//加载LESS框架
+@import "../public/config";
+body{
+  background-color:#fff;
+}
+.rc-bg{
+  height:600px;
+  background:url(../../img/index/100.jpg) no-repeat 50% 0%;
+  position:relative;
+  .nav-bg{
+    position:absolute;
+    bottom:0px;
+    left:0px;
+    width:100%;
+    height:80px;
+    background:url(../../img/public/b.png) repeat;
+    .nav{
+      width:1000px;
+      margin:0px auto;
+      height:80px;
+      overflow: hidden;
+      position: relative;
+      ul li{
+        border-right:1px #222 solid;
+        width:165px;
+        height:80px;
+        float:left;
+        cursor: pointer;
+        &.active{
+          background-color:@-main-color;
+        }
+        i{
+          display: block;
+          height:45px;
+          background-repeat: no-repeat;
+          background-position:50% 90%;
+          margin-bottom:4px;
+          &.i-1{
+            background-image:url(../../img/index/icon/1.png);
+          }
+          &.i-2{
+            background-image:url(../../img/index/icon/2.png);
+          }
+          &.i-3{
+            background-image:url(../../img/index/icon/3.png);
+          }
+          &.i-4{
+            background-image:url(../../img/index/icon/4.png);
+          }
+          &.i-5{
+            background-image:url(../../img/index/icon/5.png);
+          }
+          &.i-6{
+            background-image:url(../../img/index/icon/6.png);
+          }
+          &.i-7{
+            background-image:url(../../img/index/icon/7.png);
+          }
+          &.i-8{
+            background-image:url(../../img/index/icon/8.png);
+          }
+        }
+        p{
+          text-align: center;
+          font-size:14px;
+          color:#fff;
+        }
+      }
+    }
+    div.page-bar{
+      width: 1200px;
+      margin: -80px auto 0;
+      position: relative;
+      span{
+        position: absolute;
+        width: 100px;
+        height: 80px;
+        cursor: pointer;
+        line-height: 80px;
+        text-align: center;
+        i{
+          font-size: 30px;
+          color: @-main-color;
+        }
+      }
+      span.prev-left{
+        left: 0;
+        top: 0;
+      }
+      span.prev-right{
+        right: 0;
+        top: 0;
+      }
+    }
+  }
+}
+
+.rc-news{
+  width:1200px;
+  margin:0px auto;
+  padding:50px 0px;
+  ul{
+    margin-right:-30px;
+  }
+  ul li{
+    float:left;
+    background-color:#f5f5f5;
+    height:180px;
+    width:300px;
+    .border-radius();
+    margin-right:30px;
+    overflow: hidden;
+    padding:40px;
+    position:relative;
+    a{
+      .a();
+    }
+    h2{
+      font-size:18px;
+      .textFormat();
+    }
+    .info{
+      font-size:14px;
+      line-height:24px;
+      max-height:70px;
+      overflow: hidden;
+      margin:15px auto;
+      color:@-font-color-3;
+    }
+    .date{
+      display: inline-block;
+      padding-top:15px;
+      margin-top:15px;
+      color:@-font-color-3;
+      border-top:1px #333 solid;
+    }
+    &:hover{
+      .box-shadow(3px,15px,10px,.2);
+      background-color:@-main-color;
+      h2,.info,.date{
+        color:#fff;
+      }
+      .date{
+        border-color:#fff;
+      }
+    }
+  }
+}
+
+.rc-title{
+  text-align: center;
+  height:100px;
+  line-height:100px;
+  font-size:24px;
+}
+
+.rc-more{
+  padding-top:50px;
+  text-align: center;
+  height:50px;
+  a{
+    .border-radius(30px);
+    padding:15px 50px;
+    background-color:@-main-color;
+    color:#fff;
+  }
+}
+
+.rc-list{
+  background-color:@-bg-color;
+  padding:50px 0px;
+  .rc{
+    width:1200px;
+    margin:0px auto;
+    ul{
+      margin-right:-30px;
+    }
+    ul>li>a {
+      display: block;
+      height: 200px;
+      width: 585px;
+      .border-radius(3px);
+      float: left;
+      margin-right: 30px;
+      margin-bottom: 30px;
+      background-color: #fff;
+      position: relative;
+      &:hover{
+        .box-shadow (@x: 3px, @y: 15px, @blur: 10px, @alpha: 0.1);
+        color: #000;
+      }
+      .hp {
+        width: 120px;
+        height: 120px;
+        float: left;
+        overflow: hidden;
+        position: absolute;
+        top: 30px;
+        left: 30px;
+        .border-radius(50%);
+        img {
+          width: 100%;
+          height: 120px;
+          overflow: hidden;
+        }
+      }
+      .key{
+        position: absolute;
+        top: 32px;
+        left: 180px;
+        margin-right: 25px;
+        .name{
+          .textFormat();
+          font-size: 16px;
+          line-height: 32px;
+          color: @-font-color-1;
+        }
+        .post{
+          .textFormat();
+          font-size: 16px;
+          line-height: 32px;
+          color: @-main-color;
+        }
+        .introduction{
+          font-size: 14px;
+          line-height: 24px;
+          max-height:72px;
+          overflow: hidden;
+          color: @-font-color-3;
+        }
+      }
+    }
+  }
+}

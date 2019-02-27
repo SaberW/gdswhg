@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/view_head"
+    style="@style/base_header"
+    android:layout_width="match_parent"
+    android:layout_height="50px">
+
+    <RelativeLayout
+        android:id="@+id/view_back_layout"
+        android:layout_width="100px"
+        android:layout_height="match_parent"
+        android:visibility="visible">
+
+        <TextView
+            android:id="@+id/view_top_back"
+            style="@style/back_click_style"
+            android:layout_marginLeft="16px"
+            android:background="@mipmap/ic_back" />
+    </RelativeLayout>
+
+
+    <!-- 左侧标题（可点击） -->
+    <RelativeLayout
+        android:id="@+id/rl_top_left_option"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:gravity="center_vertical"
+        android:paddingLeft="14dp"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/view_top_left_title"
+            style="@style/header_left_text_style" />
+    </RelativeLayout>
+
+    <!-- 中间title -->
+    <LinearLayout
+        android:id="@+id/view_top_ll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_toLeftOf="@+id/rl_top_option"
+        android:layout_toRightOf="@+id/view_back_layout"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/view_top_title"
+            style="@style/header_title_style" />
+
+    </LinearLayout>
+    <!-- 右侧操作按钮 -->
+    <RelativeLayout
+        android:id="@+id/rl_top_option"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:paddingLeft="15px"
+        android:visibility="invisible">
+
+        <TextView
+            android:id="@+id/view_top_option"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="13px"
+            android:layout_toRightOf="@+id/iv_option"
+            android:text="发送"
+            android:textColor="@color/selector_header_text"
+            android:textSize="12px"
+            android:visibility="visible" />
+
+        <ImageView
+            android:id="@+id/iv_option"
+            android:layout_width="12px"
+            android:layout_height="12px"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5px"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_alignParentBottom="true"
+        android:background="#E0E0E0"></View>
+
+</RelativeLayout>

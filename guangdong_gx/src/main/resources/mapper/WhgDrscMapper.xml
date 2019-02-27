@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.creatoo.hn.dao.mapper.WhgDrscMapper">
+
+    <select id="selDrscList" resultType="hashmap">
+        SELECT
+        d1.*
+        FROM
+        whg_drsc d1
+        WHERE
+        d1.drscid NOT IN (
+        SELECT
+        c1.entid
+        FROM
+        whg_major_contact c1
+        WHERE
+        c1.type = 3
+        AND c1.majorid = #{mid}
+        )
+        AND d1.drscstate = 3
+        AND d1.drscvenueid = #{cultid}
+    </select>
+</mapper>

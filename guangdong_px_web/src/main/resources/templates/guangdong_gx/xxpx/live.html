@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong_gx/public/resource :: copy"></head>
+<link rel="stylesheet" href="https://g.alicdn.com/de/prismplayer/2.1.0/skins/default/aliplayer-min.css" />
+<script type="text/javascript" src="https://g.alicdn.com/de/prismplayer/2.1.0/aliplayer-min.js"></script>
+<style>
+    .res-main-info {
+        height: 750px;
+        background: url(../../assets/img/supply/bg.jpg) no-repeat 50% 100%;
+        margin-bottom: 0px;
+        padding-top: 30px;
+    }
+    .res-main-info .main-info {
+        width: 1200px;
+        margin: 0 auto;
+    }
+    .res-main-info .main-info h1 {
+        color: #fff;
+        font-size: 20px;
+    }
+    .res-main-info .main-info .info {
+        height: 26px;
+        line-height: 26px;
+        position: relative;
+        color: #666;
+        font-size: 14px;
+        margin-top: 10px;
+    }
+    .res-main-info .main-info .info span {
+        color: #999;
+        /*margin-right: 15px;*/
+    }
+    .res-main-info .main-info .info .other-cont {
+        width: 600px;
+        position: absolute;
+        right: 0;
+        bottom: 0;
+    }
+    .res-main-info .main-info .info .other-cont .sns-cont {
+        float: right;
+    }
+    .sns-cont {
+        font-size: 12px;
+        line-height: 22px;
+        color: #999;
+        font-weight: normal;
+    }
+    .res-main-info .main-info .info .other-cont .fav-vote-cont {
+        margin-top: 3px;
+        margin-right: 40px;
+        float: right;
+    }
+    .res-main-info .main-info .res-cont {
+        -webkit-border-radius: 3px 3px 0 0;
+        -moz-border-radius: 3px 3px 0 0;
+        border-radius: 3px 3px 0 0;
+        margin-top: 18px;
+        height: 440px;
+        position: relative;
+        background-color: #222;
+    }
+    .res-main-info .main-info .res-cont .res-video {
+        width: 660px;
+        height: 440px;
+        margin: 0 auto;
+        position: relative;
+        background-color: #000;
+    }
+    .res-main-info .main-info .res-cont .res-video .mask {
+        cursor: pointer;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        left: 0;
+        top: 0;
+        background: url(../../assets/img/public/b1.png) repeat;
+        z-index: 1;
+    }
+    .res-main-info .main-info .res-cont .live-cont .live-not-started {
+        text-align: center;
+        width: 100%;
+        height: 400px;
+        padding-top: 200px;
+        position: absolute;
+        left: 0px;
+        top: 0px;
+        z-index: 999999;
+        background-color: #000;
+        color: #aaa;
+    }
+    .res-main-info .main-info .res-cont .live-cont .live-not-started i {
+        font-size: 100px;
+    }
+    .res-main-info .main-info .res-cont .live-cont .live-not-started h2 {
+        margin: 10px auto;
+    }
+    .res-main-info .main-info .res-cont .live-catalog {
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        border-radius: 3px;
+        width: 200px;
+        height: 570px;
+        position: absolute;
+        right: 0px;
+        top: 0px;
+    }
+    .sns-cont i {
+        font-size: 24px;
+        margin-left: 10px;
+        position: relative;
+        bottom: -2px;
+        cursor: pointer;
+        color: #999;
+    }
+</style>
+<body>
+<div class="wrapper clearfix">
+    <div class="content">
+        <!--公共主头部开始-->
+        <div id="header" th:include="guangdong_gx/public/header :: copy"></div>
+        <!--公共主头部结束-->
+
+        <!-- 面包屑开始 -->
+        <div class="sys-crumbs">
+            <span><a href="../index/index">首页</a></span>
+            <i class="icon iconfont icon-enter"></i>
+            <span><a href="list">线下培训</a></span>
+            <i class="icon iconfont icon-enter"></i>
+            <span><a th:href="'detail?id='+${id}" id="tra-title"></a></span>
+            <i class="icon iconfont icon-enter"></i>
+            <span class="active" id="live-title"></span>
+        </div>
+        <!-- 面包屑结束 -->
+
+        <div class="res-main-info">
+            <div class="main-info">
+                <h1><span id="title-2"><!--长沙麻将大赛总决赛视频录播--></span><em id="liveState"><!--正在直播--></em></h1>
+                <div class="info">
+                    开播时间：<span id="livestarttime"><!--2017-09-28 18:00--></span>
+                    <div class="other-cont clearfix">
+                        <div class="sns-cont" title="分享">
+                            分享到
+                            <a class="jiathis_button_weixin fxweix" href="javascript:void(0);" target="_blank" title="分享到微信"><i class="icon iconfont icon-wechat"></i></a>
+                            <a class="fxweibo"href="http://service.weibo.com/share/share.php?title=江门市文化馆活动A&amp;url=http%3A//localhost%3A8888/hd/detail%3Fid%3D170919-835948534&amp;source=bookmark&amp;appkey=2992571369&amp;pic=http://192.168.0.144:8080/whgstatic/img/2017/201709/20170919/8ec7272e58764657a73abfa0134d5561_740_555.jpg&amp;ralateUid=" target="_blank"><i class="icon iconfont icon-xinlang"></i></a>
+                            <a class="fxqq" href="http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=http%3A%2F%2Flocalhost%3A8888%2Fhd%2Fdetail%3Fid%3D170919-835948534&amp;title=江门市文化馆活动A&amp;pics=http://192.168.0.144:8080/whgstatic/img/2017/201709/20170919/8ec7272e58764657a73abfa0134d5561_740_555.jpg&amp;summary=" target="_blank"><i class="icon iconfont icon-kongjian"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="res-cont" style="height:570px;">
+                    <div class="live-cont" id="liveContainer"></div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong_gx/public/footer :: copy"></div>
+<!--底部结束-->
+<script type="text/javascript" th:inline="javascript">
+    var itemId = dataInit.getUrlParam('id');
+    var userId = $("#temp_userId").val();
+    $(document).ready(function () {
+        dataInit.ajax({
+            api: [[${apiPath.pxDetail}]],
+            params:{ userid: userId, id:itemId },
+            fn: createModelHtml
+        })
+    })
+
+    /** 直播 */
+    function createModelHtml(data){
+        if(data.code == 0) {
+            var model = data.data.liveInfo;
+            var title = model.title;
+            $('#title, #live-title').text(title);
+            $('#tra-title').text(data.data.tra.title);
+
+            //视频插放器处理
+            var liveUrl = model.url;
+            var backUrl = model.url;
+
+            //state 1-正在进行, 2-未开始， 3-已结束， 4-回看
+            var listState = model.state;
+            var stateTxt = '';
+            if(listState == '2'){
+                stateTxt = '未开始';
+            }else if(listState == '1'){
+                stateTxt = '正在直播';
+            }else if(listState == '3'){
+                stateTxt = '精彩回顾';
+            }else{
+                stateTxt = '已结束';
+            }
+            $('#liveState').text(stateTxt);
+            $('#livestarttime').text(model.time);
+            showLive(listState, liveUrl, model.time);
+
+            //调分享接口
+            var trainimg = data.imgPath+data.data.tra.trainimg;
+            dataInit.share(title, trainimg);
+        }
+    }
+
+    /**
+     * 根据状态显示视频
+     * @param listState 1-正在进行, 2-未开始， 3-已结束， 4-回看
+     * @param liveUrl 直播地址
+     * @param backUrl 回放地址
+     */
+    function showLive(listState, url, time){
+        var liveContainer = $('#liveContainer');
+
+        //插放器地址
+        var sourceUrl = false;
+        if(listState == '2'){//显示未开始图片
+            var html = ''+
+                '<div class="live-not-started">'+
+                '        <i class="icon iconfont icon-xinhaota1"></i>'+
+                '        <h2>直播尚未开始</h2>'+
+                '        <p>直播时间：<span>'+time+'</span></p>'+
+                '</div>';
+            liveContainer.append(html);
+        }else if(listState == '1' ){//视频直播
+            sourceUrl = url;
+        }else if(listState == '4'){//视频回放
+            sourceUrl = url;
+        }else{
+            var html = ''+
+                '<div class="live-not-started">'+
+                '        <i class="icon iconfont icon-xinhaota1"></i>'+
+                '        <h2>直播已结束</h2>'+
+                '        <p>直播时间：<span>'+time+'</span></p>'+
+                '</div>';
+            liveContainer.append(html);
+        }
+
+        if(sourceUrl){
+            liveContainer.append('<div id="J_prismPlayer" class="prism-player"></div>');
+            var player = new Aliplayer({
+                id: "J_prismPlayer", // 容器id
+                source: sourceUrl,
+                autoplay: false,    //自动播放：否
+                width: "100%",       // 播放器宽度
+                height: "570px"      // 播放器高度
+            });
+        }
+    }
+</script>
+</body>
+</html>

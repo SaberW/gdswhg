@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.creatoo.hn.dao.mapper.WhgMajorContactMapper">
+
+    <select id="selTraInMajor" resultType="hashmap">
+        SELECT
+            m1.id "mid",
+            m1.crtdate,
+            m1.crtuser,
+            m1.statemdfdate,
+            m1.statemdfuser,
+            m1.province,
+            m1.city,
+            m1.area,
+            m1.cultid,
+            m1.`name`,
+            m1.logo,
+            m1.image,
+            m1.etype,
+            m1.detail,
+            t1.id "traid",
+            t1.crtdate,
+            t1.crtuser,
+            t1.state,
+            t1.statemdfdate,
+            t1.statemdfuser,
+            t1.delstate,
+            t1.arttype,
+            t1.etype,
+            t1.etag,
+            t1.ekey,
+            t1.ebrand,
+            t1.title,
+            t1.area,
+            t1.venue,
+            t1.address,
+            t1.longitude,
+            t1.latitude,
+            t1.isrealname,
+            t1.starttime,
+            t1.endtime,
+            t1.coursedesc,
+            t1.outline,
+            t1.trainimg,
+            t1.teacherdesc,
+            t1.maxnumber,
+            t1.enrollstarttime,
+            t1.enrollendtime,
+            t1.isterm,
+            t1.isbasicclass,
+            t1.basicenrollnumber,
+            t1.ismultisite,
+            t1.isshowmaxnumber,
+            t1.trainbackreason,
+            t1.cultid,
+            t1.deptid,
+            t1.fixedweek,
+            t1.coursetime,
+            t1.venroom,
+            t1.recommend,
+            t1.fixedstarttime,
+            t1.fixedendtime,
+            t1.phone,
+            t1.teacherid,
+            t1.teachername,
+            t1.age,
+            t1.ismoney,
+            t1.upindex,
+            t1.islimit,
+            t1.islive,
+            t1.contacts,
+            t1.province,
+            t1.city,
+            t1.duration,
+            c1.id "cid",
+            c1.type,
+            c1.entid,
+            c1.majorid
+        FROM
+            whg_tra_major m1,
+            whg_tra t1,
+            whg_major_contact c1
+        WHERE
+            m1.id = c1.majorid
+        AND t1.id = c1.entid
+        AND c1.type = 1
+        AND m1.id = #{mid}
+        order by t1.statemdfdate desc
+    </select>
+
+    <select id="selTeaInMajor" resultType="hashmap">
+        SELECT
+            m1.id AS mid,
+            m1.crtdate,
+            m1.crtuser,
+            m1.statemdfdate,
+            m1.statemdfuser,
+            m1.province,
+            m1.city,
+            m1.area,
+            m1.cultid,
+            m1.`name`,
+            m1.logo,
+            m1.image,
+            m1.etype,
+            m1.detail,
+            c1.id AS cid,
+            c1.type,
+            c1.entid,
+            c1.majorid,
+            t1.id AS tid,
+            t1.sex,
+            t1.teacheruid,
+            t1.teacherpic,
+            t1.`name` AS tname ,
+            t1.etag,
+            t1.ekey,
+            t1.teachertype,
+            t1.area,
+            t1.arttype,
+            t1.teacherdesc,
+            t1.teacherexpdesc,
+            t1.crtdate,
+            t1.statemdfdate,
+            t1.state,
+            t1.cultid,
+            t1.statemdfuser,
+            t1.province,
+            t1.city
+            FROM
+                whg_tra_major m1,
+                whg_tra_teacher t1,
+                whg_major_contact c1
+            WHERE
+                    m1.id = c1.majorid
+                AND t1.id = c1.entid
+                AND c1.type = 2
+                AND m1.id = #{mid}
+
+    </select>
+
+
+    <select id="selDrscInMajor" resultType="hashmap">
+       SELECT
+            m1.id AS mid,
+            m1.state,
+            m1.crtdate,
+            m1.crtuser,
+            m1.statemdfdate,
+            m1.statemdfuser,
+            m1.province,
+            m1.city,
+            m1.area,
+            m1.cultid,
+            m1.`name`,
+            m1.logo,
+            m1.image,
+            m1.etype,
+            m1.detail,
+            c1.id AS cid,
+            c1.type,
+            c1.entid,
+            c1.majorid,
+            d1.drscid,
+            d1.drsctitle,
+            d1.drscfrom,
+            d1.drscpic,
+            d1.drsccrttime,
+            d1.enturl,
+            d1.drscarttyp,
+            d1.drsctyp,
+            d1.drscstate,
+            d1.drscopttime,
+            d1.drsctime,
+            d1.drsckey,
+            d1.drscintro,
+            d1.drscvenueid,
+            d1.province,
+            d1.city,
+            d1.area
+
+            FROM
+                    whg_tra_major m1,
+                    whg_drsc d1,
+                    whg_major_contact c1
+            WHERE
+                    m1.id = c1.majorid
+                    AND d1.drscid = c1.entid
+                    AND c1.type = 3
+                    AND m1.id = #{mid}
+
+    </select>
+
+
+
+    <select id="t_selMajorByTraid" resultType="hashmap">
+        SELECT
+            m.*
+        FROM
+            whg_tra_major m,
+            whg_major_contact c
+        WHERE
+            c.type = #{type}
+        AND c.majorid = m.id
+        AND c.entid = #{id}
+    </select>
+</mapper>

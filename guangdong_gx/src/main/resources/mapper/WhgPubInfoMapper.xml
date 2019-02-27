@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.creatoo.hn.dao.mapper.WhgPubInfoMapper">
+
+<!-- 活动后台管理列表 查询 -->
+    <select id="t_srchList4p" resultType="hashmap">
+        SELECT
+            c1.clnfid,
+            c1.clnftltle,
+            c1.clnfcrttime,
+            c1.clnfsource,
+            c1.clnfauthor,
+            c1.clnfpic,
+            c1.clnfbigpic,
+            c1.clnfintroduce,
+            c1.clnfdetail,
+            c1.clnfghp,
+            c1.clnfidx,
+            c1.clnfopttime,
+            c1.clnfstata,
+            c1.clnftype,
+            c1.clnfbrowse,
+            c1.clnvenueid,
+            c1.clnfkey,
+            c1.totop,
+            c1.upindex,
+            c1.toproject,
+            c1.province,
+            c1.city,
+            c1.area,
+            c1.deptid,
+            p1.id,
+            p1.entityid,
+            p1.clnfid pubclnfid,
+            p1.clnftype pubclnftype
+        FROM
+            whg_inf_colinfo c1 ,
+            whg_pub_info p1
+        WHERE
+            c1.clnfid = p1.clnfid AND
+            p1.entityid=#{entityid}
+        ORDER BY
+            c1.clnfcrttime desc
+    </select>
+
+
+    <select id="t_srchOne" resultType="hashmap">
+        SELECT
+        c1.clnfid,
+        c1.clnftltle,
+        c1.clnfcrttime,
+        c1.clnfsource,
+        c1.clnfauthor,
+        c1.clnfpic,
+        c1.clnfbigpic,
+        c1.clnfintroduce,
+        c1.clnfdetail,
+        c1.clnfghp,
+        c1.clnfidx,
+        c1.clnfopttime,
+        c1.clnfstata,
+        c1.clnftype,
+        c1.clnfbrowse,
+        c1.clnvenueid,
+        c1.clnfkey,
+        c1.totop,
+        c1.upindex,
+        c1.toproject,
+        c1.province,
+        c1.city,
+        c1.area,
+        c1.ispub,
+        c1.deptid,
+        p1.id,
+        p1.entityid,
+        p1.clnfid pubclnfid,
+        p1.clnftype pubclnftype
+        FROM
+        whg_inf_colinfo c1 ,
+        whg_pub_info p1
+        WHERE
+        c1.clnfid = p1.clnfid AND
+        p1.id=#{id}
+        ORDER BY
+        c1.clnfcrttime desc
+    </select>
+
+    <select id="t_srchcolinfoList4p" resultType="hashmap">
+        SELECT
+        c1.clnfid,
+        c1.clnftltle,
+        c1.clnfcrttime,
+        c1.clnfsource,
+        c1.clnfauthor,
+        c1.clnfpic,
+        c1.clnfbigpic,
+        c1.clnfintroduce,
+        c1.clnfdetail,
+        c1.clnfghp,
+        c1.clnfidx,
+        c1.clnfopttime,
+        c1.clnfstata,
+        c1.clnftype,
+        c1.clnfbrowse,
+        c1.clnvenueid,
+        c1.clnfkey,
+        c1.totop,
+        c1.upindex,
+        c1.toproject,
+        c1.province,
+        c1.city,
+        c1.area,
+        c1.deptid
+        FROM
+        whg_inf_colinfo c1
+        WHERE
+        c1.clnfid not in (SELECT clnfid FROM whg_pub_info p1 where p1.entityid = ${entityid})
+        AND
+        c1.clnfstata = 6
+        <if test="entity == 1">
+            AND c1.clnftype = "2016111900000021"
+        </if>
+        <if test="entity == 2">
+            AND c1.clnftype = "2016111900000018"
+        </if>
+        <if test="entity == 3">
+            AND c1.clnftype = "2016112200000005"
+        </if>
+        <if test="entity == 4">
+            AND c1.clnftype = "2017101276534290"
+        </if>
+        <if test="cultids != null">
+            AND c1.clnvenueid IN
+            <foreach collection="cultids" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+
+        <if test="deptids!= null">
+            AND c1.deptid IN
+            <foreach item="item" index="index" collection="deptids" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        ORDER BY
+        c1.clnfcrttime desc
+    </select>
+</mapper>

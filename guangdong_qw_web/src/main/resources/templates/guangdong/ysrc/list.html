@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link th:href="${basePath}+'/assets/style/public/list.css'" rel="stylesheet">
+<div class="wrapper clearfix">
+    <div class="content">
+        <!--公共主头部开始-->
+        <div id="header" th:include="guangdong/public/header :: copy"></div>
+        <!--公共主头部结束-->
+        <!--主体开始-->
+        <div class="sys-crumbs">
+            <span><a th:href="${basePath}+'/index'">首页</a></span>
+            <i class="icon iconfont icon-enter"></i>
+            <span><a th:href="${basePath}+'/ysrc/index'">艺术人才</a></span>
+            <i class="icon iconfont icon-enter"></i>
+            <span class="active" id="title">人才列表</span>
+        </div>
+        <div class="categoryChange">
+            <div class="row clearfix">
+                <div class="title">所属区域：</div>
+                <div class="adrList" id="areList"></div>
+            </div>
+            <div class="row clearfix">
+                <div class="title">艺术类型：</div>
+                <div class="adrList" id="condition_1">
+                    <!--<span class="item active"><a href="javascript:void(0)"
+                                                 onclick="conditionChange(this,1)">全部</a></span>
+                    <span class="item"><a href="javascript:void(0)" onclick="conditionChange(this,1)">子类型一</a></span>
+                    <span class="item"><a href="javascript:void(0)" onclick="conditionChange(this,1)">子类型二</a></span>
+                    <span class="item"><a href="javascript:void(0)" onclick="conditionChange(this,1)">子类型三</a></span>
+                    <span class="item"><a href="javascript:void(0)" onclick="conditionChange(this,1)">子类型四</a></span>-->
+                </div>
+            </div>
+            <div class="row clearfix">
+                <div class="title">所属年代：</div>
+                <div class="adrList" id="condition_2">
+                    <span class="item active"><a href="javascript:void(0)"
+                                                 onclick="conditionChange(this,1)">全部</a></span>
+                    <span class="item"><a href="javascript:void(0)" onclick="conditionChange(this,1)">图片</a></span>
+                    <span class="item"><a href="javascript:void(0)" onclick="conditionChange(this,1)">音频</a></span>
+                    <span class="item"><a href="javascript:void(0)" onclick="conditionChange(this,1)">视频</a></span>
+                    <span class="item"><a href="javascript:void(0)" onclick="conditionChange(this,1)">其它</a></span>
+                </div>
+            </div>
+        </div>
+        <div class="container content">
+            <div class="filter">
+                <div class="search">
+                    <input id="searchValue" onkeydown="if(event.keyCode==13) PageTool.loadRcList(1);" placeholder="输入关键词" type="text">
+                    <a href="javascript:PageTool.loadRcList(1)"><i class="iconfont icon-search"></i></a>
+                </div>
+            </div>
+                <div class="page-list">
+                    <ul class="center-list clearfix" id="modelList">
+                        <!--<li class="teacher-item"><a href="detail" target="_blank"></a>
+                            <div class="img"><img
+                                    th:src="${basePath}+'/assets/img/userCenter/demo2.png'">
+                            </div>
+                            <div class="info"><h2>李青</h2>                                <em> 陶艺</em>
+                                <p class="desc"></p>
+                                <p class="btn">查看详情</p></div>
+                        </li>
+                        <li class="teacher-item"><a href="detail" target="_blank"></a>
+                            <div class="img"><img
+                                    th:src="${basePath}+'/assets/img/userCenter/demo2.png'">
+                            </div>
+                            <div class="info"><h2>张老师</h2>                                <em> 音乐</em>
+                                <p class="desc"></p>
+                                <p class="btn">查看详情</p></div>
+                        </li>
+                        <li class="teacher-item"><a href="detail" target="_blank"></a>
+                            <div class="img"><img
+                                    th:src="${basePath}+'/assets/img/userCenter/demo2.png'">
+                            </div>
+                            <div class="info"><h2>新会区文化馆A老师</h2>                                <em> xh&#45;&#45;张老师</em>
+                                <p class="desc"></p>
+                                <p class="btn">查看详情</p></div>
+                        </li>
+                        <li class="teacher-item"><a href="detail" target="_blank"></a>
+                            <div class="img"><img
+                                    th:src="${basePath}+'/assets/img/userCenter/demo2.png'">
+                            </div>
+                            <div class="info"><h2>假老师（在编辑）</h2>                                <em> xh&#45;&#45;老师专长配置</em>
+                                <p class="desc"></p>
+                                <p class="btn">查看详情</p></div>
+                        </li>
+                        <li class="teacher-item"><a href="detail" target="_blank"></a>
+                            <div class="img"><img
+                                    th:src="${basePath}+'/assets/img/userCenter/demo2.png'">
+                            </div>
+                            <div class="info"><h2>广州文化馆笑小老师</h2>                                <em> 舞蹈</em>
+                                <p class="desc"></p>
+                                <p class="btn">查看详情</p></div>
+                        </li>
+                        <li class="teacher-item"><a href="detail" target="_blank"></a>
+                            <div class="img"><img
+                                    th:src="${basePath}+'/assets/img/userCenter/demo2.png'">
+                            </div>
+                            <div class="info"><h2>惠州市的老师</h2>                                <em> 乐乐乐</em>
+                                <p class="desc"></p>
+                                <p class="btn">查看详情</p></div>
+                        </li>
+                        <li class="teacher-item"><a href="detail" target="_blank"></a>
+                            <div class="img"><img
+                                    th:src="${basePath}+'/assets/img/userCenter/demo2.png'">
+                            </div>
+                            <div class="info"><h2>某某老师</h2>                                <em> 陶艺</em><em>绘画</em>
+                                <p class="desc"></p>
+                                <p class="btn">查看详情</p></div>
+                        </li>
+                        <li class="teacher-item"><a href="detail" target="_blank"></a>
+                            <div class="img"><img
+                                    th:src="${basePath}+'/assets/img/userCenter/demo2.png'">
+                            </div>
+                            <div class="info"><h2>聊聊解决</h2>                                <em> 绘画</em>
+                                <p class="desc"></p>
+                                <p class="btn">查看详情</p></div>
+                        </li>-->
+                    </ul>
+                    <!--分页开始 -->
+                    <div class="green-black" id="pagging" style="margin-bottom: 40px;margin-top:60px;"></div>
+                    <!--分页结束-->
+                </div>
+        </div>
+        <!--主体结束-->
+    </div>
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong/public/footer :: copy"></div>
+<!--底部结束-->
+<script type="text/javascript" th:inline="javascript">
+    $().ready(function () {
+        showAre($.cookie("city"));
+        $("#top-nav ul li").on("click", function () {
+            $(this).addClass("active").siblings().removeClass("active");
+        })
+    })
+    function setActive(dom){
+        $(dom).parent('span').addClass("active").siblings().removeClass("active");
+    }
+
+
+    function dataPage(){
+        PageTool.loadRcList();
+    }
+
+    $(function(){
+        PageTool.init();
+    });
+
+    var PageTool = {
+        bashPath: [[${basePath}]],
+
+        artistListURL: [[${apiPath.artistList}]],
+        getTypesURL: [[${apiPath.getTypes}]],
+
+        feattype: [[${param.feattype}]],
+
+        init: function () {
+            var me = this;
+            var param = {type:25, cultid:$.cookie('cultid')};
+            var _feattype = me.feattype && me.feattype.length>0?me.feattype[0]:'';
+            me.loadTypes("#condition_1", me.getTypesURL, param, "feattype", "id", "name", function(data, pn, vn){
+                //alert(pn+"===>"+data[vn])
+                me.loadRcList(1);
+            }, _feattype);
+
+            me.loadYears("#condition_2", "years", "value", "text", function(data, pn, vn){
+                me.loadRcList(1);
+            });
+
+            me.loadRcList(null, null, _feattype);
+        },
+
+        loadYears: function(jq, pname, vname, showname, callfn){
+            var all = {};
+            all[vname] = '';
+            all[showname] = '全部';
+            var years = [all];
+            var item00 = {};
+            item00[vname] = '00';
+            item00[showname] = '00';
+            years.push(item00);
+            for(var i=9; i>=1; i--){
+                var item = {};
+                item[vname] = i*10;
+                item[showname] = i*10;
+                years.push(item);
+            }
+
+            var tpdiv = $(jq);
+            tpdiv.empty();
+            tpdiv.addClass("params_item_parent");
+            for(var i in years){
+                var type = years[i];
+                var tpitem = $('<span class="item"><a href="javascript:void(0)">'+type[showname]+'</a></span>');
+                if (i==0) tpitem.addClass("active");
+                tpitem.data("name", pname);
+                tpitem.data("valname", vname);
+                tpitem.data("data", type);
+                tpitem.off("click").on("click", {type: type}, function(env){
+                    $(this).addClass("active").siblings().removeClass("active");
+                    if ($.isFunction(callfn)) {
+                        var data = env.data.type;
+                        callfn(data, pname, vname);
+                    }
+                });
+                tpdiv.append(tpitem);
+            }
+        },
+
+        loadTypes: function(jq, url, urlparam, pname, vname, showname, callfn, val){
+            var me = this;
+            var tpdiv = $(jq);
+            tpdiv.empty();
+            tpdiv.addClass("params_item_parent");
+            $.post(url, urlparam, function(data){
+                var all = {};
+                all[vname] = '';
+                all[showname] = '全部';
+
+                var yxtypes = [all];
+                if (data && data.rows && data.rows.length) {
+                    yxtypes = yxtypes.concat(data.rows);
+                }
+
+                var selectItem = null;
+                for(var i in yxtypes) {
+                    var type = yxtypes[i];
+                    var tpitem = $('<span class="item"><a href="javascript:void(0)">'+type[showname]+'</a></span>');
+                    //if (i==0) tpitem.addClass("active");
+                    if (i==0){ selectItem = tpitem };
+                    if (val && val!='' && val== type[vname]){
+                        selectItem = tpitem;
+                    }
+
+                    tpitem.data("name", pname);
+                    tpitem.data("valname", vname);
+                    tpitem.data("data", type);
+
+                    tpitem.off("click").on("click", {type: type}, function(env){
+                        $(this).addClass("active").siblings().removeClass("active");
+                        if ($.isFunction(callfn)) {
+                            var data = env.data.type;
+                            callfn(data, pname, vname);
+                        }
+                    });
+
+                    tpdiv.append(tpitem);
+                }
+
+                selectItem.addClass("active");
+            },"JSON");
+        },
+
+        setParamsPCA: function(){
+            var me = this;
+            var province = $("#province").val();
+            var city = $("#city").val();
+            var area = $("#area").val();
+            delete me.params.province;
+            delete me.params.city;
+            delete me.params.area;
+            if (province && province!='') me.params.province = province;
+            if (city && city!='') me.params.city = city;
+            if (area && area!='') me.params.area = area;
+
+            $(".params_item_parent .active").each(function () {
+                var ent = $(this);
+                var name = ent.data("name");
+                var valname = ent.data("valname");
+                var data = ent.data("data");
+                if (name){
+                    delete me.params[name];
+                    if (valname && data[valname] && data[valname]!=''){
+                        me.params[name] = data[valname];
+                    }
+                }
+            });
+
+        },
+
+        loadRcList: function(page, pageSize, feattype){
+            var me = this;
+
+            me.params = me.params || {};
+            me.params.page = page || me.params.page || 1;
+            me.params.pageSize = pageSize || 8;
+            me.params.cultid = $.cookie('cultid') || '';
+
+            var content = $("#searchValue").val();
+            delete me.params.content;
+            if (content && content!=''){
+                me.params.content = content;
+            }
+
+            me.setParamsPCA();
+            if (feattype && feattype!=''){
+                me.params.feattype = feattype;
+            }
+
+            var UL = $("#modelList");
+            UL.empty();
+            $.post(me.artistListURL, me.params, function(data){
+                if (!data || !data.rows || !data.rows.length) {
+                    UL.append("<div class='public-no-message'></div>");
+                    return;
+                }
+                var imgPath = data.imgPath;
+                for(var i in data.rows) {
+                    var row = data.rows[i];
+                    var LI = $(me.liTemp);
+                    //LI.find("img").attr("src", imgPath+ dataInit.getSmallImage(row.imgurl));
+                    LI.find("img").attr("src", imgPath+ dataInit.getImage(row.imgurl, 300, 200));
+                    LI.find(".info h2").text(row.name);
+                    LI.find(".info .desc").text(row.summary);
+
+                    var feattype = row.feattype;
+                    feattype = feattype.split(",");
+                    for(var k in feattype) {
+                        if (feattype[k] == ''){
+                            continue;
+                        }
+                        LI.find(".info em:last").after('<em>'+feattype[k]+'</em>');
+                    }
+                    LI.find(".info em:first").remove();
+
+                    LI.find("a").attr("href", me.bashPath+"/ysrc/detail?id="+row.id);
+
+                    UL.append(LI);
+                }
+
+                dataInit.pageInit("pagging", me.params.page, me.params.pageSize, data.total,
+                        function(page, pageSize){
+                            me.loadRcList(page, pageSize)
+                        });
+
+            }, "JSON");
+
+        },
+        liTemp: '<li class="teacher-item">\
+                    <a href="detail" target="_blank"></a>\
+                    <div class="img">\
+                        <img >\
+                    </div>\
+                    <div class="info">\
+                        <h2 style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap">李青</h2>\
+                        <div style="height:40px; overflow: hidden;"><em></em></div>\
+                        <div style="height:45px;"><p class="desc"></p></div>\
+                        <p class="btn">查看详情</p>\
+                    </div>\
+                </li>'
+
+    }
+
+</script>
+</body>
+</html>

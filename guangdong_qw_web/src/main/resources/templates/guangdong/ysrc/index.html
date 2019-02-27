@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<script th:src="${basePath}+'/assets/js/public/sly.js'" type="text/javascript"></script>
+<link th:href="${basePath}+'/assets/style/ysrc/ysrc.css'" rel="stylesheet">
+<div class="wrapper clearfix">
+    <div class="content">
+        <!--公共主头部开始-->
+        <div id="header" th:include="guangdong/public/header :: copy"></div>
+        <!--公共主头部结束-->
+        <!--主体开始-->
+        <div class="rc-bg">
+            <div class="nav-bg">
+                <div class="nav" id="top-nav">
+                    <ul class="clearfix">
+                        <!--<li class="active">
+                            <i class="i-1"></i>
+                            <p>主页</p>
+                        </li>
+                        <li>
+                            <i class="i-2"></i>
+                            <p>音乐</p>
+                        </li>
+                        <li>
+                            <i class="i-3"></i>
+                            <p>舞蹈</p>
+                        </li>
+                        <li>
+                            <i class="i-4"></i>
+                            <p>美术</p>
+                        </li>
+                        <li>
+                            <i class="i-5"></i>
+                            <p>戏剧</p>
+                        </li>
+                        <li>
+                            <i class="i-6"></i>
+                            <p>曲艺</p>
+                        </li>
+                        <li>
+                            <i class="i-7"></i>
+                            <p>书法</p>
+                        </li>
+                        <li>
+                            <i class="i-8"></i>
+                            <p>摄影</p>
+                        </li>-->
+                    </ul>
+                </div>
+                <div class="page-bar">
+                    <span class="prev-left"><i class="iconfont icon-return"></i></span>
+                    <span class="prev-right"><i class="iconfont icon-enter"></i></span>
+                </div>
+            </div>
+        </div>
+        <!--人才资讯开始-->
+        <div class="rc-news">
+            <div class="rc-title">
+                人才资讯
+            </div>
+            <div class="news">
+                <ul class="clearfix">
+                    <!--<li>
+                        <a href="#" target="_blank"></a>
+                        <h2>这儿只是一个一排文字的标题</h2>
+                        <p class="info">沙特体育总局局长图尔基 阿什-谢赫表示：“体育总局将对利雅得、达曼和吉达的主要体育场进行改造，以为它们从2018年起接纳家庭做准备。”沙特国王此前颁布法令，允许该国女性独立驾驶汽车。但沙特女性驾车上路的必要准备工作可能将不早于2018年6月结束。</p>
+                        <p class="date">2017-10-30</p>
+                    </li>
+                    <li>
+                        <a href="#" target="_blank"></a>
+                        <h2>这儿只是一个一排文字的标题</h2>
+                        <p class="info">沙特体育总局局长图尔基 阿什-谢赫表示：“体育总局将对利雅得、达曼和吉达的主要体育场进行改造，以为它们从2018年起接纳家庭做准备。”沙特国王此前颁布法令，允许该国女性独立驾驶汽车。但沙特女性驾车上路的必要准备工作可能将不早于2018年6月结束。</p>
+                        <p class="date">2017-10-30</p>
+                    </li>
+                    <li>
+                        <a href="#" target="_blank"></a>
+                        <h2>这儿只是一个一排文字的标题</h2>
+                        <p class="info">沙特体育总局局长图尔基 阿什-谢赫表示：“体育总局将对利雅得、达曼和吉达的主要体育场进行改造，以为它们从2018年起接纳家庭做准备。”沙特国王此前颁布法令，允许该国女性独立驾驶汽车。但沙特女性驾车上路的必要准备工作可能将不早于2018年6月结束。</p>
+                        <p class="date">2017-10-30</p>
+                    </li>-->
+                </ul>
+            </div>
+            <div class="rc-more">
+                <a th:href="${basePath}+'/news/list'">查看更多</a>
+            </div>
+        </div>
+        <!--人才资讯结束-->
+        <!--艺术人才开始-->
+        <div class="rc-list">
+            <div class="rc-title">
+                艺术人才
+            </div>
+            <div class="rc w">
+                <ul class="clearfix">
+                    <!--<li>
+                        <a href="#" target="_blank">
+                            <div class="hp">    &lt;!&ndash;hp-头像&ndash;&gt;
+                                <img th:src="${basePath}+'/assets/img/img_demo/q1.jpg'">
+                            </div>
+                            <div class="key">
+                                <div class="name">赵志</div>
+                                <div class="post">粤海艺术团团长</div>
+                                <div class="introduction">赵志刚师承尹派，有"越剧王子"美誉。唱腔上，徐（玉兰）、范（瑞娟）、尹（桂芳）、陆（锦花）各个流派都学，皆有所成，为各派宗师所赞许...</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" target="_blank">
+                            <div class="hp">    &lt;!&ndash;hp-头像&ndash;&gt;
+                                <img th:src="${basePath}+'/assets/img/img_demo/q1.jpg'">
+                            </div>
+                            <div class="key">
+                                <div class="name">赵志</div>
+                                <div class="post">粤海艺术团团长</div>
+                                <div class="introduction">赵志刚师承尹派，有"越剧王子"美誉。唱腔上，徐（玉兰）、范（瑞娟）、尹（桂芳）、陆（锦花）各个流派都学，皆有所成，为各派宗师所赞许...</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" target="_blank">
+                            <div class="hp">    &lt;!&ndash;hp-头像&ndash;&gt;
+                                <img th:src="${basePath}+'/assets/img/img_demo/q1.jpg'">
+                            </div>
+                            <div class="key">
+                                <div class="name">赵志</div>
+                                <div class="post">粤海艺术团团长</div>
+                                <div class="introduction">赵志刚师承尹派，有"越剧王子"美誉。唱腔上，徐（玉兰）、范（瑞娟）、尹（桂芳）、陆（锦花）各个流派都学，皆有所成，为各派宗师所赞许...</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" target="_blank">
+                            <div class="hp">    &lt;!&ndash;hp-头像&ndash;&gt;
+                                <img th:src="${basePath}+'/assets/img/img_demo/q1.jpg'">
+                            </div>
+                            <div class="key">
+                                <div class="name">赵志</div>
+                                <div class="post">粤海艺术团团长</div>
+                                <div class="introduction">赵志刚师承尹派，有"越剧王子"美誉。唱腔上，徐（玉兰）、范（瑞娟）、尹（桂芳）、陆（锦花）各个流派都学，皆有所成，为各派宗师所赞许...</div>
+                            </div>
+                        </a>
+                    </li>-->
+                </ul>
+            </div>
+            <div class="rc-more">
+                <a href="list">查看更多</a>
+            </div>
+        </div>
+        <!--艺术人才结束-->
+        <!--主体结束-->
+    </div>
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong/public/footer :: copy"></div>
+<!--底部结束-->
+<script type="text/javascript" th:inline="javascript">
+
+    $(function () {
+        pageTool.init();
+
+
+    });
+
+    var pageTool = {
+        artistListURL: [[${apiPath.artistList}]],
+        artistZxListURL: [[${apiPath.artistZxList}]],
+        getTypesURL: [[${apiPath.getTypes}]],
+
+        bashPath: [[${basePath}]],
+
+        init: function () {
+            this.loadTypes();
+            this.loadHomeRcZxs();
+            this.loadHomeRcs();
+        },
+
+        loadTypes: function(){
+            var me = this;
+
+            var UL = $("#top-nav ul");
+            me.typeTemplate = me.typeTemplate ||
+                    '<li>\
+                        <i></i>\
+                        <p></p>\
+                    </li>';
+
+            var param = {type:25, cultid:$.cookie('cultid')};
+            $.post(me.getTypesURL, param, function(data){
+                UL.empty();
+                if (!data || !data.rows || !data.rows.length) {
+                    return;
+                }
+
+                var rows = data.rows;
+                for(var i in rows) {
+                    var row = rows[i];
+                    var LI = $(me.typeTemplate);
+                    LI.find("p").text(row.name);
+
+                    if (row.typeicon && row.typeicon!=""){
+                        var typeicon = data.imgPath + row.typeicon;
+                        LI.find("i").css("background-image", "url("+typeicon+")");
+                    }
+
+                    (function(el, data){
+                        /*$("#top-nav ul").on("click", "li", function(){
+                            $(this).addClass("active").siblings().removeClass("active");
+                        });*/
+                        el.on("click", function(){
+                            $(this).addClass("active").siblings().removeClass("active");
+                            window.location.href = me.bashPath+"/ysrc/list?feattype="+data.id;
+                        })
+                    })(LI, row);
+
+                    UL.append(LI);
+                }
+
+                $('#top-nav').sly({
+                    itemNav: "smart",
+                    prevPage: ".prev-left",
+                    nextPage: ".prev-right",
+                    horizontal: 1
+                });
+
+            }, "JSON");
+        },
+
+        loadHomeRcZxs: function(){
+            var me = this;
+            var params = {page: 1, pageSize: 3};
+            params.cultid = $.cookie('cultid') || '';
+
+            var UL = $(".rc-news ul");
+            UL.empty();
+            $.post(me.artistZxListURL, params, function(data){
+                if (!data || !data.rows || !data.rows.length) {
+                    UL.append("<div class='public-no-message'></div>");
+                    return;
+                }
+                var imgPath = data.imgPath;
+
+                me.rczxlitemp = me.rczxlitemp ||
+                    '<li>\
+                        <a href="#" target="_blank"></a>\
+                        <h2>这儿只是一个一排文字的标题</h2>\
+                        <p class="info"></p>\
+                        <p class="date">2017-10-30</p>\
+                    </li>';
+
+                for(var i in data.rows) {
+                    var row = data.rows[i];
+                    var LI = $(me.rczxlitemp);
+
+                    LI.find("h2").text(row.clnftltle);
+                    LI.find(".info").text(row.clnfintroduce);
+                    LI.find("date").text(moment(row.clnfopttime).format("YYYY-MM-DD"));
+                    LI.find("a").attr("href", me.bashPath+"/news/detail?id="+row.clnfid);
+
+                    UL.append(LI);
+                }
+            }, "JSON");
+        },
+
+        loadHomeRcs: function(){
+            var me = this;
+            var params = { page: 1, pageSize: 4 };
+            params.cultid = $.cookie('cultid') || '';
+
+            var UL = $(".rc-list ul");
+            UL.empty();
+
+            $.post(me.artistListURL, params, function(data){
+                if (!data || !data.rows || !data.rows.length) {
+                    UL.append("<div class='public-no-message'></div>");
+                    return;
+                }
+                var imgPath = data.imgPath;
+
+                me.rclitemp = me.rclitemp ||
+                    '<li>\
+                        <a href="#" target="_blank">\
+                            <div class="hp">    <!--hp-头像--> \
+                                <img >\
+                            </div>  \
+                            <div class="key" style="width: 380px">    \
+                                <div class="name">赵志</div>  \
+                                <div class="post">粤海艺术团团长</div> \
+                                <div class="introduction"></div> \
+                            </div>  \
+                        </a> \
+                    </li>';
+
+                for(var i in data.rows) {
+                    var row = data.rows[i];
+                    var LI = $(me.rclitemp);
+
+                    LI.find(".name").text(row.name);
+                    LI.find(".post").text(row.job);
+                    LI.find(".introduction").text(row.summary);
+                    //LI.find("img").attr("src", imgPath+ dataInit.getSmallImage(row.imgurl));
+                    LI.find("img").attr("src", imgPath+ dataInit.getImage(row.imgurl, 300, 200));
+
+                    LI.find("a").attr("href", me.bashPath+"/ysrc/detail?id="+row.id);
+
+                    UL.append(LI);
+                }
+            }, "JSON");
+        }
+    }
+</script>
+</body>
+</html>

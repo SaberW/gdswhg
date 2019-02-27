@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/public/list.css'">
+<div th:include="guangdong/public/leftBar :: copy"></div>
+<div id="page">
+    <div class="mui-content">
+        <div class="niubility-search">
+            <div class="niubility-search-dd">
+                <input id="title" placeholder="搜索你感兴趣的在线培训" type="text">
+                <span onclick="niubilitySearch();">搜索</span>
+            </div>
+        </div>
+        <div id="category-cont"
+             class="category-cont mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+            <div class="mui-scroll">
+                <a href="javascript:void(0)" class="mui-control-item" data-index="c-1">区域<i></i></a>
+                <a href="javascript:void(0)" class="mui-control-item" data-index="c-2">艺术类型<i></i></a>
+                <a href="javascript:void(0)" class="mui-control-item" data-index="c-3">培训类型<i></i></a>
+                <a href="javascript:void(0)" class="mui-control-item" data-index="c-4">播放状态<i></i></a>
+                <a href="javascript:void(0)" class="mui-control-item" data-index="c-5">排序<i></i></a>
+            </div>
+        </div>
+        <div class="category-mask none">
+            <div class="category-group none" data-index="c-1">
+                <ul class="clearfix" id="areList">
+                    <!--<li class="active" data-txt="区域">全部</li>
+                    <li item-data="0">雨花区</li>
+                    <li item-data="1">天心区</li>
+                    <li item-data="2">开福区</li>
+                    <li item-data="3">岳麓区</li>
+                    <li item-data="4">芙蓉区</li>-->
+                </ul>
+            </div>
+            <div class="category-group none" data-index="c-2">
+                <ul class="clearfix" id="ysList">
+                    <!--<li class="active" data-txt="艺术类型">全部</li>
+                    <li item-data="5">展览</li>
+                    <li item-data="6">讲座</li>
+                    <li item-data="7">演出</li>
+                    <li item-data="8">赛事活动</li>-->
+                </ul>
+            </div>
+            <div class="category-group none" data-index="c-3">
+                <ul class="clearfix" id="pxList">
+                    <!--<li item-data="9" class="active" data-txt="活动类型">全部</li>
+                    <li item-data="10">声乐</li>
+                    <li item-data="11">舞蹈</li>
+                    <li item-data="12">器乐</li>
+                    <li item-data="13">戏剧</li>
+                    <li item-data="14">曲艺</li>
+                    <li item-data="15">书法</li>
+                    <li item-data="16">美术</li>
+                    <li item-data="17">摄影</li>
+                    <li item-data="18">粤剧</li>
+                    <li item-data="19">化妆</li>
+                    <li item-data="20">太极拳</li>
+                    <li item-data="21">健身操</li>
+                    <li item-data="22">语言艺术</li>
+                    <li item-data="23">剪纸</li>
+                    <li item-data="24">其它</li>-->
+                </ul>
+            </div>
+            <div class="category-group none" data-index="c-4">
+                <ul class="clearfix">
+                    <li item-data="3" class="active" data-txt="播放状态">全部</li>
+                    <li item-data="0">直播预告</li>
+                    <li item-data="1">正在直播</li>
+                    <li item-data="2">精彩回顾</li>
+                </ul>
+            </div>
+            <div class="category-group none" data-index="c-5">
+                <ul class="clearfix">
+                    <li item-data="0" class="active" data-txt="排序">智能排序</li>
+                    <li item-data="1">热门直播</li>
+                    <li item-data="2">最新发布</li>
+                </ul>
+            </div>
+        </div>
+        <!--下拉刷新容器-->
+        <div id="model-list-panel" class="mui-content mui-scroll-wrapper" style="top:89px;">
+            <div class="mui-scroll">
+                <!--数据列表-->
+                <div class="public-list">
+                    <ul id="model-list">
+                        <!--<li>-->
+                            <!--<a href="detail?id=2017110127436518">-->
+                                <!--<div class="img">-->
+                                    <!--<div class="tag"><span>正在直播</span></div>-->
+                                    <!--<img th:src="${basePath}+'/assets/img/img_demo/q2.jpg'" alt="">-->
+                                <!--</div>-->
+                                <!--<div class="info">-->
+                                    <!--<div class="title">广东省第七届群众音乐舞蹈花会决赛即将在珠海开幕</div>-->
+                                    <!--<p>培训时间：2017-11-3 至 2017-11-20</p>-->
+                                <!--</div>-->
+                                <!--<div class="abstract">-->
+                                    <!--<div class="ticket">人数：18 / 20</div>-->
+                                    <!--<div class="other">-->
+                                        <!--&lt;!&ndash;<span class="comment"><i class="iconfont icon-message"></i>15</span>&ndash;&gt;-->
+                                        <!--<span class="zan"><i class="iconfont icon-praise"></i>20</span>-->
+                                        <!--<span class="favorite"><i class="iconfont icon-like"></i>25</span>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                            <!--</a>-->
+                        <!--</li>-->
+                        <!--<li>-->
+                            <!--<a href="detail?id=2017110127436518">-->
+                                <!--<div class="img">-->
+                                    <!--<div class="tag"><span>直播预告</span></div>-->
+                                    <!--<img th:src="${basePath}+'/assets/img/img_demo/q3.jpg'" alt="">-->
+                                <!--</div>-->
+                                <!--<div class="info">-->
+                                    <!--<div class="title">广东省第七届群众音乐舞蹈花会决赛即将在珠海开幕</div>-->
+                                    <!--<p>培训时间：2017-11-3 至 2017-11-20</p>-->
+                                <!--</div>-->
+                                <!--<div class="abstract">-->
+                                    <!--<div class="ticket">人数：18 / 20</div>-->
+                                    <!--<div class="other">-->
+                                        <!--&lt;!&ndash;<span class="comment"><i class="iconfont icon-message"></i>15</span>&ndash;&gt;-->
+                                        <!--<span class="zan"><i class="iconfont icon-praise"></i>20</span>-->
+                                        <!--<span class="favorite"><i class="iconfont icon-like"></i>25</span>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                            <!--</a>-->
+                        <!--</li>-->
+                        <!--<li>-->
+                            <!--<a href="detail?id=2017110127436518">-->
+                                <!--<div class="img">-->
+                                    <!--<div class="tag"><span>精彩回顾</span></div>-->
+                                    <!--<img th:src="${basePath}+'/assets/img/img_demo/q3.jpg'" alt="">-->
+                                <!--</div>-->
+                                <!--<div class="info">-->
+                                    <!--<div class="title">广东省第七届群众音乐舞蹈花会决赛即将在珠海开幕</div>-->
+                                    <!--<p>培训时间：2017-11-3 至 2017-11-20</p>-->
+                                <!--</div>-->
+                                <!--<div class="abstract">-->
+                                    <!--<div class="ticket">人数：18 / 20</div>-->
+                                    <!--<div class="other">-->
+                                        <!--&lt;!&ndash;<span class="comment"><i class="iconfont icon-message"></i>15</span>&ndash;&gt;-->
+                                        <!--<span class="zan"><i class="iconfont icon-praise"></i>20</span>-->
+                                        <!--<span class="favorite"><i class="iconfont icon-like"></i>25</span>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                            <!--</a>-->
+                        <!--</li>-->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" th:inline="javascript">
+    var keywords = dataInit.getCache('sgkeywords');
+    dataInit.resetCache('sgkeywords');
+    var userId = $("#temp_userId").val();
+    $().ready(function () {
+        dataInit.ajax({
+            api:[[${apiPath.actCate}]],
+            params:{
+                cultid:$.cookie('cultid'),
+                type:1 //艺术分类
+            },
+            fn:showYsClass
+        })
+        dataInit.ajax({
+            api:[[${apiPath.actCate}]],
+            params:{
+                type:16, //培训分类
+                cultid:$.cookie('cultid')},
+            fn:showPxClass
+        })
+        select.create(modelData);
+        dataInit.showAre($.cookie("city"),[[${apiPath.depts}]]);
+        modelData();
+    })
+
+    function showPxClass(data) {
+        var panel = $("#pxList");
+        panel.html("");
+        panel.append('<li class="active" item-data="" data-txt="培训类型">全部</li>');
+        for (var i in data.rows) {
+            var model = data.rows[i];
+            panel.append('<li item-data="' + model.id + '">' + model.name + '</li>');
+        }
+    }
+
+    function showYsClass(data) {
+        var panel = $("#ysList");
+        panel.html("");
+        panel.append('<li class="active" item-data="" data-txt="艺术类型">全部</li>');
+        for (var i in data.rows) {
+            var model = data.rows[i];
+            panel.append('<li item-data="' + model.id + '">' + model.name + '</li>');
+        }
+    }
+
+    function modelData(page, size) {
+        var page = page || 1;
+        var size = size || 10;
+        var params = {
+            userid:userId,
+            cultid:$.cookie('cultid'),
+            city: $("#city").val(), //市
+            area: $("#area").val(), //区
+            deptid: $("#deptid").val(), //服务站
+            province: $("#province").val(), //省
+            arttype:$("#c-2").val(),
+            etype:$("#c-3").val(),
+            livestate: $("#c-4").val(),
+            sort:$("#c-5").val(),
+            //title:keywords?keywords:'',
+            title:keywords ? keywords : '',
+            page:page,
+            pageSize:size,
+        }
+        dataInit.ajax({
+            api: [[${apiPath.nowkecheng}]],
+            params: params,
+            fn: function(data){
+                var params = {
+                    page: page,
+                    size: size,
+                    total: data.total
+                }
+                dataInit.htmlAdd(page, showModelHtml(data));
+                dataInit.pullUp(params, modelData);
+            }
+        })
+    }
+
+    function showModelHtml(data) {
+        var html = "";
+        if (data.code == 0 && data.rows.length > 0) {
+            for (var i in data.rows) {
+                var model = data.rows[i];
+                var stime = moment(model.starttime).format('YYYY-MM-DD');
+                var etime = moment(model.endtime).format('YYYY-MM-DD');
+                var curtPeoples = model.curtPeoples;
+                var restPeoples = model.restPeoples;
+                var maxnumber = model.maxnumber;
+                var listState = model.listState;//0-未开始(直播预告), 1-正在直播，2-已结束(精彩回顾)
+                var listStateDesc = listState == 0 ? '直播预告' : (listState == 1 ? "正在直播" : "精彩回顾");
+                var listStateNone = listState == 0 ? '' : 'none';
+                var enrolState = model.enrolState;//0-未开始，1-可报名, 2-已报满, 3-已结束, 4-不满足条件, 5-已报名
+                var mustsignup = model.mustsignup;
+                var _peoHtml = '';
+                if(mustsignup == 1){
+                    var showPeople = '';
+                    if (restPeoples<=0){
+                        showPeople = '已满';
+                    }
+                    else if(enrolState == 3 || enrolState == 2){
+                        showPeople = curtPeoples+'人';
+                    }else{
+                        showPeople = '仅剩'+restPeoples+'人';
+                    }
+                    _peoHtml = "<p><i class=\"iconfont icon-group\"></i> 人数："+showPeople+"</p>";
+                }else{
+                    _peoHtml = "<p><i class=\"iconfont icon-group\"></i> 人数：不限（无需报名）</p>";
+                }
+
+                var imgurl = data.imgPath+model.trainimg;
+                var age  = model.age;
+                if(age){
+                    age = age.split('-');
+                    age = age[0]+'-'+age[1]+'岁';
+                }else{
+                    age = '不限';
+                }
+                html += '<li>\
+                            <a href="liveDetail?id='+model.id+'">\
+                                <div class="img">\
+                                    <div class="tag"><span>'+listStateDesc+'</span></div>\
+                                     <img src="'+imgurl+'" class="lazy">\
+                                </div>\
+                                <div class="info">\
+                                    <div class="title">'+model.title+'</div>\
+                                    <p style="padding-right: 0px;"><i class="iconfont icon-time"></i> 培训时间：'+stime+' 至 '+etime+'</p>\
+                                    '+_peoHtml+'\
+                                </div>\
+                                <div class="abstract">\
+                                    <div class="ticket">年龄段：'+age+'</div>\
+                                    <div class="other">\
+                                        <span class="zan"><i class="iconfont icon-praise"></i>'+model.likedTimes+'</span>\
+                                        <span class="favorite"><i class="iconfont icon-like"></i>'+model.favoriteTimes+'</span>\
+                                    </div>\
+                                </div>\
+                            </a>\
+                        </li>';
+            }
+        } else {
+            html = "<div class='newbility-no-msg'></div>";
+        }
+        return html;
+    }
+
+    function niubilitySearch() {
+        mui('#model-list-panel').pullRefresh().scrollTo(0,0,0);
+        mui('#model-list-panel').pullRefresh().refresh(true);
+        keywords = $.trim($("#title").val());
+        jQuery("#model-list").html("");
+        modelData();
+    }
+</script>
+</body>
+</html>

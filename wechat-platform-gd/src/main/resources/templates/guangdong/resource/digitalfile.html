@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/brand/brand.css'" >
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/resource/resdetail.css'" >
+<script th:src="${basePath}+'/assets/js/mui.zoom.js'" type="text/javascript"></script>
+<script th:src="${basePath}+'/assets/js/mui.previewimage.js'" type="text/javascript"></script>
+<div th:include="guangdong/public/leftBar :: copy"></div>
+<div id="page">
+    <div class="mui-content">
+        <div class="image-info mui-clearfix">
+            <!--<img src="" alt="">
+            <div class="title"></div>-->
+        </div>
+    </div>
+    <nav class="mui-bar mui-bar-tab">
+        <div class="mui-tab-item"><a class="goNext" href="javascript:void(0)" download>点击下载</a></div>
+    </nav>
+</div>
+<script type="text/javascript" th:inline="javascript">
+    var rid = dataInit.getUrlParam("resid");
+    var lid = dataInit.getUrlParam("libid");
+
+    var id = dataInit.getUrlParam("id");
+    var reftype = dataInit.getUrlParam("reftype");
+    var refid = dataInit.getUrlParam("refid");
+
+    $(document).ready(function () {
+
+        if (id){
+            dataInit.ajax({
+                api: [[${apiPath.ppResourceList}]],
+                params: {
+                    page: 1,
+                    pageSize: 1000000000,
+                    refid: refid,
+                    reftype: reftype,
+                    wechat: 1,
+                    cultid: $.cookie("cultid")
+                },
+                forceUpdate: false,
+                fn: function (data) {
+                    createModelHtmlOld(data)
+                }
+            })
+        }else {
+            dataInit.ajax({
+                api: [[${apiPath.qwzyDetail}]],
+                params: {
+                    resid: rid,
+                    libid: lid
+                },
+                forceUpdate: false,
+                fn: function (data) {
+                    createModelHtml(data)
+                }
+            });
+        }
+
+        if(dataInit.isWeixin()){
+            var mask = mui.createMask();
+            mui(".mui-tab-item").on('tap','.goNext',function () {
+                mask.show();
+                $(".mui-backdrop").css({'z-index':'1000'})
+            });
+            mui("body").on('tap','.mui-backdrop',function () {
+                mask.close();
+            })
+        }else {
+            mui(".mui-tab-item").on('tap','.goNext',function () {
+                window.location.href = this.href;
+            })
+        }
+    });
+    function createModelHtml(data) {
+        if(data.code ==0){
+            var model = data.data;
+            if(model.libid == lid){
+                //var imgPath =  [[${basePath}]]+'/assets/img/gather/music.jpg';
+                var imgPath =  [[${basePath}]]+dataInit.getFileTypeIcon(model.resurl, '/assets/img/gather/xiazai.jpg');;
+                var pdfPath = model.resurl;
+                $('.image-info').html('<img src="'+imgPath+'" style="width:100%">'+
+                    '<div class="title">'+model.resname+'</div>');
+                $('.goNext').attr('href',pdfPath);
+            }
+        }
+    }
+
+    function createModelHtmlOld(data) {
+        if(data.code ==0 && data.rows.length>0){
+            data.rows.forEach(function (model) {
+                if(model.id == id){
+                    var filePath = 'javascript:void(0)';
+                    //var imgPath = [[${basePath}]]+'/assets/img/gather/music.jpg';
+                    var imgPath = [[${basePath}]] + dataInit.getFileTypeIcon(model.enturl, '/assets/img/gather/xiazai.jpg');
+                    if(model.enturl){
+                        filePath = model.enturl.indexOf('http') >= 0 ? model.enturl : data.imgPath + model.enturl;
+                    }
+                    $('.image-info').html('<img src="'+imgPath+'" alt="'+model.name+'">'+
+                            '<div class="title">'+model.name+'</div>');
+                    $('.goNext').attr('href',filePath);
+                }
+            })
+        }
+    }
+
+</script>
+</body>
+</html>

@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<script th:src="${apiPath.myvisitnote}" id="whgtongji"></script>
+<body>
+
+<link rel="stylesheet" th:href="${basePath}+'/assets/style/news/news.css'" >
+<style>
+    .file-download-cont{line-height:50px;border:1px #ccc dashed;border-width:1px 0px;}
+    .file-download-cont ul li{height:32px; line-height:32px; padding-left:42px; position:relative; margin:15px 0px;}
+    .file-download-cont ul li a{color:#333; display:block;}
+    .file-download-cont ul li i{height:32px; width:32px; position:absolute; background:url(../assets/img/public/fileBtn.png) no-repeat 50% 50%; left:0px; bottom:0px;}
+    .file-download-cont ul li a:hover{color:#c8161d;}
+</style>
+<div class="wrapper clearfix">
+    <div class="content">
+        <!--公共主头部开始-->
+        <div id="header" th:include="guangdong/public/header :: copy"></div>
+        <!--公共主头部结束-->
+        <!--面包屑开始-->
+        <div class="sys-crumbs">
+            <span><a href="../index">首页</a></span>
+            <i class="icon iconfont icon-enter"></i>
+            <span><a href="list">资讯</a></span>
+            <i class="icon iconfont icon-enter"></i>
+            <span class="active" id="crumbs-title"></span>
+        </div>
+        <!--面包屑结束-->
+        <div class="sys-main-bottom">
+            <div class="main-cont clearfix">
+                <div class="left-cont">
+                    <div class="news-detail">
+                        <h1 id="title"></h1>
+                        <div class="title-share">
+                            来源：<span id="source"></span>
+                            关键字：<span id="key"></span>
+                            时间：<span id="time"></span>
+                            浏览量：<span id="visit_count"></span>
+                            <div class="sns-cont" title="分享">
+                                分享到
+                                <a href="javascript:void(0);"  class="fxweix"><i class="icon iconfont icon-wechat"></i></a>
+                                <a href="javascript:void(0);"  class="fxweibo"><i class="icon iconfont icon-xinlang"></i></a>
+                                <a href="javascript:void(0);"  class="fxqq"><i class="icon iconfont icon-kongjian"></i></a>
+                            </div>
+                        </div>
+                        <div class="detail-text" id="info" style="border-bottom: 0px;">
+
+                        </div>
+                        <!-- 下载 -->
+                        <div class="file-download-cont" style="display: none">
+                            <ul id="downloadFile">
+                            </ul>
+                        </div>
+                        <!--<div class="main-cont clearfix">
+                            <div class="sys-detail-list" id="res-cont">
+                                <div class="html-panel">
+                                    <div class="title">相关资源：</div>
+                                    <div class="res-detail-cont">
+                                        <div class="res-filter">
+                                            <div class="filter-list">
+                                                <div class="clearfix" id="fileter-nav">
+                                                    <span onclick="resDate(1)"class="active"><a href="javascript:void(0)">图片</a></span>
+                                                    <span onclick="resDate(2)"><a href="javascript:void(0)">视频</a></span>
+                                                    <span onclick="resDate(3)"><a href="javascript:void(0)">音频</a></span>
+                                                    <span onclick="resDate(4)"><a href="javascript:void(0)">文档</a></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="style-list">
+                                            <div class="content-list">
+                                                <ul class="clearfix" id="modelList_2"></ul>
+                                            </div>
+                                            &lt;!&ndash;分页开始 &ndash;&gt;
+                                            <div class="green-black" id="artPagging_2" style="margin-bottom: 40px"></div>
+                                            &lt;!&ndash;分页结束&ndash;&gt;
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>-->
+                        <div class="sys-detail-list" id="res-list">
+                            <div class="title">资源列表</div>
+                            <div class="html-panel">
+                                <div class="res-detail-cont">
+                                    <div class="res-filter">
+                                        <div class="filter-list">
+                                            <div class="clearfix" id="fileter-nav">
+                                                <span class="active"><a href="javascript:void(0)">全部</a></span>
+                                                <span><a href="javascript:void(0)">图片</a></span>
+                                                <span><a href="javascript:void(0)">视频</a></span>
+                                                <span><a href="javascript:void(0)">音频</a></span>
+                                                <span><a href="javascript:void(0)">文档</a></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="style-list">
+                                        <div class="content-list">
+                                            <ul class="clearfix" id="modelList_2">
+
+                                            </ul>
+                                        </div>
+                                        <!--分页开始 -->
+                                        <div class="green-black" id="artPagging_2" style="margin-bottom: 40px"></div>
+                                        <!--分页结束-->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="right-cont">
+                    <div class="item-cont">
+                        <div class="sys-main-title">
+                            <div class="title">相关资讯</div>
+                            <hr>
+                        </div>
+                        <div class="recommend-cont" id="recomment-list">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong/public/footer :: copy"></div>
+<!--底部结束-->
+<a class="to-top"></a>
+<script th:src="${basePath}+'/assets/js/FilteDatail.js'"></script>
+<script type="text/javascript" th:inline="javascript">
+
+    var userId = $("#temp_userId").val();
+    var itemId = dataInit.getUrlParam('id');
+
+    $().ready(function(){
+        itemShow();
+        recommentList();
+
+        /*resDate();
+        $("#fileter-nav span").on('click',function(){
+            $(this).addClass('active').siblings().removeClass('active');
+        })*/
+        ziyuanPage();
+        $("#fileter-nav").on("click", "span>a", function(){
+            $(this).parents("span").addClass("active").siblings().removeClass("active");
+            ziyuanPage();
+        });
+    })
+
+    //调资讯详情ajax
+    function itemShow(){
+        dataInit.ajax({
+            api:[[${apiPath.infoldetail}]],
+            params:{id:itemId},
+            fn:function(data){
+                FilteDatail.options({
+                    toUrl: [[${basePath}]]+'/'+[[${cultsite}]]+'/index',
+                    info: data.data,
+                    state: 'clnfstata'
+                }).filte();
+
+               if(data.code == 0){
+                   showModelList(data);
+               }
+            }
+        })
+    }
+
+    //推荐列表
+    function recommentList(){
+        dataInit.ajax({
+            api:[[${apiPath.infolist}]],
+            params:{relation:1, cultid: $.cookie('cultid')},
+            fn:function(data){
+                showRecommentList(data);
+            }
+        })
+    }
+
+    //渲染推荐列表
+    function showRecommentList(data){
+        if(data.code == 0 && data.rows.length > 0){
+            var panel = $("#recomment-list");
+            panel.html("");
+            for(var i in data.rows){
+                if(i>=10)break;
+                var model = data.rows[i];
+                panel.append('\
+                    <div class="recommend-list">\
+                        <div class="recomment-title"><a href="detail?id='+model.clnfid+'">'+model.clnftltle+'</a></div>\
+                        <div class="recomment-time">'+moment(model.clnfcrttime).format("YYYY-MM-DD")+'</div>\
+                    </div>');
+            }
+        }
+    }
+
+    //渲染页面数据
+    function showModelList(data){
+        var model = data.data;
+        var row=data.rows;
+        var title = model.clnftltle;
+        var key = model.clnfkey ? model.clnfkey : '无';
+        var source = model.clnfsource ?  model.clnfsource : '本站点';
+        var time = moment(model.clnfcrttime).format("YYYY-MM-DD");
+        var info = model.clnfdetail;
+        var imgPath = data.imgPath + model.clnfbigpic;
+        $("#title,#crumbs-title").html(title);
+        $("#key").text(key);
+        $("#source").text(source);
+        $("#time").text(time);
+        $("#info").html(info);
+        for (var i in row) {
+            var obj = row[i];
+            var html = $('<li><a href="'+data.imgPath+obj.uplink+'" target="_blank" class="js-urlencode"><i></i>附件:'+obj.upname+'</a></li>');
+            $("#downloadFile").append(html);
+        }
+        if(row.length>0){
+            $(".file-download-cont").show();
+        }
+        //调分享接口
+        dataInit.share(title,imgPath);
+
+        // 浏览量
+        getVisitSumCount4url(itemId, function(count){
+            $("#visit_count").text(count);
+        });
+    }
+
+
+    //获取资源数据
+    function resDate(type){
+        var enttype = type ? type : 1;
+        dataInit.ajax({
+            api:[[${apiPath.resourceList}]],
+            params:{
+                refid:itemId,
+                reftype:36,
+                enttype:enttype
+            },
+            fn:function(data){
+                showResList(data,enttype);
+            }
+        })
+    }
+    //生成资源列表
+    /*function showResList(data,type){
+        var modelUL = $("#modelList_2");
+        var type = type+"";
+        modelUL.empty();
+        if(data.code == 0){
+            if (data.data.length > 0) {
+                for (var i in data.data) {
+                    var module = data.data[i];
+                    var html = $('<li>\
+                                    <div class="img">\
+                                        <img >\
+                                    </div>\
+                                    <div class="info">\
+                                        <div class="title">'+module.name+'</div>\
+                                    </div>\
+                                    <div class="mask"><img></div>\
+                                    <a href="javascript:void(0)"></a>\
+                                    </li>');
+                    if(module.enturl){
+                        var _enturl = module.enturl.indexOf('http') >= 0 ? module.enturl : data.imgPath + module.enturl;
+                    }
+                    var resBasePath = [[${basePath}]];
+                    switch (type){
+                        case "1" : //图片
+                            html.find(".img img").attr("src", data.imgPath + dataInit.getSmallImage(module.enturl));
+                            html.find(".mask").empty();
+                            html.find("a:last").attr("onClick", "rongDialog.init({\
+                                            ico : 1,\
+                                            type : 6,\
+                                            imgUrl : '"+_enturl+"',\
+                                            title : '"+ module.name +"'\
+                                        });"
+                            );
+                            break;
+                        case "2" :  //视频
+                            html.find(".img img").attr("src", data.imgPath + dataInit.getSmallImage(module.deourl));
+                            html.find(".mask img").attr("src", [[${basePath}]] + '/assets/img/brand/play.png');
+                            html.find("a:last").attr("onClick", "rongDialog.init({\
+                                            type : 5,\
+                                            vedioUrl : '"+_enturl+"',\
+                                            vedioImg : '',\
+                                            vedioTitle : '"+module.name+"',\
+                                            basePath : '"+resBasePath+"'\
+                                        })"
+                            );
+                            break;
+                        case "3" :  //音频
+                            //alert(resBasePath+"/assets/img/brand/brand-music.jpg");
+                            html.find(".img img").attr("src", [[${basePath}]] + '/assets/img/brand/brand-music.jpg');
+                            html.find(".mask img").attr("src", [[${basePath}]] + '/assets/img/brand/macphone.png');
+                            html.find("a:last").attr("onClick", "rongDialog.init({\
+                                            type : 5,\
+                                            vedioUrl : '"+_enturl+"',\
+                                            vedioType: 'mp3',\
+                                            vedioImg : '"+resBasePath+"/assets/img/brand/brand-music.jpg',\
+                                            vedioTitle : '"+module.name+"',\
+                                            basePath : '"+resBasePath+"'\
+                                        });setWidth();"
+                            );
+                            break;
+
+                        case "4" : //文档
+                            html.find(".img img").attr("src", [[${basePath}]] + '/assets/img/brand/xiazai.jpg');
+                            html.find(".mask").empty();
+                            html.find("a:last").attr({
+                                target:"_blank",
+                                href: data.imgPath + module.enturl
+                            });
+                            break;
+
+                        default:
+                            html.find(".mask").empty();
+                    }
+                    modelUL.append(html);
+                }
+            } else {
+                modelUL.append("<div class='public-no-message'></div>");
+            }
+        }else {
+            $("#res-cont").hide();
+        }
+    }*/
+
+    function ziyuanPage(page,rows){
+        var params = {};
+        params.refid = itemId;
+        params.page = page || 1;
+        params.pageSize = rows || 12;
+        params.reftype = 36;
+
+        var filterIdx = $("#fileter-nav").find("span.active").index();
+        switch (filterIdx){
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+                params.enttype = filterIdx;
+                break;
+            default: params.enttype = '';
+        }
+
+        dataInit.ajax({
+            api: [[${apiPath.resourceList}]],
+            params: params,
+            fn: function(data){
+                showZiyuanList(data);
+//                dataInit.pageInit('artPagging_2', params.page, params.pageSize, data.total, dataPage);
+            }
+        })
+    }
+
+    function showZiyuanList(data){
+        var modelUL = $("#modelList_2");
+        modelUL.empty();
+        if(data.code == 0){
+            if (data.data) {
+                for (var i in data.data) {
+                    var module = data.data[i];
+
+                    var html = $('<li>\
+                                    <div class="img">\
+                                        <img >\
+                                    </div>\
+                                    <div class="info">\
+                                        <div class="title">'+module.name+'</div>\
+                                    </div>\
+                                    <div class="mask"><img></div>\
+                                    <a href="javascript:void(0)"></a>\
+                                    </li>');
+                    if(module.enturl)
+                        var _enturl = module.enturl.indexOf('http') >= 0 ? module.enturl : data.imgPath + module.enturl;
+                    var resBasePath = [[${basePath}]];
+                    switch (module.enttype){
+                        case "1" : //图片
+                            html.find(".img img").attr("src", dataInit.getRemoteURL(data.imgPath , dataInit.getMidImage(module.enturl)));
+                            html.find(".mask").empty();
+                            html.find("a:last").attr("onClick", "rongDialog.init({\
+                                            ico : 1,\
+                                            type : 6,\
+                                            imgUrl : '"+_enturl+"',\
+                                            title : '"+module.name+"'\
+                                        });"
+                            );
+                            break;
+                        case "2" :  //视频
+                            html.find(".img img").attr("src", dataInit.getRemoteURL(data.imgPath ,dataInit.getMidImage(module.deourl)));
+                            html.find(".mask img").attr("src", [[${basePath}]] + '/assets/img/brand/play.png');
+                            html.find("a:last").attr("onClick", "rongDialog.init({\
+                                            type : 5,\
+                                            vedioUrl : '"+_enturl+"',\
+                                            vedioImg : '',\
+                                            vedioTitle : '"+module.name+"',\
+                                            basePath : '"+resBasePath+"'\
+                                        })"
+                            );
+                            break;
+                        case "3" :  //音频
+                            html.find(".img img").attr("src", [[${basePath}]] + '/assets/img/brand/brand-music.jpg');
+                            html.find(".mask img").attr("src", [[${basePath}]] + '/assets/img/brand/macphone.png');
+                            html.find("a:last").attr("onClick", "rongDialog.init({\
+                                            type : 5,\
+                                            vedioUrl : '"+_enturl+"',\
+                                            vedioType: 'mp3',\
+                                            vedioImg : '"+resBasePath+"/assets/img/brand/brand-music.jpg',\
+                                            vedioTitle : '"+module.name+"',\
+                                            basePath : '"+resBasePath+"'\
+                                        });setWidth();"
+                            );
+                            break;
+
+                        case "4" : //文档
+                            //html.find(".img img").attr("src", [[${basePath}]] + '/assets/img/brand/xiazai.jpg');
+                            var iconImg = dataInit.getFileTypeIcon(module.enturl, '/assets/img/brand/xiazai.jpg');
+                            html.find(".img img").attr("src", [[${basePath}]] + iconImg);
+
+                            html.find(".mask").empty();
+                            html.find("a:last").attr({
+                                target:"_blank",
+                                href: dataInit.getRemoteURL(data.imgPath , module.enturl)
+                            });
+                            break;
+
+                        default:
+                            html.find(".mask").empty();
+                    }
+
+                    modelUL.append(html);
+                }
+            } else {
+                modelUL.append("<div class='public-no-message'></div>");
+            }
+        }else {
+            $("#res-list").hide();
+        }
+    }
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

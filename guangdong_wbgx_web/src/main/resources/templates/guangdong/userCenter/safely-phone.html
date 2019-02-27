@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link th:href="${basePath}+'/assets/style/userCenter/userCenter.css'" rel="stylesheet">
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/rong.validate.js'"></script>
+<script type="text/javascript" th:src="${basePath}+'/assets/js/plugs/rong.message.js'"></script>
+<div class="wrapper clearfix">
+    <div class="content">
+        <!--公共主头部开始-->
+        <div id="header" th:include="guangdong/public/header :: copy"></div>
+        <!--公共主头部结束-->
+        <div class="main main-boder clearfix">
+            <div class="leftPanel" th:include="guangdong/userCenter/left :: copy"></div>
+            <form method="post" id="phoneForm">
+                <div class="rightPanel">
+                    <div class="crumbs clearfix">
+                        <div class="tt">绑定手机</div>
+                        <div class="goBack"><a href="../safely"></a></div>
+                    </div>
+                    <dl class="phoneType clearfix">
+                        <dt class="float-left">原手机号</dt>
+                        <dd class="float-left">
+                            <input class="in-txt inputPhone" id="phoneNum" name="phoneNum" placeholder="输入11位手机号码"
+                                   maxlength="11" required>
+                            <em></em>
+                        </dd>
+                    </dl>
+                    <dl class="phoneCode clearfix">
+                        <dt class="float-left">手机验证码</dt>
+                        <dd class="float-left">
+                            <input class="in-txt inputPcode" placeholder="输入手机验证码" minlength="6" maxlength="6" id="code"
+                                   name="code" required>
+                            <em></em>
+                            <div class="numAdd phoneNum none"><span>120</span>秒后可重新发送</div>
+                            <div class="numAdd postCode sendCodeP" id="sendCode">发送验证码</div>
+                        </dd>
+                    </dl>
+                    <dl class="clearfix">
+                        <dt class="float-left">
+                            &nbsp;
+                        </dt>
+                        <dd class="float-left">
+                            <input class="submit none" type="submit" value="Submit">
+                            <div class="goNext g1 float-left">确 定</div>
+                        </dd>
+                    </dl>
+                </div>
+            </form>
+            <form method="post" id="phoneForm2" class="none">
+                <div class="rightPanel">
+                    <div class="crumbs clearfix">
+                        <div class="tt">绑定手机</div>
+                        <div class="goBack"><a href="../safely"></a></div>
+                    </div>
+                    <dl class="phoneType clearfix">
+                        <dt class="float-left">新手机号</dt>
+                        <dd class="float-left">
+                            <input class="in-txt inputPhone" id="phoneNum2" name="phoneNum2" placeholder="输入11位手机号码"
+                                   maxlength="11" required>
+                            <em></em>
+                        </dd>
+                    </dl>
+                    <dl class="phoneCode clearfix">
+                        <dt class="float-left">手机验证码</dt>
+                        <dd class="float-left">
+                            <input class="in-txt inputPcode" placeholder="输入手机验证码" minlength="6" maxlength="6"
+                                   id="code2"
+                                   name="code2" required>
+                            <em></em>
+                            <div class="numAdd phoneNum2 none"><span>120</span>秒后可重新发送</div>
+                            <div class="numAdd postCode2 sendCodeP" id="sendCode2">发送验证码</div>
+                        </dd>
+                    </dl>
+                    <dl class="clearfix">
+                        <dt class="float-left">
+                            &nbsp;
+                        </dt>
+                        <dd class="float-left">
+                            <input class="submit2 none" type="submit" value="Submit">
+                            <div class="goNext g2 float-left">确 定</div>
+                        </dd>
+                    </dl>
+                </div>
+                <input type="hidden" id="temp_pid" name="temp_pid">
+            </form>
+        </div>
+    </div>
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong/public/footer :: copy"></div>
+<!--底部结束-->
+<!-- core public JavaScript -->
+<script type="text/javascript" th:inline="javascript">
+    var sendCodeType = true;
+    //时间重置
+    function numAdd() {
+        $('.postCode').hide();
+        $('.phoneNum').show();
+        function loadTime() {
+            var countdown = $('.phoneNum span').html();
+            if (countdown == 0) {
+                $('.phoneNum').hide();
+                $('.phoneNum span').html(120);
+                $('.postCode').show();
+                sendCodeType = true;
+                return;
+            }
+            countdown--;
+            $('.phoneNum span').html(countdown);
+            setTimeout(function () {
+                loadTime()
+            }, 1000)
+        }
+
+        loadTime();
+    }
+
+    function numAdd2() {
+        $('.postCode2').hide();
+        $('.phoneNum2').show();
+        function loadTime2() {
+            var countdown = $('.phoneNum2 span').html();
+            if (countdown == 0) {
+                $('.phoneNum2').hide();
+                $('.phoneNum2 span').html(120);
+                $('.postCode2').show();
+                sendCodeType = true;
+                return;
+            }
+            countdown--;
+            $('.phoneNum2 span').html(countdown);
+            setTimeout(function () {
+                loadTime2()
+            }, 1000)
+        }
+
+        loadTime2();
+    }
+
+    $("#sendCode").on("click", function () {
+        var phone = $("#phoneNum").val();
+        var reg = /^0?(13[0-9]|15[012356789]|17[013678]|18[0-9]|14[57])[0-9]{8}$/;
+        //前端验证手机号是否真实
+        if (reg.test(phone) && phone == [[${session.wbgx_sessUserKey.mobile}]] && sendCodeType == true) {
+            sendCodeType = false;
+            dataInit.ajax({
+                api: [[${apiPath.hasPhone}]],
+                params: {"phone": phone},
+                fn: function (data) {
+                    if (data.data == 1) {
+                        dataInit.ajax({
+                            api: [[${apiPath.sendSmsCode}]],
+                            params: {
+                                phone: phone
+                            },
+                            fn: function (data) {
+                                if (data.code != 0) {
+                                    rongDialog.init({
+                                        ico: 2,
+                                        type: 1,
+                                        desc: data.msg || "验证码异常",
+                                        nextFn: function () {
+                                            $("#code").val("");
+                                            $("#code").onfocus;
+                                            sendCodeType = true;
+                                        }
+                                    });
+                                } else {
+                                    $("#temp_pid").val(data.temp_pid);
+                                    numAdd();
+                                }
+                            }
+                        })
+                    } else {
+                        rongDialog.init({
+                            ico: 2,
+                            type: 1,
+                            desc: data.msg || "手机号异常",
+                            nextFn:function(){
+                                sendCodeType = true;
+                            }
+                        });
+                    }
+                }
+            });
+        }else{
+            rongDialog.init({
+                ico: 2,
+                type: 1,
+                desc: "请输入该账号绑定的手机号"
+            });
+        }
+    });
+    $("#sendCode2").on("click", function () {
+        var phone = $("#phoneNum2").val();
+        var reg = /^0?(13[0-9]|15[012356789]|17[013678]|18[0-9]|14[57])[0-9]{8}$/;
+        //前端验证手机号是否真实
+        if (reg.test(phone) &&  sendCodeType == true) {
+            sendCodeType = false;
+            dataInit.ajax({
+                api: [[${apiPath.hasPhone}]],
+                params: {"phone": phone},
+                fn: function (data) {
+                    //console.log(data);
+                    if (data.data == 1) {
+                        rongDialog.init({
+                            ico: 2,
+                            type: 1,
+                            desc: "手机号已存在",
+                            nextFn:function(){
+                                sendCodeType = true;
+                            }
+                        });
+                    } else { //手机号验证能过发送短信息
+                        dataInit.ajax({
+                            api: [[${apiPath.sendSmsCode}]],
+                            params: {
+                                phone: phone
+                            },
+                            fn: function (data) {
+                                //console.log(data);
+                                if (data.code != 0) {
+                                    rongDialog.init({
+                                        ico: 2,
+                                        type: 1,
+                                        desc: data.msg || "验证码异常",
+                                        nextFn: function () {
+                                            $("#code").val("");
+                                            $("#code").onfocus;
+                                        }
+                                    });
+                                } else {
+                                    $("#temp_pid").val(data.temp_pid);
+                                    numAdd2();
+                                }
+                            }
+                        })
+                    }
+                }
+            })
+        }
+    })
+    //手机号格式
+    $.validator.addMethod("phoneType", function (value) {
+        var reg = /^0?(13[0-9]|15[012356789]|17[013678]|18[0-9]|14[57])[0-9]{8}$/;
+        return reg.test(value);
+    }, '请输入正确的手机号码');
+    $(document).ready(function () {
+        //判断是修改手机还是绑定手机
+        dataInit.ajax({
+            api:[[${apiPath.getUserInfo}]],
+            params:{
+                userId:[[${session.wbgx_sessUserKey.userId}]]
+            },
+            fn:function(data){
+                if(data.code == 0){
+                    //是否绑定的手机
+                    if(data.data.mobile == ''){//未绑定手机
+                        $("#phoneForm").hide();
+                        $("#phoneForm2").show();
+                    }else{//重新绑定手机
+                        $("#phoneForm").show();
+                        $("#phoneForm2").hide();
+                    }
+                }
+            }
+        });
+
+        //修改手机
+        $("#phoneForm").validate({
+            errorElement: "em",
+            rules: {
+                phoneNum: "phoneType"
+            },
+            messages: {
+                phoneNum: {
+                    required: "请输入您的手机号码"
+                },
+                code: {
+                    required: "手机验证码不能为空"
+                }
+            },
+            submitHandler: function () {
+                var phone = $("#phoneNum").val();
+                //验证验证码是否通过
+                dataInit.ajax({
+                    api: [[${apiPath.hasCode}]],
+                    params: {
+                        temp_pid: $("#temp_pid").val(),
+                        phone: phone,
+                        code: $("#code").val()
+                    },
+                    fn: function (data) {
+                        //验证通过即可修改密码
+                        if (data.code == 0 && data.data == 1) {
+                            $('#phoneForm').hide();
+                            $('#phoneForm2').show();
+                            sendCodeType = true;
+                        } else {
+                            rongDialog.init({
+                                ico: 2,
+                                type: 1,
+                                desc: "验证码错误"
+                            });
+                        }
+                    }
+                })
+            }
+        });
+
+        //绑定手机
+        $("#phoneForm2").validate({
+            debug: true,
+            errorElement: "em",
+            rules: {
+                phoneNum2: "phoneType"
+            },
+            messages: {
+                phoneNum2: {
+                    required: "请输入您的手机号码"
+                },
+                code2: {
+                    required: "手机验证码不能为空"
+                }
+            },
+            submitHandler: function () {
+                var phone = $("#phoneNum2").val();
+                //验证验证码是否通过
+                dataInit.ajax({
+                    api: [[${apiPath.relationMobile}]],
+                    params: {
+                        userId: [[${session.wbgx_sessUserKey.userId}]],
+                        phone: phone,
+                        code: $("#code2").val()
+                    },
+                    fn: function (data) {
+                        if (data.code == 0) {
+                            rongDialog.init({
+                                ico: 1,
+                                type: 1,
+                                desc: "绑定成功，重新登录",
+                                nextFn: function () {
+                                    window.location.href = [[${basePath}]] +'/'+[[${cultsite}]]+ "/doLogout";
+                                }
+                            });
+                        } else {
+                            rongDialog.init({
+                                ico: 2,
+                                type: 1,
+                                desc: data.msg || "手机绑定异常"
+                            });
+                        }
+                    }
+                });
+
+
+            }
+        });
+    });
+
+    $(".g1").on("click", function () {
+        $(".submit").click();
+    });
+
+    $(".g2").on("click", function () {
+        $(".submit2").click();
+    })
+
+</script>
+</body>
+</html>

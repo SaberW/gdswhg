@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/brand/brand.css'" >
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/resource/resdetail.css'" >
+<link rel="stylesheet" th:href="${basePath}+'/assets/css/public/detail.css'" >
+<script th:src="${apiPath.statistics}" id="whgtongji"></script>
+<div th:include="guangdong/public/leftBar :: copy"></div>
+<div id="page">
+    <div class="mui-content">
+        <div class="music-box mui-clearfix">
+            <audio id="audio" src=""></audio>
+            <div class="MusicPanel">
+                <div class="PanelRight">
+                    <div id="Play" class="Play"><span class="icon audio-play"></span></div> <!-- Play & Pause Button -->
+                    <div class="Song">
+                        <span id="name" class="SongName">标题</span>
+                        <span id="visitCount"></span>
+                        <span class="song-tags" id="laiyuan">
+                            <span></span>
+                        </span>
+                    </div> <!-- Song Title -->
+                </div> <!-- PanelRight End -->
+                <div class="Process"> <!-- Process -->
+                    <div class="ProcessAll" ></div> <!-- ProcessAll -->
+                    <div class="ProcessNow"></div> <!-- ProcessNow -->
+                </div> <!-- Process End -->
+                <div class="SongTime"><span>0:00</span><span>0:00</span></div> <!-- Time -->
+            </div> <!-- MusicPanel End -->
+        </div>
+        <div class="image-info">
+            <h2>资源简介</h2>
+            <div class="info"></div>
+        </div>
+    </div>
+    <nav class="mui-bar mui-bar-tab">
+        <div th:include="guangdong/public/collectionAndVoteup :: copy" class="zan-collection mui-tab-item"></div>
+    </nav>
+    <input type="hidden" id="temp_type" value="32">
+    <input type="hidden" id="commType">
+    <input type="hidden" id="toproject" value="ZXPX">
+</div>
+<script type="text/javascript" th:inline="javascript">
+    var itemId = dataInit.getUrlParam("id");
+    var userId = $('#temp_userId').val();
+    $(document).ready(function (){
+        dataInit.ajax({
+            api:[[${apiPath.traDescDetail}]],
+            params:{
+                userId: userId,
+                id:itemId
+            },
+            fn:function(data){
+                createModelHtml(data);
+
+                getVisitSumCount4url(itemId, function(count){
+                    $("#visitCount").text(' (访问量 '+count+')');
+                });
+            }
+        })
+
+        $("#Play").on('click',function () {
+            if(audio.paused){
+                if(audio.ended){
+                    Play();
+
+                }
+                if( $(this).children().hasClass('audio-play') ) {
+                    $("#Play").children("span").removeClass("audio-play").addClass("audio-pause");
+                    Play();
+                }
+            }
+            else{
+                $("#Play").children("span").removeClass("audio-pause").addClass("audio-play");
+                Pause();
+            }
+        });// Button cilick
+    })
+    function createModelHtml(data) {
+        var model = data.data;
+        var audio = document.getElementById("audio");
+        var audioPath = '';
+        if(model.enturl){
+            audioPath = model.enturl.indexOf('http') >= 0 ? model.enturl : data.imgPath + model.enturl;
+        }
+        audio.src = audioPath;
+        $('#name').text(model.drsctitle);
+        if (model.drscintro && model.drscintro!=''){
+            $('.info').text(model.drscintro);
+        }else{
+            $('.image-info').hide();
+        }
+        if(model.drscfrom){
+            $('#laiyuan span').text('来源：'+model.drscfrom);
+        }else {
+            $('#laiyuan').hide();
+        }
+    }
+    function getFileName(name) {
+        var _fileName = name.split("/");
+        _fileName = _fileName[_fileName.length-1];
+        _fileName = _fileName.split(".");
+        _fileName = _fileName[0];
+        return _fileName;
+    }
+    function Play() {
+        audio.play();
+        TimeSpan();
+    } //Play()
+
+    function Pause() {
+        audio.pause();
+    } //Pause()
+
+    function TimeSpan() {
+        var ProcessNow = 0;
+        var ProcessAllHeight = $(".ProcessAll").width();
+        var setInterval1 = setInterval(function () {
+            var ProcessNow = (audio.currentTime / audio.duration) * ProcessAllHeight;
+            $(".ProcessNow").css("width", ProcessNow + "px");
+            var currentTime = timeFormat(audio.currentTime);
+            var timeAll = timeFormat(TimeAll());
+            $(".SongTime").html("<span>"+ currentTime + "</span><span>" + timeAll + "</span>");
+        }, 1000);
+        audio.addEventListener('ended',function () {
+            clearInterval(setInterval1);
+        });
+        audio.addEventListener('pause',function () {
+            clearInterval(setInterval1);
+        });
+    }  //TimeSpan()
+
+    function timeFormat(number) {
+        var minute = parseInt(number / 60);
+        var second = parseInt(number % 60);
+        minute = minute >= 10 ? minute : "0" + minute;
+        second = second >= 10 ? second : "0" + second;
+        return minute + ":" + second;
+    } //timeFormat()
+
+    function TimeAll() {
+        return audio.duration;
+    } //TimeAll()
+</script>
+</body>
+</html>

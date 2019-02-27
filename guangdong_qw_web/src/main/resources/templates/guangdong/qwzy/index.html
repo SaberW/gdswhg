@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<link th:href="${basePath}+'/assets/style/normalize.css'" rel="stylesheet">
+<link th:href="${basePath}+'/assets/style/gdqw.css'" rel="stylesheet">
+<style>
+    .header-content {display: none;}
+</style>
+<body>
+<div class="qwMain">
+    <!--公共主头部开始-->
+    <div id="header" th:include="guangdong/public/header :: copy"></div>
+    <!--公共主头部结束-->
+    <div class="searchContent">
+        <img class="qwLogo"  th:src="${basePath}+'/assets/image/logo.png'" style="width: 290px;height: auto; margin: 80px 0 40px 230px;">
+        <img th:src="${basePath}+'/assets/image/logoTit.png'" style="display: block; margin: 0 auto;margin-bottom: 30px;">
+        <div class="qwHeadSou">
+            <div class="filterWrap clearfix" style="width: 960px">
+                <ul class="filterListYi clearfix">
+                    <li class="item cur" data-value="">全部</li>
+                </ul>
+            </div>
+            <div class="filterSearWrap clearfix">
+                <div class="selBox">
+                    <div class="selOne">
+                        <span>资源库</span>
+                    </div>
+                    <div class="selTwo" style="display: none">
+                        <a class="sItem cur" data-value="1" href="javascript:;">资源库</a>
+                        <a class="sItem" data-value="2" href="javascript:;">资源</a>
+                    </div>
+                </div>
+                <input class="txtInp" id="searchKey" type="text" placeholder="请输入关键字">
+                <div class="fsBtn"><img th:src="${basePath}+'/assets/image/search1.png'">搜索</div>
+            </div>
+        </div>
+    </div>
+    <!--底部开始-->
+    <div th:include="guangdong/public/footer :: copy"></div>
+    <!--底部结束-->
+</div>
+
+<script type="text/javascript" th:inline="javascript">
+
+    function setStopPropagation(evt) {
+        var e = evt || window.event;
+        if(typeof e.stopPropagation == 'function') {
+            e.stopPropagation();
+        } else {
+            e.cancelBubble = true;
+        }
+    }
+    $(function () {
+
+        $("#searchKey").focus();
+
+        $('.filterListYi, .filterListEr').on('click', '.item', function () {
+            $(this).addClass('cur').siblings().removeClass('cur');
+            if($(this).index() == 0) {
+                $(this).parent().siblings('.filterChild').hide();
+            } else {
+                $(this).parent().siblings('.filterChild').show();
+            }
+        });
+
+        $('.selBox .selOne').on('click', function () {
+            $(this).siblings('.selTwo').toggle();
+        });
+        $('html,body').click(function () {
+            $('.selBox .selTwo').hide();
+        });
+        $('.selBox').click(function (evt) {
+            setStopPropagation(evt)
+        });
+        $('.selBox .selTwo').on('click', '.sItem', function () {
+            $(this).parent().hide();
+            $(this).parent().siblings('.selOne').find('span').html($(this).html());
+            $(this).addClass('cur').siblings().removeClass('cur');
+        });
+    });
+
+
+    var cultid = $.cookie('cultid') || '';
+    var basePath = [[${basePath}]];
+    $(function(){
+        //加载分类
+        dataInit.ajax({
+            api: [[${apiPath.massResType}]],
+            params:{"cultid": cultid,token:token,timestamp:timestamp},
+            fn:function(data){
+                if($.isArray(data)){
+                    var li_html = '';
+                    for(var i=0; i<data.length; i++){
+                        var _type = data[i];
+                        var _type_name = _type.name;
+                        var _type_value = _type.value;
+
+                        li_html+='<li class="item" data-value="'+_type_value+'">'+_type_name+'</li>';
+                    }
+                    $('.filterWrap ul').append(li_html);
+                }
+            }
+        });
+
+        //搜索
+        $('.fsBtn').on('click',function(){
+            var srchkey = $('#searchKey').val();
+            var typeValue = $(".filterListYi").find('.cur').attr('data-value');
+            //if(srchkey != ''){
+                //$(this).parent("a").attr("href", "list?srchkey="+encodeURIComponent(srchkey));
+            //}
+            var resourcetype = $(".filterListYi .cur").attr('data-value');
+            var masstype = $(".selTwo .cur").attr('data-value');
+            window.location.href = 'list?srchkey='+encodeURIComponent(srchkey)+'&resourcetype='+resourcetype+'&masstype='+masstype;
+        });
+
+        //回车事件
+        $("body").keydown(function(e) {
+            var isFocus = $('#searchKey').is(":focus");
+            var srchkey = $('#searchKey').val();
+            var typeValue = $(".filterListYi").find('.cur').attr('data-value');
+
+            var curKey = e.which;
+
+            click(e);
+
+            if (curKey == "13" && isFocus) {
+                var resourcetype = $(".filterListYi .cur").attr('data-value');
+                var masstype = $(".selTwo .cur").attr('data-value');
+                window.location.href = 'list?srchkey='+encodeURIComponent(srchkey)+'&resourcetype='+resourcetype+'&masstype='+masstype;
+            }
+        });
+    });
+
+
+    function click(e) {
+        if (document.all) {
+            if (event.button==2||event.button==3) { console.log("谢谢您的合作！");
+                oncontextmenu='return false';
+            }
+        }
+        if (document.layers) {
+            if (e.which == 3) {
+                oncontextmenu='return false';
+            }
+        }
+    }
+    if (document.layers) {
+        document.captureEvents(Event.MOUSEDOWN);
+    }
+    document.onmousedown=click;
+    document.oncontextmenu = new Function("return false;")
+    document.onkeydown =document.onkeyup = document.onkeypress=function(){
+        if(window.event.keyCode == 123) {
+            window.event.returnValue=false;
+            return(false);
+        }
+    }
+
+    //对参数拼接成 XXX=XXX&XXX==XXXX 字符串的形式 后再进行加密
+    function sign(arr2) {
+        var str = "";
+        for (var i = 0; i < arr2.length; i++){
+            if (map[arr2[i]] == null || map[arr2[i]] == "" || map[arr2[i]] == undefined) {
+                continue;
+            }
+            str += arr2[i] + "=" + map[arr2[i]]+"&";
+        }
+        str = str.substring(0, str.length - 1);
+        return $.md5(str+timestamp).toUpperCase();
+    }
+    // 对参数排序
+    function sortToMap() {
+        var arr=new Array()
+        for(var key in map) {
+            arr.push(key);
+        }
+        arr.sort();
+        return arr;
+    }
+
+</script>
+</body>
+</html>

@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="guangdong/public/resource :: copy"></head>
+<body>
+<link rel="stylesheet" th:href="${basePath}+'/assets/style/venue/venueOrder.css'">
+<script th:src="${basePath}+'/assets/common/js/whg.maps.js'"></script>
+<div class="wrapper clearfix">
+    <div class="content">
+        <!--公共主头部开始-->
+        <div id="header" th:include="guangdong/public/header :: copy"></div>
+        <!--公共主头部结束-->
+        <div class="sys-crumbs">
+            <span><a href="../index">首页</a></span>
+            <i class="icon iconfont icon-enter"></i>
+            <span><a href="list">场馆</a></span>
+            <i class="icon iconfont icon-enter"></i>
+            <span><a href="javascript:void(0);" id="venueName"></a></span>
+            <i class="icon iconfont icon-enter"></i>
+            <span class="active _title" id="crumbs-title"></span>
+        </div>
+        <div class="sys-main-info">
+            <div class="img">
+                <img id="imgPath" src="../../assets/img/public/loading.png">
+            </div>
+            <div class="info">
+                <h1 class="_title">&nbsp;</h1>
+                <p class="tag-list" id="tag"></p>
+                <p class="desc">
+                    地址：<span id="address"></span>
+                </p>
+                <p class="desc">
+                    可用面积：<span id="sizearea"></span>
+                </p>
+                <p class="desc">
+                    容纳人数：<span id="sizepeople"></span>
+                </p>
+                <p class="desc">
+                    联系人：<span id="contacts"></span>
+                </p>
+                <p class="desc">
+                    固定电话：<span id="phone"></span>
+                </p>
+                <p class="desc" id="facility">
+                    配套设施：<!--<span class="tag">空调</span><span class="tag">Wifi</span>-->
+                </p>
+                <div class="other-cont clearfix">
+                    <div class="fav-vote-cont clearfix">
+                        <div class="sys-vote" title="点赞"><i
+                                class="icon iconfont icon-praise icon-praise_fill" id="good"></i><span>0</span></div>
+                        <div class="sys-fav" title="收藏"><i
+                                class="icon iconfont icon-collection icon-collection_fill" id="collection"></i><span>0</span></div>
+                        <div class="sys-fav" title="访问量"><i class="icon iconfont icon-search icon-collection_fill" id="visitCount"></i><span>0</span></div>
+                    </div>
+                    <div class="sns-cont" title="分享">
+                        分享到
+                        <a href="javascript:void(0);"  class="fxweix"><i
+                                class="icon iconfont icon-wechat"></i></a>
+                        <a href="javascript:void(0);"  class="fxweibo"><i
+                                class="icon iconfont icon-xinlang"></i></a>
+                        <a href="javascript:void(0);"  class="fxqq"><i
+                                class="icon iconfont icon-kongjian"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="room-date-change-cont" id="roomTime" style="display: none">
+            <div class="main-cont clearfix">
+                <div class="sys-main-title">
+                    <div class="title">活动室预定</div>
+                    <hr>
+                </div>
+                <div class="left-cont">
+                    <div class="orderPayCont">
+                        <div class="dateCont clearfix">
+                            <div class="weekCont clearfix">
+                                <div class="week-btn week-prev"></div>
+                                <div class="week-groups">
+                                    <ul></ul>
+                                </div>
+                                <div class="week-btn week-next"></div>
+                            </div>
+
+                        </div>
+                        <div class="tableListCont">
+                            <table>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="orderPayBg">
+                            <div class="orderPay"><a href="javascript:void(0)">立即预订</a></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="sys-main-bottom">
+            <div class="main-cont clearfix">
+                <div class="left-cont">
+
+                    <div class="item-cont" id="show-venue-info">
+                        <div class="sys-main-title">
+                            <div class="title">活动室详情</div>
+                            <hr>
+                        </div>
+                        <div class="sys-detail-list">
+                            <div class="title">活动室简介</div>
+                            <div class="html-panel" id="summary"></div>
+                        </div>
+                        <div class="sys-detail-list">
+                            <div class="title">活动室描述</div>
+                            <div class="html-panel" id="description"></div>
+                        </div>
+
+                        <div class="sys-detail-list" id="res-list">
+                            <div class="title">资源列表</div>
+                            <div class="html-panel">
+                                <div class="res-detail-cont">
+                                    <div class="res-filter">
+                                        <div class="filter-list">
+                                            <div class="clearfix" id="fileter-nav">
+                                                <span class="active"><a href="javascript:void(0)">全部</a></span>
+                                                <span><a href="javascript:void(0)">图片</a></span>
+                                                <span><a href="javascript:void(0)">视频</a></span>
+                                                <span><a href="javascript:void(0)">音频</a></span>
+                                                <span><a href="javascript:void(0)">文档</a></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="style-list">
+                                        <div class="content-list">
+                                            <ul class="clearfix" id="modelList_2">
+                                                <!--<li>
+                                                    <div class="img">
+                                                        <img src="http://183.131.126.132:8092/whgstatic/img/2017/201709/20170921/a768d33e5359460e910de9c08ce4425d_750_500.jpg">
+                                                    </div>
+                                                    <div class="info">
+                                                        <div class="title">供需标题</div>
+                                                    </div>
+                                                    <div class="mask"><img th:src="${basePath}+'/assets/img/brand/macphone.png'"></div>
+                                                    <a href="javascript:void(0)"></a>
+                                                </li>
+                                                <li>
+                                                    <div class="img">
+                                                        <img src="http://183.131.126.132:8092/whgstatic/img/2017/201709/20170921/e7f2cf27ba3b41b680c1f10651db8800_750_500.jpg">
+                                                    </div>
+                                                    <div class="info">
+                                                        <div class="title">供需标题</div>
+                                                    </div>
+                                                    <div class="mask"><img th:src="${basePath}+'/assets/img/brand/play.png'"></div>
+                                                    <a href="javascript:void(0)" onclick="rongDialog.init({
+                type : 5,
+                vedioUrl : 'http://szwhg-gds.oss-cn-shenzhen.aliyuncs.com/2016%E5%B9%B4%E9%A6%86%E9%95%BF%E5%9F%B9%E8%AE%AD%E7%8F%AD/%E7%8E%B0%E4%BB%A3%E5%85%AC%E5%85%B1%E6%96%87%E5%8C%96%E6%9C%8D%E5%8A%A1%E4%BD%93%E7%B3%BB%E5%BB%BA%E8%AE%BE%E6%9C%80%E6%96%B0%E6%94%BF%E7%AD%96%E8%A7%A3%E8%AF%BB2%E2%80%94%E7%A5%81%E8%BF%B0%E8%A3%95.mp4',
+                vedioImg : '',
+                vedioTitle : 'RongDialog视频测试2'
+            });"></a>
+                                                </li>
+                                                <li>
+                                                    <div class="img">
+                                                        <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1507548990671&di=6c7760dcd561c63f7f5386bd4614cf03&imgtype=0&src=http%3A%2F%2Fimg5.duitang.com%2Fuploads%2Fitem%2F201407%2F27%2F20140727202737_sZLAX.jpeg">
+                                                    </div>
+                                                    <div class="info">
+                                                        <div class="title">供需标题</div>
+                                                    </div>
+                                                    <div class="mask"></div>
+                                                    <a href="javascript:void(0)"  onclick="rongDialog.init({
+                ico : 1,
+                type : 6,
+                imgUrl : 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1507548990671&di=6c7760dcd561c63f7f5386bd4614cf03&imgtype=0&src=http%3A%2F%2Fimg5.duitang.com%2Fuploads%2Fitem%2F201407%2F27%2F20140727202737_sZLAX.jpeg'
+            });"></a>
+                                                </li>-->
+                                            </ul>
+                                        </div>
+                                        <!--分页开始 -->
+                                        <div class="green-black" id="artPagging_2" style="margin-bottom: 40px"></div>
+                                        <!--分页结束-->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="right-cont">
+                    <div class="item-cont">
+                        <div class="sys-main-title">
+                            <div class="title">相关活动室</div>
+                            <hr>
+                        </div>
+                        <div class="recommend-cont">
+                            <ul id="RecommendRoomList">
+                                <!--<li>
+                                    <div class="img">
+                                        <a href="#">
+                                            <img src="../../assets/img/img_demo/demo2017b.jpg">
+                                        </a>
+                                    </div>
+                                    <p>
+                                        <a href="#">不过话说text-ellipsis是一个特殊的样式</a>
+                                    </p>
+                                </li>-->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div th:include="guangdong/public/fav :: copy"></div>
+        <div th:include="guangdong/public/voteup :: copy"></div>
+        <input type="hidden" id="temp_type" value="3">
+        <input type="hidden" id="commType">
+    </div>
+</div>
+<!--底部开始-->
+<div class="footer-container" id="footer" th:include="guangdong/public/footer :: copy"></div>
+<!--底部结束-->
+
+<script th:src="${apiPath.myvisitnote}" id="whgtongji"></script>
+
+<script th:src="${basePath}+'/assets/js/plugins/roll/jquery.sly.min.js'"></script>
+<script th:src="${basePath}+'/assets/js/field/fieldOrder.js'"></script>
+<script th:src="${basePath}+'/assets/js/field/roomOrderTool.js'"></script>
+<script th:src="${basePath}+'/assets/js/FilteDatail.js'"></script>
+<script type="text/javascript" th:inline="javascript">
+    var roomId = dataInit.getUrlParam('id');
+    var userId = $("#temp_userId").val();
+    var address, longitude, latitude;
+    $(document).ready(function () {
+        dataInit.ajax({
+            api: [[${apiPath.roomdetail}]],
+            fn: function (data) {
+                FilteDatail.options({
+                    toUrl: [[${basePath}]]+'/'+[[${cultsite}]]+'/index',
+                    info: data.data
+                }).filte().options({
+                    toUrl: [[${basePath}]]+'/'+[[${cultsite}]]+'/index',
+                    info: data.data,
+                    state: 'venState',
+                    delstate: 'venDelstate',
+                    filteMsg: '场馆已经取消发布或删除'
+                }).filte();
+
+                showRoomDetail(data);
+            },
+            params: {id: roomId}
+        });
+        dataInit.ajax({
+            api: [[${apiPath.roomTimeMaxMinDay}]],
+            fn: function (data) {
+                getBeginDay(data);
+                initWeekList(new Date());
+            },
+            params: {roomid: roomId},
+        });
+
+        dataInit.ajax({
+            api: [[${apiPath.refRoomList}]],
+            fn: refRoomList,
+            params: {roomid: roomId,cultid:cultid}
+        });
+
+        //弹出层绝对居中
+        var dom = $("#venueRoom-map");
+        dom.css({
+            position: 'fixed',
+            left: ($(window).width() - dom.outerWidth()) / 2,
+            top: ($(window).height() - dom.outerHeight()) / 2,
+            zIndex: 1000
+        })
+
+        $(".colse-map").on('click', function () {
+            dom.hide();
+            $(".window-mask").hide();
+        })
+
+        dataPage();
+        $("#fileter-nav").on("click", "span>a", function(){
+            $(this).parents("span").addClass("active").siblings().removeClass("active");
+            dataPage();
+        });
+
+        getVisitSumCount4url(roomId, function(count){
+            $("#visitCount").next("span").text(count);
+        });
+    })
+    function getBeginDay(data) {
+        var orderTool = new RoomOrderTool({
+            basePath: [[${apiPath.roomApplyAll}]],
+            basePathHeader: [[${basePath}]]+'/'+[[${cultsite}]],
+            roomId: roomId,
+            userId: userId,
+            startDay: data.data.minDay,
+            endDay: data.data.maxDay,
+            venueOrderCheckURL : [[${apiPath.venueOrderCheck}]]
+        });
+        //扩展initWeekList,接管后续处理
+        var tempInitWeekList = initWeekList;
+        initWeekList = function (day) {
+            if (data.data.maxDay && data.data.minDay) {
+                if (data.data.minDay)
+                    var beginDay = new Date(data.data.minDay);
+                if (data.data.maxDay)
+                    var endDay = new Date(data.data.maxDay);
+                if (endDay < day) {
+                    day.setDate(day.getDate() - 7);
+                }
+                if (day <= beginDay) {
+                    day = beginDay;
+                    $(".week-prev").on("click.prev", function () {
+                        rongDialog.init({ico: 2, type: 1, desc: "没有更多了"});
+                    })
+                } else {
+                    $(".week-prev").off("click.prev");
+                }
+            }
+            if (data.data.maxDay && data.data.minDay) {
+                $("#roomTime").show();
+            } else {
+                $("#roomTime").hide();
+            }
+            tempInitWeekList(day);
+            if (endDay <= day) {
+                $(".week-next").on("click.next", function () {
+                    rongDialog.init({ico: 2, type: 1, desc: "没有更多了"});
+                })
+            } else {
+                $(".week-next").off("click.next");
+            }
+            orderTool.initWeekDay(day);
+        };
+    }
+    function showRoomDetail(data) {
+        var venueName = data.data.venTitle;
+        $("#venueName").text(venueName);
+        $("#venueName").attr("href", "detail?id=" + data.data.venid);
+
+        var RoomList = data.data;
+        var title = RoomList.title;
+        var contacts = RoomList.contacts ? RoomList.contacts : RoomList.venContacts;
+        /*var phone = RoomList.phone? RoomList.phone : RoomList.venPhone;
+        if (RoomList.telephone){
+            phone += ' '+RoomList.telephone;
+        }*/
+        var phone = RoomList.telephone;
+        address = RoomList.address + RoomList.location;
+        var sizearea = RoomList.sizearea + '㎡';
+        var sizepeople = RoomList.sizepeople + '人';
+
+        var imgPath = data.imgPath + dataInit.getBigImage(RoomList.imgurl);
+        //调分享接口
+        dataInit.share(title, imgPath);
+        //标签
+        if(RoomList.etag){
+            var tag = RoomList.etag.split(",");
+            if (RoomList.etag) {
+                var tagHtml = "";
+                for (var j in tag) {
+                    tagHtml += '<span>' + tag[j] + '</span>';
+                }
+                $("#tag").html(tagHtml);
+            }
+        }/*else {
+            $("#tag").hide();
+        }*/
+
+        //设施
+        if(RoomList.facility){
+            var facility = RoomList.facility.split(",");
+            if (RoomList.facility) {
+                var facilityHtml = "配套设施：";
+                for (var j in facility) {
+                    facilityHtml += '<span class="tag">' + facility[j] + '</span>';
+                }
+                $("#facility").html(facilityHtml);
+            } else {
+                $("#facility").hide();
+            }
+        }else {
+            $("#facility").hide();
+        }
+
+        var description = RoomList.description;
+
+        //获取经纬度
+        longitude = RoomList.longitude;
+        latitude = RoomList.latitude;
+        WhgMap.showMap('map-box', address, longitude, latitude);
+        $('#description').html(description);
+        var summary = RoomList.summary;
+        $('#summary').html(summary);
+
+        $('._title').text(title);
+        $('#contacts').text(contacts);
+        $('#phone').text(phone);
+        $('#address').text(address);
+        $('#sizearea').text(sizearea);
+        $('#sizepeople').text(sizepeople);
+        $('#imgPath').attr('src', imgPath);
+        var labelList = RoomList.facility;
+        setTimeout(function () {
+            if (labelList && labelList.length > 0)
+                labelList = labelList.split(",");
+            var labelListHtml = '';
+            if (labelList) {
+                for (var j in labelList) {
+                    var text = dataInit.checkDict(labelList[j]);
+                    labelListHtml += '<em>' + text + '</em>';
+                }
+            } else {
+                $("#sheshi").remove();
+            }
+            $('#labelList').html(labelListHtml);
+        }, 0);
+
+    }
+    function refRoomList(data) {
+        //相关活动室
+        $("#RecommendRoomList").empty();
+        var roomlist = data.rows;
+        if (roomlist && roomlist.length > 0) {
+            var i_length = roomlist.length > 3 ? 3 : roomlist.length;
+            for (var i = 0; i < i_length; i++) {
+                var imgPathR = data.imgPath + dataInit.getBigImage(roomlist[i].imgurl);
+                if (roomlist[i].id != roomId) {
+                    $("#RecommendRoomList").append(
+                        '<li>' +
+                        '<div class="img">' +
+                        '<a href="venueroom?id=' + roomlist[i].id + '">' +
+                        '<img src="' + imgPathR + '">' +
+                        '</a>' +
+                        '</div>' +
+                        '<p>' +
+                        '<a href="venueroom?id=' + roomlist[i].id + '">' + roomlist[i].title + '</a>' +
+                        '</p>' +
+                        '</li>'
+                    );
+                }
+            }
+        } else {
+            $("#RecommendRoomList").append('<div class="public-no-message-detail"></div>');
+        }
+    }
+    function openMap() {
+        $("#venueRoom-map").show();
+        $(".window-mask").show();
+    }
+
+
+    function dataPage(page,rows){
+        var params = {};
+        params.refid = roomId;
+        params.page = page || 1;
+        params.pageSize = rows || 12;
+        params.reftype = 3;
+
+        var filterIdx = $("#fileter-nav").find("span.active").index();
+        switch (filterIdx){
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+                params.enttype = filterIdx;
+                break;
+            default: params.enttype = '';
+        }
+
+        dataInit.ajax({
+            api: [[${apiPath.resourceList}]],
+            params: params,
+            fn: function(data){
+                showModelList(data);
+//                dataInit.pageInit('artPagging_2', params.page, params.pageSize, data.total, dataPage);
+            }
+        })
+    }
+
+    function showModelList(data){
+        var modelUL = $("#modelList_2");
+        modelUL.empty();
+        if(data.code == 0){
+            if (data.data) {
+                for (var i in data.data) {
+                    var module = data.data[i];
+
+                    var html = $('<li>\
+                                    <div class="img">\
+                                        <img >\
+                                    </div>\
+                                    <div class="info">\
+                                        <div class="title">'+module.name+'</div>\
+                                    </div>\
+                                    <div class="mask"><img></div>\
+                                    <a href="javascript:void(0)"></a>\
+                                    </li>');
+                    if(module.enturl)
+                        var _enturl = module.enturl.indexOf('http') >= 0 ? module.enturl : data.imgPath + module.enturl;
+                    var resBasePath = [[${basePath}]];
+                    switch (module.enttype){
+                        case "1" : //图片
+                            html.find(".img img").attr("src", dataInit.getRemoteURL(data.imgPath ,dataInit.getMidImage(module.enturl)));
+                            html.find(".mask").empty();
+                            html.find("a:last").attr("onClick", "rongDialog.init({\
+                                            ico : 1,\
+                                            type : 6,\
+                                            title : '"+module.name+"',\
+                                            imgUrl : '"+_enturl+"'\
+                                        });"
+                            );
+                            break;
+                        case "2" :  //视频
+                            html.find(".img img").attr("src", dataInit.getRemoteURL(data.imgPath , dataInit.getMidImage(module.deourl)));
+                            html.find(".mask img").attr("src", [[${basePath}]] + '/assets/img/brand/play.png');
+                            html.find("a:last").attr("onClick", "rongDialog.init({\
+                                            type : 5,\
+                                            vedioUrl : '"+_enturl+"',\
+                                            vedioImg : '',\
+                                            vedioTitle : '"+module.name+"',\
+                                            basePath : '"+resBasePath+"'\
+                                        })"
+                            );
+                            break;
+                        case "3" :  //音频
+                            html.find(".img img").attr("src", [[${basePath}]] + '/assets/img/brand/brand-music.jpg');
+                            html.find(".mask img").attr("src", [[${basePath}]] + '/assets/img/brand/macphone.png');
+                            html.find("a:last").attr("onClick", "rongDialog.init({\
+                                            type : 5,\
+                                            vedioUrl : '"+_enturl+"',\
+                                            vedioType: 'mp3',\
+                                            vedioImg : '"+resBasePath+"/assets/img/brand/brand-music.jpg',\
+                                            vedioTitle : '"+module.name+"',\
+                                            basePath : '"+resBasePath+"'\
+                                        });setWidth();"
+                            );
+                            break;
+
+                        case "4" : //文档
+                            //html.find(".img img").attr("src", [[${basePath}]] + '/assets/img/brand/xiazai.jpg');
+                            var iconImg = dataInit.getFileTypeIcon(module.enturl, '/assets/img/brand/xiazai.jpg');
+                            html.find(".img img").attr("src", [[${basePath}]] + iconImg);
+
+                            html.find(".mask").empty();
+                            html.find("a:last").attr({
+                                target:"_blank",
+                                href: dataInit.getRemoteURL(data.imgPath, module.enturl)
+                            });
+                            break;
+
+                        default:
+                            html.find(".mask").empty();
+                    }
+
+                    modelUL.append(html);
+                }
+            } else {
+                modelUL.append("<div class='public-no-message'></div>");
+            }
+        }else {
+            $("#res-list").hide();
+//            rongDialog.init({ico : 2, type : 1, desc : data.msg});
+        }
+    }
+</script>
+</body>
+</html>

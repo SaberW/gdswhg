@@ -1,0 +1,137 @@
+@charset "UTF-8";
+@import "../public/config";
+
+.recommend{
+  display: none/* block*/;
+}
+.activity{
+  display: none/* block*/;
+}
+.mien{
+  display: /*none*/ block;
+}
+.pic-list {
+  /*height: 750px;*/
+  width: 100%;
+  background-color: #EDEDED;
+  /*margin-top: 10px;*/
+  .brand {
+    width: 100%;
+    /*padding: 0 10px;*/
+    background-color: #EDEDED;
+    /* margin-bottom: 10px;*/
+    .img {
+      width: 100%;
+      position: relative;
+      img {
+        width: 100%;
+        display: block;
+      }
+      p {
+        position: absolute;
+        bottom: 20px;
+        left: 20px;
+        height: 16px;
+        margin-bottom: 0;
+        font-size: 14px;
+        line-height: 16px;
+        font-weight: bold;
+        color: #fff;
+      }
+    }
+  }
+}
+
+/*导航栏*/
+.brand-nav{
+  /*position: fixed;*/
+  position: relative;
+  height: 46px;
+  width: 100%;
+  background-color: #fff;
+  border-bottom: 1px solid #E5E5E5;
+  /*  z-index: 5;*/
+  a{
+    display: block;
+    height: 46px;
+    line-height: 46px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #000;
+    text-align: center;
+    i{
+      font-size: 12px;
+      line-height: 46px;
+    }
+  }
+  a.active{
+    color: @-main-color;
+    border-bottom: 2px solid @-main-color;
+  }
+  .cl1{
+    position: absolute;
+    top: 16px;
+    left: 25%;
+    height: 13px;
+    width: 1px;
+    background-color: #000;
+  }
+  .cl2{
+    position: absolute;
+    top: 16px;
+    left: 50%;
+    height: 13px;
+    width: 1px;
+    background-color: #000;
+  }
+  .cl3{
+    position: absolute;
+    top: 16px;
+    left: 75%;
+    height: 13px;
+    width: 1px;
+    background-color: #000;
+  }
+}
+/*导航栏*/
+
+.specialty-info{
+  background-color:#fff;
+  padding:15px;
+  margin-bottom:10px;
+  h1{
+    font-size:18px;
+    line-height:1.5;
+    margin:10px auto;
+  }
+  .info{
+    margin-top:20px;
+    color:@-font-color-3;
+    line-height:1.5;
+    font-size:14px;
+  }
+}
+.gather-nav-content{
+  background-color:#fff;
+  div>h2 {
+    padding: 15px 10px;
+    font-size: 15px;
+    color: #333333;
+    font-weight: 700;
+    position: relative;
+    margin: 0;
+    &:after {
+      .after();
+    }
+  }
+  &>div.look-more{
+    background: #fff;
+    height: 44px;
+    text-align: center;
+    a{
+      line-height: 44px;
+      display: block;
+      color: @-font-color-2;
+    }
+  }
+}
